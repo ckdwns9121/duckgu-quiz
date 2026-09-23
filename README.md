@@ -138,7 +138,7 @@
 
 ## 만든 방법
 
-React 없이 **TypeScript로 만든 SPA**입니다. 항해플러스 1주차 과제 [chapter1-2](https://github.com/ckdwns9121/front_6th_chapter1-2)에서 직접 만든 가상 DOM, 스토어, 라우터를 TypeScript로 옮겨 앱의 뼈대로 썼습니다.
+React 없이 **TypeScript로 만든 SPA**입니다. 가상 DOM, 스토어, 라우터를 라이브러리 없이 직접 만들어 앱의 뼈대로 썼습니다.
 
 | 영역 | 내용 |
 |---|---|
