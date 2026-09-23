@@ -3,6 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#EEF1F5">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="정처기 퀴즈">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>정처기 실기 퀴즈</title>
 <meta name="description" content="정보처리기사 실기 대비 플래시카드 퀴즈: 코드 함정, DB, 네트워크, 보안, UML">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -112,6 +120,11 @@ mark{background:var(--mark);color:var(--mark-ink);padding:0 3px;border-radius:2p
     </div>
     <p class="muted">카드를 보고 답을 떠올린 뒤 뒤집으세요. 알았으면 <b>알았다</b>, 몰랐으면 <b>몰랐다</b>. 기록은 이 기기에 저장되고, 몰랐던 카드는 다음에 먼저 나옵니다.</p>
 
+    <div class="panel" id="install-panel" hidden>
+      <span class="label">앱으로 설치</span>
+      <p class="muted" id="install-text">홈 화면에 추가하면 앱처럼 열리고, 인터넷이 없어도 공부할 수 있습니다.</p>
+      <button class="primary" id="install-btn" type="button" hidden>홈 화면에 설치</button>
+    </div>
     <section class="panel" aria-label="내 진도">
       <div class="stats">
         <div class="stat"><b id="st-total">0</b><span>전체 카드</span></div>
@@ -400,6 +413,24 @@ mark{background:var(--mark);color:var(--mark-ink);padding:0 3px;border-radius:2p
     $('loading').textContent = '카드를 불러오지 못했습니다. notes.html이 같은 폴더에 있는지 확인하세요. 파일을 직접 열었다면 웹 주소(GitHub Pages)로 열어야 합니다.';
   });
   show('none');
+})();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); });
+}
+</script>
+<script>
+(function(){
+  var panel = document.getElementById('install-panel'), btn = document.getElementById('install-btn'), text = document.getElementById('install-text');
+  var standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  if (standalone) return;
+  var deferred = null;
+  window.addEventListener('beforeinstallprompt', function(e){ e.preventDefault(); deferred = e; panel.hidden = false; btn.hidden = false; });
+  btn.addEventListener('click', function(){ if (!deferred) return; deferred.prompt(); deferred.userChoice.finally(function(){ deferred = null; panel.hidden = true; }); });
+  window.addEventListener('appinstalled', function(){ panel.hidden = true; });
+  var ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  if (ios) { panel.hidden = false; text.innerHTML = 'Safari 아래쪽 <b>공유 버튼(□↑)</b> → <b>홈 화면에 추가</b>를 누르면 앱처럼 설치됩니다. 설치하면 인터넷이 없어도 공부할 수 있습니다.'; }
 })();
 </script>
 </body>
