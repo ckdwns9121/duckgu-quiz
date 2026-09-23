@@ -4,7 +4,7 @@ from content_code import CARDS as C1
 from content_db import ROWS as R1
 from content_net import ROWS as R2, CARDS as C2, REL
 CARDS = {**C1, **C2}; ROWS = {**R1, **R2}
-s = open('notes.html', encoding='utf-8').read()
+s = open('public/notes.html', encoding='utf-8').read()
 miss = []
 for i, html in CARDS.items():
     m = re.search(r'<article class="item" data-id="%s">.*?</article>' % re.escape(i), s, re.S)
@@ -32,6 +32,6 @@ for i, cells in ROWS.items():
 s = s.replace('<th>외우는 법</th>', '<th>예시 · 외우는 법</th>')
 css = '.steps{margin:0;padding-left:1.3em;display:grid;gap:4px}\n.steps li{padding-left:2px}\n.ans p + .steps,.ans .steps + p{margin-top:2px}\n'
 if '.steps{' not in s: s = s.replace('footer{', css + 'footer{', 1)
-open('notes.html', 'w', encoding='utf-8').write(s)
+open('public/notes.html', 'w', encoding='utf-8').write(s)
 allids = set(re.findall(r'data-id="([^"]+)"', s))
 print('missing:', miss); print('not rewritten:', sorted(allids - set(CARDS) - set(ROWS) - set(REL)))
