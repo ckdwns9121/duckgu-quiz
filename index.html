@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>정처기 실기 퀴즈</title>
+<meta name="description" content="정보처리기사 실기 대비 플래시카드 퀴즈: 코드 함정, DB, 네트워크, 보안, UML">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#EEF1F5; --card:#FFFFFF; --ink:#18202B; --muted:#5A6576; --line:#D5DBE4;
+  --accent:#2B56C9; --accent-soft:#E3EAFB; --mark:#FFE58A; --mark-ink:#18202B;
+  --code-bg:#F4F6F9; --ok:#1F8A5B; --ok-soft:#E1F3EA; --ng:#B8472A; --ng-soft:#FBE7E1;
+  --display:"Do Hyeon","Noto Sans KR",system-ui,sans-serif;
+  --body:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.65;-webkit-tap-highlight-color:transparent}
+.wrap{max-width:720px;margin:0 auto;padding-inline:18px;padding-block:24px 40px;min-height:100%;display:flex;flex-direction:column;gap:18px}
+h1,h2,h3{margin:0;text-wrap:balance}
+p{margin:0}
+button{font:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible,label:focus-within{outline:2px solid var(--accent);outline-offset:2px}
+code,pre{font-family:var(--mono)}
+mark{background:var(--mark);color:var(--mark-ink);padding:0 3px;border-radius:2px}
+.brand{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand h1{font-family:var(--display);font-weight:400;font-size:34px;line-height:1.1}
+.brand a{color:var(--accent);font-weight:500;font-size:14px;text-decoration:none}
+.muted{color:var(--muted)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:12px}
+.label{font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;font-size:14px;font-weight:500;user-select:none}
+.chip input{position:absolute;opacity:0;pointer-events:none}
+.chip:has(input:checked){background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.chip .n{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mode{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:10px;text-align:left;display:grid;gap:2px}
+.mode b{font-size:14px}
+.mode span{font-size:12px;color:var(--muted)}
+.mode.on{border-color:var(--accent);background:var(--accent-soft)}
+.mode.on b{color:var(--accent)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.stat b{display:block;font-family:var(--display);font-weight:400;font-size:28px;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--muted)}
+.stat.ok b{color:var(--ok)} .stat.ng b{color:var(--ng)}
+.bar{height:8px;background:var(--code-bg);border-radius:99px;overflow:hidden;display:flex}
+.bar i{display:block;height:100%}
+.bar .k{background:var(--ok)} .bar .w{background:var(--ng)}
+.primary{background:var(--accent);color:#fff;border:none;border-radius:12px;padding:14px;font-size:16px;font-weight:700}
+.primary:disabled{opacity:.45;cursor:not-allowed}
+.ghost{background:none;border:1px solid var(--line);border-radius:10px;padding:8px 12px;color:var(--muted);font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+/* quiz */
+.qtop{display:flex;align-items:center;gap:10px}
+.qtop .count{font-family:var(--mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.qtop .bar{flex:1}
+.qtop .bar .k{background:var(--accent)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:12px;align-content:start;flex:1}
+.cat{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.tag{font-size:11px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:5px;background:var(--accent-soft);color:var(--accent)}
+.tag.lang{background:var(--code-bg);color:var(--muted);border:1px solid var(--line);font-family:var(--mono)}
+.tag.again{background:var(--ng-soft);color:var(--ng)}
+.prompt-title{font-size:20px;font-weight:700;line-height:1.35}
+.prompt-title small{display:block;font-size:12.5px;font-weight:400;color:var(--muted);font-family:var(--mono)}
+.card pre{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin:0;font-size:13px;line-height:1.55;overflow-x:auto}
+.card .q{font-weight:500}
+.mnemo{font-family:var(--display);font-size:22px;color:var(--accent)}
+.card svg{width:100%;max-width:280px;height:44px;color:var(--ink)}
+.card svg .hollow{fill:var(--card)} .card svg .solid{fill:currentColor}
+.answer{border-top:1px dashed var(--line);padding-top:12px;display:grid;gap:6px}
+.answer .a{font-family:var(--mono);font-weight:600;color:var(--ok)}
+.answer .why{color:var(--muted)}
+.answer code{background:var(--code-bg);padding:0 4px;border-radius:3px;font-size:.92em}
+.answer dl{margin:0;display:grid;gap:6px}
+.answer dt{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.04em}
+.answer dd{margin:0}
+.answer dd.hint{color:var(--muted)}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;position:sticky;bottom:0;padding-bottom:env(safe-area-inset-bottom,0px);background:var(--bg);padding-top:8px}
+.actions .primary{grid-column:1/-1}
+.ngbtn,.okbtn{border:none;border-radius:12px;padding:14px;font-size:16px;font-weight:700}
+.ngbtn{background:var(--ng-soft);color:var(--ng)}
+.okbtn{background:var(--ok-soft);color:var(--ok)}
+.keys{font-size:12px;color:var(--muted);text-align:center}
+.keys kbd{font-family:var(--mono);border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;background:var(--card)}
+/* result */
+.big{font-family:var(--display);font-weight:400;font-size:56px;line-height:1;color:var(--accent);font-variant-numeric:tabular-nums}
+.wronglist{display:grid;gap:6px;max-height:320px;overflow:auto}
+.wronglist div{font-size:14px;padding:8px 10px;background:var(--ng-soft);border-radius:8px}
+.wronglist small{color:var(--muted);margin-left:6px}
+.loading{padding:40px 0;text-align:center;color:var(--muted)}
+[hidden]{display:none!important}
+@media (max-width:480px){.modes{grid-template-columns:1fr}.brand h1{font-size:30px}}
+@media (prefers-reduced-motion:no-preference){.card{animation:in .18s ease-out}@keyframes in{from{transform:translateY(4px);opacity:.6}to{transform:none;opacity:1}}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HOME -->
+  <main id="home" class="wrap" style="padding:0;min-height:0">
+    <div class="brand">
+      <h1>정처기 실기 퀴즈</h1>
+      <a href="notes.html">노트 전체 보기 →</a>
+    </div>
+    <p class="muted">카드를 보고 답을 떠올린 뒤 뒤집으세요. 알았으면 <b>알았다</b>, 몰랐으면 <b>몰랐다</b>. 기록은 이 기기에 저장되고, 몰랐던 카드는 다음에 먼저 나옵니다.</p>
+
+    <section class="panel" aria-label="내 진도">
+      <div class="stats">
+        <div class="stat"><b id="st-total">0</b><span>전체 카드</span></div>
+        <div class="stat ok"><b id="st-known">0</b><span>외운 카드</span></div>
+        <div class="stat ng"><b id="st-weak">0</b><span>약한 카드</span></div>
+      </div>
+      <div class="bar" aria-hidden="true"><i class="k" id="bar-k"></i><i class="w" id="bar-w"></i></div>
+      <p class="muted" style="font-size:12.5px">외운 카드 = 최근 2번 연속 알았다. 약한 카드 = 마지막에 몰랐다.</p>
+    </section>
+
+    <section class="panel" aria-label="범위">
+      <div class="row" style="justify-content:space-between"><span class="label">범위</span>
+        <span class="row"><button class="ghost" id="all-on" type="button">전체 선택</button><button class="ghost" id="all-off" type="button">전체 해제</button></span></div>
+      <div class="chips" id="chips"></div>
+    </section>
+
+    <section class="panel" aria-label="방식">
+      <span class="label">방식</span>
+      <div class="modes" id="modes">
+        <button class="mode on" data-mode="smart" type="button"><b>추천 순서</b><span>약한 것 → 안 본 것 → 나머지</span></button>
+        <button class="mode" data-mode="weak" type="button"><b>틀린 것만</b><span>마지막에 몰랐던 카드</span></button>
+        <button class="mode" data-mode="shuffle" type="button"><b>전체 섞기</b><span>범위 안 모든 카드</span></button>
+      </div>
+      <div class="row">
+        <span class="label">한 번에</span>
+        <div class="chips" id="sizes">
+          <label class="chip"><input type="radio" name="size" id="size-10" value="10">10장</label>
+          <label class="chip"><input type="radio" name="size" id="size-20" value="20" checked>20장</label>
+          <label class="chip"><input type="radio" name="size" id="size-all" value="0">전부</label>
+        </div>
+      </div>
+    </section>
+
+    <button class="primary" id="start" type="button">시작하기</button>
+    <p class="muted" id="start-note" style="text-align:center;font-size:13px"></p>
+    <div class="row" style="justify-content:center"><button class="ghost" id="reset" type="button">기록 초기화</button></div>
+  </main>
+
+  <!-- QUIZ -->
+  <main id="quiz" hidden style="display:flex;flex-direction:column;gap:14px;flex:1">
+    <div class="qtop">
+      <button class="ghost" id="quit" type="button" aria-label="그만하기">✕ 그만</button>
+      <div class="bar"><i class="k" id="qbar"></i></div>
+      <span class="count" id="qcount">1 / 20</span>
+    </div>
+    <article class="card" id="card" aria-live="polite"></article>
+    <div class="actions">
+      <button class="primary" id="reveal" type="button">답 보기</button>
+      <button class="ngbtn" id="ng" type="button" hidden>몰랐다</button>
+      <button class="okbtn" id="ok" type="button" hidden>알았다</button>
+    </div>
+    <p class="keys">키보드: <kbd>Space</kbd> 답 보기 · <kbd>←</kbd> 몰랐다 · <kbd>→</kbd> 알았다</p>
+  </main>
+
+  <!-- RESULT -->
+  <main id="result" hidden style="display:grid;gap:16px">
+    <div class="panel" style="text-align:center;gap:6px">
+      <span class="label">이번 판</span>
+      <div class="big" id="r-score">0 / 0</div>
+      <p class="muted" id="r-msg"></p>
+    </div>
+    <div class="panel" id="r-wrong-panel">
+      <span class="label">몰랐던 카드</span>
+      <div class="wronglist" id="r-wrong"></div>
+    </div>
+    <button class="primary" id="r-retry" type="button">몰랐던 것만 다시</button>
+    <button class="ghost" id="r-home" type="button" style="padding:12px">처음으로</button>
+  </main>
+
+  <p class="loading" id="loading">카드를 불러오는 중…</p>
+</div>
+
+<script>
+(function(){
+  var STORE = 'jcq-stats-v1';
+  var PREF = 'jcq-pref-v1';
+  var stats = {}; var pref = {};
+  try { stats = JSON.parse(localStorage.getItem(STORE) || '{}') || {}; } catch(e) {}
+  try { pref = JSON.parse(localStorage.getItem(PREF) || '{}') || {}; } catch(e) {}
+  function saveStats(){ try { localStorage.setItem(STORE, JSON.stringify(stats)); } catch(e) {} }
+  function savePref(){ try { localStorage.setItem(PREF, JSON.stringify(pref)); } catch(e) {} }
+
+  var $ = function(id){ return document.getElementById(id); };
+  var CATS = [
+    {id:'code-c', name:'C'}, {id:'code-java', name:'Java'}, {id:'code-py', name:'Python'},
+    {id:'code-sql', name:'SQL'}, {id:'db', name:'DB 이론'}, {id:'net', name:'네트워크'},
+    {id:'sec', name:'보안'}, {id:'uml', name:'UML'}
+  ];
+  var cards = [];
+
+  function clean(node){
+    node.querySelectorAll('input, label.chk').forEach(function(n){ n.remove(); });
+    return node;
+  }
+
+  function buildCards(doc){
+    CATS.forEach(function(cat){
+      var sec = doc.getElementById(cat.id);
+      if (!sec) return;
+      var group = '';
+      sec.querySelectorAll('.group-title, [data-id]').forEach(function(el){
+        if (el.classList.contains('group-title')) { group = el.textContent.trim(); return; }
+        var id = el.dataset.id;
+        if (el.tagName === 'TR') {
+          var heads = Array.prototype.map.call(el.closest('table').querySelectorAll('thead th'), function(th){ return th.textContent.trim(); });
+          var cells = el.querySelectorAll('td');
+          var termCell = el.querySelector('td.term');
+          var parts = [];
+          cells.forEach(function(td, i){
+            if (td.classList.contains('c') || td === termCell) return;
+            parts.push({h: heads[i] || '', html: td.innerHTML, hint: !td.classList.contains('ans')});
+          });
+          cards.push({
+            id: id, cat: cat.id, catName: cat.name, group: group,
+            titleHtml: termCell ? termCell.innerHTML : '',
+            bodyHtml: '<p class="q">' + (heads[1] ? heads[1] + '의 ' : '') + '뜻은? 떠올려 보세요.</p>',
+            answerHtml: '<dl>' + parts.map(function(p){ return '<dt>' + p.h + '</dt><dd' + (p.hint ? ' class="hint"' : '') + '>' + p.html + '</dd>'; }).join('') + '</dl>'
+          });
+        } else {
+          var c = clean(el.cloneNode(true));
+          var ans = c.querySelector('.ans');
+          var titleEl = c.querySelector('h3') || c.querySelector('.name');
+          var lang = c.querySelector('.lang');
+          var title = titleEl ? titleEl.textContent.trim() : '';
+          var answerHtml = ans ? ans.innerHTML : '';
+          if (ans) ans.remove();
+          var head = c.querySelector('.item-h'); if (head) head.remove();
+          cards.push({
+            id: id, cat: cat.id, catName: cat.name, group: group,
+            lang: lang ? lang.textContent.trim() : '',
+            titleHtml: title,
+            bodyHtml: c.innerHTML.trim() || '<p class="q">뜻은? 떠올려 보세요.</p>',
+            answerHtml: answerHtml
+          });
+        }
+      });
+    });
+  }
+
+  function st(id){ return stats[id] || {seen:0, ok:0, streak:0, last:null}; }
+  function isKnown(id){ return st(id).streak >= 2; }
+  function isWeak(id){ return st(id).last === 'ng'; }
+
+  // ---------- home ----------
+  function selectedCats(){
+    return Array.prototype.filter.call(document.querySelectorAll('#chips input'), function(i){ return i.checked; }).map(function(i){ return i.value; });
+  }
+  function renderHome(){
+    var total = cards.length, known = 0, weak = 0;
+    cards.forEach(function(c){ if (isKnown(c.id)) known++; else if (isWeak(c.id)) weak++; });
+    $('st-total').textContent = total; $('st-known').textContent = known; $('st-weak').textContent = weak;
+    $('bar-k').style.width = (total ? known/total*100 : 0) + '%';
+    $('bar-w').style.width = (total ? weak/total*100 : 0) + '%';
+    var chips = $('chips');
+    if (!chips.children.length) {
+      var saved = pref.cats;
+      CATS.forEach(function(cat){
+        var n = cards.filter(function(c){ return c.cat === cat.id; }).length;
+        if (!n) return;
+        var lab = document.createElement('label'); lab.className = 'chip';
+        lab.innerHTML = '<input type="checkbox" id="cat-' + cat.id + '" value="' + cat.id + '"' + (!saved || saved.indexOf(cat.id) > -1 ? ' checked' : '') + '>' + cat.name + ' <span class="n"></span>';
+        chips.appendChild(lab);
+      });
+      chips.addEventListener('change', function(){ pref.cats = selectedCats(); savePref(); updateStartNote(); });
+    }
+    CATS.forEach(function(cat){
+      var box = $('cat-' + cat.id); if (!box) return;
+      var list = cards.filter(function(c){ return c.cat === cat.id; });
+      var k = list.filter(function(c){ return isKnown(c.id); }).length;
+      box.parentNode.querySelector('.n').textContent = k + '/' + list.length;
+    });
+    updateStartNote();
+  }
+  var mode = pref.mode || 'smart';
+  function setMode(m){
+    mode = m; pref.mode = m; savePref();
+    document.querySelectorAll('.mode').forEach(function(b){ b.classList.toggle('on', b.dataset.mode === m); });
+    updateStartNote();
+  }
+  function pool(){
+    var cats = selectedCats();
+    var list = cards.filter(function(c){ return cats.indexOf(c.cat) > -1; });
+    if (mode === 'weak') list = list.filter(function(c){ return isWeak(c.id); });
+    return list;
+  }
+  function size(){ var r = document.querySelector('input[name=size]:checked'); return r ? +r.value : 20; }
+  function updateStartNote(){
+    var n = pool().length;
+    $('start').disabled = n === 0;
+    $('start-note').textContent = n === 0
+      ? (mode === 'weak' ? '틀린 카드가 없습니다. 다른 방식을 고르세요.' : '범위를 하나 이상 고르세요.')
+      : '범위 안 카드 ' + n + '장';
+  }
+  function shuffle(a){ for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function makeDeck(){
+    var list = shuffle(pool().slice());
+    if (mode === 'smart') {
+      var rank = function(c){ return isWeak(c.id) ? 0 : (st(c.id).seen === 0 ? 1 : (isKnown(c.id) ? 3 : 2)); };
+      list.sort(function(a, b){ return rank(a) - rank(b); });
+    }
+    var n = size();
+    return n ? list.slice(0, n) : list;
+  }
+
+  // ---------- quiz ----------
+  var deck = [], idx = 0, revealed = false, wrong = [], right = 0;
+  function show(which){
+    ['home', 'quiz', 'result'].forEach(function(s){ $(s).hidden = s !== which; });
+    window.scrollTo(0, 0);
+  }
+  function start(d){
+    deck = d; idx = 0; wrong = []; right = 0;
+    if (!deck.length) return;
+    show('quiz'); renderCard();
+  }
+  function renderCard(){
+    var c = deck[idx]; revealed = false;
+    var tags = '<span class="tag">' + c.catName + '</span>' + (c.group ? '<span class="tag lang">' + c.group + '</span>' : '') + (c.lang ? '<span class="tag lang">' + c.lang + '</span>' : '') + (isWeak(c.id) ? '<span class="tag again">지난번에 몰랐음</span>' : '');
+    $('card').innerHTML = '<div class="cat">' + tags + '</div><div class="prompt-title">' + c.titleHtml + '</div>' + c.bodyHtml + '<div class="answer" id="answer" hidden>' + c.answerHtml + '</div>';
+    $('qcount').textContent = (idx + 1) + ' / ' + deck.length;
+    $('qbar').style.width = (idx / deck.length * 100) + '%';
+    $('reveal').hidden = false; $('ok').hidden = true; $('ng').hidden = true;
+    $('reveal').focus({preventScroll:true});
+  }
+  function reveal(){
+    if (revealed) return; revealed = true;
+    $('answer').hidden = false;
+    $('reveal').hidden = true; $('ok').hidden = false; $('ng').hidden = false;
+    $('ok').focus({preventScroll:true});
+  }
+  function grade(ok){
+    if (!revealed) return;
+    var c = deck[idx], s = st(c.id);
+    s.seen++; s.last = ok ? 'ok' : 'ng'; s.streak = ok ? s.streak + 1 : 0; if (ok) s.ok++;
+    stats[c.id] = s; saveStats();
+    if (ok) right++; else wrong.push(c);
+    idx++;
+    if (idx < deck.length) renderCard(); else finish();
+  }
+  function finish(){
+    $('qbar').style.width = '100%';
+    $('r-score').textContent = right + ' / ' + deck.length;
+    var rate = deck.length ? right / deck.length : 0;
+    $('r-msg').textContent = rate >= .8 ? '좋아요. 이 범위는 거의 잡혔습니다.' : rate >= .6 ? '합격선(60%)은 넘었습니다. 몰랐던 것만 한 번 더 보세요.' : '몰랐던 카드만 바로 한 번 더 돌리면 훨씬 잘 남습니다.';
+    $('r-wrong-panel').hidden = !wrong.length; $('r-retry').hidden = !wrong.length;
+    $('r-wrong').innerHTML = wrong.map(function(c){
+      var t = document.createElement('div'); t.innerHTML = c.titleHtml;
+      var small = t.querySelector('small'); var sub = small ? small.textContent : ''; if (small) small.remove();
+      return '<div>' + t.textContent.trim() + '<small>' + c.catName + (sub ? ' · ' + sub : '') + '</small></div>';
+    }).join('');
+    show('result');
+  }
+
+  // ---------- events ----------
+  $('modes').addEventListener('click', function(e){ var b = e.target.closest('.mode'); if (b) setMode(b.dataset.mode); });
+  $('sizes').addEventListener('change', function(){ pref.size = size(); savePref(); });
+  $('all-on').addEventListener('click', function(){ document.querySelectorAll('#chips input').forEach(function(i){ i.checked = true; }); pref.cats = selectedCats(); savePref(); updateStartNote(); });
+  $('all-off').addEventListener('click', function(){ document.querySelectorAll('#chips input').forEach(function(i){ i.checked = false; }); pref.cats = []; savePref(); updateStartNote(); });
+  $('start').addEventListener('click', function(){ start(makeDeck()); });
+  $('reveal').addEventListener('click', reveal);
+  $('ok').addEventListener('click', function(){ grade(true); });
+  $('ng').addEventListener('click', function(){ grade(false); });
+  $('card').addEventListener('click', function(e){ if (!revealed && !e.target.closest('pre')) reveal(); });
+  $('quit').addEventListener('click', function(){ if (idx > 0) { deck = deck.slice(0, idx); finish(); } else { renderHome(); show('home'); } });
+  $('r-retry').addEventListener('click', function(){ start(shuffle(wrong.slice())); });
+  $('r-home').addEventListener('click', function(){ renderHome(); show('home'); });
+  var resetArmed = false;
+  $('reset').addEventListener('click', function(){
+    if (!resetArmed) { resetArmed = true; this.textContent = '한 번 더 누르면 기록이 지워집니다'; var b = this; setTimeout(function(){ resetArmed = false; b.textContent = '기록 초기화'; }, 3000); return; }
+    stats = {}; saveStats(); resetArmed = false; this.textContent = '기록을 지웠습니다'; renderHome();
+  });
+  document.addEventListener('keydown', function(e){
+    if ($('quiz').hidden || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); if (!revealed) reveal(); else if (e.key === 'Enter') grade(true); }
+    else if (e.key === 'ArrowRight') { e.preventDefault(); if (!revealed) reveal(); else grade(true); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); grade(false); }
+  });
+
+  // ---------- boot ----------
+  if (pref.size !== undefined) { var r = document.querySelector('input[name=size][value="' + pref.size + '"]'); if (r) r.checked = true; }
+  fetch('notes.html').then(function(res){ if (!res.ok) throw new Error(res.status); return res.text(); }).then(function(html){
+    buildCards(new DOMParser().parseFromString(html, 'text/html'));
+    $('loading').hidden = true;
+    setMode(mode); renderHome(); show('home');
+  }).catch(function(){
+    $('loading').textContent = '카드를 불러오지 못했습니다. notes.html이 같은 폴더에 있는지 확인하세요. 파일을 직접 열었다면 웹 주소(GitHub Pages)로 열어야 합니다.';
+  });
+  show('none');
+})();
+</script>
+</body>
+</html>

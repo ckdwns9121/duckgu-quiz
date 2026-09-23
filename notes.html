@@ -1,0 +1,939 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>정처기 실기 함정 노트</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root,:root[data-theme="dark"]{
+  color-scheme:light;
+  --bg:#EEF1F5; --card:#FFFFFF; --ink:#18202B; --muted:#5A6576; --line:#D5DBE4;
+  --accent:#2B56C9; --accent-soft:#E3EAFB; --mark:#FFE58A; --mark-ink:#18202B;
+  --code-bg:#F4F6F9; --ok:#1F8A5B; --warn:#B8472A;
+  --display:"Do Hyeon","Noto Sans KR",system-ui,sans-serif;
+  --body:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.65;margin:0}
+.wrap{max-width:980px;margin:0 auto;padding-inline:20px;padding-block:28px 80px}
+h1,h2,h3{text-wrap:balance;margin:0}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(30px,5vw,42px);letter-spacing:-.01em;line-height:1.15}
+h2{font-family:var(--display);font-weight:400;font-size:28px;line-height:1.2}
+h3{font-size:16px;font-weight:700}
+p{margin:0}
+code,pre{font-family:var(--mono)}
+mark{background:var(--mark);color:var(--mark-ink);padding:0 3px;border-radius:2px}
+.lede{color:var(--muted);max-width:62ch;margin-top:10px}
+.top{display:grid;gap:18px;margin-bottom:22px}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.toggle{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer;font-weight:500;font-size:14px}
+.toggle input{accent-color:var(--accent);width:16px;height:16px}
+.progress{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.progress b{color:var(--ok)}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);margin-inline:-20px;padding:10px 20px;display:flex;gap:6px;overflow-x:auto}
+nav a{flex:none;text-decoration:none;color:var(--ink);font-weight:500;font-size:14px;padding:6px 12px;border-radius:8px}
+nav a:hover,nav a:focus-visible{background:var(--accent-soft);color:var(--accent);outline:none}
+section{padding-top:40px;display:grid;gap:18px}
+.sec-head{display:grid;gap:6px}
+.sec-head p{color:var(--muted);max-width:66ch}
+.sub{font-size:13px;letter-spacing:.06em;color:var(--accent);font-weight:700}
+.tip{background:var(--accent-soft);border-radius:10px;padding:14px 16px;display:grid;gap:4px}
+.tip b{color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.item{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;gap:10px;align-content:start}
+.item-h{display:flex;align-items:center;gap:8px}
+.item-h h3{flex:1}
+.lang{font-family:var(--mono);font-size:11px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--code-bg);border:1px solid var(--line);color:var(--muted)}
+.chk{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--muted);cursor:pointer;white-space:nowrap}
+.chk input{accent-color:var(--ok)}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin:0;font-size:13px;line-height:1.55;overflow-x:auto}
+.q{font-size:14px;font-weight:500}
+.ans{border-top:1px dashed var(--line);padding-top:10px;display:grid;gap:4px;font-size:14px}
+.ans .a{font-family:var(--mono);font-weight:600;color:var(--ok)}
+.ans .why{color:var(--muted)}
+.ans .why code,.why code{background:var(--code-bg);padding:0 4px;border-radius:3px;font-size:.92em}
+body.quiz .ans{filter:blur(6px);cursor:pointer;user-select:none;transition:filter .15s}
+body.quiz .ans.shown{filter:none;user-select:auto}
+body.hide-known .known{display:none}
+.table-wrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:620px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;letter-spacing:.05em;color:var(--muted);font-weight:700;background:var(--code-bg)}
+tr:last-child td{border-bottom:none}
+td.term{font-weight:700;white-space:nowrap}
+td.term small{display:block;font-weight:400;color:var(--muted);font-family:var(--mono);font-size:11.5px;white-space:normal}
+td.hint{color:var(--muted)}
+td.c{width:34px}
+.group-title{font-size:17px;font-weight:700;margin-top:10px}
+.mnemo{font-family:var(--display);font-size:22px;color:var(--accent);letter-spacing:.02em}
+.rel{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.rel .item{gap:6px}
+.rel svg{width:100%;height:44px;color:var(--ink)}
+.rel svg .hollow{fill:var(--card)}
+.rel svg .solid{fill:currentColor}
+.rel .name{font-weight:700}
+.rel .ex{font-size:13px;color:var(--muted)}
+footer{margin-top:48px;color:var(--muted);font-size:13px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:480px){.wrap{padding-inline:16px}nav{margin-inline:-16px;padding-inline:16px}}
+</style>
+</head>
+<body>
+<a href="./" style="display:inline-block;margin:16px 20px 0;font:500 14px var(--body);color:var(--accent)">← 퀴즈로 돌아가기</a>
+
+<div class="wrap">
+  <div class="top">
+    <div>
+      <h1>정처기 실기 함정 노트</h1>
+      <p class="lede">2026년 3회 실기(10월 24일~) 대비. 기출에서 자주 헷갈리는 코드, DB 이론, 네트워크·보안 용어, UML만 모았습니다. <b>퀴즈 모드</b>를 켜면 답이 가려지고, 누르면 보입니다. 외운 건 체크해서 숨기세요.</p>
+    </div>
+    <div class="controls">
+      <label class="toggle" for="quiz-toggle"><input type="checkbox" id="quiz-toggle"> 퀴즈 모드 (답 가리기)</label>
+      <label class="toggle" for="known-toggle"><input type="checkbox" id="known-toggle"> 외운 것 숨기기</label>
+      <span class="progress" id="progress">외운 것 <b>0</b> / 0</span>
+    </div>
+  </div>
+
+  <nav aria-label="목차">
+    <a href="#code-c">C 함정</a>
+    <a href="#code-java">Java 함정</a>
+    <a href="#code-py">Python 함정</a>
+    <a href="#code-sql">SQL 함정</a>
+    <a href="#db">DB 이론</a>
+    <a href="#net">네트워크</a>
+    <a href="#sec">보안</a>
+    <a href="#uml">UML</a>
+  </nav>
+
+  <!-- ================= C ================= -->
+  <section id="code-c">
+    <div class="sec-head">
+      <span class="sub">PART 1 · 코드</span>
+      <h2>C 언어 함정</h2>
+      <p>코드는 외우는 게 아니라 따라가는 겁니다. 변수 값을 종이에 표로 적으면서 한 줄씩 보세요.</p>
+    </div>
+    <div class="grid">
+      <article class="item" data-id="c1">
+        <div class="item-h"><span class="lang">C</span><h3>a++ 와 ++a</h3><label class="chk"><input type="checkbox" id="k-c1">외움</label></div>
+<pre>int a = 5, b, c;
+b = a++;
+c = ++a;
+printf("%d %d %d", a, b, c);</pre>
+        <p class="q">출력은?</p>
+        <div class="ans"><span class="a">7 5 7</span><p class="why"><code>a++</code>는 <mark>먼저 쓰고 나중에 더함</mark> (b=5, a=6). <code>++a</code>는 먼저 더하고 씀 (a=7, c=7).</p></div>
+      </article>
+
+      <article class="item" data-id="c2">
+        <div class="item-h"><span class="lang">C</span><h3>*(p+2) 와 *p+2</h3><label class="chk"><input type="checkbox" id="k-c2">외움</label></div>
+<pre>int arr[] = {10, 20, 30, 40};
+int *p = arr;
+printf("%d ", *(p+2));
+printf("%d", *p+2);</pre>
+        <p class="q">출력은?</p>
+        <div class="ans"><span class="a">30 12</span><p class="why"><code>*(p+2)</code> = 2칸 옮긴 곳의 값 → arr[2] = 30. <code>*p+2</code> = <mark>값을 먼저 꺼내고 +2</mark> → 10+2 = 12. 괄호가 있으면 이동, 없으면 덧셈.</p></div>
+      </article>
+
+      <article class="item" data-id="c3">
+        <div class="item-h"><span class="lang">C</span><h3>이중 포인터</h3><label class="chk"><input type="checkbox" id="k-c3">외움</label></div>
+<pre>int a = 10;
+int *p = &amp;a;
+int **pp = &amp;p;
+**pp = 20;
+printf("%d", a);</pre>
+        <p class="q">출력은?</p>
+        <div class="ans"><span class="a">20</span><p class="why"><code>&amp;</code> = 주소 가져오기, <code>*</code> = 주소 따라가기. <code>**pp</code>는 pp → p → a로 두 번 따라감. 결국 a를 바꾼 것.</p></div>
+      </article>
+
+      <article class="item" data-id="c4">
+        <div class="item-h"><span class="lang">C</span><h3>2차원 배열 포인터</h3><label class="chk"><input type="checkbox" id="k-c4">외움</label></div>
+<pre>int a[2][3] = {{1,2,3},{4,5,6}};
+printf("%d", *(*(a+1)+2));</pre>
+        <p class="q">출력은?</p>
+        <div class="ans"><span class="a">6</span><p class="why"><code>*(*(a+i)+j)</code> = <mark>a[i][j]</mark>. 바깥 +1은 행, 안쪽 +2는 열 → a[1][2] = 6.</p></div>
+      </article>
+
+      <article class="item" data-id="c5">
+        <div class="item-h"><span class="lang">C</span><h3>sizeof 와 strlen</h3><label class="chk"><input type="checkbox" id="k-c5">외움</label></div>
+<pre>char s[] = "hello";
+printf("%d %d", sizeof(s), strlen(s));</pre>
+        <p class="q">출력은?</p>
+        <div class="ans"><span class="a">6 5</span><p class="why">문자열 끝에는 보이지 않는 <code>'\0'</code>이 붙음. sizeof는 그것까지 세고(6), strlen은 빼고 셈(5).</p></div>
+      </article>
+
+      <article class="item" data-id="c6">
+        <div class="item-h"><span class="lang">C</span><h3>static 지역변수</h3><label class="chk"><input type="checkbox" id="k-c6">외움</label></div>
+<pre>int f() {
+  static int n = 0;
+  n++;
+  return n;
+}
+// main
+for (int i = 0; i &lt; 3; i++)
+  printf("%d", f());</pre>
+        <p class="q">출력은?</p>
+        <div class="ans"><span class="a">123</span><p class="why"><code>static</code>은 <mark>함수가 끝나도 값이 남음</mark>. 초기화도 처음 한 번만 됨. static이 없으면 매번 1.</p></div>
+      </article>
+
+      <article class="item" data-id="c7">
+        <div class="item-h"><span class="lang">C</span><h3>switch 에 break 없음</h3><label class="chk"><input type="checkbox" id="k-c7">외움</label></div>
+<pre>int n = 2;
+switch (n) {
+  case 1: printf("A");
+  case 2: printf("B");
+  case 3: printf("C"); break;
+  default: printf("D");
+}</pre>
+        <p class="q">출력은?</p>
+        <div class="ans"><span class="a">BC</span><p class="why">맞는 case부터 들어가서 <mark>break를 만날 때까지 아래로 계속 실행</mark>. 시험 단골 함정.</p></div>
+      </article>
+
+      <article class="item" data-id="c8">
+        <div class="item-h"><span class="lang">C</span><h3>음수 나눗셈·나머지</h3><label class="chk"><input type="checkbox" id="k-c8">외움</label></div>
+<pre>printf("%d %d ", 7/2, 7%3);
+printf("%d %d", -7/2, -7%3);</pre>
+        <p class="q">출력은?</p>
+        <div class="ans"><span class="a">3 1 -3 -1</span><p class="why">C·Java는 정수 나눗셈에서 <mark>소수점을 그냥 버림</mark>(0 쪽으로). 나머지 부호는 앞 숫자를 따라감. Python과 다름 (아래 Python 참고).</p></div>
+      </article>
+
+      <article class="item" data-id="c9">
+        <div class="item-h"><span class="lang">C</span><h3>비트 연산</h3><label class="chk"><input type="checkbox" id="k-c9">외움</label></div>
+<pre>printf("%d %d %d ", 5&amp;3, 5|3, 5^3);
+printf("%d %d", 1&lt;&lt;3, ~5);</pre>
+        <p class="q">출력은?</p>
+        <div class="ans"><span class="a">1 7 6 8 -6</span><p class="why">5=101, 3=011. <code>&amp;</code> 둘 다 1 → 001, <code>|</code> 하나라도 1 → 111, <code>^</code> 서로 다르면 1 → 110. <code>1&lt;&lt;3</code> = 1×2³. <code>~x</code> = <mark>-(x+1)</mark>.</p></div>
+      </article>
+
+      <article class="item" data-id="c10">
+        <div class="item-h"><span class="lang">C</span><h3>구조체 포인터 -&gt;</h3><label class="chk"><input type="checkbox" id="k-c10">외움</label></div>
+<pre>struct P { int x; int y; };
+struct P s = {3, 4};
+struct P *p = &amp;s;
+p-&gt;x = p-&gt;x + p-&gt;y;
+printf("%d", s.x);</pre>
+        <p class="q">출력은?</p>
+        <div class="ans"><span class="a">7</span><p class="why">구조체 변수는 <code>s.x</code>, 구조체 포인터는 <code>p-&gt;x</code>. <code>p-&gt;x</code>는 <code>(*p).x</code>와 같음.</p></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ================= Java ================= -->
+  <section id="code-java">
+    <div class="sec-head">
+      <span class="sub">PART 1 · 코드</span>
+      <h2>Java 함정</h2>
+      <p>핵심은 한 문장입니다. <mark>메서드는 실제 객체(new 뒤)를 따라가고, 필드와 static은 변수 타입(앞쪽)을 따라간다.</mark></p>
+    </div>
+    <div class="grid">
+      <article class="item" data-id="j1">
+        <div class="item-h"><span class="lang">Java</span><h3>업캐스팅 + 오버라이딩</h3><label class="chk"><input type="checkbox" id="k-j1">외움</label></div>
+<pre>class A { void show(){ System.out.print("A"); } }
+class B extends A {
+  void show(){ System.out.print("B"); }
+}
+A obj = new B();
+obj.show();</pre>
+        <p class="q">출력은?</p>
+        <div class="ans"><span class="a">B</span><p class="why">타입은 A지만 실제 객체는 B. 오버라이딩된 메서드는 <mark>new 뒤의 클래스</mark> 것이 실행됨 (동적 바인딩).</p></div>
+      </article>
+
+      <article class="item" data-id="j2">
+        <div class="item-h"><span class="lang">Java</span><h3>필드는 다형성 없음</h3><label class="chk"><input type="checkbox" id="k-j2">외움</label></div>
+<pre>class A { int x = 1; }
+class B extends A { int x = 2; }
+A o = new B();
+System.out.print(o.x);</pre>
+        <p class="q">출력은?</p>
+        <div class="ans"><span class="a">1</span><p class="why">변수(필드)는 오버라이딩이 안 됨. <mark>선언한 타입 A</mark>의 x를 읽음.</p></div>
+      </article>
+
+      <article class="item" data-id="j3">
+        <div class="item-h"><span class="lang">Java</span><h3>static 메서드</h3><label class="chk"><input type="checkbox" id="k-j3">외움</label></div>
+<pre>class A { static void hi(){ System.out.print("A"); } }
+class B extends A {
+  static void hi(){ System.out.print("B"); }
+}
+A o = new B();
+o.hi();</pre>
+        <p class="q">출력은?</p>
+        <div class="ans"><span class="a">A</span><p class="why">static 메서드는 객체가 아니라 <mark>클래스(선언 타입)</mark>에 붙음. 오버라이딩이 아니라 숨김(hiding).</p></div>
+      </article>
+
+      <article class="item" data-id="j4">
+        <div class="item-h"><span class="lang">Java</span><h3>생성자 호출 순서</h3><label class="chk"><input type="checkbox" id="k-j4">외움</label></div>
+<pre>class A { A(){ System.out.print("A"); } }
+class B extends A {
+  B(){ System.out.print("B"); }
+}
+new B();</pre>
+        <p class="q">출력은?</p>
+        <div class="ans"><span class="a">AB</span><p class="why">자식 생성자 첫 줄에 <code>super()</code>가 숨어 있음. <mark>부모가 먼저</mark> 만들어짐.</p></div>
+      </article>
+
+      <article class="item" data-id="j5">
+        <div class="item-h"><span class="lang">Java</span><h3>super.메서드()</h3><label class="chk"><input type="checkbox" id="k-j5">외움</label></div>
+<pre>class A { void f(){ System.out.print("1"); } }
+class B extends A {
+  void f(){ super.f(); System.out.print("2"); }
+}
+new B().f();</pre>
+        <p class="q">출력은?</p>
+        <div class="ans"><span class="a">12</span><p class="why"><code>super.f()</code>는 부모 버전을 부름. 부모 것 실행 뒤 자식 나머지 실행.</p></div>
+      </article>
+
+      <article class="item" data-id="j6">
+        <div class="item-h"><span class="lang">Java</span><h3>문자열 + 숫자</h3><label class="chk"><input type="checkbox" id="k-j6">외움</label></div>
+<pre>System.out.print(1 + 2 + "3" + 4 + 5);</pre>
+        <p class="q">출력은?</p>
+        <div class="ans"><span class="a">3345</span><p class="why">왼쪽부터 계산. 1+2=3(숫자). 그다음 문자열을 만나면 <mark>그 뒤는 전부 이어붙이기</mark> → "33"+4+5 = "3345".</p></div>
+      </article>
+
+      <article class="item" data-id="j7">
+        <div class="item-h"><span class="lang">Java</span><h3>String == 와 equals</h3><label class="chk"><input type="checkbox" id="k-j7">외움</label></div>
+<pre>String a = "hi";
+String b = "hi";
+String c = new String("hi");
+System.out.print((a==b) + " " + (a==c) + " " + a.equals(c));</pre>
+        <p class="q">출력은?</p>
+        <div class="ans"><span class="a">true false true</span><p class="why"><code>==</code>는 <mark>같은 객체인지</mark>, <code>equals</code>는 내용이 같은지. 같은 리터럴은 한 객체를 공유, <code>new</code>는 새 객체.</p></div>
+      </article>
+
+      <article class="item" data-id="j8">
+        <div class="item-h"><span class="lang">Java</span><h3>static 변수 공유</h3><label class="chk"><input type="checkbox" id="k-j8">외움</label></div>
+<pre>class C {
+  static int cnt = 0;
+  C(){ cnt++; }
+}
+new C(); new C(); new C();
+System.out.print(C.cnt);</pre>
+        <p class="q">출력은?</p>
+        <div class="ans"><span class="a">3</span><p class="why">static 변수는 <mark>모든 객체가 하나를 같이 씀</mark>. 객체마다 따로 있는 게 아님.</p></div>
+      </article>
+
+      <article class="item" data-id="j9">
+        <div class="item-h"><span class="lang">Java</span><h3>오버로딩 vs 오버라이딩</h3><label class="chk"><input type="checkbox" id="k-j9">외움</label></div>
+        <p class="q">둘의 차이는?</p>
+        <div class="ans"><p><b>오버로딩</b>: 한 클래스 안, 이름은 같고 <mark>매개변수가 다름</mark>. 반환형만 다르면 안 됨.</p><p><b>오버라이딩</b>: 상속 관계, 부모 메서드를 <mark>같은 모양으로 다시 정의</mark>.</p><p class="why">외우는 법: 로딩 = 짐(매개변수)을 다르게 싣기, 라이딩 = 부모 위에 올라타기.</p></div>
+      </article>
+
+      <article class="item" data-id="j10">
+        <div class="item-h"><span class="lang">Java</span><h3>try-catch-finally</h3><label class="chk"><input type="checkbox" id="k-j10">외움</label></div>
+<pre>try {
+  int x = 10 / 0;
+  System.out.print("A");
+} catch (ArithmeticException e) {
+  System.out.print("B");
+} finally {
+  System.out.print("C");
+}</pre>
+        <p class="q">출력은?</p>
+        <div class="ans"><span class="a">BC</span><p class="why">예외가 난 줄 이후("A")는 건너뜀. <code>finally</code>는 <mark>예외가 나든 안 나든 무조건</mark> 실행.</p></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ================= Python ================= -->
+  <section id="code-py">
+    <div class="sec-head">
+      <span class="sub">PART 1 · 코드</span>
+      <h2>Python 함정</h2>
+      <p>슬라이싱은 <mark>[시작 : 끝 : 간격]</mark>, 끝 번호는 포함 안 됨. 이것만 확실하면 절반은 풉니다.</p>
+    </div>
+    <div class="grid">
+      <article class="item" data-id="p1">
+        <div class="item-h"><span class="lang">Py</span><h3>리스트 슬라이싱</h3><label class="chk"><input type="checkbox" id="k-p1">외움</label></div>
+<pre>a = [1, 2, 3, 4, 5]
+print(a[1:3], a[-2:], a[::2], a[::-1])</pre>
+        <p class="q">출력은?</p>
+        <div class="ans"><span class="a">[2, 3] [4, 5] [1, 3, 5] [5, 4, 3, 2, 1]</span><p class="why">번호는 0부터. <code>[1:3]</code> = 1번, 2번 (3번 제외). <code>-2</code> = 뒤에서 두 번째. <code>::-1</code> = 거꾸로.</p></div>
+      </article>
+
+      <article class="item" data-id="p2">
+        <div class="item-h"><span class="lang">Py</span><h3>문자열 슬라이싱</h3><label class="chk"><input type="checkbox" id="k-p2">외움</label></div>
+<pre>s = "Hello"
+print(s[1:4], s[-1], s[:2])</pre>
+        <p class="q">출력은?</p>
+        <div class="ans"><span class="a">ell o He</span><p class="why">문자열도 리스트처럼 자름. H=0, e=1, l=2, l=3, o=4.</p></div>
+      </article>
+
+      <article class="item" data-id="p3">
+        <div class="item-h"><span class="lang">Py</span><h3>// 와 % 와 **</h3><label class="chk"><input type="checkbox" id="k-p3">외움</label></div>
+<pre>print(7//2, -7//2, -7%3, 2**3, 7/2)</pre>
+        <p class="q">출력은?</p>
+        <div class="ans"><span class="a">3 -4 2 8 3.5</span><p class="why">Python <code>//</code>는 <mark>더 작은 쪽으로 내림</mark> (-3.5 → -4). 그래서 나머지도 양수 2. C는 -3, -1. <code>/</code>는 항상 실수.</p></div>
+      </article>
+
+      <article class="item" data-id="p4">
+        <div class="item-h"><span class="lang">Py</span><h3>리스트는 같이 바뀜</h3><label class="chk"><input type="checkbox" id="k-p4">외움</label></div>
+<pre>a = [1, 2, 3]
+b = a
+b.append(4)
+print(a)</pre>
+        <p class="q">출력은?</p>
+        <div class="ans"><span class="a">[1, 2, 3, 4]</span><p class="why"><code>b = a</code>는 복사가 아니라 <mark>같은 리스트에 이름을 하나 더 붙인 것</mark>. 복사하려면 <code>a[:]</code> 또는 <code>a.copy()</code>.</p></div>
+      </article>
+
+      <article class="item" data-id="p5">
+        <div class="item-h"><span class="lang">Py</span><h3>append vs extend</h3><label class="chk"><input type="checkbox" id="k-p5">외움</label></div>
+<pre>a = [1, 2]; b = [1, 2]
+a.append([3, 4])
+b.extend([3, 4])
+print(a, len(a), b, len(b))</pre>
+        <p class="q">출력은?</p>
+        <div class="ans"><span class="a">[1, 2, [3, 4]] 3 [1, 2, 3, 4] 4</span><p class="why">append는 <mark>통째로 한 칸</mark>에 넣음. extend는 하나씩 풀어서 넣음.</p></div>
+      </article>
+
+      <article class="item" data-id="p6">
+        <div class="item-h"><span class="lang">Py</span><h3>range</h3><label class="chk"><input type="checkbox" id="k-p6">외움</label></div>
+<pre>print(list(range(5)), list(range(1, 10, 3)), list(range(5, 0, -2)))</pre>
+        <p class="q">출력은?</p>
+        <div class="ans"><span class="a">[0, 1, 2, 3, 4] [1, 4, 7] [5, 3, 1]</span><p class="why">range(시작, 끝, 간격). 슬라이싱처럼 <mark>끝은 포함 안 됨</mark>.</p></div>
+      </article>
+
+      <article class="item" data-id="p7">
+        <div class="item-h"><span class="lang">Py</span><h3>리스트 컴프리헨션</h3><label class="chk"><input type="checkbox" id="k-p7">외움</label></div>
+<pre>print([x*2 for x in range(5) if x % 2 == 0])</pre>
+        <p class="q">출력은?</p>
+        <div class="ans"><span class="a">[0, 4, 8]</span><p class="why">뒤에서부터 읽기: 0~4 중 짝수(0, 2, 4)만 골라서 → 2배.</p></div>
+      </article>
+
+      <article class="item" data-id="p8">
+        <div class="item-h"><span class="lang">Py</span><h3>set 연산</h3><label class="chk"><input type="checkbox" id="k-p8">외움</label></div>
+<pre>a = {1, 2, 3}; b = {2, 3, 4}
+print(a &amp; b, a | b, a - b)</pre>
+        <p class="q">출력은?</p>
+        <div class="ans"><span class="a">{2, 3} {1, 2, 3, 4} {1}</span><p class="why"><code>&amp;</code> 교집합, <code>|</code> 합집합, <code>-</code> 차집합. set은 <mark>중복이 없음</mark>.</p></div>
+      </article>
+
+      <article class="item" data-id="p9">
+        <div class="item-h"><span class="lang">Py</span><h3>print 의 sep, end</h3><label class="chk"><input type="checkbox" id="k-p9">외움</label></div>
+<pre>print(1, 2, 3, sep="-", end="!")
+print("A")</pre>
+        <p class="q">출력은?</p>
+        <div class="ans"><span class="a">1-2-3!A</span><p class="why"><code>sep</code> = 값 사이, <code>end</code> = 끝에 붙일 것(기본은 줄바꿈). end를 바꿔서 줄이 안 바뀜.</p></div>
+      </article>
+
+      <article class="item" data-id="p10">
+        <div class="item-h"><span class="lang">Py</span><h3>dict 순회</h3><label class="chk"><input type="checkbox" id="k-p10">외움</label></div>
+<pre>d = {"a": 1, "b": 2}
+for k in d:
+    print(k, end="")
+print(d.get("c", 0))</pre>
+        <p class="q">출력은?</p>
+        <div class="ans"><span class="a">ab0</span><p class="why">dict를 그냥 돌리면 <mark>키만</mark> 나옴. 값까지는 <code>d.items()</code>. <code>get</code>은 없으면 기본값.</p></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ================= SQL ================= -->
+  <section id="code-sql">
+    <div class="sec-head">
+      <span class="sub">PART 1 · 코드</span>
+      <h2>SQL 함정</h2>
+    </div>
+    <div class="grid">
+      <article class="item" data-id="s1">
+        <div class="item-h"><span class="lang">SQL</span><h3>COUNT(*) vs COUNT(열)</h3><label class="chk"><input type="checkbox" id="k-s1">외움</label></div>
+        <p class="q">점수 열이 90, NULL, 80인 3행 테이블에서 COUNT(*)와 COUNT(점수)는?</p>
+        <div class="ans"><span class="a">3, 2</span><p class="why"><code>COUNT(*)</code>는 행 수, <code>COUNT(열)</code>은 <mark>NULL을 빼고</mark> 셈. SUM, AVG도 NULL 무시.</p></div>
+      </article>
+      <article class="item" data-id="s2">
+        <div class="item-h"><span class="lang">SQL</span><h3>WHERE vs HAVING</h3><label class="chk"><input type="checkbox" id="k-s2">외움</label></div>
+        <p class="q">둘의 차이는?</p>
+        <div class="ans"><p><code>WHERE</code>: 묶기 <mark>전</mark> 행을 거름. <code>HAVING</code>: <code>GROUP BY</code>로 묶은 <mark>후</mark> 그룹을 거름.</p><p class="why">COUNT, AVG 같은 집계 조건은 HAVING에.</p></div>
+      </article>
+      <article class="item" data-id="s3">
+        <div class="item-h"><span class="lang">SQL</span><h3>LIKE 기호</h3><label class="chk"><input type="checkbox" id="k-s3">외움</label></div>
+        <p class="q"><code>'김%'</code>, <code>'김_'</code>, <code>'%김%'</code>의 뜻은?</p>
+        <div class="ans"><p><code>%</code> = 글자 0개 이상, <code>_</code> = <mark>딱 한 글자</mark>.</p><p class="why">김으로 시작 / 김+한 글자(두 글자 이름) / 김이 어디든 들어감.</p></div>
+      </article>
+      <article class="item" data-id="s4">
+        <div class="item-h"><span class="lang">SQL</span><h3>DELETE · TRUNCATE · DROP</h3><label class="chk"><input type="checkbox" id="k-s4">외움</label></div>
+        <p class="q">셋의 차이는?</p>
+        <div class="ans"><p><code>DELETE</code>: 행 삭제 (DML, 조건 가능, 되돌리기 가능).</p><p><code>TRUNCATE</code>: 행 전부 삭제, 구조는 남음 (DDL).</p><p><code>DROP</code>: <mark>테이블 자체를 없앰</mark> (DDL).</p></div>
+      </article>
+      <article class="item" data-id="s5">
+        <div class="item-h"><span class="lang">SQL</span><h3>DDL · DML · DCL</h3><label class="chk"><input type="checkbox" id="k-s5">외움</label></div>
+        <p class="q">각각 어떤 명령어?</p>
+        <div class="ans"><p><b>DDL</b>(정의): CREATE, ALTER, DROP, TRUNCATE</p><p><b>DML</b>(조작): SELECT, INSERT, UPDATE, DELETE</p><p><b>DCL</b>(제어): GRANT, REVOKE, COMMIT, ROLLBACK</p><p class="why">외우는 법: 정의 = 틀, 조작 = 데이터, 제어 = 권한.</p></div>
+      </article>
+      <article class="item" data-id="s6">
+        <div class="item-h"><span class="lang">SQL</span><h3>GRANT / REVOKE 문법</h3><label class="chk"><input type="checkbox" id="k-s6">외움</label></div>
+<pre>GRANT SELECT ON 학생 TO 홍길동 WITH GRANT OPTION;
+REVOKE SELECT ON 학생 FROM 홍길동 CASCADE;</pre>
+        <p class="q">빈칸으로 자주 나오는 단어는?</p>
+        <div class="ans"><p>주는 건 <mark>TO</mark>, 뺏는 건 <mark>FROM</mark>.</p><p class="why">WITH GRANT OPTION = 받은 사람도 남에게 줄 수 있음. CASCADE = 그 사람이 준 권한까지 연쇄로 회수.</p></div>
+      </article>
+      <article class="item" data-id="s7">
+        <div class="item-h"><span class="lang">SQL</span><h3>BETWEEN, IN</h3><label class="chk"><input type="checkbox" id="k-s7">외움</label></div>
+        <p class="q"><code>점수 BETWEEN 80 AND 90</code>에 80과 90이 포함되나?</p>
+        <div class="ans"><span class="a">둘 다 포함</span><p class="why">80 ≤ 점수 ≤ 90. <code>IN (1, 3)</code>은 1 또는 3.</p></div>
+      </article>
+      <article class="item" data-id="s8">
+        <div class="item-h"><span class="lang">SQL</span><h3>ORDER BY 기본값</h3><label class="chk"><input type="checkbox" id="k-s8">외움</label></div>
+        <p class="q">ASC, DESC를 안 쓰면?</p>
+        <div class="ans"><span class="a">ASC (오름차순)</span><p class="why">작은 것부터. 큰 것부터는 DESC.</p></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ================= DB ================= -->
+  <section id="db">
+    <div class="sec-head">
+      <span class="sub">PART 1.5 · 데이터베이스</span>
+      <h2>DB 이론, 헷갈리는 것만</h2>
+      <p>DB는 용어가 비슷해서 헷갈립니다. <mark>엑셀 표 하나</mark>를 떠올리면서 보세요. 표 = 테이블, 가로줄 = 행, 세로줄 = 열입니다.</p>
+    </div>
+
+    <div class="tip"><b>"무결성"이 두 번 나오는 이유</b><span>무결성은 한마디로 <mark>데이터가 틀리지 않고 올바른 상태</mark>라는 뜻입니다.</span><span><b>보안에서</b>: 허락 없이 데이터를 못 바꾸게 지키는 것 (CIA의 I). <b>DB에서</b>: 규칙에 안 맞는 데이터가 아예 못 들어오게 막는 것 (무결성 제약조건). 뜻은 같고 보는 쪽만 다릅니다.</span></div>
+
+    <p class="group-title">관계형 DB 기본 용어</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="c"></th><th>용어</th><th>뜻</th><th>엑셀로 치면 / 외우는 법</th></tr></thead>
+        <tbody>
+          <tr data-id="d-rel"><td class="c"><input type="checkbox" id="k-d-rel" aria-label="외움"></td><td class="term">릴레이션<small>Relation</small></td><td class="ans">테이블</td><td class="hint">시트 하나</td></tr>
+          <tr data-id="d-tuple"><td class="c"><input type="checkbox" id="k-d-tuple" aria-label="외움"></td><td class="term">튜플<small>Tuple</small></td><td class="ans">행 (레코드 한 줄)</td><td class="hint">가로줄. 학생 한 명의 정보</td></tr>
+          <tr data-id="d-attr"><td class="c"><input type="checkbox" id="k-d-attr" aria-label="외움"></td><td class="term">속성<small>Attribute</small></td><td class="ans">열 (컬럼)</td><td class="hint">세로줄. 이름, 학번 같은 항목</td></tr>
+          <tr data-id="d-domain"><td class="c"><input type="checkbox" id="k-d-domain" aria-label="외움"></td><td class="term">도메인<small>Domain</small></td><td class="ans">한 속성이 가질 수 있는 값의 범위</td><td class="hint">성별 열 → {남, 여}. 학년 열 → 1~4</td></tr>
+          <tr data-id="d-degree"><td class="c"><input type="checkbox" id="k-d-degree" aria-label="외움"></td><td class="term">차수<small>Degree</small></td><td class="ans"><mark>속성(열)의 개수</mark></td><td class="hint">열은 잘 안 바뀜 → 고정된 "차수"</td></tr>
+          <tr data-id="d-card"><td class="c"><input type="checkbox" id="k-d-card" aria-label="외움"></td><td class="term">카디널리티<small>Cardinality</small></td><td class="ans"><mark>튜플(행)의 개수</mark></td><td class="hint">카드 장수 = 사람 수 = 행 수. 데이터 넣을 때마다 바뀜</td></tr>
+          <tr data-id="d-schema"><td class="c"><input type="checkbox" id="k-d-schema" aria-label="외움"></td><td class="term">스키마 / 인스턴스</td><td class="ans">스키마 = 표의 구조(틀), 인스턴스 = 실제로 들어 있는 데이터</td><td class="hint">빈 양식 / 채워진 양식</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid">
+      <article class="item" data-id="d-q1">
+        <div class="item-h"><span class="lang">연습</span><h3>차수와 카디널리티</h3><label class="chk"><input type="checkbox" id="k-d-q1">외움</label></div>
+<pre>학생(학번, 이름, 학과, 학년)
+행 5개가 들어 있음</pre>
+        <p class="q">차수와 카디널리티는?</p>
+        <div class="ans"><span class="a">차수 4, 카디널리티 5</span><p class="why">열 4개 = 차수, 행 5개 = 카디널리티.</p></div>
+      </article>
+      <article class="item" data-id="d-q2">
+        <div class="item-h"><span class="lang">연습</span><h3>무슨 무결성 위반?</h3><label class="chk"><input type="checkbox" id="k-d-q2">외움</label></div>
+<pre>학생 테이블 기본키 = 학번
+INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
+        <p class="q">어떤 무결성을 어겼나?</p>
+        <div class="ans"><span class="a">개체 무결성</span><p class="why">기본키에는 NULL도, 중복도 들어갈 수 없음.</p></div>
+      </article>
+      <article class="item" data-id="d-q3">
+        <div class="item-h"><span class="lang">연습</span><h3>이것도 무슨 무결성?</h3><label class="chk"><input type="checkbox" id="k-d-q3">외움</label></div>
+<pre>학과 테이블: 컴공, 전자만 있음
+학생.학과(외래키) = '경영'으로 입력</pre>
+        <p class="q">어떤 무결성을 어겼나?</p>
+        <div class="ans"><span class="a">참조 무결성</span><p class="why">외래키 값은 참조하는 테이블에 <mark>실제로 있는 값이거나 NULL</mark>이어야 함. 없는 학과를 가리킴.</p></div>
+      </article>
+    </div>
+
+    <p class="group-title">무결성 제약조건</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="c"></th><th>종류</th><th>규칙</th><th>외우는 법</th></tr></thead>
+        <tbody>
+          <tr data-id="d-i-ent"><td class="c"><input type="checkbox" id="k-d-i-ent" aria-label="외움"></td><td class="term">개체 무결성</td><td class="ans"><mark>기본키</mark>는 NULL이나 중복 값을 가질 수 없음</td><td class="hint">개체 = 나 자신. 내 신분증(기본키)은 비어 있으면 안 됨</td></tr>
+          <tr data-id="d-i-ref"><td class="c"><input type="checkbox" id="k-d-i-ref" aria-label="외움"></td><td class="term">참조 무결성</td><td class="ans"><mark>외래키</mark>는 참조하는 테이블의 기본키 값이거나 NULL</td><td class="hint">참조 = 남을 가리킴. 없는 사람을 가리키면 안 됨</td></tr>
+          <tr data-id="d-i-dom"><td class="c"><input type="checkbox" id="k-d-i-dom" aria-label="외움"></td><td class="term">도메인 무결성</td><td class="ans">속성 값은 정해진 도메인(범위·형식) 안에 있어야 함</td><td class="hint">학년에 7 넣으면 안 됨</td></tr>
+          <tr data-id="d-i-key"><td class="c"><input type="checkbox" id="k-d-i-key" aria-label="외움"></td><td class="term">키 무결성</td><td class="ans">한 릴레이션에 같은 키 값을 가진 튜플이 있으면 안 됨</td><td class="hint">중복 금지</td></tr>
+          <tr data-id="d-i-user"><td class="c"><input type="checkbox" id="k-d-i-user" aria-label="외움"></td><td class="term">사용자 정의 무결성</td><td class="ans">업무 규칙에 맞아야 함</td><td class="hint">"나이는 0 이상" 같은 회사 규칙</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="group-title">키 종류</p>
+    <div class="tip"><b>예시 테이블로 보기</b><span>학생(<mark>학번</mark>, 주민번호, 이름, 학과). 학번도 주민번호도 한 사람을 딱 구별할 수 있음.</span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="c"></th><th>키</th><th>뜻</th><th>예시</th></tr></thead>
+        <tbody>
+          <tr data-id="d-k-super"><td class="c"><input type="checkbox" id="k-d-k-super" aria-label="외움"></td><td class="term">슈퍼키</td><td class="ans">구별만 되면 됨 (<mark>유일성 O, 최소성 X</mark>)</td><td class="hint">(학번, 이름)도 구별은 되니까 슈퍼키. 쓸데없는 게 붙어 있어도 OK</td></tr>
+          <tr data-id="d-k-cand"><td class="c"><input type="checkbox" id="k-d-k-cand" aria-label="외움"></td><td class="term">후보키</td><td class="ans">구별되고, 군더더기 없음 (<mark>유일성 O, 최소성 O</mark>)</td><td class="hint">학번, 주민번호. 하나만 빼도 구별 안 되는 최소 조합</td></tr>
+          <tr data-id="d-k-pk"><td class="c"><input type="checkbox" id="k-d-k-pk" aria-label="외움"></td><td class="term">기본키<small>Primary Key</small></td><td class="ans">후보키 중 대표로 뽑은 것. NULL·중복 불가</td><td class="hint">학번</td></tr>
+          <tr data-id="d-k-alt"><td class="c"><input type="checkbox" id="k-d-k-alt" aria-label="외움"></td><td class="term">대체키</td><td class="ans">후보키 중 기본키로 <mark>안 뽑힌 나머지</mark></td><td class="hint">주민번호 (반장 선거 떨어진 후보)</td></tr>
+          <tr data-id="d-k-fk"><td class="c"><input type="checkbox" id="k-d-k-fk" aria-label="외움"></td><td class="term">외래키<small>Foreign Key</small></td><td class="ans">다른 테이블의 기본키를 가리키는 속성</td><td class="hint">학생.학과 → 학과.학과코드</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tip"><b>한 줄 정리</b><span>슈퍼키 ⊃ 후보키 = 기본키 + 대체키. 유일성은 "구별됨", 최소성은 "군더더기 없음".</span></div>
+
+    <p class="group-title">이상 현상과 정규화</p>
+    <div class="tip"><b>이상 현상: 표를 잘못 만들면 생기는 문제</b><span class="mnemo">삽 · 삭 · 갱</span><span><b>삽입 이상</b>: 쓸데없는 정보가 없으면 데이터를 못 넣음 (수강 과목이 없으면 학생을 등록 못 함). <b>삭제 이상</b>: 하나 지웠는데 필요한 정보까지 같이 사라짐. <b>갱신 이상</b>: 같은 정보가 여러 줄에 있어서 일부만 바뀜. 이걸 없애려고 표를 쪼개는 게 <mark>정규화</mark>입니다.</span></div>
+
+    <div class="tip"><b>함수 종속 먼저 이해하기</b><span><code>X → Y</code> = X를 알면 Y가 하나로 정해짐. 예) 학번 → 이름 (학번을 알면 이름이 딱 나옴).</span><span><b>부분 함수 종속</b>: 기본키가 (학번, 과목)인데 이름은 <mark>학번만</mark>으로도 정해짐 → 키의 일부에만 종속. <b>이행 함수 종속</b>: 학번 → 학과, 학과 → 학과사무실이면 학번 → 학과사무실이 <mark>건너서</mark> 성립.</span></div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="c"></th><th>단계</th><th>하는 일</th><th>외우는 법</th></tr></thead>
+        <tbody>
+          <tr data-id="d-n1"><td class="c"><input type="checkbox" id="k-d-n1" aria-label="외움"></td><td class="term">1NF</td><td class="ans">모든 값을 <mark>원자값</mark>(더 못 쪼개는 값)으로</td><td class="hint"><b>도</b>메인 원자값. 한 칸에 "수학, 영어" 두 개 넣으면 안 됨</td></tr>
+          <tr data-id="d-n2"><td class="c"><input type="checkbox" id="k-d-n2" aria-label="외움"></td><td class="term">2NF</td><td class="ans"><mark>부분</mark> 함수 종속 제거</td><td class="hint"><b>부</b>분</td></tr>
+          <tr data-id="d-n3"><td class="c"><input type="checkbox" id="k-d-n3" aria-label="외움"></td><td class="term">3NF</td><td class="ans"><mark>이행</mark> 함수 종속 제거</td><td class="hint"><b>이</b>행</td></tr>
+          <tr data-id="d-nb"><td class="c"><input type="checkbox" id="k-d-nb" aria-label="외움"></td><td class="term">BCNF</td><td class="ans">모든 <mark>결정자</mark>가 후보키가 되도록</td><td class="hint"><b>결</b>정자</td></tr>
+          <tr data-id="d-n4"><td class="c"><input type="checkbox" id="k-d-n4" aria-label="외움"></td><td class="term">4NF</td><td class="ans"><mark>다치</mark> 종속 제거</td><td class="hint"><b>다</b>치</td></tr>
+          <tr data-id="d-n5"><td class="c"><input type="checkbox" id="k-d-n5" aria-label="외움"></td><td class="term">5NF</td><td class="ans"><mark>조인</mark> 종속 제거</td><td class="hint"><b>조</b>인</td></tr>
+          <tr data-id="d-denorm"><td class="c"><input type="checkbox" id="k-d-denorm" aria-label="외움"></td><td class="term">반정규화</td><td class="ans">성능을 위해 일부러 표를 합치거나 중복을 허용</td><td class="hint">정규화의 반대. 조회를 빠르게</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tip"><b>정규화 순서 외우기</b><span class="mnemo">도 · 부 · 이 · 결 · 다 · 조</span><span>"도부이결다조" (두부 이겨 다 조려). 각 단계에서 제거하는 것의 앞글자입니다.</span></div>
+
+    <p class="group-title">관계대수 기호</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="c"></th><th>기호</th><th>이름</th><th>뜻 / 외우는 법</th></tr></thead>
+        <tbody>
+          <tr data-id="d-ra-s"><td class="c"><input type="checkbox" id="k-d-ra-s" aria-label="외움"></td><td class="term">σ</td><td class="ans">Select (셀렉트)</td><td class="hint ans">조건에 맞는 <mark>행</mark>을 고름. 시그마 = S = Select. SQL의 WHERE</td></tr>
+          <tr data-id="d-ra-p"><td class="c"><input type="checkbox" id="k-d-ra-p" aria-label="외움"></td><td class="term">π</td><td class="ans">Project (프로젝트)</td><td class="hint ans">원하는 <mark>열</mark>만 뽑음. 파이 = P = Project. SQL의 SELECT 열 목록</td></tr>
+          <tr data-id="d-ra-j"><td class="c"><input type="checkbox" id="k-d-ra-j" aria-label="외움"></td><td class="term">⋈</td><td class="ans">Join (조인)</td><td class="hint ans">두 테이블을 공통 속성으로 합침. 나비넥타이 모양</td></tr>
+          <tr data-id="d-ra-d"><td class="c"><input type="checkbox" id="k-d-ra-d" aria-label="외움"></td><td class="term">÷</td><td class="ans">Division (디비전)</td><td class="hint ans">B의 모든 값과 관련된 A의 행만 남김. "모든 과목을 들은 학생"</td></tr>
+          <tr data-id="d-ra-set"><td class="c"><input type="checkbox" id="k-d-ra-set" aria-label="외움"></td><td class="term">∪ ∩ − ×</td><td class="ans">합집합, 교집합, 차집합, 카티션 프로덕트</td><td class="hint ans">×는 모든 조합. 차수는 더하고, 카디널리티는 곱함</td></tr>
+          <tr data-id="d-ra-calc"><td class="c"><input type="checkbox" id="k-d-ra-calc" aria-label="외움"></td><td class="term">관계대수 vs 관계해석</td><td class="ans">관계대수 = <mark>절차적</mark>(어떻게), 관계해석 = <mark>비절차적</mark>(무엇을)</td><td class="hint">대수는 계산 순서를 적음, 해석은 원하는 결과만 적음</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="group-title">트랜잭션과 ACID</p>
+    <div class="tip"><b>트랜잭션 = 한 번에 처리되어야 하는 작업 묶음</b><span>계좌이체: A에서 빼기 + B에 넣기. 둘 중 하나만 되면 안 됩니다.</span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="c"></th><th>특성</th><th>뜻</th><th>계좌이체로 치면</th></tr></thead>
+        <tbody>
+          <tr data-id="d-acid-a"><td class="c"><input type="checkbox" id="k-d-acid-a" aria-label="외움"></td><td class="term">원자성<small>Atomicity</small></td><td class="ans">전부 되거나 <mark>전부 안 되거나</mark> (Commit / Rollback)</td><td class="hint">빼기만 되고 넣기가 실패하면 빼기도 취소</td></tr>
+          <tr data-id="d-acid-c"><td class="c"><input type="checkbox" id="k-d-acid-c" aria-label="외움"></td><td class="term">일관성<small>Consistency</small></td><td class="ans">처리 전후 모두 규칙에 맞는 상태</td><td class="hint">이체 전후 두 계좌 합계가 같음</td></tr>
+          <tr data-id="d-acid-i"><td class="c"><input type="checkbox" id="k-d-acid-i" aria-label="외움"></td><td class="term">격리성<small>Isolation</small></td><td class="ans">동시에 실행돼도 서로 끼어들지 않음</td><td class="hint">내 이체 중간 상태를 남이 못 봄</td></tr>
+          <tr data-id="d-acid-d"><td class="c"><input type="checkbox" id="k-d-acid-d" aria-label="외움"></td><td class="term">영속성<small>Durability</small></td><td class="ans">완료(Commit)된 결과는 <mark>영구히</mark> 남음</td><td class="hint">이체 완료 뒤 서버가 꺼져도 기록 유지</td></tr>
+          <tr data-id="d-tx-state"><td class="c"><input type="checkbox" id="k-d-tx-state" aria-label="외움"></td><td class="term">트랜잭션 상태</td><td class="ans">활동 → 부분 완료 → 완료, 또는 실패 → 철회</td><td class="hint">부분 완료 = 마지막 명령 실행 직후, Commit 직전</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="group-title">병행 제어와 회복</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="c"></th><th>용어</th><th>뜻</th><th>외우는 법</th></tr></thead>
+        <tbody>
+          <tr data-id="d-cc-prob"><td class="c"><input type="checkbox" id="k-d-cc-prob" aria-label="외움"></td><td class="term">병행 제어 안 하면</td><td class="ans">갱신 분실, 모순성, 연쇄 복귀</td><td class="hint">둘이 동시에 수정하다 한 명 것이 날아감</td></tr>
+          <tr data-id="d-cc-lock"><td class="c"><input type="checkbox" id="k-d-cc-lock" aria-label="외움"></td><td class="term">로킹<small>Locking</small></td><td class="ans">쓰는 동안 잠가서 남이 못 건드리게 함</td><td class="hint">화장실 문 잠그기</td></tr>
+          <tr data-id="d-cc-unit"><td class="c"><input type="checkbox" id="k-d-cc-unit" aria-label="외움"></td><td class="term">로킹 단위</td><td class="ans">단위가 <mark>크면</mark> 병행성 낮고 관리 쉬움. <mark>작으면</mark> 병행성 높고 관리 복잡</td><td class="hint">건물 전체를 잠그면 편하지만 아무도 못 씀</td></tr>
+          <tr data-id="d-cc-ts"><td class="c"><input type="checkbox" id="k-d-cc-ts" aria-label="외움"></td><td class="term">타임스탬프 / 낙관적 검증 / 다중 버전</td><td class="ans">시간 순서로 처리 / 일단 실행하고 끝에 검사 / 여러 버전을 두고 처리</td><td class="hint">로킹 말고 다른 병행 제어 방법들</td></tr>
+          <tr data-id="d-rc-redo"><td class="c"><input type="checkbox" id="k-d-rc-redo" aria-label="외움"></td><td class="term">REDO / UNDO</td><td class="ans">REDO = <mark>커밋된 것</mark>을 다시 실행. UNDO = <mark>커밋 안 된 것</mark>을 되돌림</td><td class="hint">끝낸 건 다시(Redo), 덜 끝낸 건 취소(Undo)</td></tr>
+          <tr data-id="d-rc-imm"><td class="c"><input type="checkbox" id="k-d-rc-imm" aria-label="외움"></td><td class="term">즉시 갱신 / 지연 갱신</td><td class="ans">즉시: 바로 DB에 반영 → REDO, UNDO 둘 다 필요. 지연: 커밋 때 반영 → <mark>REDO만</mark></td><td class="hint">지연은 커밋 전엔 DB에 안 썼으니 되돌릴 게 없음</td></tr>
+          <tr data-id="d-rc-etc"><td class="c"><input type="checkbox" id="k-d-rc-etc" aria-label="외움"></td><td class="term">체크포인트 / 그림자 페이징</td><td class="ans">중간 저장 지점부터 회복 / 복사본(그림자)을 두고 실패하면 그걸로 교체</td><td class="hint">게임 세이브 포인트 / 원본 백업</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="group-title">스키마 3단계와 설계 순서</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="c"></th><th>용어</th><th>뜻</th><th>외우는 법</th></tr></thead>
+        <tbody>
+          <tr data-id="d-sch-ext"><td class="c"><input type="checkbox" id="k-d-sch-ext" aria-label="외움"></td><td class="term">외부 스키마</td><td class="ans">사용자·앱이 보는 부분 (서브 스키마)</td><td class="hint">내 화면에 보이는 것</td></tr>
+          <tr data-id="d-sch-con"><td class="c"><input type="checkbox" id="k-d-sch-con" aria-label="외움"></td><td class="term">개념 스키마</td><td class="ans">DB 전체의 논리 구조. 조직 전체 관점</td><td class="hint">전체 설계도 한 장</td></tr>
+          <tr data-id="d-sch-int"><td class="c"><input type="checkbox" id="k-d-sch-int" aria-label="외움"></td><td class="term">내부 스키마</td><td class="ans">실제로 디스크에 저장되는 물리 구조</td><td class="hint">창고에 어떻게 쌓였는지</td></tr>
+          <tr data-id="d-indep"><td class="c"><input type="checkbox" id="k-d-indep" aria-label="외움"></td><td class="term">논리적 / 물리적 독립성</td><td class="ans">논리적: 개념 스키마가 바뀌어도 외부(앱)에 영향 없음. 물리적: 내부 스키마가 바뀌어도 개념에 영향 없음</td><td class="hint">아래층을 고쳐도 위층은 모름</td></tr>
+          <tr data-id="d-design"><td class="c"><input type="checkbox" id="k-d-design" aria-label="외움"></td><td class="term">DB 설계 순서</td><td class="ans">요구 분석 → 개념 설계(ERD) → 논리 설계(테이블) → 물리 설계 → 구현</td><td class="hint">"요개논물구"</td></tr>
+          <tr data-id="d-er"><td class="c"><input type="checkbox" id="k-d-er" aria-label="외움"></td><td class="term">E-R 다이어그램 기호</td><td class="ans">사각형 = 개체, 마름모 = 관계, 타원 = 속성, 밑줄 = 기본키</td><td class="hint">UML 마름모(집합)와 헷갈리지 않기</td></tr>
+          <tr data-id="d-view"><td class="c"><input type="checkbox" id="k-d-view" aria-label="외움"></td><td class="term">뷰<small>View</small></td><td class="ans">실제 저장 안 되는 가상 테이블. <mark>ALTER로 수정 불가</mark>, 지우고 다시 만듦</td><td class="hint">보여줄 열만 골라 보여주니 보안에도 좋음</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ================= Network ================= -->
+  <section id="net">
+    <div class="sec-head">
+      <span class="sub">PART 2</span>
+      <h2>네트워크, 처음부터</h2>
+      <p>네트워크는 <mark>택배</mark>라고 생각하면 됩니다. 물건(데이터)을 상자에 넣고, 주소를 붙이고, 트럭으로 옮기는 과정을 층층이 나눈 게 OSI 7계층입니다.</p>
+    </div>
+
+    <div class="tip"><b>OSI 7계층 외우는 법 (아래 1층부터)</b><span class="mnemo">물 · 데 · 네 · 전 · 세 · 표 · 응</span><span>물리 → 데이터링크 → 네트워크 → 전송 → 세션 → 표현 → 응용. "물 데워서 네가 전해줘, 세 표 응?"처럼 문장으로 붙이세요.</span></div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="c"></th><th>계층</th><th>하는 일</th><th>택배로 치면</th><th>대표 단어</th></tr></thead>
+        <tbody>
+          <tr data-id="n-osi7"><td class="c"><input type="checkbox" id="k-n-osi7" aria-label="외움"></td><td class="term">7 응용<small>Application</small></td><td class="ans">사용자가 쓰는 서비스</td><td class="hint">택배 앱</td><td class="ans">HTTP, FTP, SMTP, DNS</td></tr>
+          <tr data-id="n-osi6"><td class="c"><input type="checkbox" id="k-n-osi6" aria-label="외움"></td><td class="term">6 표현<small>Presentation</small></td><td class="ans">데이터 형식 변환, 암호화, 압축</td><td class="hint">물건 포장 방식</td><td class="ans">JPEG, MPEG, 암호화</td></tr>
+          <tr data-id="n-osi5"><td class="c"><input type="checkbox" id="k-n-osi5" aria-label="외움"></td><td class="term">5 세션<small>Session</small></td><td class="ans">연결 시작·유지·종료, 동기화</td><td class="hint">배송 예약 잡기</td><td class="ans">동기점(체크포인트)</td></tr>
+          <tr data-id="n-osi4"><td class="c"><input type="checkbox" id="k-n-osi4" aria-label="외움"></td><td class="term">4 전송<small>Transport</small></td><td class="ans">끝과 끝 사이 신뢰성, 오류·흐름 제어</td><td class="hint">분실되면 다시 보내기</td><td class="ans">TCP, UDP / 단위: 세그먼트</td></tr>
+          <tr data-id="n-osi3"><td class="c"><input type="checkbox" id="k-n-osi3" aria-label="외움"></td><td class="term">3 네트워크<small>Network</small></td><td class="ans">주소(IP)로 경로 찾기(라우팅)</td><td class="hint">주소 보고 경로 정하기</td><td class="ans">IP, ICMP, ARP, 라우터 / 단위: 패킷</td></tr>
+          <tr data-id="n-osi2"><td class="c"><input type="checkbox" id="k-n-osi2" aria-label="외움"></td><td class="term">2 데이터링크<small>Data Link</small></td><td class="ans">바로 옆 장비까지 전달, MAC 주소</td><td class="hint">동네 집배원</td><td class="ans">이더넷, 스위치, 브리지 / 단위: 프레임</td></tr>
+          <tr data-id="n-osi1"><td class="c"><input type="checkbox" id="k-n-osi1" aria-label="외움"></td><td class="term">1 물리<small>Physical</small></td><td class="ans">전기 신호로 비트 전송</td><td class="hint">도로, 트럭</td><td class="ans">케이블, 허브, 리피터 / 단위: 비트</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="group-title">꼭 나오는 네트워크 용어</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="c"></th><th>용어</th><th>뜻</th><th>외우는 법</th></tr></thead>
+        <tbody>
+          <tr data-id="n-tcp"><td class="c"><input type="checkbox" id="k-n-tcp" aria-label="외움"></td><td class="term">TCP<small>Transmission Control Protocol</small></td><td class="ans">연결을 맺고, 순서와 도착을 보장하는 전송 방식</td><td class="hint">등기 우편. 느리지만 확실함</td></tr>
+          <tr data-id="n-udp"><td class="c"><input type="checkbox" id="k-n-udp" aria-label="외움"></td><td class="term">UDP<small>User Datagram Protocol</small></td><td class="ans">연결 없이 그냥 보냄. 빠르지만 보장 없음</td><td class="hint">전단지 뿌리기. 스트리밍, 게임, DNS</td></tr>
+          <tr data-id="n-3way"><td class="c"><input type="checkbox" id="k-n-3way" aria-label="외움"></td><td class="term">3-Way Handshake</td><td class="ans">TCP 연결 과정: SYN → SYN+ACK → ACK</td><td class="hint">"여보세요?" "네 들려요, 제 말 들려요?" "네"</td></tr>
+          <tr data-id="n-ip"><td class="c"><input type="checkbox" id="k-n-ip" aria-label="외움"></td><td class="term">IPv4 / IPv6</td><td class="ans">IPv4 = <mark>32비트</mark> (8비트×4, 점으로 구분). IPv6 = <mark>128비트</mark> (16비트×8, 콜론으로 구분)</td><td class="hint">IPv6는 브로드캐스트 없음. 유니캐스트·멀티캐스트·애니캐스트</td></tr>
+          <tr data-id="n-arp"><td class="c"><input type="checkbox" id="k-n-arp" aria-label="외움"></td><td class="term">ARP / RARP<small>Address Resolution Protocol</small></td><td class="ans">ARP: IP → MAC 주소 알아내기. RARP: MAC → IP (반대)</td><td class="hint">R = Reverse(거꾸로)</td></tr>
+          <tr data-id="n-icmp"><td class="c"><input type="checkbox" id="k-n-icmp" aria-label="외움"></td><td class="term">ICMP<small>Internet Control Message Protocol</small></td><td class="ans">오류·상태를 알려주는 프로토콜</td><td class="hint">ping 명령어가 쓰는 것</td></tr>
+          <tr data-id="n-dns"><td class="c"><input type="checkbox" id="k-n-dns" aria-label="외움"></td><td class="term">DNS<small>Domain Name System</small></td><td class="ans">도메인(naver.com)을 IP 주소로 바꿔줌</td><td class="hint">전화번호부</td></tr>
+          <tr data-id="n-dhcp"><td class="c"><input type="checkbox" id="k-n-dhcp" aria-label="외움"></td><td class="term">DHCP<small>Dynamic Host Configuration Protocol</small></td><td class="ans">IP 주소를 자동으로 나눠줌</td><td class="hint">와이파이 붙으면 IP가 자동으로 생기는 이유</td></tr>
+          <tr data-id="n-nat"><td class="c"><input type="checkbox" id="k-n-nat" aria-label="외움"></td><td class="term">NAT<small>Network Address Translation</small></td><td class="ans">내부 사설 IP를 외부 공인 IP로 바꿔줌</td><td class="hint">회사 대표번호 하나로 여러 내선 쓰기</td></tr>
+          <tr data-id="n-rip"><td class="c"><input type="checkbox" id="k-n-rip" aria-label="외움"></td><td class="term">RIP / OSPF / BGP</td><td class="ans">RIP: 거리 벡터, <mark>최대 홉 15</mark>. OSPF: 링크 상태, 대규모. BGP: AS(조직 네트워크)끼리</td><td class="hint">라우팅 = 길 찾기 방법</td></tr>
+          <tr data-id="n-dev"><td class="c"><input type="checkbox" id="k-n-dev" aria-label="외움"></td><td class="term">장비와 계층</td><td class="ans">허브·리피터 = 1계층, 스위치·브리지 = 2계층, 라우터 = 3계층</td><td class="hint">똑똑할수록 층이 높음</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="group-title">포트 번호 (숫자로 자주 나옴)</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="c"></th><th>프로토콜</th><th>포트</th><th>하는 일</th></tr></thead>
+        <tbody>
+          <tr data-id="n-p-ftp"><td class="c"><input type="checkbox" id="k-n-p-ftp" aria-label="외움"></td><td class="term">FTP</td><td class="ans">20(데이터), 21(제어)</td><td class="hint">파일 전송</td></tr>
+          <tr data-id="n-p-ssh"><td class="c"><input type="checkbox" id="k-n-p-ssh" aria-label="외움"></td><td class="term">SSH / Telnet</td><td class="ans">22 / 23</td><td class="hint">원격 접속. SSH는 암호화, Telnet은 평문</td></tr>
+          <tr data-id="n-p-smtp"><td class="c"><input type="checkbox" id="k-n-p-smtp" aria-label="외움"></td><td class="term">SMTP / POP3 / IMAP</td><td class="ans">25 / 110 / 143</td><td class="hint">메일 보내기 / 받기 / 받기(서버에 보관)</td></tr>
+          <tr data-id="n-p-dns"><td class="c"><input type="checkbox" id="k-n-p-dns" aria-label="외움"></td><td class="term">DNS</td><td class="ans">53</td><td class="hint">이름 → IP</td></tr>
+          <tr data-id="n-p-http"><td class="c"><input type="checkbox" id="k-n-p-http" aria-label="외움"></td><td class="term">HTTP / HTTPS</td><td class="ans">80 / 443</td><td class="hint">웹. HTTPS는 암호화</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tip"><b>서브넷 계산 한 가지만</b><span><code>/26</code> 같은 숫자는 앞에서부터 1인 비트 수. 한 서브넷 주소 수 = <mark>2^(32−n)</mark>, 쓸 수 있는 호스트 = 그 값 −2 (네트워크 주소, 브로드캐스트 주소 제외).</span><span>예) 192.168.1.0/26 → 2^6 = 64개씩 4개로 나뉨 → 호스트 62개. 서브넷 마스크는 255.255.255.192.</span></div>
+  </section>
+
+  <!-- ================= Security ================= -->
+  <section id="sec">
+    <div class="sec-head">
+      <span class="sub">PART 3</span>
+      <h2>보안 용어, 처음부터</h2>
+      <p>공격 이름은 <mark>이름 안에 힌트가 있는 경우</mark>가 많습니다. 영어 뜻을 같이 보면 훨씬 덜 외워도 됩니다.</p>
+    </div>
+
+    <div class="tip"><b>보안의 3요소 (CIA)</b><span><b>기밀성</b>(Confidentiality): 허락된 사람만 봄 · <b>무결성</b>(Integrity): 함부로 못 바꿈 · <b>가용성</b>(Availability): 필요할 때 쓸 수 있음. DoS 공격은 가용성을 깨는 공격.</span></div>
+
+    <p class="group-title">서비스 거부 공격 (서버를 마비시킴)</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="c"></th><th>용어</th><th>뜻</th><th>외우는 법</th></tr></thead>
+        <tbody>
+          <tr data-id="x-dos"><td class="c"><input type="checkbox" id="k-x-dos" aria-label="외움"></td><td class="term">DoS / DDoS<small>(Distributed) Denial of Service</small></td><td class="ans">요청을 폭주시켜 서비스를 못 쓰게 함. DDoS는 여러 대(좀비 PC)가 동시에</td><td class="hint">가게 앞에 사람 수천 명 줄 세우기</td></tr>
+          <tr data-id="x-syn"><td class="c"><input type="checkbox" id="k-x-syn" aria-label="외움"></td><td class="term">SYN Flooding</td><td class="ans">SYN만 잔뜩 보내고 마지막 ACK를 안 보내 서버 연결 대기열을 가득 채움</td><td class="hint">3-way handshake를 중간에 버림. "여보세요?"만 하고 끊기 반복</td></tr>
+          <tr data-id="x-smurf"><td class="c"><input type="checkbox" id="k-x-smurf" aria-label="외움"></td><td class="term">Smurf (스머핑)</td><td class="ans">출발지를 피해자 IP로 속이고 ICMP를 브로드캐스트로 보내 응답이 피해자에게 몰림</td><td class="hint">스머프 떼처럼 응답이 몰려옴. 키워드: ICMP + 브로드캐스트</td></tr>
+          <tr data-id="x-pod"><td class="c"><input type="checkbox" id="k-x-pod" aria-label="외움"></td><td class="term">Ping of Death</td><td class="ans">최대 크기(65,535바이트)를 넘는 ICMP 패킷을 보냄</td><td class="hint">이름 그대로 죽음의 핑. 너무 큰 핑</td></tr>
+          <tr data-id="x-land"><td class="c"><input type="checkbox" id="k-x-land" aria-label="외움"></td><td class="term">Land Attack</td><td class="ans"><mark>출발지 IP = 목적지 IP</mark>로 만들어 자기 자신에게 응답하게 함</td><td class="hint">자기 땅(Land)에 자기가 편지 보내기</td></tr>
+          <tr data-id="x-tear"><td class="c"><input type="checkbox" id="k-x-tear" aria-label="외움"></td><td class="term">Teardrop</td><td class="ans">조각난 패킷의 순서 번호(offset)를 엉망으로 만들어 재조립 못 하게 함</td><td class="hint">눈물방울처럼 조각조각. 키워드: Fragment Offset</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="group-title">웹 공격</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="c"></th><th>용어</th><th>뜻</th><th>외우는 법</th></tr></thead>
+        <tbody>
+          <tr data-id="x-sqli"><td class="c"><input type="checkbox" id="k-x-sqli" aria-label="외움"></td><td class="term">SQL Injection</td><td class="ans">입력창에 SQL 문을 넣어 DB를 조작</td><td class="hint">로그인 칸에 <code>' OR 1=1 --</code></td></tr>
+          <tr data-id="x-xss"><td class="c"><input type="checkbox" id="k-x-xss" aria-label="외움"></td><td class="term">XSS<small>Cross-Site Scripting</small></td><td class="ans">게시글 등에 악성 스크립트를 심어 보는 사람 브라우저에서 실행</td><td class="hint">프론트에서 입력값을 이스케이프하는 이유</td></tr>
+          <tr data-id="x-csrf"><td class="c"><input type="checkbox" id="k-x-csrf" aria-label="외움"></td><td class="term">CSRF<small>Cross-Site Request Forgery</small></td><td class="ans">로그인한 사용자가 모르게 원치 않는 요청(송금, 비번 변경)을 보내게 함</td><td class="hint">Forgery = 위조. 내 권한을 빌려 위조 요청. CSRF 토큰으로 막음</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="group-title">속이기 · 가로채기</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="c"></th><th>용어</th><th>뜻</th><th>외우는 법</th></tr></thead>
+        <tbody>
+          <tr data-id="x-phish"><td class="c"><input type="checkbox" id="k-x-phish" aria-label="외움"></td><td class="term">피싱 / 스미싱 / 스피어 피싱</td><td class="ans">가짜 메일·사이트로 정보 탈취 / 문자(SMS)로 / 특정인을 노려서</td><td class="hint">스미싱 = SMS + 피싱. 스피어 = 작살로 한 명 찌르기</td></tr>
+          <tr data-id="x-pharm"><td class="c"><input type="checkbox" id="k-x-pharm" aria-label="외움"></td><td class="term">파밍<small>Pharming</small></td><td class="ans">DNS나 hosts를 조작해 주소를 제대로 쳐도 가짜 사이트로 보냄</td><td class="hint">주소창이 맞는데도 가짜. 피싱보다 한 단계 교묘</td></tr>
+          <tr data-id="x-sniff"><td class="c"><input type="checkbox" id="k-x-sniff" aria-label="외움"></td><td class="term">스니핑<small>Sniffing</small></td><td class="ans">네트워크에 흐르는 데이터를 몰래 엿봄</td><td class="hint">sniff = 킁킁 냄새 맡기. 엿듣기만 함</td></tr>
+          <tr data-id="x-spoof"><td class="c"><input type="checkbox" id="k-x-spoof" aria-label="외움"></td><td class="term">스푸핑<small>Spoofing</small></td><td class="ans">IP·MAC·DNS 등을 위조해 다른 대상인 척함 (ARP 스푸핑 등)</td><td class="hint">spoof = 속이다. 신분 위장</td></tr>
+          <tr data-id="x-hijack"><td class="c"><input type="checkbox" id="k-x-hijack" aria-label="외움"></td><td class="term">세션 하이재킹</td><td class="ans">로그인된 세션을 가로채 사용자인 척함</td><td class="hint">hijack = 납치. 이미 열린 연결을 뺏기</td></tr>
+          <tr data-id="x-social"><td class="c"><input type="checkbox" id="k-x-social" aria-label="외움"></td><td class="term">사회공학<small>Social Engineering</small></td><td class="ans">기술이 아니라 사람의 심리를 속여 정보를 얻음</td><td class="hint">"IT팀인데 비밀번호 좀 알려주세요"</td></tr>
+          <tr data-id="x-apt"><td class="c"><input type="checkbox" id="k-x-apt" aria-label="외움"></td><td class="term">APT<small>Advanced Persistent Threat</small></td><td class="ans">특정 조직을 오랫동안 끈질기게 노리는 지능형 공격</td><td class="hint">Persistent = 끈질긴</td></tr>
+          <tr data-id="x-zero"><td class="c"><input type="checkbox" id="k-x-zero" aria-label="외움"></td><td class="term">제로데이 공격</td><td class="ans">보안 패치가 나오기 전에 취약점을 노림</td><td class="hint">대응할 시간이 0일</td></tr>
+          <tr data-id="x-water"><td class="c"><input type="checkbox" id="k-x-water" aria-label="외움"></td><td class="term">워터링 홀<small>Watering Hole</small></td><td class="ans">목표가 자주 가는 사이트를 감염시켜 놓고 기다림</td><td class="hint">사자가 물웅덩이에서 먹잇감 기다리기</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="group-title">악성코드</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="c"></th><th>용어</th><th>뜻</th><th>외우는 법</th></tr></thead>
+        <tbody>
+          <tr data-id="x-virus"><td class="c"><input type="checkbox" id="k-x-virus" aria-label="외움"></td><td class="term">바이러스</td><td class="ans">다른 파일에 붙어서(숙주 필요) 퍼짐</td><td class="hint">감기처럼 숙주가 있어야 함</td></tr>
+          <tr data-id="x-worm"><td class="c"><input type="checkbox" id="k-x-worm" aria-label="외움"></td><td class="term">웜<small>Worm</small></td><td class="ans"><mark>혼자서</mark> 복제하며 네트워크로 퍼짐</td><td class="hint">벌레가 스스로 기어다님</td></tr>
+          <tr data-id="x-trojan"><td class="c"><input type="checkbox" id="k-x-trojan" aria-label="외움"></td><td class="term">트로이 목마</td><td class="ans">정상 프로그램인 척 숨어 있음. <mark>자기 복제는 안 함</mark></td><td class="hint">선물(목마) 안에 병사</td></tr>
+          <tr data-id="x-ransom"><td class="c"><input type="checkbox" id="k-x-ransom" aria-label="외움"></td><td class="term">랜섬웨어</td><td class="ans">파일을 암호화하고 풀어주는 대가로 돈 요구</td><td class="hint">ransom = 몸값</td></tr>
+          <tr data-id="x-root"><td class="c"><input type="checkbox" id="k-x-root" aria-label="외움"></td><td class="term">루트킷 / 백도어 / 키로거</td><td class="ans">관리자 권한을 얻고 흔적 숨김 / 몰래 들어오는 뒷문 / 키보드 입력 기록</td><td class="hint">root = 관리자, back door = 뒷문, key + logger</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="group-title">암호 · 접근통제 · 방어</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="c"></th><th>용어</th><th>뜻</th><th>외우는 법</th></tr></thead>
+        <tbody>
+          <tr data-id="x-sym"><td class="c"><input type="checkbox" id="k-x-sym" aria-label="외움"></td><td class="term">대칭키 암호</td><td class="ans">암호화·복호화 키가 같음. <mark>DES, AES, SEED, ARIA</mark>. 빠름</td><td class="hint">집 열쇠 하나를 나눠 가짐. SEED·ARIA는 국산</td></tr>
+          <tr data-id="x-asym"><td class="c"><input type="checkbox" id="k-x-asym" aria-label="외움"></td><td class="term">비대칭키(공개키) 암호</td><td class="ans">공개키로 잠그고 개인키로 엶. <mark>RSA, ECC, ElGamal</mark></td><td class="hint">우체통: 누구나 넣을 수 있고 주인만 꺼냄</td></tr>
+          <tr data-id="x-keys"><td class="c"><input type="checkbox" id="k-x-keys" aria-label="외움"></td><td class="term">필요한 키 개수 (n명)</td><td class="ans">대칭키 = <mark>n(n−1)/2</mark>, 비대칭키 = <mark>2n</mark></td><td class="hint">10명이면 대칭 45개, 비대칭 20개</td></tr>
+          <tr data-id="x-hash"><td class="c"><input type="checkbox" id="k-x-hash" aria-label="외움"></td><td class="term">해시<small>MD5, SHA</small></td><td class="ans">데이터를 고정 길이 값으로 바꿈. 되돌릴 수 없음. 무결성 확인</td><td class="hint">지문. 비밀번호 저장에 씀</td></tr>
+          <tr data-id="x-mac"><td class="c"><input type="checkbox" id="k-x-mac" aria-label="외움"></td><td class="term">MAC / DAC / RBAC</td><td class="ans">MAC(강제): 보안 등급으로 통제. DAC(임의): 소유자가 권한 결정. RBAC: 역할(직급)로 권한</td><td class="hint">M = 군대(Mandatory), D = 내 파일 공유 설정, R = Role</td></tr>
+          <tr data-id="x-ids"><td class="c"><input type="checkbox" id="k-x-ids" aria-label="외움"></td><td class="term">방화벽 / IDS / IPS</td><td class="ans">방화벽: 규칙으로 통과·차단. IDS: 침입 <mark>탐지</mark>(알림만). IPS: 침입 <mark>차단</mark>까지</td><td class="hint">IDS = Detection(CCTV), IPS = Prevention(경비원)</td></tr>
+          <tr data-id="x-honey"><td class="c"><input type="checkbox" id="k-x-honey" aria-label="외움"></td><td class="term">허니팟<small>Honeypot</small></td><td class="ans">일부러 허술한 가짜 시스템을 두고 공격자를 유인·관찰</td><td class="hint">꿀단지 함정</td></tr>
+          <tr data-id="x-vpn"><td class="c"><input type="checkbox" id="k-x-vpn" aria-label="외움"></td><td class="term">VPN / SSO</td><td class="ans">VPN: 공용망 위에 암호화된 전용 통로. SSO: 한 번 로그인으로 여러 서비스 이용</td><td class="hint">SSO = Single Sign-On</td></tr>
+          <tr data-id="x-proto"><td class="c"><input type="checkbox" id="k-x-proto" aria-label="외움"></td><td class="term">SSL/TLS · IPSec</td><td class="ans">SSL/TLS: 웹 통신 암호화(HTTPS). IPSec: IP 계층 암호화, AH(인증)·ESP(암호화)</td><td class="hint">IPSec의 두 모드: 전송 모드, 터널 모드</td></tr>
+          <tr data-id="x-auth"><td class="c"><input type="checkbox" id="k-x-auth" aria-label="외움"></td><td class="term">인증 유형</td><td class="ans">지식(비밀번호), 소유(OTP, 스마트카드), 존재(지문·홍채), 행위(서명·걸음걸이)</td><td class="hint">아는 것, 가진 것, 나 자신, 내 행동</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ================= UML ================= -->
+  <section id="uml">
+    <div class="sec-head">
+      <span class="sub">PART 4</span>
+      <h2>UML, 그림으로 외우기</h2>
+      <p>UML은 <mark>소프트웨어 설계도를 그리는 공통 규칙</mark>입니다. 외울 건 딱 세 덩어리: 다이어그램 종류(구조 vs 행위), 관계 6가지(선 모양), 기호 몇 개.</p>
+    </div>
+
+    <div class="tip"><b>1단계: 다이어그램은 두 편으로 나뉜다</b><span><b>구조(정적)</b> = 사진. 무엇이 있는지. <b>행위(동적)</b> = 동영상. 무엇이 일어나는지.</span><span>문제에서 "시간", "순서", "상태 변화", "흐름"이 보이면 행위, "구성", "관계", "배치"가 보이면 구조입니다.</span></div>
+
+    <div class="grid">
+      <article class="item" data-id="u-struct">
+        <div class="item-h"><h3>구조 다이어그램 (사진)</h3><label class="chk"><input type="checkbox" id="k-u-struct">외움</label></div>
+        <span class="mnemo">클 · 객 · 컴 · 배 · 복 · 패</span>
+        <div class="ans">
+          <p><b>클래스</b>: 클래스와 관계. 설계도 (가장 많이 나옴)</p>
+          <p><b>객체</b>: 특정 순간의 실제 객체들. 설계도로 지은 집 사진</p>
+          <p><b>컴포넌트</b>: 부품(모듈) 사이 관계</p>
+          <p><b>배치</b>: 서버·기기 같은 물리적 배치. 서버실 배치도</p>
+          <p><b>복합체 구조</b>: 클래스 내부 구조</p>
+          <p><b>패키지</b>: 묶음(폴더) 관계</p>
+          <p class="why">"클래스 객체 컴퓨터 배치 복잡해 패스"로 외우기</p>
+        </div>
+      </article>
+      <article class="item" data-id="u-behav">
+        <div class="item-h"><h3>행위 다이어그램 (동영상)</h3><label class="chk"><input type="checkbox" id="k-u-behav">외움</label></div>
+        <span class="mnemo">유 · 시 · 커 · 상 · 활 · 타 · 상호</span>
+        <div class="ans">
+          <p><b>유스케이스</b>: 사용자(액터)가 할 수 있는 기능. 메뉴판</p>
+          <p><b>시퀀스</b>: 객체끼리 <mark>시간 순서</mark>로 메시지 주고받기. 카톡 대화 순서</p>
+          <p><b>커뮤니케이션</b>: 시퀀스와 같은 내용을 <mark>연결 관계</mark> 중심으로</p>
+          <p><b>상태</b>: 한 객체의 상태 변화. 신호등, 주문(접수 → 배송 → 완료)</p>
+          <p><b>활동</b>: 처리 흐름. 순서도(flowchart)</p>
+          <p><b>타이밍</b>: 시간에 따른 상태 변화</p>
+          <p><b>상호작용 개요</b>: 여러 상호작용을 묶어 큰 흐름</p>
+          <p class="why">"유시커 상활 타상"</p>
+        </div>
+      </article>
+    </div>
+
+    <div class="tip"><b>2단계: 관계 6가지는 선 모양으로 구분</b><span>실선이면 진짜 붙어 있는 관계, 점선이면 약한 관계. 빈 삼각형은 "상속 계열", 마름모는 "전체-부분".</span></div>
+
+    <div class="rel">
+      <article class="item" data-id="u-assoc">
+        <svg viewBox="0 0 200 40" role="img" aria-label="실선"><line x1="10" y1="20" x2="190" y2="20" stroke="currentColor" stroke-width="2"/></svg>
+        <div class="item-h"><span class="name" style="flex:1">연관 (Association)</span><label class="chk"><input type="checkbox" id="k-u-assoc">외움</label></div>
+        <p class="ex ans">서로 알고 지냄. 실선. 예) 학생 — 강의</p>
+      </article>
+      <article class="item" data-id="u-dep">
+        <svg viewBox="0 0 200 40" role="img" aria-label="점선 화살표"><line x1="10" y1="20" x2="186" y2="20" stroke="currentColor" stroke-width="2" stroke-dasharray="7 5"/><polyline points="176,12 190,20 176,28" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+        <div class="item-h"><span class="name" style="flex:1">의존 (Dependency)</span><label class="chk"><input type="checkbox" id="k-u-dep">외움</label></div>
+        <p class="ex ans">잠깐 빌려 씀. 점선 + 열린 화살표. 예) 메서드 매개변수로 잠깐 사용</p>
+      </article>
+      <article class="item" data-id="u-gen">
+        <svg viewBox="0 0 200 40" role="img" aria-label="실선 빈 삼각형"><line x1="10" y1="20" x2="172" y2="20" stroke="currentColor" stroke-width="2"/><polygon class="hollow" points="172,10 190,20 172,30" stroke="currentColor" stroke-width="2"/></svg>
+        <div class="item-h"><span class="name" style="flex:1">일반화 (Generalization)</span><label class="chk"><input type="checkbox" id="k-u-gen">외움</label></div>
+        <p class="ex ans"><mark>상속</mark>. 실선 + 빈 삼각형이 부모를 가리킴. 예) 강아지 → 동물 (is-a)</p>
+      </article>
+      <article class="item" data-id="u-real">
+        <svg viewBox="0 0 200 40" role="img" aria-label="점선 빈 삼각형"><line x1="10" y1="20" x2="172" y2="20" stroke="currentColor" stroke-width="2" stroke-dasharray="7 5"/><polygon class="hollow" points="172,10 190,20 172,30" stroke="currentColor" stroke-width="2"/></svg>
+        <div class="item-h"><span class="name" style="flex:1">실체화 (Realization)</span><label class="chk"><input type="checkbox" id="k-u-real">외움</label></div>
+        <p class="ex ans">인터페이스 구현. <mark>점선</mark> + 빈 삼각형. Java의 implements</p>
+      </article>
+      <article class="item" data-id="u-agg">
+        <svg viewBox="0 0 200 40" role="img" aria-label="실선 빈 마름모"><polygon class="hollow" points="10,20 26,11 42,20 26,29" stroke="currentColor" stroke-width="2"/><line x1="42" y1="20" x2="190" y2="20" stroke="currentColor" stroke-width="2"/></svg>
+        <div class="item-h"><span class="name" style="flex:1">집합 (Aggregation)</span><label class="chk"><input type="checkbox" id="k-u-agg">외움</label></div>
+        <p class="ex ans">전체-부분, 부분이 <mark>따로 살 수 있음</mark>. 빈 마름모가 전체 쪽. 예) 컴퓨터 ◇— 마우스</p>
+      </article>
+      <article class="item" data-id="u-comp">
+        <svg viewBox="0 0 200 40" role="img" aria-label="실선 채운 마름모"><polygon class="solid" points="10,20 26,11 42,20 26,29" stroke="currentColor" stroke-width="2"/><line x1="42" y1="20" x2="190" y2="20" stroke="currentColor" stroke-width="2"/></svg>
+        <div class="item-h"><span class="name" style="flex:1">포함·합성 (Composition)</span><label class="chk"><input type="checkbox" id="k-u-comp">외움</label></div>
+        <p class="ex ans">전체가 없어지면 <mark>부분도 같이 없어짐</mark>. 채운 마름모. 예) 집 ◆— 방</p>
+      </article>
+    </div>
+
+    <div class="tip"><b>마름모 헷갈릴 때</b><span>속이 <b>꽉 찬</b> 마름모 = 관계도 <b>꽉 묶임</b>(같이 죽음). 속이 <b>빈</b> 마름모 = <b>느슨함</b>(따로 삶).</span></div>
+
+    <p class="group-title">3단계: 기호 몇 개</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="c"></th><th>기호</th><th>뜻</th><th>외우는 법</th></tr></thead>
+        <tbody>
+          <tr data-id="u-vis"><td class="c"><input type="checkbox" id="k-u-vis" aria-label="외움"></td><td class="term">+ − # ~</td><td class="ans">+ public, − private, # protected, ~ package(default)</td><td class="hint">플러스 = 공개, 마이너스 = 숨김, #(샵) = 상속한 자식에게만</td></tr>
+          <tr data-id="u-inc"><td class="c"><input type="checkbox" id="k-u-inc" aria-label="외움"></td><td class="term">&lt;&lt;include&gt;&gt; / &lt;&lt;extend&gt;&gt;</td><td class="ans">include: 반드시 같이 실행(필수). extend: 조건에 따라 추가(선택)</td><td class="hint">결제하기 → 로그인 include(무조건). 결제하기 → 쿠폰 적용 extend(할 수도)</td></tr>
+          <tr data-id="u-parts"><td class="c"><input type="checkbox" id="k-u-parts" aria-label="외움"></td><td class="term">UML 구성요소</td><td class="ans">사물(Things), 관계(Relationships), 다이어그램(Diagram)</td><td class="hint">"무엇이, 어떻게 연결돼, 그림으로"</td></tr>
+          <tr data-id="u-actor"><td class="c"><input type="checkbox" id="k-u-actor" aria-label="외움"></td><td class="term">액터 (Actor)</td><td class="ans">시스템 밖에서 시스템을 쓰는 사람·외부 시스템. 졸라맨 모양</td><td class="hint">유스케이스 다이어그램의 주인공</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>체크한 항목은 이 브라우저에만 저장됩니다. 공식 일정과 규정은 큐넷에서 확인하세요.</footer>
+</div>
+
+<script>
+(function(){
+  var KEY = 'jck-known-v1';
+  var known = {};
+  try { known = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch(e) { known = {}; }
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(known)); } catch(e) {} }
+
+  var units = document.querySelectorAll('[data-id]');
+  var progress = document.getElementById('progress');
+
+  function update(){
+    var n = 0;
+    units.forEach(function(u){
+      var on = !!known[u.dataset.id];
+      u.classList.toggle('known', on);
+      if (on) n++;
+    });
+    progress.innerHTML = '외운 것 <b>' + n + '</b> / ' + units.length;
+  }
+
+  units.forEach(function(u){
+    var box = u.querySelector('input[type=checkbox]');
+    if (!box) return;
+    box.checked = !!known[u.dataset.id];
+    box.addEventListener('change', function(){
+      if (box.checked) known[u.dataset.id] = 1; else delete known[u.dataset.id];
+      save(); update();
+    });
+  });
+
+  document.getElementById('quiz-toggle').addEventListener('change', function(e){
+    document.body.classList.toggle('quiz', e.target.checked);
+    document.querySelectorAll('.ans.shown').forEach(function(a){ a.classList.remove('shown'); });
+  });
+  document.getElementById('known-toggle').addEventListener('change', function(e){
+    document.body.classList.toggle('hide-known', e.target.checked);
+  });
+  document.addEventListener('click', function(e){
+    if (!document.body.classList.contains('quiz')) return;
+    var a = e.target.closest('.ans');
+    if (a) a.classList.toggle('shown');
+  });
+  update();
+})();
+</script>
+
+</body>
+</html>
