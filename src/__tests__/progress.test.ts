@@ -2,7 +2,7 @@ import { buildLessons, isUnlocked } from '../domain/lessons';
 import { lessonXp, nextStreak, visibleStreak } from '../domain/streak';
 import { CARDS } from '../domain/content';
 import { UNITS } from '../domain/units';
-import { lessonReducer } from '../stores/lessonStore';
+import { lessonReducer, MAX_LIVES } from '../stores/lessonStore';
 import { makeQuestion } from '../domain/question';
 
 describe('레슨 나누기', () => {
@@ -48,7 +48,7 @@ describe('레슨 진행 리듀서', () => {
   it('틀리면 하트가 줄고 그 문제가 맨 뒤로 간다', () => {
     const retry = makeQuestion(CARDS[0], CARDS);
     const s = lessonReducer(started, { type: 'ANSWER', ok: false, retry, withSheet: true })!;
-    expect(s.lives).toBe(2);
+    expect(s.lives).toBe(MAX_LIVES - 1);
     expect(s.queue.map((q) => q.card.id)).toEqual([CARDS[1].id, CARDS[0].id]);
     expect(s.feedback?.ok).toBe(false);
     expect(s.firstTry[CARDS[0].id]).toBe(false);

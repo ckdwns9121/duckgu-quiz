@@ -1,7 +1,8 @@
 import type { Question } from '../domain/types';
 import { createStore } from '../lib';
 
-export const MAX_LIVES = 3;
+/** 레슨마다 주는 하트. 넉넉하게 줘서 틀려도 끝까지 풀고 해설을 보게 한다 */
+export const MAX_LIVES = 100;
 
 export interface Outcome {
   passed: boolean;
