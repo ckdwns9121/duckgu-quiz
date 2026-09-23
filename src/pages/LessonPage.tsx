@@ -35,7 +35,7 @@ export const LessonPage = () => {
       <div className="col lesson-top">
         <button className="x" type="button" aria-label="레슨 그만하기" onClick={quitLesson}><CloseIcon /></button>
         <div className="pbar"><i style={`width:${(session.solved / session.total) * 100}%`} /></div>
-        <span className={`lives${session.mistakes ? ' hit' : ''}`} data-m={session.mistakes}><HeartIcon /><span>{session.lives}</span></span>
+        <span className="lives"><HeartIcon /><span>{session.lives}</span></span>
       </div>
       <QuestionView q={q} session={session} />
       <CheckBar q={q} session={session} />

@@ -181,3 +181,26 @@ svg .hollow{fill:#fff} svg .solid{fill:currentColor}
 #app{min-height:100%;display:flex;flex-direction:column}
 #app>div{min-height:100%;display:flex;flex-direction:column}
 .center-msg{text-align:center;color:var(--muted);padding:60px 16px}
+
+/* ---------- 동적 효과 ---------- */
+.fx-float{position:fixed;z-index:70;pointer-events:none;font-family:var(--display);font-weight:400;white-space:nowrap;text-shadow:0 2px 0 #fff,0 0 12px rgba(255,255,255,.9)}
+.fx-heart{position:fixed;z-index:70;pointer-events:none}
+.fx-heart svg{width:100%;height:100%;overflow:visible}
+.fx-heart path{fill:var(--red);transition:transform .45s cubic-bezier(.3,.6,.4,1)}
+.fx-heart.broken .l{transform:translate(-4px,2px) rotate(-18deg)}
+.fx-heart.broken .r{transform:translate(4px,2px) rotate(18deg)}
+.fx-heart path.l{transform-origin:12px 20px}.fx-heart path.r{transform-origin:12px 20px}
+.lesson-body.shake{animation:bodyshake .42s cubic-bezier(.36,.07,.19,.97)}
+@keyframes bodyshake{15%,85%{transform:translateX(-3px)}30%,70%{transform:translateX(6px)}45%,55%{transform:translateX(-8px)}}
+.pbar.glow i{animation:barglow .7s ease-out}
+@keyframes barglow{0%{filter:brightness(1)}30%{filter:brightness(1.35) saturate(1.3);box-shadow:0 0 14px #58CC02}100%{filter:none;box-shadow:none}}
+.lives.hit svg{animation:none}
+.lives.hit-now svg{animation:heartpop .45s ease-out}
+@keyframes heartpop{0%{transform:scale(1)}35%{transform:scale(.6)}70%{transform:scale(1.2)}100%{transform:scale(1)}}
+.combo{display:inline-flex;align-items:center;gap:6px;justify-self:start;background:var(--orange);color:#fff;font-weight:900;font-size:14px;border-radius:999px;padding:4px 12px;animation:comboin .5s cubic-bezier(.2,1.6,.4,1)}
+.combo svg{width:16px;height:16px}
+@keyframes comboin{from{transform:scale(.3) rotate(-10deg);opacity:0}to{transform:none;opacity:1}}
+.choice.right{animation:rightpop .45s cubic-bezier(.2,1.4,.4,1)}
+@keyframes rightpop{40%{transform:scale(1.04)}}
+.sheet.show .head .m{animation:mascotin .5s cubic-bezier(.2,1.5,.4,1)}
+@keyframes mascotin{from{transform:scale(.4) translateY(20px)}to{transform:none}}

@@ -5,6 +5,7 @@ import type { Card } from '../domain/types';
 import { router } from '../router';
 import { currentQuestion, lessonStore } from '../stores/lessonStore';
 import { progressStore, weakCardIds } from '../stores/progressStore';
+import { celebrateCorrect, celebrateLesson, loseHeart } from '../components/effects';
 import { sfx } from './sfx';
 
 const PRACTICE_SIZE = 8;
@@ -48,9 +49,16 @@ export function answer(ok: boolean) {
   const s = lessonStore.getState();
   if (!s || s.feedback) return;
   const q = currentQuestion(s);
+  // 효과를 터뜨릴 위치: 고른 보기 → 입력칸 → 버튼 순서로 찾는다 (렌더 전에 잡아 둔다)
+  const origin = document.querySelector('.choice.sel') ?? document.getElementById('answer') ?? document.querySelector('.check-bar .btn:last-child');
   progressStore.dispatch({ type: 'RECORD_ANSWER', cardId: q.card.id, ok });
-  if (ok) sfx.correct();
-  else sfx.wrong();
+  if (ok) {
+    sfx.correct();
+    celebrateCorrect(origin, s.combo + 1);
+  } else {
+    sfx.wrong();
+    loseHeart();
+  }
   const withSheet = q.type !== 'recall';
   lessonStore.dispatch({ type: 'ANSWER', ok, retry: ok ? null : makeQuestion(q.card, CARDS), withSheet });
   if (!withSheet) proceed();
@@ -82,6 +90,7 @@ function finish(passed: boolean) {
     streak = nextStreak(progress.streak, progress.lastDay);
     progressStore.dispatch({ type: 'COMPLETE_LESSON', lessonId: s.lessonId, xp, streak, day: dayKey() });
     sfx.complete();
+    setTimeout(celebrateLesson, 150);
   }
   lessonStore.dispatch({ type: 'FINISH', outcome: { passed, xp, accuracy, streak, perfect: passed && s.mistakes === 0 } });
   router.push('/result', { replace: true });

@@ -1,6 +1,7 @@
 import { createVNode } from '../lib';
 import { continueLesson } from '../services/lessonService';
 import type { LessonSession } from '../stores/lessonStore';
+import { FireIcon } from './Icons';
 import { Mascot } from './Mascot';
 
 const PRAISE = ['정답이에요!', '좋아요!', '완벽해요!', '잘했어요!'];
@@ -23,6 +24,7 @@ export const FeedbackSheet = ({ session }: { session: LessonSession }) => {
             <div className="m"><Mascot mood={fb ? (fb.ok ? 'happy' : 'sad') : 'idle'} /></div>
             <b>{title}</b>
           </div>
+          {fb?.ok && session.combo >= 2 && <span className="combo"><FireIcon />{session.combo}연속 정답!</span>}
           {fb && !fb.ok && <p className="correct">정답: <code>{correct}</code></p>}
           <div className="explain" innerHTML={q ? q.card.kind === 'term' ? termExplain(q.card.parts) : q.card.explain : ''} />
           <button className={`btn${fb && !fb.ok ? ' red' : ''}`} id="continue-btn" type="button" onClick={continueLesson}>계속</button>

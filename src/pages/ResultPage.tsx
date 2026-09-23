@@ -1,6 +1,5 @@
 import { LESSON_BY_ID } from '../domain/content';
 import { afterRender, createVNode } from '../lib';
-import { confetti } from '../components/confetti';
 import { Mascot } from '../components/Mascot';
 import { router } from '../router';
 import { retryLesson } from '../services/lessonService';
@@ -18,12 +17,6 @@ export const ResultPage = () => {
   if (!session || !outcome) {
     afterRender(() => router.push('/', { replace: true }));
     return <div />;
-  }
-  if (outcome.passed && !session.celebrated) {
-    afterRender(() => {
-      confetti();
-      lessonStore.dispatch({ type: 'CELEBRATED' });
-    });
   }
   const lesson = session.lessonId ? LESSON_BY_ID.get(session.lessonId) : null;
   const subtitle = outcome.passed

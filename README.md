@@ -1,31 +1,151 @@
+<div align="center">
+
+<img src="public/icons/icon-192.png" width="96" alt="정처기 실기 퀴즈 아이콘">
+
 # 정처기 실기 퀴즈
 
-정보처리기사 실기 대비 듀오링고식 레슨 앱. https://ckdwns9121.github.io/jeongcheogi-quiz/
+**정보처리기사 실기, 하루 한 레슨씩 게임처럼.**
 
-React 없이 TypeScript로 만든 SPA입니다. 항해플러스 1주차 과제([chapter1-2](https://github.com/ckdwns9121/front_6th_chapter1-2))에서 직접 만든 가상 DOM, 스토어, 라우터를 TypeScript로 옮겨 썼습니다.
+헷갈리는 코드 문제부터 DB, 네트워크, 보안, UML까지<br>
+158장의 카드를 듀오링고처럼 짧은 레슨으로 풀어 보세요.
 
-## 구조
+### [👉 지금 풀어 보기](https://ckdwns9121.github.io/jeongcheogi-quiz/)
+
+<img src="docs/images/01-intro.png" width="240" alt="인트로 화면"> <img src="docs/images/02-home.png" width="240" alt="레슨 지도"> <img src="docs/images/06-result.png" width="240" alt="레슨 완료 화면">
+
+</div>
+
+<br>
+
+## 이런 분께 좋아요
+
+- 실기 시험이 코앞인데 **코드 출력값 문제**에서 자꾸 틀리는 분
+- 보안 공격 이름, 네트워크 용어, UML 다이어그램이 **아무리 봐도 안 외워지는** 분
+- 두꺼운 책 대신 **출퇴근길에 폰으로 5분씩** 공부하고 싶은 분
+
+<br>
+
+## 무엇을 공부하나요
+
+| 유닛 | 내용 | 카드 |
+|---|---|---|
+| C 언어 함정 | `a++`와 `++a`, 포인터, 이중 포인터, `static`, `switch` fall-through, 비트 연산 | 10 |
+| Java 함정 | 업캐스팅과 오버라이딩, 필드·static은 선언 타입, 생성자 순서, `==`와 `equals` | 10 |
+| Python 함정 | 슬라이싱, `//`와 `%`(C와 다름), `append`와 `extend`, `range`, set 연산 | 10 |
+| SQL 함정 | `COUNT(*)`와 NULL, `WHERE`와 `HAVING`, `LIKE`, DDL·DML·DCL, `GRANT`·`REVOKE` | 8 |
+| DB 이론 | 무결성, 키 종류, 정규화, 관계대수, 트랜잭션 ACID, 병행 제어, 회복 | 52 |
+| 네트워크 | OSI 7계층, TCP·UDP, ARP, DNS, 라우팅, 포트 번호, 서브넷 | 23 |
+| 보안 | DoS 계열 공격, XSS·CSRF, 피싱·파밍, 악성코드, 암호, 접근통제 | 33 |
+| UML | 구조·행위 다이어그램, 관계 6가지 선 모양, 접근 제어 기호 | 12 |
+
+모든 카드에 **한 줄씩 따라가는 풀이**와 **"기억할 것" 한 줄 요약**, 외우는 요령이 들어 있습니다.
+
+<br>
+
+## 이렇게 공부해요
+
+### 1. 레슨 지도에서 하나씩
+
+유닛마다 6문제짜리 레슨이 이어져 있어요. 레슨을 끝내면 다음 레슨이 열리고, 캐릭터 **비트**가 지금 할 레슨 옆에서 기다립니다. 유닛끼리는 순서가 없어서 약한 과목부터 골라 시작해도 돼요.
+
+### 2. 문제는 네 가지 방식으로
+
+<table>
+<tr>
+<td align="center"><img src="docs/images/03-typing.png" width="220" alt="직접 써 보기"><br><b>직접 써 보기</b><br>코드 실행 결과를 그대로 입력.<br>실기처럼 손으로 쓰는 연습</td>
+<td align="center"><img src="docs/images/07-choice.png" width="220" alt="뜻 고르기"><br><b>뜻·용어 고르기</b><br>용어를 보고 뜻을, 뜻을 보고<br>용어를 고르는 4지선다</td>
+</tr>
+<tr>
+<td align="center"><img src="docs/images/08-uml.png" width="220" alt="관계 고르기"><br><b>관계 고르기</b><br>UML 선 모양만 보고<br>어떤 관계인지 맞히기</td>
+<td align="center"><img src="docs/images/10-recall.png" width="220" alt="떠올려 보기"><br><b>떠올려 보기</b><br>답이 한 줄로 안 떨어지는 개념은<br>떠올려 보고 스스로 채점</td>
+</tr>
+</table>
+
+### 3. 틀려도 바로 이해하고 넘어가기
+
+<table>
+<tr>
+<td align="center"><img src="docs/images/04-correct.png" width="220" alt="정답 화면"><br><b>맞히면</b> 비트가 폴짝 뛰고<br>왜 그 답인지 풀이가 나와요</td>
+<td align="center"><img src="docs/images/05-wrong.png" width="220" alt="오답 화면"><br><b>틀리면</b> 정답과 단계별 풀이를 보여 주고,<br>그 문제는 레슨 끝에 다시 나와요</td>
+</tr>
+</table>
+
+<table>
+<tr>
+<td align="center"><img src="docs/images/11-combo.png" width="220" alt="연속 정답"><br><b>연속으로 맞히면</b> 누른 자리에서 폭죽이 터지고<br>"3연속 정답!" 배지가 떠요</td>
+<td align="center"><img src="docs/images/12-heart.png" width="220" alt="하트 잃기"><br><b>틀리면</b> 하트가 튀어나와 두 쪽으로 깨지고<br>화면이 살짝 흔들려요</td>
+</tr>
+</table>
+
+- 레슨마다 **하트 3개**. 다 쓰면 레슨이 끝나요.
+- 틀린 카드는 **약점 복습**에 자동으로 모여요. 지도 오른쪽 아래 버튼으로 틀린 것만 다시 풀 수 있어요.
+- 문제 순서와 보기 순서는 매번 섞여서, 순서를 외워서 풀 수 없어요.
+
+### 4. 매일 이어 가기
+
+레슨을 끝내면 **XP**를 받고(기본 10, 만점 +5, 처음 깬 레슨 +5), 하루에 하나라도 끝내면 **연속 학습일** 불꽃이 켜져요.
+
+### 5. 노트로 다시 보기
+
+<img src="docs/images/09-notes.png" width="220" align="right" alt="학습 노트">
+
+유닛 제목 옆 **노트** 버튼을 누르면 카드 전체를 한 페이지로 정리한 노트가 열려요. 퀴즈 모드로 답을 가리고 읽거나, 외운 카드를 체크해서 숨길 수 있어요.
+
+<br clear="right">
+
+<br>
+
+## 폰에 앱처럼 설치하기
+
+설치하면 홈 화면 아이콘으로 바로 열리고, **인터넷이 없어도** 공부할 수 있어요.
+
+- **iPhone**: Safari로 열기 → 아래 공유 버튼 → **홈 화면에 추가**
+- **Android · PC 크롬**: 주소창의 설치 아이콘 또는 메뉴 → **앱 설치**
+
+푼 기록(XP, 스트릭, 틀린 카드)은 쓰는 기기의 브라우저에 저장돼요. 폰과 PC 기록은 따로 쌓여요.
+
+<br>
+
+---
+
+## 만든 방법
+
+React 없이 **TypeScript로 만든 SPA**입니다. 항해플러스 1주차 과제 [chapter1-2](https://github.com/ckdwns9121/front_6th_chapter1-2)에서 직접 만든 가상 DOM, 스토어, 라우터를 TypeScript로 옮겨 앱의 뼈대로 썼습니다.
+
+| 영역 | 내용 |
+|---|---|
+| 가상 DOM | `createVNode`(JSX 팩토리) → `normalizeVNode` → `createElement` / `updateElement` 비교 렌더링. SVG 네임스페이스, `innerHTML`, `value` prop을 보강 |
+| 이벤트 | WeakMap에 핸들러를 두고 루트에서 한 번에 처리하는 이벤트 위임 |
+| 상태 | Redux 방식 `createStore` + `createStorage`(localStorage), `withBatch`로 같은 틱의 렌더를 한 번으로 |
+| 라우팅 | History API `Router`. `/lesson/db-1`처럼 레슨마다 주소가 있고, GitHub Pages에서는 `404.html`로 새로고침을 받아요 |
+| 퀴즈 로직 | 문제 생성, 채점, 레슨 나누기, 스트릭·XP를 `domain/`의 순수 함수로 분리하고 vitest로 테스트 |
+| 캐릭터 | 비트는 이미지 파일 없이 SVG 도형으로 직접 그렸고, 표정과 동작은 CSS 애니메이션으로 바꿔요 |
+| 효과 | 폭죽은 캔버스 파티클, 하트·글자는 Web Animations API, 효과음은 음원 파일 없이 Web Audio로 합성. 움직임 줄이기 설정을 켜면 효과를 끕니다 |
+| PWA | manifest, service worker(페이지는 네트워크 우선, 나머지는 캐시 우선)로 설치와 오프라인 지원 |
+| 배포 | `main`에 push하면 GitHub Actions가 테스트 → 빌드 → GitHub Pages 배포 |
+
+### 폴더 구조
 
 ```
 src/
-  lib/        가상 DOM(createVNode · normalizeVNode · createElement · updateElement), 이벤트 위임,
-              createStore · createStorage · Router · afterRender · withBatch
-  domain/     카드 타입, 레슨 나누기, 문제 만들기·채점, 스트릭·XP 계산 (전부 순수 함수)
-  stores/     progressStore(XP·스트릭·푼 기록, localStorage 저장), lessonStore(진행 중인 레슨)
-  services/   레슨 시작·채점·완료 흐름, 효과음
-  components/ JSX 컴포넌트 (캐릭터, 레슨 지도, 문제, 해설 시트)
-  pages/      Intro · Home(레슨 지도) · Lesson · Result · NotFound
-  data/       cards.json (public/notes.html에서 추출)
-public/       notes.html(학습 노트), PWA manifest, service worker, 아이콘
+  lib/          가상 DOM, 이벤트 위임, createStore · createStorage · Router · afterRender · withBatch
+  domain/       카드 타입, 레슨 나누기, 문제 만들기·채점, 스트릭·XP (순수 함수)
+  stores/       progressStore(XP·스트릭·푼 기록), lessonStore(진행 중인 레슨)
+  services/     레슨 시작·채점·완료 흐름, 효과음
+  components/   캐릭터, 레슨 지도, 문제, 해설 시트, 폭죽
+  pages/        Intro · Home(레슨 지도) · Lesson · Result · NotFound
+  data/         cards.json (public/notes.html에서 추출)
+public/         notes.html(학습 노트), manifest, service worker, 아이콘
 ```
 
-## 명령어
+### 직접 실행하기
 
 ```bash
+pnpm install
 pnpm dev        # 개발 서버
-pnpm test       # 단위 테스트 (vitest)
-pnpm build      # 타입 체크 + 빌드, 404.html 복사(SPA 새로고침 대응)
+pnpm test       # 단위 테스트
+pnpm build      # 타입 체크 + 빌드
 pnpm extract    # public/notes.html을 고친 뒤 카드 데이터 다시 뽑기
 ```
 
-main 브랜치에 push하면 GitHub Actions가 테스트, 빌드 후 GitHub Pages에 배포합니다.
+카드 내용은 `public/notes.html` 한 곳에서 관리해요. 노트를 고치고 `pnpm extract`를 실행하면 퀴즈에도 반영됩니다.

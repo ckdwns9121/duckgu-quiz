@@ -62,4 +62,11 @@ describe('레슨 진행 리듀서', () => {
     expect(s.solved).toBe(2);
     expect(s.firstTry[CARDS[0].id]).toBe(false);
   });
+
+  it('연속 정답 수를 세고, 틀리면 0으로 돌아간다', () => {
+    let s = lessonReducer(started, { type: 'ANSWER', ok: true, retry: null, withSheet: false })!;
+    expect(s.combo).toBe(1);
+    s = lessonReducer(s, { type: 'ANSWER', ok: false, retry: q2, withSheet: false })!;
+    expect(s.combo).toBe(0);
+  });
 });

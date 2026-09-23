@@ -19,6 +19,8 @@ export interface LessonSession {
   solved: number;
   lives: number;
   mistakes: number;
+  /** 지금까지 연속으로 맞힌 개수. 틀리면 0 */
+  combo: number;
   /** 카드별 첫 시도 결과. 정확도는 이것으로 계산한다 (다시 맞힌 건 치지 않는다) */
   firstTry: Record<string, boolean>;
   selected: number | null;
@@ -26,7 +28,6 @@ export interface LessonSession {
   recallShown: boolean;
   feedback: { ok: boolean; question: Question } | null;
   outcome: Outcome | null;
-  celebrated: boolean;
 }
 
 export type LessonAction =
@@ -36,15 +37,14 @@ export type LessonAction =
   | { type: 'SHOW_RECALL' }
   | { type: 'ANSWER'; ok: boolean; retry: Question | null; withSheet: boolean }
   | { type: 'CLOSE_SHEET' }
-  | { type: 'FINISH'; outcome: Outcome }
-  | { type: 'CELEBRATED' };
+  | { type: 'FINISH'; outcome: Outcome };
 
 export function lessonReducer(state: LessonSession | null, action: LessonAction): LessonSession | null {
   if (action.type === 'START') {
     return {
       lessonId: action.lessonId, queue: action.queue, total: action.queue.length, solved: 0,
-      lives: MAX_LIVES, mistakes: 0, firstTry: {}, selected: null, typed: '', recallShown: false,
-      feedback: null, outcome: null, celebrated: false,
+      lives: MAX_LIVES, mistakes: 0, combo: 0, firstTry: {}, selected: null, typed: '', recallShown: false,
+      feedback: null, outcome: null,
     };
   }
   if (!state) return state;
@@ -70,6 +70,7 @@ export function lessonReducer(state: LessonSession | null, action: LessonAction)
         solved: state.solved + (action.ok ? 1 : 0),
         lives: state.lives - (action.ok ? 0 : 1),
         mistakes: state.mistakes + (action.ok ? 0 : 1),
+        combo: action.ok ? state.combo + 1 : 0,
         feedback: action.withSheet ? { ok: action.ok, question: current } : null,
         selected: action.withSheet ? state.selected : null,
         typed: action.withSheet ? state.typed : '',
@@ -80,8 +81,6 @@ export function lessonReducer(state: LessonSession | null, action: LessonAction)
       return { ...state, feedback: null, selected: null, typed: '' };
     case 'FINISH':
       return { ...state, feedback: null, outcome: action.outcome };
-    case 'CELEBRATED':
-      return { ...state, celebrated: true };
     default:
       return state;
   }
