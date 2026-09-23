@@ -11,6 +11,30 @@ const text = (html) => {
   return d.textContent.replace(/\s+/g, ' ').trim();
 };
 
+// ---------- 힌트 ----------
+// 힌트는 정답을 직접 보여 주면 안 된다: 용어 이름은 ○○로 가리고, 코드 답이 든 줄은 뺀다.
+const squash = (t) => t.toLowerCase().replace(/[\s'"`,[\]{}()]/g, '');
+const mask = (html, words) => words.filter((w) => w && w.length >= 2).reduce((acc, w) => acc.split(w).join('○○'), html);
+const nameWords = (title) => {
+  const m = title.match(/^(.*?)\s*\((.*)\)$/);
+  return m ? [m[1].trim(), m[2].trim()] : [title.trim()];
+};
+function answerHints(explainHtml, answer) {
+  const box = document.createElement('div');
+  box.innerHTML = explainHtml;
+  const hints = [];
+  const first = box.querySelector('.steps li');
+  if (first && !squash(first.textContent).includes(squash(answer))) hints.push(first.innerHTML.trim());
+  const rule = [...box.querySelectorAll('p.why')].pop();
+  if (rule && !squash(rule.textContent).includes(squash(answer))) hints.push(rule.innerHTML.trim());
+  return hints;
+}
+function firstSentence(html) {
+  const t = text(html);
+  const i = t.search(/[.]\s/);
+  return i > 0 ? t.slice(0, i + 1) : t;
+}
+
 const cards = [];
 for (const unit of UNITS) {
   const sec = document.getElementById(unit);
@@ -30,7 +54,10 @@ for (const unit of UNITS) {
       const small = clone.querySelector('small');
       const sub = small ? small.textContent.trim() : '';
       small?.remove();
-      cards.push({ kind: 'term', id, unit, table: `${unit}:${table}`, col: heads[1] ?? '용어', term: clone.textContent.trim(), sub, meaning: text(parts[0]?.html ?? ''), parts });
+      const term = clone.textContent.trim();
+      const hintPart = parts.slice(1).find((p) => p.hint) ?? parts.find((p, i) => i > 0);
+      const hints = hintPart ? [mask(hintPart.html, [term, sub, ...term.split(/\s*\/\s*/)])] : [];
+      cards.push({ kind: 'term', id, unit, table: `${unit}:${table}`, col: heads[1] ?? '용어', term, sub, meaning: text(parts[0]?.html ?? ''), parts, hints });
       continue;
     }
     const clone = el.cloneNode(true);
@@ -43,9 +70,14 @@ for (const unit of UNITS) {
     const pre = clone.querySelector('pre')?.outerHTML ?? '';
     const q = clone.querySelector('.q')?.innerHTML.trim() ?? '';
     const mnemo = clone.querySelector('.mnemo')?.textContent.trim() ?? '';
-    if (svg) cards.push({ kind: 'rel', id, unit, title, svg, explain });
-    else if (answer) cards.push({ kind: 'answer', id, unit, title, pre, q, answer, explain });
-    else cards.push({ kind: 'recall', id, unit, title, pre, q, mnemo, explain });
+    if (svg) cards.push({ kind: 'rel', id, unit, title, svg, explain, hints: [mask(firstSentence(explain), nameWords(title))] });
+    else if (answer) cards.push({ kind: 'answer', id, unit, title, pre, q, answer, explain, hints: answerHints(explain, answer) });
+    else {
+      const box = document.createElement('div');
+      box.innerHTML = explain;
+      const rule = [...box.querySelectorAll('p.why')].pop();
+      cards.push({ kind: 'recall', id, unit, title, pre, q, mnemo, explain, hints: rule ? [rule.innerHTML.trim()] : [] });
+    }
   }
 }
 mkdirSync('src/data', { recursive: true });

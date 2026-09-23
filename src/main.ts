@@ -2,6 +2,7 @@ import './styles.css';
 import { initRender } from './render';
 import { router } from './router';
 import { answer, check, continueLesson, selectChoice } from './services/lessonService';
+import { setupViewport } from './services/viewport';
 import { currentQuestion, lessonStore } from './stores/lessonStore';
 
 /** 레슨 키보드 단축키: 1~4 보기 선택, Enter 확인·계속 */
@@ -32,6 +33,7 @@ function registerServiceWorker() {
   });
 }
 
+setupViewport();
 initRender();
 setupKeyboard();
 registerServiceWorker();

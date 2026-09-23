@@ -5,6 +5,7 @@ import { CloseIcon, HeartIcon } from '../components/Icons';
 import { QuestionView } from '../components/QuestionView';
 import { router } from '../router';
 import { quitLesson, startLesson, startPractice } from '../services/lessonService';
+import { prefersAutoFocus } from '../services/viewport';
 import { currentQuestion, lessonStore } from '../stores/lessonStore';
 
 let lastQuestionKey = '';
@@ -23,15 +24,15 @@ export const LessonPage = () => {
 
   const q = currentQuestion(session);
   const key = `${session.total}-${session.queue.length}-${q.card.id}-${session.lives}`;
-  // 새 문제가 뜨면 입력칸에 바로 커서를 둔다
-  if (q.type === 'typing' && !session.feedback && key !== lastQuestionKey) {
-    afterRender(() => (document.getElementById('answer') as HTMLInputElement | null)?.focus());
+  // 새 문제가 뜨면 입력칸에 바로 커서를 둔다 (PC만. 폰은 누를 때 키보드가 뜨게 둔다)
+  if (q.type === 'typing' && !session.feedback && key !== lastQuestionKey && prefersAutoFocus()) {
+    afterRender(() => (document.getElementById('answer') as HTMLInputElement | null)?.focus({ preventScroll: true }));
   }
   if (session.feedback) afterRender(() => document.getElementById('continue-btn')?.focus({ preventScroll: true }));
   lastQuestionKey = key;
 
   return (
-    <section className="screen">
+    <section className="screen lesson-screen">
       <div className="col lesson-top">
         <button className="x" type="button" aria-label="레슨 그만하기" onClick={quitLesson}><CloseIcon /></button>
         <div className="pbar"><i style={`width:${(session.solved / session.total) * 100}%`} /></div>

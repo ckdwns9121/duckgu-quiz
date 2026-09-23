@@ -9,7 +9,7 @@ export const TopBar = () => {
   return (
     <header className="topbar">
       <div className="col">
-        <span className="brandmini">정처기 실기</span>
+        <span className="brandmini">출근길 정처기 퀴즈</span>
         <div style="display:flex;gap:4px;align-items:center">
           <span className={`stat fire${doneToday ? '' : ' off'}`} title={doneToday ? '오늘 학습 완료' : '오늘 레슨을 하나 끝내면 불이 켜져요'}>
             <FireIcon /><span>{visibleStreak(streak, lastDay)}</span>

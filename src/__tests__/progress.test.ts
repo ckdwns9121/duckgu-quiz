@@ -70,3 +70,15 @@ describe('레슨 진행 리듀서', () => {
     expect(s.combo).toBe(0);
   });
 });
+
+describe('힌트 열기', () => {
+  it('힌트 개수까지만 열리고, 다음 문제로 넘어가면 다시 0', () => {
+    const card = CARDS.find((c) => c.id === 'c1')!;
+    let s = lessonReducer(null, { type: 'START', lessonId: 'code-c-1', queue: [makeQuestion(card, CARDS), makeQuestion(CARDS[1], CARDS)] })!;
+    for (let i = 0; i < 5; i++) s = lessonReducer(s, { type: 'SHOW_HINT' })!;
+    expect(s.hintsShown).toBe(card.hints.length);
+    s = lessonReducer(s, { type: 'ANSWER', ok: true, retry: null, withSheet: true })!;
+    s = lessonReducer(s, { type: 'CLOSE_SHEET' })!;
+    expect(s.hintsShown).toBe(0);
+  });
+});

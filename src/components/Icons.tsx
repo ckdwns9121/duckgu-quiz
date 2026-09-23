@@ -30,3 +30,6 @@ export const SoundIcon = ({ on }: { on: boolean }) => (
       : <path d="m16 9 5 6m0-6-5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />}
   </svg>
 );
+export const BulbIcon = () => (
+  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M9 21h6v-1.5H9zm3-19a7 7 0 0 0-4 12.7V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.3A7 7 0 0 0 12 2z" /></svg>
+);

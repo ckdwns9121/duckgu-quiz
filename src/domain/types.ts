@@ -3,6 +3,8 @@ export type UnitId = 'code-c' | 'code-java' | 'code-py' | 'code-sql' | 'db' | 'n
 interface BaseCard {
   id: string;
   unit: UnitId;
+  /** 한 단계씩 여는 힌트 (정답은 가려져 있다) */
+  hints: string[];
 }
 
 export interface TermPart {

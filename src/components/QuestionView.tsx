@@ -1,7 +1,8 @@
 import type { Question } from '../domain/types';
 import { createVNode } from '../lib';
-import { check, selectChoice, typeAnswer } from '../services/lessonService';
+import { check, selectChoice, showHint, typeAnswer } from '../services/lessonService';
 import type { LessonSession } from '../stores/lessonStore';
+import { BulbIcon } from './Icons';
 import { Mascot } from './Mascot';
 
 /** 문제 본문 (말풍선, 코드, 보기). 채점 전후 상태는 session에서 읽는다 */
@@ -16,6 +17,7 @@ export const QuestionView = ({ q, session }: { q: Question; session: LessonSessi
         <div className="bubble" innerHTML={q.say} />
       </div>
       <Prompt q={q} />
+      <Hints q={q} session={session} />
       {q.type === 'choice' && <Choices q={q} session={session} />}
       {q.type === 'typing' && (
         <div style="display:grid;gap:8px">
@@ -67,6 +69,30 @@ const Choices = ({ q, session }: { q: Extract<Question, { type: 'choice' }>; ses
           </button>
         );
       })}
+    </div>
+  );
+};
+
+/** 힌트 보기: 누를 때마다 한 단계씩 연다. 채점 뒤에는 해설이 나오므로 숨긴다 */
+const Hints = ({ q, session }: { q: Question; session: LessonSession }) => {
+  const hints = q.card.hints;
+  if (!hints.length || session.feedback || (q.type === 'recall' && session.recallShown)) return null;
+  const shown = hints.slice(0, session.hintsShown);
+  const left = hints.length - session.hintsShown;
+  return (
+    <div className="hints">
+      {shown.map((html, i) => (
+        <div className="hint-card">
+          <span className="hint-tag"><BulbIcon />힌트 {i + 1}</span>
+          <div innerHTML={html} />
+        </div>
+      ))}
+      {left > 0 && (
+        <button className="hint-btn" type="button" onClick={showHint}>
+          <BulbIcon />{session.hintsShown === 0 ? '힌트 보기' : '힌트 더 보기'}
+          {hints.length > 1 && <span className="n">{session.hintsShown + 1}/{hints.length}</span>}
+        </button>
+      )}
     </div>
   );
 };

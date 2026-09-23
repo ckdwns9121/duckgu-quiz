@@ -59,3 +59,18 @@ describe('문제 만들기', () => {
     expect(v).not.toContain('차수 4, 카디널리티 5');
   });
 });
+
+describe('힌트', () => {
+  it('코드 문제 힌트에는 정답이 통째로 나오지 않는다', () => {
+    const squash = (t: string) => t.toLowerCase().replace(/<[^>]+>/g, '').replace(/[\s'"`,[\]{}()]/g, '');
+    CARDS.filter((c) => c.kind === 'answer').forEach((c) => {
+      c.hints.forEach((h) => expect(squash(h)).not.toContain(squash((c as { answer: string }).answer)));
+    });
+  });
+  it('용어 문제 힌트에는 용어 이름이 가려져 있다', () => {
+    CARDS.filter((c) => c.kind === 'term').forEach((c) => {
+      const term = (c as { term: string }).term;
+      if (term.length >= 2) c.hints.forEach((h) => expect(h).not.toContain(term));
+    });
+  });
+});

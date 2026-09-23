@@ -34,12 +34,15 @@ export function startPractice() {
 export const selectChoice = (index: number) => lessonStore.dispatch({ type: 'SELECT', index });
 export const typeAnswer = (text: string) => lessonStore.dispatch({ type: 'TYPE', text });
 export const showRecall = () => lessonStore.dispatch({ type: 'SHOW_RECALL' });
+export const showHint = () => lessonStore.dispatch({ type: 'SHOW_HINT' });
 
 /** "확인" 버튼: 고른 보기나 입력한 답을 채점한다 */
 export function check() {
   const s = lessonStore.getState();
   if (!s || s.feedback) return;
   const q = currentQuestion(s);
+  // 폰 키보드를 닫아야 해설 시트가 키보드에 가리지 않는다
+  (document.activeElement as HTMLElement | null)?.blur?.();
   if (q.type === 'choice' && s.selected !== null) answer(q.options[s.selected] === q.correct);
   if (q.type === 'typing' && s.typed.trim()) answer(isTypedAnswerCorrect(s.typed, q.correct));
 }

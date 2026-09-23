@@ -27,6 +27,8 @@ export interface LessonSession {
   selected: number | null;
   typed: string;
   recallShown: boolean;
+  /** 지금 문제에서 연 힌트 개수 */
+  hintsShown: number;
   feedback: { ok: boolean; question: Question } | null;
   outcome: Outcome | null;
 }
@@ -36,6 +38,7 @@ export type LessonAction =
   | { type: 'SELECT'; index: number }
   | { type: 'TYPE'; text: string }
   | { type: 'SHOW_RECALL' }
+  | { type: 'SHOW_HINT' }
   | { type: 'ANSWER'; ok: boolean; retry: Question | null; withSheet: boolean }
   | { type: 'CLOSE_SHEET' }
   | { type: 'FINISH'; outcome: Outcome };
@@ -44,7 +47,7 @@ export function lessonReducer(state: LessonSession | null, action: LessonAction)
   if (action.type === 'START') {
     return {
       lessonId: action.lessonId, queue: action.queue, total: action.queue.length, solved: 0,
-      lives: MAX_LIVES, mistakes: 0, combo: 0, firstTry: {}, selected: null, typed: '', recallShown: false,
+      lives: MAX_LIVES, mistakes: 0, combo: 0, firstTry: {}, selected: null, typed: '', recallShown: false, hintsShown: 0,
       feedback: null, outcome: null,
     };
   }
@@ -57,6 +60,10 @@ export function lessonReducer(state: LessonSession | null, action: LessonAction)
       return { ...state, typed: action.text };
     case 'SHOW_RECALL':
       return { ...state, recallShown: true };
+    case 'SHOW_HINT': {
+      const max = state.queue[0]?.card.hints.length ?? 0;
+      return state.feedback || state.hintsShown >= max ? state : { ...state, hintsShown: state.hintsShown + 1 };
+    }
     case 'ANSWER': {
       const current = state.queue[0];
       const cardId = current.card.id;
@@ -76,10 +83,11 @@ export function lessonReducer(state: LessonSession | null, action: LessonAction)
         selected: action.withSheet ? state.selected : null,
         typed: action.withSheet ? state.typed : '',
         recallShown: false,
+        hintsShown: action.withSheet ? state.hintsShown : 0,
       };
     }
     case 'CLOSE_SHEET':
-      return { ...state, feedback: null, selected: null, typed: '' };
+      return { ...state, feedback: null, selected: null, typed: '', hintsShown: 0 };
     case 'FINISH':
       return { ...state, feedback: null, outcome: action.outcome };
     default:
