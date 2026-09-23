@@ -31,8 +31,9 @@ function loadRuntime() {
   return runtime;
 }
 
-function applyMood(entry: Entry, mood: Mood) {
+function applyMood(entry: Entry, mood: Mood, canvas?: HTMLCanvasElement | null) {
   if (!entry.ready || entry.mood === mood) return;
+  if (canvas && fitCanvas(canvas)) entry.rive.resizeToCanvas();
   const inputs = entry.rive.stateMachineInputs(STATE_MACHINE) ?? [];
   const input = (name: string) => inputs.find((i) => i.name === name);
   const cheer = input('cheer');
@@ -51,7 +52,11 @@ type Entry = { rive: RiveInstance; mood: Mood | null; ready: boolean; observer: 
  * 크기를 못 읽으면(아직 화면에 안 나왔으면) false를 돌려준다.
  */
 function fitCanvas(canvas: HTMLCanvasElement): boolean {
-  const { width, height } = canvas.getBoundingClientRect();
+  // getBoundingClientRect는 부모의 확대·축소 애니메이션(해설 시트의 등장 효과 등)까지 반영해서
+  // 잠깐 작아진 크기로 재 버린다. 그러면 작은 그림을 늘려 보여 줘서 캐릭터가 흐릿하게 깨진다.
+  // clientWidth/Height는 애니메이션과 상관없는 실제 칸 크기다.
+  const width = canvas.clientWidth;
+  const height = canvas.clientHeight;
   if (width < 1 || height < 1) return false;
   const dpr = Math.min(window.devicePixelRatio || 1, 3);
   const w = Math.round(width * dpr);
@@ -113,7 +118,7 @@ export function syncRiveMascots() {
   }
   document.querySelectorAll<HTMLElement>('.mascot-host').forEach((host) => {
     const entry = instances.get(host);
-    if (entry) applyMood(entry, (host.dataset.mood as Mood) ?? 'idle');
+    if (entry) applyMood(entry, (host.dataset.mood as Mood) ?? 'idle', host.querySelector('canvas'));
     else void attach(host);
   });
 }
