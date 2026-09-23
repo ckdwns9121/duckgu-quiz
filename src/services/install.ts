@@ -1,4 +1,5 @@
 import { installStore } from '../stores/installStore';
+import { track } from './analytics';
 
 /** Chrome이 주는 설치 이벤트 (표준 타입 정의에 아직 없다) */
 interface BeforeInstallPromptEvent extends Event {
@@ -21,6 +22,7 @@ export function setupInstall() {
   });
   window.addEventListener('appinstalled', () => {
     deferred = null;
+    track('app_installed');
     installStore.dispatch({ type: 'INSTALLED' });
   });
 }
@@ -33,10 +35,14 @@ export async function requestInstall() {
     installStore.dispatch({ type: 'PROMPT_USED' });
     await event.prompt();
     const { outcome } = await event.userChoice;
+    track('install_prompt', { outcome });
     if (outcome === 'accepted') installStore.dispatch({ type: 'INSTALLED' });
     return;
   }
-  if (installStore.getState().isIos) installStore.dispatch({ type: 'IOS_GUIDE', open: true });
+  if (installStore.getState().isIos) {
+    track('install_guide_ios');
+    installStore.dispatch({ type: 'IOS_GUIDE', open: true });
+  }
 }
 
 export const dismissInstall = () => installStore.dispatch({ type: 'DISMISS' });

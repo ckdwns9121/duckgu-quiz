@@ -6,6 +6,7 @@ import { router } from '../router';
 import { currentQuestion, lessonStore } from '../stores/lessonStore';
 import { progressStore, weakCardIds } from '../stores/progressStore';
 import { celebrateCorrect, celebrateLesson, loseHeart } from '../components/effects';
+import { track } from './analytics';
 import { sfx } from './sfx';
 import { prefersAutoFocus } from './viewport';
 
@@ -21,6 +22,7 @@ export function startLesson(lessonId: string) {
   const lesson = LESSON_BY_ID.get(lessonId);
   if (!lesson) return router.push('/', { replace: true });
   begin(lessonId, lesson.cardIds.map((id) => CARD_BY_ID.get(id)!));
+  track('lesson_start', { lesson_id: lessonId, unit: lesson.unit.id });
   if (router.params.id !== lessonId) router.push(`/lesson/${lessonId}`);
 }
 
@@ -29,6 +31,7 @@ export function startPractice() {
   const ids = shuffle(weakCardIds(progressStore.getState())).slice(0, PRACTICE_SIZE);
   if (!ids.length) return router.push('/', { replace: true });
   begin(null, ids.map((id) => CARD_BY_ID.get(id)!).filter(Boolean));
+  track('practice_start', { cards: ids.length });
   if (router.route?.path !== '/practice') router.push('/practice');
 }
 
@@ -36,7 +39,10 @@ export const selectChoice = (index: number) => lessonStore.dispatch({ type: 'SEL
 export const typeAnswer = (text: string) => lessonStore.dispatch({ type: 'TYPE', text });
 export const pickTile = (index: number) => lessonStore.dispatch({ type: 'PICK', index });
 export const unpickTile = (position: number) => lessonStore.dispatch({ type: 'UNPICK', position });
-export const setInputMode = (mode: 'tiles' | 'keyboard') => progressStore.dispatch({ type: 'SET_INPUT_MODE', mode });
+export function setInputMode(mode: 'tiles' | 'keyboard') {
+  track('input_mode_change', { mode });
+  progressStore.dispatch({ type: 'SET_INPUT_MODE', mode });
+}
 
 /** 출력값 문제를 조각으로 풀지. 직접 고른 적이 없으면 폰(터치)은 조각, PC는 키보드 */
 export function usesTiles(): boolean {
@@ -44,7 +50,11 @@ export function usesTiles(): boolean {
   return inputMode === 'auto' ? !prefersAutoFocus() : inputMode === 'tiles';
 }
 export const showRecall = () => lessonStore.dispatch({ type: 'SHOW_RECALL' });
-export const showHint = () => lessonStore.dispatch({ type: 'SHOW_HINT' });
+export function showHint() {
+  const s = lessonStore.getState();
+  if (s) track('hint_open', { card_id: currentQuestion(s).card.id, level: s.hintsShown + 1 });
+  lessonStore.dispatch({ type: 'SHOW_HINT' });
+}
 
 /** "확인" 버튼: 고른 보기나 입력한 답을 채점한다 */
 export function check() {
@@ -109,6 +119,11 @@ function finish(passed: boolean) {
     setTimeout(celebrateLesson, 150);
   }
   lessonStore.dispatch({ type: 'FINISH', outcome: { passed, xp, accuracy, streak, perfect: passed && s.mistakes === 0 } });
+  const lesson = s.lessonId ? LESSON_BY_ID.get(s.lessonId) : null;
+  track(passed ? 'lesson_complete' : 'lesson_fail', {
+    lesson_id: s.lessonId ?? 'practice', unit: lesson?.unit.id ?? 'practice',
+    accuracy, mistakes: s.mistakes, xp, streak, perfect: passed && s.mistakes === 0,
+  });
   router.push('/result', { replace: true });
 }
 

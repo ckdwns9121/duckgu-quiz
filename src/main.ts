@@ -3,6 +3,7 @@ import { initRender } from './render';
 import { router } from './router';
 import { answer, check, continueLesson, selectChoice, unpickTile, usesTiles } from './services/lessonService';
 import { resizeRiveMascots } from './components/riveMascot';
+import { setupAnalytics } from './services/analytics';
 import { setupInstall } from './services/install';
 import { setupViewport } from './services/viewport';
 import { currentQuestion, lessonStore } from './stores/lessonStore';
@@ -42,6 +43,7 @@ function registerServiceWorker() {
   });
 }
 
+setupAnalytics();
 setupInstall();
 setupViewport();
 initRender();

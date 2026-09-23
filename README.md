@@ -132,6 +132,8 @@
 
 푼 기록(XP, 스트릭, 틀린 카드)은 쓰는 기기의 브라우저에 저장돼요. 폰과 PC 기록은 따로 쌓여요.
 
+방문 수와 레슨 시작·완료, 힌트 사용 같은 이용 통계는 Google Analytics로 모아요. 이름이나 입력한 답처럼 사람을 알아볼 수 있는 정보는 보내지 않아요.
+
 <br>
 
 ---
@@ -150,6 +152,7 @@ React 없이 **TypeScript로 만든 SPA**입니다. 가상 DOM, 스토어, 라�
 | 캐릭터 | 러버덕 덕구는 **Rive**(`public/rive/duck.riv`)로 움직여요. idle·happy·sad·cheer 네 동작과 상태 머신(happy·sad 트리거, cheer 불)을 [rive-mcp-server](https://github.com/ODU33104/rive-mcp)로 Rive 에디터 없이 만들었어요(`pnpm build:riv`). 런타임은 첫 화면 뒤에 따로 받고, 불러오기 전이나 실패하면 같은 모양의 SVG + CSS 애니메이션이 대신 보여요 |
 | 효과 | 폭죽은 캔버스 파티클, 하트·글자는 Web Animations API, 효과음은 음원 파일 없이 Web Audio로 합성. 움직임 줄이기 설정을 켜면 효과를 끕니다 |
 | PWA | manifest, service worker(페이지는 네트워크 우선, 나머지는 캐시 우선)로 오프라인 지원. `beforeinstallprompt`를 받아 두었다가 설치 버튼에서 설치 창을 띄우고, 아이폰은 안내 시트로 대신해요 |
+| 통계 | Google Analytics 4. 화면 이동은 향상된 측정이 잡고, 앱은 레슨 시작·완료(정확도), 힌트, 설치 같은 학습 이벤트만 보내요. 배포된 사이트에서만 켜져요 |
 | 배포 | `main`에 push하면 GitHub Actions가 테스트 → 빌드 → GitHub Pages 배포 |
 
 ### 폴더 구조
