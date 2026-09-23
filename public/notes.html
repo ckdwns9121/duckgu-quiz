@@ -968,7 +968,7 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
         <p class="q">데이터베이스 설계 단계를 순서대로 놓으세요.</p>
         <div class="ans"><ol class="steps build-answer"><li>요구 분석</li><li>개념 설계</li><li>논리 설계</li><li>물리 설계</li><li>구현</li></ol><p class="why"><b>외우는 법</b>: "<mark>요 개 논 물 구</mark>". 개념 설계에서 E-R 다이어그램을 그리고, 논리 설계에서 테이블로 바꾸고 정규화한다.</p></div>
       </article>
-      <article class="item" data-id="b-txstate" data-build="order" data-join=" → " data-decoys="실패|철회">
+      <article class="item" data-id="b-txstate" data-build="order" data-join=" → " data-decoys="">
         <div class="item-h"><span class="lang">순서</span><h3>트랜잭션이 정상으로 끝나는 순서</h3><label class="chk"><input type="checkbox" id="k-b-txstate">외움</label></div>
         <p class="q">트랜잭션이 문제없이 끝날 때 거치는 상태를 순서대로 놓으세요.</p>
         <div class="ans"><ol class="steps build-answer"><li>활동</li><li>부분 완료</li><li>완료</li></ol><p class="why">실행 중(활동) → 마지막 명령까지 실행, Commit 직전(부분 완료) → Commit(완료). 문제가 생기면 실패 → 철회(Rollback)로 간다.</p></div>
@@ -1049,12 +1049,12 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
         <p class="q">아래(1계층)부터 위(7계층)까지 순서대로 놓으세요.</p>
         <div class="ans"><ol class="steps build-answer"><li>물리</li><li>데이터링크</li><li>네트워크</li><li>전송</li><li>세션</li><li>표현</li><li>응용</li></ol><p class="why"><b>외우는 법</b>: 아래부터 "<mark>물 데 네 전 세 표 응</mark>". 택배로 치면 도로(물리) → 동네 집배원(데이터링크) → 경로 정하기(네트워크) → 분실 시 재전송(전송) → 배송 예약(세션) → 포장(표현) → 택배 앱(응용).</p></div>
       </article>
-      <article class="item" data-id="b-tcpip" data-build="order" data-join=" → " data-decoys="세션">
+      <article class="item" data-id="b-tcpip" data-build="order" data-join=" → " data-decoys="">
         <div class="item-h"><span class="lang">순서</span><h3>TCP/IP 4계층 순서</h3><label class="chk"><input type="checkbox" id="k-b-tcpip">외움</label></div>
         <p class="q">아래부터 위까지 순서대로 놓으세요.</p>
         <div class="ans"><ol class="steps build-answer"><li>네트워크 액세스</li><li>인터넷</li><li>전송</li><li>응용</li></ol><p class="why">OSI 7계층을 4개로 묶은 것. 물리·데이터링크 → <b>네트워크 액세스</b>, 네트워크 → <b>인터넷</b>(IP), 전송 → <b>전송</b>(TCP·UDP), 세션·표현·응용 → <b>응용</b>. 세션 계층은 따로 없다.</p></div>
       </article>
-      <article class="item" data-id="b-3way" data-build="order" data-join=" → " data-decoys="FIN|RST">
+      <article class="item" data-id="b-3way" data-build="order" data-join=" → " data-decoys="">
         <div class="item-h"><span class="lang">순서</span><h3>TCP 3-Way Handshake</h3><label class="chk"><input type="checkbox" id="k-b-3way">외움</label></div>
         <p class="q">TCP가 연결을 맺을 때 주고받는 순서대로 놓으세요.</p>
         <div class="ans"><ol class="steps build-answer"><li>SYN</li><li>SYN+ACK</li><li>ACK</li></ol><p class="why">"여보세요?"(SYN) → "네, 들려요. 제 말도 들려요?"(SYN+ACK) → "네"(ACK). <mark>FIN은 연결을 끊을 때</mark>, RST는 강제로 끊을 때 쓴다.</p></div>
@@ -1297,12 +1297,12 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
         <p class="q">응집도가 강한 것(좋은 것)부터 약한 것(나쁜 것)까지 순서대로 놓으세요.</p>
         <div class="ans"><ol class="steps build-answer"><li>기능적</li><li>순차적</li><li>교환적</li><li>절차적</li><li>시간적</li><li>논리적</li><li>우연적</li></ol><p class="why"><b>외우는 법</b>: "<mark>기 순 교 절 시 논 우</mark>". 응집도는 한 모듈 안이 얼마나 한 가지 일에 모였는지라서 <b>강할수록 좋다</b>. 결합도는 약할수록, 응집도는 강할수록 좋은 설계.</p></div>
       </article>
-      <article class="item" data-id="b-vmodel" data-build="order" data-join=" → " data-decoys="회귀 테스트">
+      <article class="item" data-id="b-vmodel" data-build="order" data-join=" → " data-decoys="">
         <div class="item-h"><span class="lang">순서</span><h3>테스트 단계 순서</h3><label class="chk"><input type="checkbox" id="k-b-vmodel">외움</label></div>
         <p class="q">소프트웨어 테스트 단계를 작은 것부터 순서대로 놓으세요.</p>
         <div class="ans"><ol class="steps build-answer"><li>단위 테스트</li><li>통합 테스트</li><li>시스템 테스트</li><li>인수 테스트</li></ol><p class="why">함수 하나(단위) → 모듈을 합쳐서(통합) → 전체 시스템(시스템) → 사용자가 받아들일지(인수). V-모델에서 각각 구현·설계·분석·요구사항 단계와 짝을 이룬다. 회귀 테스트는 고친 뒤 다시 확인하는 테스트라 순서 단계가 아니다.</p></div>
       </article>
-      <article class="item" data-id="b-waterfall" data-build="order" data-join=" → " data-decoys="프로토타입">
+      <article class="item" data-id="b-waterfall" data-build="order" data-join=" → " data-decoys="">
         <div class="item-h"><span class="lang">순서</span><h3>폭포수 모델 순서</h3><label class="chk"><input type="checkbox" id="k-b-waterfall">외움</label></div>
         <p class="q">폭포수 모델의 개발 단계를 순서대로 놓으세요.</p>
         <div class="ans"><ol class="steps build-answer"><li>계획</li><li>요구 분석</li><li>설계</li><li>구현</li><li>테스트</li><li>유지보수</li></ol><p class="why">물이 위에서 아래로만 흐르듯 <b>한 단계를 끝내야 다음 단계</b>로 간다. 프로토타입(시제품을 먼저 보여 주기)은 프로토타입 모델의 특징.</p></div>

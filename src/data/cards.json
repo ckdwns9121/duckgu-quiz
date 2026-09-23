@@ -1977,10 +1977,7 @@
    "부분 완료",
    "완료"
   ],
-  "decoys": [
-   "실패",
-   "철회"
-  ],
+  "decoys": [],
   "explain": "<ol class=\"steps build-answer\"><li>활동</li><li>부분 완료</li><li>완료</li></ol><p class=\"why\">실행 중(활동) → 마지막 명령까지 실행, Commit 직전(부분 완료) → Commit(완료). 문제가 생기면 실패 → 철회(Rollback)로 간다.</p>",
   "hints": [
    "첫 번째 조각은 <b>활동</b>",
@@ -2659,9 +2656,7 @@
    "전송",
    "응용"
   ],
-  "decoys": [
-   "세션"
-  ],
+  "decoys": [],
   "explain": "<ol class=\"steps build-answer\"><li>네트워크 액세스</li><li>인터넷</li><li>전송</li><li>응용</li></ol><p class=\"why\">OSI 7계층을 4개로 묶은 것. 물리·데이터링크 → <b>네트워크 액세스</b>, 네트워크 → <b>인터넷</b>(IP), 전송 → <b>전송</b>(TCP·UDP), 세션·표현·응용 → <b>응용</b>. 세션 계층은 따로 없다.</p>",
   "hints": [
    "첫 번째 조각은 <b>네트워크 액세스</b>",
@@ -2681,10 +2676,7 @@
    "SYN+ACK",
    "ACK"
   ],
-  "decoys": [
-   "FIN",
-   "RST"
-  ],
+  "decoys": [],
   "explain": "<ol class=\"steps build-answer\"><li>SYN</li><li>SYN+ACK</li><li>ACK</li></ol><p class=\"why\">\"여보세요?\"(SYN) → \"네, 들려요. 제 말도 들려요?\"(SYN+ACK) → \"네\"(ACK). <mark>FIN은 연결을 끊을 때</mark>, RST는 강제로 끊을 때 쓴다.</p>",
   "hints": [
    "첫 번째 조각은 <b>SYN</b>",
@@ -3908,9 +3900,7 @@
    "시스템 테스트",
    "인수 테스트"
   ],
-  "decoys": [
-   "회귀 테스트"
-  ],
+  "decoys": [],
   "explain": "<ol class=\"steps build-answer\"><li>단위 테스트</li><li>통합 테스트</li><li>시스템 테스트</li><li>인수 테스트</li></ol><p class=\"why\">함수 하나(단위) → 모듈을 합쳐서(통합) → 전체 시스템(시스템) → 사용자가 받아들일지(인수). V-모델에서 각각 구현·설계·분석·요구사항 단계와 짝을 이룬다. 회귀 테스트는 고친 뒤 다시 확인하는 테스트라 순서 단계가 아니다.</p>",
   "hints": [
    "첫 번째 조각은 <b>단위 테스트</b>",
@@ -3933,9 +3923,7 @@
    "테스트",
    "유지보수"
   ],
-  "decoys": [
-   "프로토타입"
-  ],
+  "decoys": [],
   "explain": "<ol class=\"steps build-answer\"><li>계획</li><li>요구 분석</li><li>설계</li><li>구현</li><li>테스트</li><li>유지보수</li></ol><p class=\"why\">물이 위에서 아래로만 흐르듯 <b>한 단계를 끝내야 다음 단계</b>로 간다. 프로토타입(시제품을 먼저 보여 주기)은 프로토타입 모델의 특징.</p>",
   "hints": [
    "첫 번째 조각은 <b>계획</b>",

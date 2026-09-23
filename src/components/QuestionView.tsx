@@ -19,10 +19,10 @@ export const QuestionView = ({ q, session }: { q: Question; session: LessonSessi
       <Prompt q={q} />
       <Hints q={q} session={session} />
       {q.type === 'choice' && <Choices q={q} session={session} />}
-      {q.type === 'build' && <TileBoard tiles={q.tiles} session={session} />}
+      {q.type === 'build' && <TileBoard tiles={q.tiles} session={session} hasDecoys={q.card.decoys.length > 0} />}
       {q.type === 'typing' && usesTiles() && (
         <div style="display:grid;gap:10px">
-          <TileBoard tiles={q.tiles} session={session} />
+          <TileBoard tiles={q.tiles} session={session} hasDecoys />
           {!session.feedback && <button className="mode-switch" type="button" onClick={() => setInputMode('keyboard')}>키보드로 직접 쓰기</button>}
         </div>
       )}
@@ -110,16 +110,19 @@ const Hints = ({ q, session }: { q: Question; session: LessonSession }) => {
  * 답 조각: 아래 조각을 누르면 위 답 줄에 순서대로 쌓이고, 답 줄의 조각을 누르면 다시 빠진다.
  * 키보드가 안 올라와서 폰에서 화면이 밀리지 않는다.
  */
-const TileBoard = ({ tiles, session }: { tiles: string[]; session: LessonSession }) => {
+const TileBoard = ({ tiles, session, hasDecoys = false }: { tiles: string[]; session: LessonSession; hasDecoys?: boolean }) => {
   const graded = Boolean(session.feedback);
   return (
     <div className="tiles-board">
       <div className="tile-line" aria-label="내가 만든 답">
-        {session.picked.length === 0 && <span className="tile-placeholder">아래 조각을 순서대로 눌러 보세요</span>}
+        {session.picked.length === 0 && (
+          <span className="tile-placeholder">{hasDecoys ? '필요한 조각만 골라 순서대로 눌러 보세요' : '아래 조각을 모두 순서대로 눌러 보세요'}</span>
+        )}
         {session.picked.map((tileIndex, position) => (
           <button className="tile" type="button" disabled={graded} onClick={() => unpickTile(position)}>{tiles[tileIndex]}</button>
         ))}
       </div>
+      {hasDecoys && !graded && <p className="decoy-note">안 쓰는 조각도 섞여 있어요</p>}
       <div className="tile-bank">
         {tiles.map((tile, i) => {
           const used = session.picked.includes(i);

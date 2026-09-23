@@ -67,3 +67,11 @@ describe('조각 고르기 상태', () => {
     expect(s.picked).toEqual([0]);
   });
 });
+
+describe('순서 맞추기 조각', () => {
+  it('순서 맞추기에는 안 쓰는 조각이 없다 (나온 조각을 전부 쓰면 된다)', () => {
+    CARDS.filter((c): c is BuildCard => c.kind === 'build' && c.mode === 'order').forEach((c) => {
+      expect(c.decoys, c.id).toEqual([]);
+    });
+  });
+});
