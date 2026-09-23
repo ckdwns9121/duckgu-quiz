@@ -79,15 +79,17 @@ mark{background:#FFF0A8;color:inherit;padding:0 3px;border-radius:3px}
 .mascot.sad .mouth-smile{display:none}
 .mascot.sad .mouth-sad,.mascot.sad .tear{display:inline}
 .mascot .arm-l,.mascot .arm-r{transform-box:fill-box}
-.mascot .arm-l{transform-origin:100% 20%}.mascot .arm-r{transform-origin:0 20%}
-.mascot.cheer .arm-l{animation:waveL .55s ease-in-out infinite}
-.mascot.cheer .arm-r{animation:waveR .55s ease-in-out infinite}
+.mascot .arm-l{transform-origin:100% 30%}.mascot .arm-r{transform-origin:0 30%}
+.mascot.cheer .arm-l,.mascot.happy .arm-l{animation:waveL .55s ease-in-out infinite}
+.mascot.sad .arm-l{transform:rotate(-20deg);transition:transform .3s}
+.mascot.sad .arm-r{transform:rotate(20deg);transition:transform .3s}
+.mascot.cheer .arm-r,.mascot.happy .arm-r{animation:waveR .55s ease-in-out infinite}
 .mascot .blink{animation:blink 4s infinite;transform-box:fill-box;transform-origin:center}
 @keyframes breathe{50%{transform:scale(1.03,.97)}}
 @keyframes hop{0%,100%{transform:translateY(0) scale(1)}30%{transform:translateY(-16px) scale(.96,1.05)}60%{transform:translateY(0) scale(1.06,.94)}}
 @keyframes droop{to{transform:translateY(4px) scale(1.04,.94)}}
-@keyframes waveL{50%{transform:rotate(-38deg)}}
-@keyframes waveR{50%{transform:rotate(38deg)}}
+@keyframes waveL{50%{transform:rotate(38deg)}}
+@keyframes waveR{50%{transform:rotate(-38deg)}}
 @keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
 
 /* intro */

@@ -1,19 +1,19 @@
 /**
- * 캐릭터 비트를 Rive(public/rive/bit.riv)로 움직인다.
+ * 캐릭터 덕구를 Rive(public/rive/duck.riv)로 움직인다.
  *
  * Mascot 컴포넌트는 SVG를 그리고 그 위에 빈 <canvas>를 얹어 둔다. 렌더가 끝날 때마다 여기서
  * 새로 생긴 캔버스에 Rive를 붙이고, data-mood가 바뀌면 상태 머신 입력을 당긴다.
  * Rive가 준비되기 전이나 불러오지 못하면 SVG 캐릭터(CSS 애니메이션)가 그대로 보인다.
  *
- * 상태 머신 "Bit": happy·sad 트리거, cheer 불(bool)
+ * 상태 머신 "Mascot": happy·sad 트리거, cheer 불(bool)
  */
 import type { Rive as RiveInstance } from '@rive-app/canvas-lite';
 import type { Mood } from './Mascot';
 
 type RiveModule = typeof import('@rive-app/canvas-lite');
 
-const SRC = `${import.meta.env.BASE_URL}rive/bit.riv`;
-const STATE_MACHINE = 'Bit';
+const SRC = `${import.meta.env.BASE_URL}rive/duck.riv`;
+const STATE_MACHINE = 'Mascot';
 
 let runtime: Promise<RiveModule | null> | null = null;
 const instances = new Map<HTMLElement, { rive: RiveInstance; mood: Mood | null; ready: boolean }>();

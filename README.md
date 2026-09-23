@@ -46,7 +46,7 @@
 
 ### 1. 레슨 지도에서 하나씩
 
-유닛마다 6문제짜리 레슨이 이어져 있어요. 레슨을 끝내면 다음 레슨이 열리고, 캐릭터 **비트**가 지금 할 레슨 옆에서 기다립니다. 유닛끼리는 순서가 없어서 약한 과목부터 골라 시작해도 돼요.
+유닛마다 6문제짜리 레슨이 이어져 있어요. 레슨을 끝내면 다음 레슨이 열리고, 러버덕 캐릭터 **덕구**가 지금 할 레슨 옆에서 기다립니다. 유닛끼리는 순서가 없어서 약한 과목부터 골라 시작해도 돼요.
 
 ### 2. 문제는 네 가지 방식으로
 
@@ -79,7 +79,7 @@
 
 <table>
 <tr>
-<td align="center"><img src="docs/images/04-correct.png" width="220" alt="정답 화면"><br><b>맞히면</b> 비트가 폴짝 뛰고<br>왜 그 답인지 풀이가 나와요</td>
+<td align="center"><img src="docs/images/04-correct.png" width="220" alt="정답 화면"><br><b>맞히면</b> 덕구가 날개를 파닥이며 뛰고<br>왜 그 답인지 풀이가 나와요</td>
 <td align="center"><img src="docs/images/05-wrong.png" width="220" alt="오답 화면"><br><b>틀리면</b> 정답과 단계별 풀이를 보여 주고,<br>그 문제는 레슨 끝에 다시 나와요</td>
 </tr>
 </table>
@@ -142,7 +142,7 @@ React 없이 **TypeScript로 만든 SPA**입니다. 항해플러스 1주차 과�
 | 상태 | Redux 방식 `createStore` + `createStorage`(localStorage), `withBatch`로 같은 틱의 렌더를 한 번으로 |
 | 라우팅 | History API `Router`. `/lesson/db-1`처럼 레슨마다 주소가 있고, GitHub Pages에서는 `404.html`로 새로고침을 받아요 |
 | 퀴즈 로직 | 문제 생성, 채점, 레슨 나누기, 스트릭·XP를 `domain/`의 순수 함수로 분리하고 vitest로 테스트 |
-| 캐릭터 | 비트는 **Rive**(`public/rive/bit.riv`)로 움직여요. idle·happy·sad·cheer 네 동작과 상태 머신(happy·sad 트리거, cheer 불)을 [rive-mcp-server](https://github.com/ODU33104/rive-mcp)로 Rive 에디터 없이 만들었어요(`pnpm build:riv`). 런타임은 첫 화면 뒤에 따로 받고, 불러오기 전이나 실패하면 같은 모양의 SVG + CSS 애니메이션이 대신 보여요 |
+| 캐릭터 | 러버덕 덕구는 **Rive**(`public/rive/duck.riv`)로 움직여요. idle·happy·sad·cheer 네 동작과 상태 머신(happy·sad 트리거, cheer 불)을 [rive-mcp-server](https://github.com/ODU33104/rive-mcp)로 Rive 에디터 없이 만들었어요(`pnpm build:riv`). 런타임은 첫 화면 뒤에 따로 받고, 불러오기 전이나 실패하면 같은 모양의 SVG + CSS 애니메이션이 대신 보여요 |
 | 효과 | 폭죽은 캔버스 파티클, 하트·글자는 Web Animations API, 효과음은 음원 파일 없이 Web Audio로 합성. 움직임 줄이기 설정을 켜면 효과를 끕니다 |
 | PWA | manifest, service worker(페이지는 네트워크 우선, 나머지는 캐시 우선)로 오프라인 지원. `beforeinstallprompt`를 받아 두었다가 설치 버튼에서 설치 창을 띄우고, 아이폰은 안내 시트로 대신해요 |
 | 배포 | `main`에 push하면 GitHub Actions가 테스트 → 빌드 → GitHub Pages 배포 |
@@ -158,8 +158,8 @@ src/
   components/   캐릭터(SVG + Rive 연결), 레슨 지도, 문제, 해설 시트, 효과
   pages/        Intro · Home(레슨 지도) · Lesson · Result · NotFound
   data/         cards.json (public/notes.html에서 추출)
-public/         notes.html(학습 노트), rive/bit.riv(캐릭터), manifest, service worker, 아이콘
-scripts/        카드 추출, 캐릭터 Rive 파일 만들기, 아이콘 만들기
+public/         notes.html(학습 노트), rive/duck.riv(캐릭터), manifest, service worker, 아이콘
+scripts/        카드 추출, 캐릭터 부위 그림(mascot-parts.mjs), Rive 파일 만들기, 아이콘 만들기
 ```
 
 ### 직접 실행하기
@@ -170,7 +170,7 @@ pnpm dev        # 개발 서버
 pnpm test       # 단위 테스트
 pnpm build      # 타입 체크 + 빌드
 pnpm extract    # public/notes.html을 고친 뒤 카드 데이터 다시 뽑기
-pnpm build:riv  # 캐릭터 bit.riv 다시 만들기 (공식 런타임으로 상태 머신까지 검증)
+pnpm build:riv  # 캐릭터 duck.riv 다시 만들기 (공식 런타임으로 상태 머신까지 검증)
 ```
 
 카드 내용은 `public/notes.html` 한 곳에서 관리해요. 노트를 고치고 `pnpm extract`를 실행하면 퀴즈에도 반영됩니다.

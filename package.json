@@ -10,7 +10,7 @@
     "extract": "node scripts/extract-cards.mjs",
     "test": "vitest",
     "typecheck": "tsc --noEmit",
-    "build:riv": "node scripts/build-bit-riv.mjs"
+    "build:riv": "node scripts/build-mascot-riv.mjs"
   },
   "devDependencies": {
     "jsdom": "^26.1.0",
