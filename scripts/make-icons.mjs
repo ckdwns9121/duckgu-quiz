@@ -1,5 +1,7 @@
 // 앱 아이콘(public/icons/*.png)을 캐릭터 덕구로 그려 낸다.
 // 실행: npx -y -p playwright node scripts/make-icons.mjs  (로컬에 Chrome 필요)
+// 아이콘을 바꾸면 index.html, manifest, sw.js, notes.html, InstallBanner.tsx의 ?v= 값을 함께 올린다.
+// 파일 이름이 같으면 브라우저와 서비스 워커가 예전 그림을 계속 보여 준다.
 import { chromium } from 'playwright';
 import { DUCK } from './mascot-parts.mjs';
 const OUT = new URL('../public/icons/', import.meta.url).pathname;

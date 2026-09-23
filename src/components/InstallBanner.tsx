@@ -23,7 +23,7 @@ export const InstallBanner = () => {
   if (!shouldShowInstall(s)) return null;
   return (
     <div className="install-banner">
-      <img src={`${import.meta.env.BASE_URL}icons/icon-192.png`} alt="" width="48" height="48" />
+      <img src={`${import.meta.env.BASE_URL}icons/icon-192.png?v=duck1`} alt="" width="48" height="48" />
       <div className="txt">
         <b>홈 화면에 설치하기</b>
         <span>앱처럼 바로 열리고, 인터넷 없이도 풀 수 있어요.</span>
