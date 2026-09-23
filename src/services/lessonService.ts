@@ -10,7 +10,8 @@ import { sfx } from './sfx';
 const PRACTICE_SIZE = 8;
 
 function begin(lessonId: string | null, cards: Card[]) {
-  lessonStore.dispatch({ type: 'START', lessonId, queue: cards.map((card) => makeQuestion(card, CARDS)) });
+  // 레슨마다 문제 순서를 섞는다 (같은 레슨을 다시 해도 순서를 외워서 풀지 않게)
+  lessonStore.dispatch({ type: 'START', lessonId, queue: shuffle(cards).map((card) => makeQuestion(card, CARDS)) });
 }
 
 /** 레슨 지도에서 누른 레슨 시작 */
