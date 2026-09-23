@@ -77,7 +77,9 @@ mark{background:var(--mark);color:var(--mark-ink);padding:0 3px;border-radius:2p
 .answer .a{font-family:var(--mono);font-weight:600;color:var(--ok)}
 .answer .why{color:var(--muted)}
 .answer code{background:var(--code-bg);padding:0 4px;border-radius:3px;font-size:.92em}
-.answer dl{margin:0;display:grid;gap:6px}
+.answer .steps{margin:0;padding-left:1.3em;display:grid;gap:5px}
+.answer pre{margin-top:2px}
+.answer dl{margin:0;display:grid;gap:8px}
 .answer dt{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.04em}
 .answer dd{margin:0}
 .answer dd.hint{color:var(--muted)}
@@ -327,7 +329,7 @@ mark{background:var(--mark);color:var(--mark-ink);padding:0 3px;border-radius:2p
   }
   function renderCard(){
     var c = deck[idx]; revealed = false;
-    var tags = '<span class="tag">' + c.catName + '</span>' + (c.group ? '<span class="tag lang">' + c.group + '</span>' : '') + (c.lang ? '<span class="tag lang">' + c.lang + '</span>' : '') + (isWeak(c.id) ? '<span class="tag again">지난번에 몰랐음</span>' : '');
+    var tags = '<span class="tag">' + c.catName + '</span>' + (c.group ? '<span class="tag lang">' + c.group + '</span>' : '') + (c.lang && c.lang !== c.catName && !(c.lang === 'Py' && c.catName === 'Python') ? '<span class="tag lang">' + c.lang + '</span>' : '') + (isWeak(c.id) ? '<span class="tag again">지난번에 몰랐음</span>' : '');
     $('card').innerHTML = '<div class="cat">' + tags + '</div><div class="prompt-title">' + c.titleHtml + '</div>' + c.bodyHtml + '<div class="answer" id="answer" hidden>' + c.answerHtml + '</div>';
     $('qcount').textContent = (idx + 1) + ' / ' + deck.length;
     $('qbar').style.width = (idx / deck.length * 100) + '%';
