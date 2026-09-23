@@ -3,6 +3,7 @@ import { isUnlocked } from '../domain/lessons';
 import { UNITS } from '../domain/units';
 import { afterRender, createVNode } from '../lib';
 import { HeartIcon } from '../components/Icons';
+import { InstallBanner, IosInstallGuide } from '../components/InstallBanner';
 import { UnitSection } from '../components/LessonPath';
 import { TopBar } from '../components/TopBar';
 import { router } from '../router';
@@ -33,6 +34,7 @@ export const HomePage = () => {
     <section className="screen">
       <TopBar />
       <main className="col path">
+        <InstallBanner />
         {UNITS.map((unit, i) => (
           <UnitSection
             unit={unit} index={i} lessons={LESSONS.filter((l) => l.unit.id === unit.id)} done={done}
@@ -45,6 +47,7 @@ export const HomePage = () => {
           <HeartIcon /><span>약점 복습 {weak}</span>
         </button>
       )}
+      <IosInstallGuide />
     </section>
   );
 };

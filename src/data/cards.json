@@ -147,7 +147,9 @@
   "q": "출력은?",
   "answer": "B",
   "explain": "<span class=\"a\">B</span>\n<ol class=\"steps\">\n<li><code>A obj = new B();</code> → 변수 타입은 A, <b>실제로 만든 객체는 B</b></li>\n<li>B가 show()를 <b>오버라이딩</b>(같은 모양으로 다시 정의)함</li>\n<li>메서드를 부를 때는 <b>실제 객체(B)</b>의 것을 씀 → \"B\"</li>\n</ol>\n<p class=\"why\"><b>기억할 것</b>: <mark>메서드는 new 뒤를 본다</mark>. 겉포장(A)이 아니라 안에 든 물건(B)이 일한다. 이걸 동적 바인딩이라고 한다.</p>",
-  "hints": []
+  "hints": [
+   "<b>기억할 것</b>: <mark>메서드는 new 뒤를 본다</mark>. 겉포장(A)이 아니라 안에 든 물건(B)이 일한다. 이걸 동적 바인딩이라고 한다."
+  ]
  },
  {
   "kind": "answer",
@@ -172,7 +174,10 @@
   "q": "출력은?",
   "answer": "A",
   "explain": "<span class=\"a\">A</span>\n<ol class=\"steps\">\n<li><code>static</code> 메서드는 객체가 아니라 <b>클래스에 붙어 있는</b> 메서드</li>\n<li>그래서 오버라이딩이 안 되고, 자식 것은 그냥 이름만 같은 <b>별개 메서드</b>(숨김, hiding)</li>\n<li><code>o.hi()</code> → o의 <b>선언 타입 A</b>의 hi()가 실행 → \"A\"</li>\n</ol>\n<p class=\"why\"><b>기억할 것</b>: static은 \"클래스 전용\". <mark>static 메서드와 필드는 앞쪽 타입, 일반 메서드만 new 뒤</mark>. j1과 차이를 꼭 비교하기.</p>",
-  "hints": []
+  "hints": [
+   "<code>static</code> 메서드는 객체가 아니라 <b>클래스에 붙어 있는</b> 메서드",
+   "<b>기억할 것</b>: static은 \"클래스 전용\". <mark>static 메서드와 필드는 앞쪽 타입, 일반 메서드만 new 뒤</mark>. j1과 차이를 꼭 비교하기."
+  ]
  },
  {
   "kind": "answer",

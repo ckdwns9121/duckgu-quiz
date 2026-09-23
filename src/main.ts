@@ -2,6 +2,7 @@ import './styles.css';
 import { initRender } from './render';
 import { router } from './router';
 import { answer, check, continueLesson, selectChoice } from './services/lessonService';
+import { setupInstall } from './services/install';
 import { setupViewport } from './services/viewport';
 import { currentQuestion, lessonStore } from './stores/lessonStore';
 
@@ -33,6 +34,7 @@ function registerServiceWorker() {
   });
 }
 
+setupInstall();
 setupViewport();
 initRender();
 setupKeyboard();

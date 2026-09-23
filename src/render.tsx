@@ -6,6 +6,7 @@ import { NotFoundPage } from './pages/NotFoundPage';
 import { ResultPage } from './pages/ResultPage';
 import { router } from './router';
 import { lessonStore } from './stores/lessonStore';
+import { installStore } from './stores/installStore';
 import { progressStore } from './stores/progressStore';
 
 router.addRoute('/', HomePage);
@@ -36,4 +37,5 @@ export function initRender() {
   router.subscribe(render);
   lessonStore.subscribe(render);
   progressStore.subscribe(render);
+  installStore.subscribe(render);
 }

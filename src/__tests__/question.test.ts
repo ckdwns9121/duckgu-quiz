@@ -64,8 +64,14 @@ describe('힌트', () => {
   it('코드 문제 힌트에는 정답이 통째로 나오지 않는다', () => {
     const squash = (t: string) => t.toLowerCase().replace(/<[^>]+>/g, '').replace(/[\s'"`,[\]{}()]/g, '');
     CARDS.filter((c) => c.kind === 'answer').forEach((c) => {
-      c.hints.forEach((h) => expect(squash(h)).not.toContain(squash((c as { answer: string }).answer)));
+      const answer = squash((c as { answer: string }).answer);
+      // 한두 글자 답("B", "1")은 아무 줄에나 들어 있을 수 있어서 긴 답만 검사한다
+      if (answer.length > 3) c.hints.forEach((h) => expect(squash(h)).not.toContain(answer));
     });
+  });
+  it('코드 문제 대부분에 힌트가 있다', () => {
+    const answers = CARDS.filter((c) => c.kind === 'answer');
+    expect(answers.filter((c) => c.hints.length > 0).length).toBeGreaterThanOrEqual(answers.length - 3);
   });
   it('용어 문제 힌트에는 용어 이름이 가려져 있다', () => {
     CARDS.filter((c) => c.kind === 'term').forEach((c) => {

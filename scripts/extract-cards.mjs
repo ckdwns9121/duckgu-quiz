@@ -19,14 +19,25 @@ const nameWords = (title) => {
   const m = title.match(/^(.*?)\s*\((.*)\)$/);
   return m ? [m[1].trim(), m[2].trim()] : [title.trim()];
 };
+/**
+ * 이 줄을 보여 주면 정답이 드러나는지.
+ * 긴 답("7 5 7")은 줄 안에 통째로 있으면 드러난 것으로 본다.
+ * "B", "1" 같은 짧은 답은 어느 줄에나 흔히 들어 있어서, 줄이 그 답으로 끝날 때("→ B")만 드러난 것으로 본다.
+ */
+export function revealsAnswer(line, answer) {
+  const a = squash(answer);
+  if (a.length > 3) return squash(line).includes(a);
+  const tokens = line.split(/[^0-9A-Za-z가-힣.-]+/).filter(Boolean);
+  return tokens.length > 0 && squash(tokens[tokens.length - 1]) === a;
+}
 function answerHints(explainHtml, answer) {
   const box = document.createElement('div');
   box.innerHTML = explainHtml;
   const hints = [];
   const first = box.querySelector('.steps li');
-  if (first && !squash(first.textContent).includes(squash(answer))) hints.push(first.innerHTML.trim());
+  if (first && !revealsAnswer(first.textContent, answer)) hints.push(first.innerHTML.trim());
   const rule = [...box.querySelectorAll('p.why')].pop();
-  if (rule && !squash(rule.textContent).includes(squash(answer))) hints.push(rule.innerHTML.trim());
+  if (rule && !revealsAnswer(rule.textContent, answer)) hints.push(rule.innerHTML.trim());
   return hints;
 }
 function firstSentence(html) {

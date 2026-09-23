@@ -225,3 +225,20 @@ svg .hollow{fill:#fff} svg .solid{fill:currentColor}
 .hint-tag{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:900;color:var(--gold-d)}
 .hint-tag svg{width:14px;height:14px}
 @keyframes hintin{from{transform:translateY(-6px) scale(.97);opacity:0}to{transform:none;opacity:1}}
+
+/* ---------- 설치 배너 ---------- */
+.install-banner{display:grid;grid-template-columns:48px 1fr auto auto;align-items:center;gap:12px;border:2px solid var(--line);border-bottom-width:4px;border-radius:16px;padding:12px 8px 12px 12px;background:#fff}
+.install-banner img{border-radius:12px}
+.install-banner .txt{display:grid;line-height:1.35;min-width:0}
+.install-banner .txt b{font-size:15px}
+.install-banner .txt span{font-size:13px;color:var(--muted)}
+.install-btn{width:auto;padding:10px 16px;font-size:15px}
+.install-x{padding:4px}
+.install-x svg{width:18px;height:18px}
+.ios-guide{background:#fff;border-top:2px solid var(--line);border-radius:20px 20px 0 0}
+.ios-title{font-family:var(--display);font-weight:400;font-size:24px}
+.ios-steps{margin:0;padding:0;list-style:none;display:grid;gap:12px;counter-reset:s}
+.ios-steps li{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center;font-size:16px}
+.ios-steps .ico{width:44px;height:44px;border-radius:12px;background:var(--blue-soft);color:var(--blue-d);display:grid;place-items:center;font-weight:900;font-size:13px}
+.ios-steps .ico svg{width:24px;height:24px}
+.ios-steps .ico.ok{background:var(--green-soft);color:var(--green-d)}
