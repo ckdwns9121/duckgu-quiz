@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="public/icons/icon-192.png" width="96" alt="출근길 정처기 퀴즈 아이콘">
+<img src="docs/screenshots/app-icon.png" width="96" alt="출근길 정처기 퀴즈 아이콘">
 
 # 출근길 정처기 퀴즈
 
@@ -11,7 +11,7 @@
 
 ### [👉 지금 풀어 보기](https://ckdwns9121.github.io/jeongcheogi-quiz/)
 
-<img src="docs/images/01-intro.png" width="240" alt="인트로 화면"> <img src="docs/images/02-home.png" width="240" alt="레슨 지도"> <img src="docs/images/06-result.png" width="240" alt="레슨 완료 화면">
+<img src="docs/screenshots/01-intro.png" width="240" alt="인트로 화면"> <img src="docs/screenshots/02-home.png" width="240" alt="레슨 지도"> <img src="docs/screenshots/06-result.png" width="240" alt="레슨 완료 화면">
 
 </div>
 
@@ -52,18 +52,18 @@
 
 <table>
 <tr>
-<td align="center"><img src="docs/images/03-typing.png" width="220" alt="직접 써 보기"><br><b>직접 써 보기</b><br>코드 실행 결과를 그대로 입력.<br>실기처럼 손으로 쓰는 연습</td>
-<td align="center"><img src="docs/images/07-choice.png" width="220" alt="뜻 고르기"><br><b>뜻·용어 고르기</b><br>용어를 보고 뜻을, 뜻을 보고<br>용어를 고르는 4지선다</td>
+<td align="center"><img src="docs/screenshots/03-typing.png" width="220" alt="직접 써 보기"><br><b>직접 써 보기</b><br>코드 실행 결과를 그대로 입력.<br>실기처럼 손으로 쓰는 연습</td>
+<td align="center"><img src="docs/screenshots/07-choice.png" width="220" alt="뜻 고르기"><br><b>뜻·용어 고르기</b><br>용어를 보고 뜻을, 뜻을 보고<br>용어를 고르는 4지선다</td>
 </tr>
 <tr>
-<td align="center"><img src="docs/images/08-uml.png" width="220" alt="관계 고르기"><br><b>관계 고르기</b><br>UML 선 모양만 보고<br>어떤 관계인지 맞히기</td>
-<td align="center"><img src="docs/images/10-recall.png" width="220" alt="떠올려 보기"><br><b>떠올려 보기</b><br>답이 한 줄로 안 떨어지는 개념은<br>떠올려 보고 스스로 채점</td>
+<td align="center"><img src="docs/screenshots/08-uml.png" width="220" alt="관계 고르기"><br><b>관계 고르기</b><br>UML 선 모양만 보고<br>어떤 관계인지 맞히기</td>
+<td align="center"><img src="docs/screenshots/10-recall.png" width="220" alt="떠올려 보기"><br><b>떠올려 보기</b><br>답이 한 줄로 안 떨어지는 개념은<br>떠올려 보고 스스로 채점</td>
 </tr>
 </table>
 
 ### 3. 막히면 힌트부터
 
-<img src="docs/images/13-hint.png" width="220" align="right" alt="힌트 보기">
+<img src="docs/screenshots/13-hint.png" width="220" align="right" alt="힌트 보기">
 
 바로 정답을 보기 전에 **힌트 보기**를 눌러 보세요. 누를 때마다 한 단계씩 열려요.
 
@@ -79,15 +79,15 @@
 
 <table>
 <tr>
-<td align="center"><img src="docs/images/04-correct.png" width="220" alt="정답 화면"><br><b>맞히면</b> 덕구가 날개를 파닥이며 뛰고<br>왜 그 답인지 풀이가 나와요</td>
-<td align="center"><img src="docs/images/05-wrong.png" width="220" alt="오답 화면"><br><b>틀리면</b> 정답과 단계별 풀이를 보여 주고,<br>그 문제는 레슨 끝에 다시 나와요</td>
+<td align="center"><img src="docs/screenshots/04-correct.png" width="220" alt="정답 화면"><br><b>맞히면</b> 덕구가 날개를 파닥이며 뛰고<br>왜 그 답인지 풀이가 나와요</td>
+<td align="center"><img src="docs/screenshots/05-wrong.png" width="220" alt="오답 화면"><br><b>틀리면</b> 정답과 단계별 풀이를 보여 주고,<br>그 문제는 레슨 끝에 다시 나와요</td>
 </tr>
 </table>
 
 <table>
 <tr>
-<td align="center"><img src="docs/images/11-combo.png" width="220" alt="연속 정답"><br><b>연속으로 맞히면</b> 누른 자리에서 폭죽이 터지고<br>"3연속 정답!" 배지가 떠요</td>
-<td align="center"><img src="docs/images/12-heart.png" width="220" alt="하트 잃기"><br><b>틀리면</b> 하트가 튀어나와 두 쪽으로 깨지고<br>화면이 살짝 흔들려요</td>
+<td align="center"><img src="docs/screenshots/11-combo.png" width="220" alt="연속 정답"><br><b>연속으로 맞히면</b> 누른 자리에서 폭죽이 터지고<br>"3연속 정답!" 배지가 떠요</td>
+<td align="center"><img src="docs/screenshots/12-heart.png" width="220" alt="하트 잃기"><br><b>틀리면</b> 하트가 튀어나와 두 쪽으로 깨지고<br>화면이 살짝 흔들려요</td>
 </tr>
 </table>
 
@@ -101,7 +101,7 @@
 
 ### 6. 노트로 다시 보기
 
-<img src="docs/images/09-notes.png" width="220" align="right" alt="학습 노트">
+<img src="docs/screenshots/09-notes.png" width="220" align="right" alt="학습 노트">
 
 유닛 제목 옆 **노트** 버튼을 누르면 카드 전체를 한 페이지로 정리한 노트가 열려요. 퀴즈 모드로 답을 가리고 읽거나, 외운 카드를 체크해서 숨길 수 있어요.
 
@@ -115,8 +115,8 @@
 
 <table>
 <tr>
-<td align="center"><img src="docs/images/14-install.png" width="220" alt="설치 배너"><br><b>Android · PC 크롬 · Edge</b><br>설치 버튼 → 브라우저 설치 창에서 <b>설치</b></td>
-<td align="center"><img src="docs/images/15-ios-install.png" width="220" alt="아이폰 설치 안내"><br><b>iPhone · iPad</b><br>Apple이 설치 API를 막아 두어서<br>공유 버튼 → <b>홈 화면에 추가</b> 순서를 안내해요</td>
+<td align="center"><img src="docs/screenshots/14-install.png" width="220" alt="설치 배너"><br><b>Android · PC 크롬 · Edge</b><br>설치 버튼 → 브라우저 설치 창에서 <b>설치</b></td>
+<td align="center"><img src="docs/screenshots/15-ios-install.png" width="220" alt="아이폰 설치 안내"><br><b>iPhone · iPad</b><br>Apple이 설치 API를 막아 두어서<br>공유 버튼 → <b>홈 화면에 추가</b> 순서를 안내해요</td>
 </tr>
 </table>
 
