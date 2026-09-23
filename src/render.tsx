@@ -1,3 +1,4 @@
+import { syncRiveMascots } from './components/riveMascot';
 import { createVNode, flushAfterRender, renderElement, withBatch } from './lib';
 import { HomePage } from './pages/HomePage';
 import { IntroPage } from './pages/IntroPage';
@@ -31,6 +32,7 @@ export const render = withBatch(() => {
   }
   renderElement(createVNode(Page, null), root);
   flushAfterRender();
+  syncRiveMascots();
 });
 
 export function initRender() {

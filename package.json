@@ -9,12 +9,17 @@
     "preview": "vite preview",
     "extract": "node scripts/extract-cards.mjs",
     "test": "vitest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build:riv": "node scripts/build-bit-riv.mjs"
   },
   "devDependencies": {
     "jsdom": "^26.1.0",
+    "rive-mcp-server": "0.6.1",
     "typescript": "^5.9.2",
     "vite": "^7.1.5",
     "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "@rive-app/canvas-lite": "^2.43.0"
   }
 }

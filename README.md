@@ -142,7 +142,7 @@ React 없이 **TypeScript로 만든 SPA**입니다. 항해플러스 1주차 과�
 | 상태 | Redux 방식 `createStore` + `createStorage`(localStorage), `withBatch`로 같은 틱의 렌더를 한 번으로 |
 | 라우팅 | History API `Router`. `/lesson/db-1`처럼 레슨마다 주소가 있고, GitHub Pages에서는 `404.html`로 새로고침을 받아요 |
 | 퀴즈 로직 | 문제 생성, 채점, 레슨 나누기, 스트릭·XP를 `domain/`의 순수 함수로 분리하고 vitest로 테스트 |
-| 캐릭터 | 비트는 이미지 파일 없이 SVG 도형으로 직접 그렸고, 표정과 동작은 CSS 애니메이션으로 바꿔요 |
+| 캐릭터 | 비트는 **Rive**(`public/rive/bit.riv`)로 움직여요. idle·happy·sad·cheer 네 동작과 상태 머신(happy·sad 트리거, cheer 불)을 [rive-mcp-server](https://github.com/ODU33104/rive-mcp)로 Rive 에디터 없이 만들었어요(`pnpm build:riv`). 런타임은 첫 화면 뒤에 따로 받고, 불러오기 전이나 실패하면 같은 모양의 SVG + CSS 애니메이션이 대신 보여요 |
 | 효과 | 폭죽은 캔버스 파티클, 하트·글자는 Web Animations API, 효과음은 음원 파일 없이 Web Audio로 합성. 움직임 줄이기 설정을 켜면 효과를 끕니다 |
 | PWA | manifest, service worker(페이지는 네트워크 우선, 나머지는 캐시 우선)로 오프라인 지원. `beforeinstallprompt`를 받아 두었다가 설치 버튼에서 설치 창을 띄우고, 아이폰은 안내 시트로 대신해요 |
 | 배포 | `main`에 push하면 GitHub Actions가 테스트 → 빌드 → GitHub Pages 배포 |
@@ -155,10 +155,11 @@ src/
   domain/       카드 타입, 레슨 나누기, 문제 만들기·채점, 스트릭·XP (순수 함수)
   stores/       progressStore(XP·스트릭·푼 기록), lessonStore(진행 중인 레슨)
   services/     레슨 시작·채점·완료 흐름, 효과음
-  components/   캐릭터, 레슨 지도, 문제, 해설 시트, 폭죽
+  components/   캐릭터(SVG + Rive 연결), 레슨 지도, 문제, 해설 시트, 효과
   pages/        Intro · Home(레슨 지도) · Lesson · Result · NotFound
   data/         cards.json (public/notes.html에서 추출)
-public/         notes.html(학습 노트), manifest, service worker, 아이콘
+public/         notes.html(학습 노트), rive/bit.riv(캐릭터), manifest, service worker, 아이콘
+scripts/        카드 추출, 캐릭터 Rive 파일 만들기, 아이콘 만들기
 ```
 
 ### 직접 실행하기
@@ -169,6 +170,7 @@ pnpm dev        # 개발 서버
 pnpm test       # 단위 테스트
 pnpm build      # 타입 체크 + 빌드
 pnpm extract    # public/notes.html을 고친 뒤 카드 데이터 다시 뽑기
+pnpm build:riv  # 캐릭터 bit.riv 다시 만들기 (공식 런타임으로 상태 머신까지 검증)
 ```
 
 카드 내용은 `public/notes.html` 한 곳에서 관리해요. 노트를 고치고 `pnpm extract`를 실행하면 퀴즈에도 반영됩니다.

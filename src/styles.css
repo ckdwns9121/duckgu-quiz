@@ -242,3 +242,11 @@ svg .hollow{fill:#fff} svg .solid{fill:currentColor}
 .ios-steps .ico{width:44px;height:44px;border-radius:12px;background:var(--blue-soft);color:var(--blue-d);display:grid;place-items:center;font-weight:900;font-size:13px}
 .ios-steps .ico svg{width:24px;height:24px}
 .ios-steps .ico.ok{background:var(--green-soft);color:var(--green-d)}
+
+/* ---------- Rive 캐릭터 ---------- */
+/* SVG(120x124)와 같은 칸을 차지하고, Rive 캔버스는 위쪽 여유(뛰는 높이)만큼 더 크게 얹는다 (artboard 240x288) */
+.mascot-host{position:relative;width:100%;aspect-ratio:120/124}
+.mascot-host>svg.mascot{position:absolute;inset:0;width:100%;height:100%}
+.mascot-rive{position:absolute;left:0;bottom:0;width:100%;height:calc(100% * 288 / 248);pointer-events:none;opacity:0;transition:opacity .2s}
+.mascot-host.rive-ready .mascot-rive{opacity:1}
+.mascot-host.rive-ready>svg.mascot{visibility:hidden}

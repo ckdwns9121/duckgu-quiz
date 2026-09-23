@@ -3,10 +3,19 @@ import { createVNode } from '../lib';
 export type Mood = 'idle' | 'happy' | 'sad' | 'cheer';
 
 /**
- * 캐릭터 "비트". mood 클래스만 바꾸면 CSS 애니메이션이 표정과 동작을 바꾼다.
- * 나중에 직접 만든 Rive 캐릭터가 생기면 이 컴포넌트만 바꿔 끼우면 된다.
+ * 캐릭터 "비트".
+ * SVG(+CSS 애니메이션)를 기본으로 그리고, 위에 얹은 캔버스에 Rive(public/rive/bit.riv)가 준비되면
+ * 그쪽으로 바꿔 보여 준다 (riveMascot.ts). className은 고정하고 표정은 data-mood로만 바꾼다:
+ * 가상 DOM이 className을 다시 쓰면 Rive가 붙인 rive-ready 표시가 지워지기 때문이다.
  */
 export const Mascot = ({ mood = 'idle' }: { mood?: Mood }) => (
+  <div className="mascot-host" data-mood={mood}>
+    <MascotSvg mood={mood} />
+    <canvas className="mascot-rive" aria-hidden="true" />
+  </div>
+);
+
+const MascotSvg = ({ mood }: { mood: Mood }) => (
   <svg className={`mascot ${mood}`} viewBox="0 0 120 124" aria-hidden="true">
     <ellipse cx="60" cy="119" rx="34" ry="5" fill="#000" opacity=".08" />
     <g className="body">
