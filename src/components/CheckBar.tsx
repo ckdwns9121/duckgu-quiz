@@ -1,6 +1,6 @@
 import type { Question } from '../domain/types';
 import { createVNode } from '../lib';
-import { answer, check, showRecall } from '../services/lessonService';
+import { answer, check, showRecall, usesTiles } from '../services/lessonService';
 import type { LessonSession } from '../stores/lessonStore';
 
 /** 화면 아래 고정 버튼 줄 */
@@ -19,7 +19,10 @@ export const CheckBar = ({ q, session }: { q: Question; session: LessonSession }
       </div>
     );
   }
-  const ready = q.type === 'choice' ? session.selected !== null : session.typed.trim() !== '';
+  const ready =
+    q.type === 'choice' ? session.selected !== null
+      : q.type === 'build' || usesTiles() ? session.picked.length > 0
+        : session.typed.trim() !== '';
   return (
     <div className="check-bar">
       <div className="col">

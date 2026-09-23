@@ -14,19 +14,22 @@ export interface ProgressState {
   cards: Record<string, CardRecord>;
   introSeen: boolean;
   sound: boolean;
+  /** 출력값 문제 입력 방식. auto면 폰은 조각, PC는 키보드 */
+  inputMode: 'auto' | 'tiles' | 'keyboard';
 }
 
 export type ProgressAction =
   | { type: 'INTRO_SEEN' }
   | { type: 'RECORD_ANSWER'; cardId: string; ok: boolean }
   | { type: 'COMPLETE_LESSON'; lessonId: string | null; xp: number; streak: number; day: string }
-  | { type: 'TOGGLE_SOUND' };
+  | { type: 'TOGGLE_SOUND' }
+  | { type: 'SET_INPUT_MODE'; mode: 'tiles' | 'keyboard' };
 
 // 예전 버전(순수 HTML 앱)과 같은 키를 써서 푼 기록을 그대로 이어받는다
 export const progressStorage = createStorage<ProgressState>('jcq-duo-v1');
 
 const initialState: ProgressState = {
-  xp: 0, streak: 0, lastDay: null, done: {}, cards: {}, introSeen: false, sound: true,
+  xp: 0, streak: 0, lastDay: null, done: {}, cards: {}, introSeen: false, sound: true, inputMode: 'auto',
   ...(progressStorage.get() ?? {}),
 };
 
@@ -51,6 +54,8 @@ export function progressReducer(state: ProgressState, action: ProgressAction): P
       };
     case 'TOGGLE_SOUND':
       return { ...state, sound: !state.sound };
+    case 'SET_INPUT_MODE':
+      return { ...state, inputMode: action.mode };
     default:
       return state;
   }

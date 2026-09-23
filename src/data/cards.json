@@ -524,6 +524,137 @@
   ]
  },
  {
+  "kind": "build",
+  "id": "b-sqlorder",
+  "unit": "code-sql",
+  "mode": "order",
+  "join": " → ",
+  "title": "SQL 실행 순서",
+  "q": "SELECT 문이 실제로 처리되는 순서대로 놓으세요.",
+  "tokens": [
+   "FROM",
+   "WHERE",
+   "GROUP BY",
+   "HAVING",
+   "SELECT",
+   "ORDER BY"
+  ],
+  "decoys": [],
+  "explain": "<ol class=\"steps build-answer\"><li>FROM</li><li>WHERE</li><li>GROUP BY</li><li>HAVING</li><li>SELECT</li><li>ORDER BY</li></ol><p class=\"why\">쓰는 순서(SELECT가 맨 앞)와 <mark>실행 순서</mark>는 다르다. 테이블을 먼저 고르고(FROM) → 행을 거르고(WHERE) → 묶고(GROUP BY) → 묶음을 거르고(HAVING) → 열을 고르고(SELECT) → 정렬(ORDER BY). 그래서 WHERE에서는 SELECT의 별칭을 못 쓴다.</p>",
+  "hints": [
+   "첫 번째 조각은 <b>FROM</b>",
+   "쓰는 순서(SELECT가 맨 앞)와 <mark>실행 순서</mark>는 다르다. 테이블을 먼저 고르고(FROM) → 행을 거르고(WHERE) → 묶고(GROUP BY) → 묶음을 거르고(HAVING) → 열을 고르고(SELECT) → 정렬(ORDER BY). 그래서 WHERE에서는 SELECT의 별칭을 못 쓴다."
+  ]
+ },
+ {
+  "kind": "build",
+  "id": "b-grant",
+  "unit": "code-sql",
+  "mode": "sql",
+  "join": " ",
+  "title": "권한 주기 문장 만들기",
+  "q": "학생 테이블의 SELECT 권한을 홍길동에게 주고, 홍길동도 남에게 줄 수 있게 하세요.",
+  "tokens": [
+   "GRANT",
+   "SELECT",
+   "ON",
+   "학생",
+   "TO",
+   "홍길동",
+   "WITH GRANT OPTION"
+  ],
+  "decoys": [
+   "FROM",
+   "CASCADE"
+  ],
+  "explain": "<ol class=\"steps build-answer\"><li>GRANT</li><li>SELECT</li><li>ON</li><li>학생</li><li>TO</li><li>홍길동</li><li>WITH GRANT OPTION</li></ol><p class=\"why\">주는 건 <mark>TO</mark>(~에게). 받은 사람도 남에게 줄 수 있게 하려면 끝에 <b>WITH GRANT OPTION</b>.</p>",
+  "hints": [
+   "첫 번째 조각은 <b>GRANT</b>",
+   "주는 건 <mark>TO</mark>(~에게). 받은 사람도 남에게 줄 수 있게 하려면 끝에 <b>WITH GRANT OPTION</b>."
+  ]
+ },
+ {
+  "kind": "build",
+  "id": "b-revoke",
+  "unit": "code-sql",
+  "mode": "sql",
+  "join": " ",
+  "title": "권한 뺏기 문장 만들기",
+  "q": "홍길동의 학생 테이블 SELECT 권한을 뺏고, 홍길동이 남에게 준 권한까지 같이 뺏으세요.",
+  "tokens": [
+   "REVOKE",
+   "SELECT",
+   "ON",
+   "학생",
+   "FROM",
+   "홍길동",
+   "CASCADE"
+  ],
+  "decoys": [
+   "TO",
+   "WITH GRANT OPTION"
+  ],
+  "explain": "<ol class=\"steps build-answer\"><li>REVOKE</li><li>SELECT</li><li>ON</li><li>학생</li><li>FROM</li><li>홍길동</li><li>CASCADE</li></ol><p class=\"why\">뺏는 건 <mark>FROM</mark>(~에게서). 그 사람이 나눠 준 권한까지 줄줄이 뺏는 건 <b>CASCADE</b>.</p>",
+  "hints": [
+   "첫 번째 조각은 <b>REVOKE</b>",
+   "뺏는 건 <mark>FROM</mark>(~에게서). 그 사람이 나눠 준 권한까지 줄줄이 뺏는 건 <b>CASCADE</b>."
+  ]
+ },
+ {
+  "kind": "build",
+  "id": "b-having",
+  "unit": "code-sql",
+  "mode": "sql",
+  "join": " ",
+  "title": "그룹 조건 문장 만들기",
+  "q": "학생이 10명 넘는 학과만, 학과와 학생 수를 조회하세요.",
+  "tokens": [
+   "SELECT",
+   "학과, COUNT(*)",
+   "FROM",
+   "학생",
+   "GROUP BY",
+   "학과",
+   "HAVING",
+   "COUNT(*) > 10"
+  ],
+  "decoys": [
+   "WHERE",
+   "ORDER BY"
+  ],
+  "explain": "<ol class=\"steps build-answer\"><li>SELECT</li><li>학과, COUNT(*)</li><li>FROM</li><li>학생</li><li>GROUP BY</li><li>학과</li><li>HAVING</li><li>COUNT(*) &gt; 10</li></ol><p class=\"why\">COUNT 같은 집계 조건은 묶은 뒤에 거르므로 WHERE가 아니라 <mark>HAVING</mark>. GROUP BY 바로 뒤에 온다.</p>",
+  "hints": [
+   "첫 번째 조각은 <b>SELECT</b>",
+   "COUNT 같은 집계 조건은 묶은 뒤에 거르므로 WHERE가 아니라 <mark>HAVING</mark>. GROUP BY 바로 뒤에 온다."
+  ]
+ },
+ {
+  "kind": "build",
+  "id": "b-update",
+  "unit": "code-sql",
+  "mode": "sql",
+  "join": " ",
+  "title": "값 바꾸기 문장 만들기",
+  "q": "학번이 1001인 학생의 학년을 4로 바꾸세요.",
+  "tokens": [
+   "UPDATE",
+   "학생",
+   "SET",
+   "학년 = 4",
+   "WHERE",
+   "학번 = 1001"
+  ],
+  "decoys": [
+   "INTO",
+   "VALUES"
+  ],
+  "explain": "<ol class=\"steps build-answer\"><li>UPDATE</li><li>학생</li><li>SET</li><li>학년 = 4</li><li>WHERE</li><li>학번 = 1001</li></ol><p class=\"why\">UPDATE 테이블 <b>SET</b> 열 = 값 <b>WHERE</b> 조건. INTO와 VALUES는 INSERT에서 쓴다. WHERE를 빼면 모든 학생의 학년이 바뀐다.</p>",
+  "hints": [
+   "첫 번째 조각은 <b>UPDATE</b>",
+   "UPDATE 테이블 <b>SET</b> 열 = 값 <b>WHERE</b> 조건. INTO와 VALUES는 INSERT에서 쓴다. WHERE를 빼면 모든 학생의 학년이 바뀐다."
+  ]
+ },
+ {
   "kind": "term",
   "id": "d-rel",
   "unit": "db",
@@ -1789,6 +1920,98 @@
   ]
  },
  {
+  "kind": "build",
+  "id": "b-norm",
+  "unit": "db",
+  "mode": "order",
+  "join": " → ",
+  "title": "정규화 순서",
+  "q": "정규화 단계를 순서대로 놓으세요.",
+  "tokens": [
+   "1NF",
+   "2NF",
+   "3NF",
+   "BCNF",
+   "4NF",
+   "5NF"
+  ],
+  "decoys": [],
+  "explain": "<ol class=\"steps build-answer\"><li>1NF</li><li>2NF</li><li>3NF</li><li>BCNF</li><li>4NF</li><li>5NF</li></ol><p class=\"why\"><b>외우는 법</b>: 각 단계에서 없애는 것의 앞글자 \"<mark>도 부 이 결 다 조</mark>\" (도메인 원자값 → 부분 종속 → 이행 종속 → 결정자 → 다치 종속 → 조인 종속). BCNF는 3NF와 4NF 사이.</p>",
+  "hints": [
+   "첫 번째 조각은 <b>1NF</b>",
+   "<b>외우는 법</b>: 각 단계에서 없애는 것의 앞글자 \"<mark>도 부 이 결 다 조</mark>\" (도메인 원자값 → 부분 종속 → 이행 종속 → 결정자 → 다치 종속 → 조인 종속). BCNF는 3NF와 4NF 사이."
+  ]
+ },
+ {
+  "kind": "build",
+  "id": "b-dbdesign",
+  "unit": "db",
+  "mode": "order",
+  "join": " → ",
+  "title": "DB 설계 순서",
+  "q": "데이터베이스 설계 단계를 순서대로 놓으세요.",
+  "tokens": [
+   "요구 분석",
+   "개념 설계",
+   "논리 설계",
+   "물리 설계",
+   "구현"
+  ],
+  "decoys": [],
+  "explain": "<ol class=\"steps build-answer\"><li>요구 분석</li><li>개념 설계</li><li>논리 설계</li><li>물리 설계</li><li>구현</li></ol><p class=\"why\"><b>외우는 법</b>: \"<mark>요 개 논 물 구</mark>\". 개념 설계에서 E-R 다이어그램을 그리고, 논리 설계에서 테이블로 바꾸고 정규화한다.</p>",
+  "hints": [
+   "첫 번째 조각은 <b>요구 분석</b>",
+   "<b>외우는 법</b>: \"<mark>요 개 논 물 구</mark>\". 개념 설계에서 E-R 다이어그램을 그리고, 논리 설계에서 테이블로 바꾸고 정규화한다."
+  ]
+ },
+ {
+  "kind": "build",
+  "id": "b-txstate",
+  "unit": "db",
+  "mode": "order",
+  "join": " → ",
+  "title": "트랜잭션이 정상으로 끝나는 순서",
+  "q": "트랜잭션이 문제없이 끝날 때 거치는 상태를 순서대로 놓으세요.",
+  "tokens": [
+   "활동",
+   "부분 완료",
+   "완료"
+  ],
+  "decoys": [
+   "실패",
+   "철회"
+  ],
+  "explain": "<ol class=\"steps build-answer\"><li>활동</li><li>부분 완료</li><li>완료</li></ol><p class=\"why\">실행 중(활동) → 마지막 명령까지 실행, Commit 직전(부분 완료) → Commit(완료). 문제가 생기면 실패 → 철회(Rollback)로 간다.</p>",
+  "hints": [
+   "첫 번째 조각은 <b>활동</b>",
+   "실행 중(활동) → 마지막 명령까지 실행, Commit 직전(부분 완료) → Commit(완료). 문제가 생기면 실패 → 철회(Rollback)로 간다."
+  ]
+ },
+ {
+  "kind": "build",
+  "id": "b-acid",
+  "unit": "db",
+  "mode": "fullname",
+  "join": ", ",
+  "title": "ACID 풀네임",
+  "q": "트랜잭션 특성 A, C, I, D를 순서대로 놓으세요.",
+  "tokens": [
+   "Atomicity",
+   "Consistency",
+   "Isolation",
+   "Durability"
+  ],
+  "decoys": [
+   "Availability",
+   "Integrity"
+  ],
+  "explain": "<ol class=\"steps build-answer\"><li>Atomicity</li><li>Consistency</li><li>Isolation</li><li>Durability</li></ol><p class=\"why\"><b>원자성</b>(전부 아니면 전무), <b>일관성</b>, <b>격리성</b>, <b>영속성</b>. Availability·Integrity는 보안 3요소(CIA)라서 섞어 내는 함정.</p>",
+  "hints": [
+   "첫 번째 조각은 <b>Atomicity</b>",
+   "<b>원자성</b>(전부 아니면 전무), <b>일관성</b>, <b>격리성</b>, <b>영속성</b>. Availability·Integrity는 보안 3요소(CIA)라서 섞어 내는 함정."
+  ]
+ },
+ {
   "kind": "term",
   "id": "n-osi7",
   "unit": "net",
@@ -2396,6 +2619,124 @@
   ],
   "hints": [
    "웹사이트. ○○S는 ○○에 암호화(TLS)를 더한 것. 주소창 자물쇠 = 443"
+  ]
+ },
+ {
+  "kind": "build",
+  "id": "b-osi",
+  "unit": "net",
+  "mode": "order",
+  "join": " → ",
+  "title": "OSI 7계층 순서",
+  "q": "아래(1계층)부터 위(7계층)까지 순서대로 놓으세요.",
+  "tokens": [
+   "물리",
+   "데이터링크",
+   "네트워크",
+   "전송",
+   "세션",
+   "표현",
+   "응용"
+  ],
+  "decoys": [],
+  "explain": "<ol class=\"steps build-answer\"><li>물리</li><li>데이터링크</li><li>네트워크</li><li>전송</li><li>세션</li><li>표현</li><li>응용</li></ol><p class=\"why\"><b>외우는 법</b>: 아래부터 \"<mark>물 데 네 전 세 표 응</mark>\". 택배로 치면 도로(물리) → 동네 집배원(데이터링크) → 경로 정하기(네트워크) → 분실 시 재전송(전송) → 배송 예약(세션) → 포장(표현) → 택배 앱(응용).</p>",
+  "hints": [
+   "첫 번째 조각은 <b>물리</b>",
+   "<b>외우는 법</b>: 아래부터 \"<mark>물 데 네 전 세 표 응</mark>\". 택배로 치면 도로(물리) → 동네 집배원(데이터링크) → 경로 정하기(네트워크) → 분실 시 재전송(전송) → 배송 예약(세션) → 포장(표현) → 택배 앱(응용)."
+  ]
+ },
+ {
+  "kind": "build",
+  "id": "b-tcpip",
+  "unit": "net",
+  "mode": "order",
+  "join": " → ",
+  "title": "TCP/IP 4계층 순서",
+  "q": "아래부터 위까지 순서대로 놓으세요.",
+  "tokens": [
+   "네트워크 액세스",
+   "인터넷",
+   "전송",
+   "응용"
+  ],
+  "decoys": [
+   "세션"
+  ],
+  "explain": "<ol class=\"steps build-answer\"><li>네트워크 액세스</li><li>인터넷</li><li>전송</li><li>응용</li></ol><p class=\"why\">OSI 7계층을 4개로 묶은 것. 물리·데이터링크 → <b>네트워크 액세스</b>, 네트워크 → <b>인터넷</b>(IP), 전송 → <b>전송</b>(TCP·UDP), 세션·표현·응용 → <b>응용</b>. 세션 계층은 따로 없다.</p>",
+  "hints": [
+   "첫 번째 조각은 <b>네트워크 액세스</b>",
+   "OSI 7계층을 4개로 묶은 것. 물리·데이터링크 → <b>네트워크 액세스</b>, 네트워크 → <b>인터넷</b>(IP), 전송 → <b>전송</b>(TCP·UDP), 세션·표현·응용 → <b>응용</b>. 세션 계층은 따로 없다."
+  ]
+ },
+ {
+  "kind": "build",
+  "id": "b-3way",
+  "unit": "net",
+  "mode": "order",
+  "join": " → ",
+  "title": "TCP 3-Way Handshake",
+  "q": "TCP가 연결을 맺을 때 주고받는 순서대로 놓으세요.",
+  "tokens": [
+   "SYN",
+   "SYN+ACK",
+   "ACK"
+  ],
+  "decoys": [
+   "FIN",
+   "RST"
+  ],
+  "explain": "<ol class=\"steps build-answer\"><li>SYN</li><li>SYN+ACK</li><li>ACK</li></ol><p class=\"why\">\"여보세요?\"(SYN) → \"네, 들려요. 제 말도 들려요?\"(SYN+ACK) → \"네\"(ACK). <mark>FIN은 연결을 끊을 때</mark>, RST는 강제로 끊을 때 쓴다.</p>",
+  "hints": [
+   "첫 번째 조각은 <b>SYN</b>",
+   "\"여보세요?\"(SYN) → \"네, 들려요. 제 말도 들려요?\"(SYN+ACK) → \"네\"(ACK). <mark>FIN은 연결을 끊을 때</mark>, RST는 강제로 끊을 때 쓴다."
+  ]
+ },
+ {
+  "kind": "build",
+  "id": "b-dhcp",
+  "unit": "net",
+  "mode": "fullname",
+  "join": " ",
+  "title": "DHCP 풀네임",
+  "q": "DHCP의 영문 풀네임을 만드세요.",
+  "tokens": [
+   "Dynamic",
+   "Host",
+   "Configuration",
+   "Protocol"
+  ],
+  "decoys": [
+   "Domain",
+   "Control"
+  ],
+  "explain": "<ol class=\"steps build-answer\"><li>Dynamic</li><li>Host</li><li>Configuration</li><li>Protocol</li></ol><p class=\"why\">IP 주소를 <b>자동으로(Dynamic)</b> 나눠 주는 프로토콜. Domain이 들어가는 건 DNS(Domain Name System).</p>",
+  "hints": [
+   "첫 번째 조각은 <b>Dynamic</b>",
+   "IP 주소를 <b>자동으로(Dynamic)</b> 나눠 주는 프로토콜. Domain이 들어가는 건 DNS(Domain Name System)."
+  ]
+ },
+ {
+  "kind": "build",
+  "id": "b-icmp",
+  "unit": "net",
+  "mode": "fullname",
+  "join": " ",
+  "title": "ICMP 풀네임",
+  "q": "ICMP의 영문 풀네임을 만드세요.",
+  "tokens": [
+   "Internet",
+   "Control",
+   "Message",
+   "Protocol"
+  ],
+  "decoys": [
+   "Management",
+   "Transfer"
+  ],
+  "explain": "<ol class=\"steps build-answer\"><li>Internet</li><li>Control</li><li>Message</li><li>Protocol</li></ol><p class=\"why\">오류와 상태를 알려 주는 <b>제어(Control) 메시지</b> 프로토콜. ping이 쓰는 것. Management가 들어가는 건 SNMP(Simple Network Management Protocol).</p>",
+  "hints": [
+   "첫 번째 조각은 <b>Internet</b>",
+   "오류와 상태를 알려 주는 <b>제어(Control) 메시지</b> 프로토콜. ping이 쓰는 것. Management가 들어가는 건 SNMP(Simple Network Management Protocol)."
   ]
  },
  {
@@ -3224,6 +3565,97 @@
   ]
  },
  {
+  "kind": "build",
+  "id": "b-cia",
+  "unit": "sec",
+  "mode": "fullname",
+  "join": ", ",
+  "title": "보안 3요소 CIA",
+  "q": "C, I, A가 각각 무엇인지 순서대로 놓으세요.",
+  "tokens": [
+   "Confidentiality",
+   "Integrity",
+   "Availability"
+  ],
+  "decoys": [
+   "Authentication",
+   "Durability"
+  ],
+  "explain": "<ol class=\"steps build-answer\"><li>Confidentiality</li><li>Integrity</li><li>Availability</li></ol><p class=\"why\"><b>기밀성</b>(허락된 사람만 봄), <b>무결성</b>(함부로 못 바꿈), <b>가용성</b>(필요할 때 쓸 수 있음). Authentication(인증)은 A지만 3요소가 아니고, Durability는 DB의 ACID.</p>",
+  "hints": [
+   "첫 번째 조각은 <b>Confidentiality</b>",
+   "<b>기밀성</b>(허락된 사람만 봄), <b>무결성</b>(함부로 못 바꿈), <b>가용성</b>(필요할 때 쓸 수 있음). Authentication(인증)은 A지만 3요소가 아니고, Durability는 DB의 ACID."
+  ]
+ },
+ {
+  "kind": "build",
+  "id": "b-csrf",
+  "unit": "sec",
+  "mode": "fullname",
+  "join": " ",
+  "title": "CSRF 풀네임",
+  "q": "CSRF의 영문 풀네임을 만드세요.",
+  "tokens": [
+   "Cross-Site",
+   "Request",
+   "Forgery"
+  ],
+  "decoys": [
+   "Scripting",
+   "Server"
+  ],
+  "explain": "<ol class=\"steps build-answer\"><li>Cross-Site</li><li>Request</li><li>Forgery</li></ol><p class=\"why\">사용자 권한으로 <b>요청(Request)을 위조(Forgery)</b>하는 공격. Scripting이 들어가는 건 XSS.</p>",
+  "hints": [
+   "첫 번째 조각은 <b>Cross-Site</b>",
+   "사용자 권한으로 <b>요청(Request)을 위조(Forgery)</b>하는 공격. Scripting이 들어가는 건 XSS."
+  ]
+ },
+ {
+  "kind": "build",
+  "id": "b-xss",
+  "unit": "sec",
+  "mode": "fullname",
+  "join": " ",
+  "title": "XSS 풀네임",
+  "q": "XSS의 영문 풀네임을 만드세요.",
+  "tokens": [
+   "Cross-Site",
+   "Scripting"
+  ],
+  "decoys": [
+   "Request",
+   "Forgery"
+  ],
+  "explain": "<ol class=\"steps build-answer\"><li>Cross-Site</li><li>Scripting</li></ol><p class=\"why\">게시글 등에 <b>스크립트(Scripting)</b>를 심어 보는 사람 브라우저에서 실행하게 하는 공격. CSS와 헷갈리지 않게 X를 쓴다.</p>",
+  "hints": [
+   "첫 번째 조각은 <b>Cross-Site</b>",
+   "게시글 등에 <b>스크립트(Scripting)</b>를 심어 보는 사람 브라우저에서 실행하게 하는 공격. CSS와 헷갈리지 않게 X를 쓴다."
+  ]
+ },
+ {
+  "kind": "build",
+  "id": "b-apt",
+  "unit": "sec",
+  "mode": "fullname",
+  "join": " ",
+  "title": "APT 풀네임",
+  "q": "APT의 영문 풀네임을 만드세요.",
+  "tokens": [
+   "Advanced",
+   "Persistent",
+   "Threat"
+  ],
+  "decoys": [
+   "Attack",
+   "Protocol"
+  ],
+  "explain": "<ol class=\"steps build-answer\"><li>Advanced</li><li>Persistent</li><li>Threat</li></ol><p class=\"why\">특정 조직을 <b>오랫동안 끈질기게(Persistent)</b> 노리는 지능형 <b>위협(Threat)</b>. Attack이 아니라 Threat.</p>",
+  "hints": [
+   "첫 번째 조각은 <b>Advanced</b>",
+   "특정 조직을 <b>오랫동안 끈질기게(Persistent)</b> 노리는 지능형 <b>위협(Threat)</b>. Attack이 아니라 Threat."
+  ]
+ },
+ {
   "kind": "recall",
   "id": "u-struct",
   "unit": "uml",
@@ -3413,6 +3845,121 @@
   ],
   "hints": [
    "쇼핑몰 시스템에서 고객, 관리자, 외부 결제 시스템이 액터. 시스템 안에 있는 건 액터가 아님"
+  ]
+ },
+ {
+  "kind": "build",
+  "id": "b-coupling",
+  "unit": "swe",
+  "mode": "order",
+  "join": " → ",
+  "title": "결합도 순서",
+  "q": "결합도가 약한 것(좋은 것)부터 강한 것(나쁜 것)까지 순서대로 놓으세요.",
+  "tokens": [
+   "자료",
+   "스탬프",
+   "제어",
+   "외부",
+   "공통",
+   "내용"
+  ],
+  "decoys": [],
+  "explain": "<ol class=\"steps build-answer\"><li>자료</li><li>스탬프</li><li>제어</li><li>외부</li><li>공통</li><li>내용</li></ol><p class=\"why\"><b>외우는 법</b>: \"<mark>자 스 제 외 공 내</mark>\". 결합도는 모듈끼리 얼마나 얽혔는지라서 <b>약할수록 좋다</b>. 필요한 값만 넘기면 자료 결합도, 남의 내부를 직접 건드리면 내용 결합도.</p>",
+  "hints": [
+   "첫 번째 조각은 <b>자료</b>",
+   "<b>외우는 법</b>: \"<mark>자 스 제 외 공 내</mark>\". 결합도는 모듈끼리 얼마나 얽혔는지라서 <b>약할수록 좋다</b>. 필요한 값만 넘기면 자료 결합도, 남의 내부를 직접 건드리면 내용 결합도."
+  ]
+ },
+ {
+  "kind": "build",
+  "id": "b-cohesion",
+  "unit": "swe",
+  "mode": "order",
+  "join": " → ",
+  "title": "응집도 순서",
+  "q": "응집도가 강한 것(좋은 것)부터 약한 것(나쁜 것)까지 순서대로 놓으세요.",
+  "tokens": [
+   "기능적",
+   "순차적",
+   "교환적",
+   "절차적",
+   "시간적",
+   "논리적",
+   "우연적"
+  ],
+  "decoys": [],
+  "explain": "<ol class=\"steps build-answer\"><li>기능적</li><li>순차적</li><li>교환적</li><li>절차적</li><li>시간적</li><li>논리적</li><li>우연적</li></ol><p class=\"why\"><b>외우는 법</b>: \"<mark>기 순 교 절 시 논 우</mark>\". 응집도는 한 모듈 안이 얼마나 한 가지 일에 모였는지라서 <b>강할수록 좋다</b>. 결합도는 약할수록, 응집도는 강할수록 좋은 설계.</p>",
+  "hints": [
+   "첫 번째 조각은 <b>기능적</b>",
+   "<b>외우는 법</b>: \"<mark>기 순 교 절 시 논 우</mark>\". 응집도는 한 모듈 안이 얼마나 한 가지 일에 모였는지라서 <b>강할수록 좋다</b>. 결합도는 약할수록, 응집도는 강할수록 좋은 설계."
+  ]
+ },
+ {
+  "kind": "build",
+  "id": "b-vmodel",
+  "unit": "swe",
+  "mode": "order",
+  "join": " → ",
+  "title": "테스트 단계 순서",
+  "q": "소프트웨어 테스트 단계를 작은 것부터 순서대로 놓으세요.",
+  "tokens": [
+   "단위 테스트",
+   "통합 테스트",
+   "시스템 테스트",
+   "인수 테스트"
+  ],
+  "decoys": [
+   "회귀 테스트"
+  ],
+  "explain": "<ol class=\"steps build-answer\"><li>단위 테스트</li><li>통합 테스트</li><li>시스템 테스트</li><li>인수 테스트</li></ol><p class=\"why\">함수 하나(단위) → 모듈을 합쳐서(통합) → 전체 시스템(시스템) → 사용자가 받아들일지(인수). V-모델에서 각각 구현·설계·분석·요구사항 단계와 짝을 이룬다. 회귀 테스트는 고친 뒤 다시 확인하는 테스트라 순서 단계가 아니다.</p>",
+  "hints": [
+   "첫 번째 조각은 <b>단위 테스트</b>",
+   "함수 하나(단위) → 모듈을 합쳐서(통합) → 전체 시스템(시스템) → 사용자가 받아들일지(인수). V-모델에서 각각 구현·설계·분석·요구사항 단계와 짝을 이룬다. 회귀 테스트는 고친 뒤 다시 확인하는 테스트라 순서 단계가 아니다."
+  ]
+ },
+ {
+  "kind": "build",
+  "id": "b-waterfall",
+  "unit": "swe",
+  "mode": "order",
+  "join": " → ",
+  "title": "폭포수 모델 순서",
+  "q": "폭포수 모델의 개발 단계를 순서대로 놓으세요.",
+  "tokens": [
+   "계획",
+   "요구 분석",
+   "설계",
+   "구현",
+   "테스트",
+   "유지보수"
+  ],
+  "decoys": [
+   "프로토타입"
+  ],
+  "explain": "<ol class=\"steps build-answer\"><li>계획</li><li>요구 분석</li><li>설계</li><li>구현</li><li>테스트</li><li>유지보수</li></ol><p class=\"why\">물이 위에서 아래로만 흐르듯 <b>한 단계를 끝내야 다음 단계</b>로 간다. 프로토타입(시제품을 먼저 보여 주기)은 프로토타입 모델의 특징.</p>",
+  "hints": [
+   "첫 번째 조각은 <b>계획</b>",
+   "물이 위에서 아래로만 흐르듯 <b>한 단계를 끝내야 다음 단계</b>로 간다. 프로토타입(시제품을 먼저 보여 주기)은 프로토타입 모델의 특징."
+  ]
+ },
+ {
+  "kind": "build",
+  "id": "b-integration",
+  "unit": "swe",
+  "mode": "order",
+  "join": " → ",
+  "title": "하향식 통합 테스트",
+  "q": "하향식 통합 테스트에서 모듈을 합치는 순서대로 놓으세요.",
+  "tokens": [
+   "상위 모듈",
+   "중간 모듈",
+   "하위 모듈"
+  ],
+  "decoys": [],
+  "explain": "<ol class=\"steps build-answer\"><li>상위 모듈</li><li>중간 모듈</li><li>하위 모듈</li></ol><p class=\"why\">하향식은 <b>위에서 아래로</b> 합치고, 아직 없는 아래 모듈은 가짜 모듈인 <mark>스텁(Stub)</mark>으로 대신한다. 상향식은 반대로 아래부터 합치고 <mark>드라이버(Driver)</mark>를 쓴다.</p>",
+  "hints": [
+   "첫 번째 조각은 <b>상위 모듈</b>",
+   "하향식은 <b>위에서 아래로</b> 합치고, 아직 없는 아래 모듈은 가짜 모듈인 <mark>스텁(Stub)</mark>으로 대신한다. 상향식은 반대로 아래부터 합치고 <mark>드라이버(Driver)</mark>를 쓴다."
   ]
  }
 ]

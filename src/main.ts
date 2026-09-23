@@ -1,7 +1,7 @@
 import './styles.css';
 import { initRender } from './render';
 import { router } from './router';
-import { answer, check, continueLesson, selectChoice } from './services/lessonService';
+import { answer, check, continueLesson, selectChoice, unpickTile, usesTiles } from './services/lessonService';
 import { resizeRiveMascots } from './components/riveMascot';
 import { setupInstall } from './services/install';
 import { setupViewport } from './services/viewport';
@@ -23,6 +23,13 @@ function setupKeyboard() {
     const q = currentQuestion(s);
     if (q.type === 'choice' && /^[1-4]$/.test(e.key)) selectChoice(Number(e.key) - 1);
     if (q.type === 'choice' && e.key === 'Enter') check();
+    const tileMode = q.type === 'build' || (q.type === 'typing' && usesTiles());
+    if (tileMode && e.key === 'Enter') check();
+    // 조각 문제: 백스페이스로 마지막 조각 빼기
+    if (tileMode && e.key === 'Backspace' && s.picked.length) {
+      e.preventDefault();
+      unpickTile(s.picked.length - 1);
+    }
     if (q.type === 'recall' && s.recallShown && e.key === 'ArrowLeft') answer(false);
     if (q.type === 'recall' && s.recallShown && e.key === 'ArrowRight') answer(true);
   });

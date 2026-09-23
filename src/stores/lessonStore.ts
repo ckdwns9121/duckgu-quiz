@@ -26,6 +26,8 @@ export interface LessonSession {
   firstTry: Record<string, boolean>;
   selected: number | null;
   typed: string;
+  /** 답 조각 문제에서 고른 조각 (tiles의 번호, 누른 순서대로) */
+  picked: number[];
   recallShown: boolean;
   /** 지금 문제에서 연 힌트 개수 */
   hintsShown: number;
@@ -37,6 +39,8 @@ export type LessonAction =
   | { type: 'START'; lessonId: string | null; queue: Question[] }
   | { type: 'SELECT'; index: number }
   | { type: 'TYPE'; text: string }
+  | { type: 'PICK'; index: number }
+  | { type: 'UNPICK'; position: number }
   | { type: 'SHOW_RECALL' }
   | { type: 'SHOW_HINT' }
   | { type: 'ANSWER'; ok: boolean; retry: Question | null; withSheet: boolean }
@@ -47,7 +51,7 @@ export function lessonReducer(state: LessonSession | null, action: LessonAction)
   if (action.type === 'START') {
     return {
       lessonId: action.lessonId, queue: action.queue, total: action.queue.length, solved: 0,
-      lives: MAX_LIVES, mistakes: 0, combo: 0, firstTry: {}, selected: null, typed: '', recallShown: false, hintsShown: 0,
+      lives: MAX_LIVES, mistakes: 0, combo: 0, firstTry: {}, selected: null, typed: '', picked: [], recallShown: false, hintsShown: 0,
       feedback: null, outcome: null,
     };
   }
@@ -58,6 +62,12 @@ export function lessonReducer(state: LessonSession | null, action: LessonAction)
       return state.feedback ? state : { ...state, selected: action.index };
     case 'TYPE':
       return { ...state, typed: action.text };
+    case 'PICK':
+      if (state.feedback || state.picked.includes(action.index)) return state;
+      return { ...state, picked: [...state.picked, action.index] };
+    case 'UNPICK':
+      if (state.feedback) return state;
+      return { ...state, picked: state.picked.filter((_, i) => i !== action.position) };
     case 'SHOW_RECALL':
       return { ...state, recallShown: true };
     case 'SHOW_HINT': {
@@ -82,12 +92,13 @@ export function lessonReducer(state: LessonSession | null, action: LessonAction)
         feedback: action.withSheet ? { ok: action.ok, question: current } : null,
         selected: action.withSheet ? state.selected : null,
         typed: action.withSheet ? state.typed : '',
+        picked: action.withSheet ? state.picked : [],
         recallShown: false,
         hintsShown: action.withSheet ? state.hintsShown : 0,
       };
     }
     case 'CLOSE_SHEET':
-      return { ...state, feedback: null, selected: null, typed: '', hintsShown: 0 };
+      return { ...state, feedback: null, selected: null, typed: '', picked: [], hintsShown: 0 };
     case 'FINISH':
       return { ...state, feedback: null, outcome: action.outcome };
     default:

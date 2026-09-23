@@ -1,4 +1,4 @@
-import type { AnswerCard, Card, Question, TermCard } from './types';
+import type { AnswerCard, BuildCard, Card, Question, TermCard } from './types';
 
 export type Rng = () => number;
 
@@ -59,7 +59,50 @@ export function makeQuestion(card: Card, all: Card[], rng: Rng = Math.random): Q
       return answerQuestion(card, all, rng);
     case 'recall':
       return { type: 'recall', card, label: '떠올려 보기', say: '머릿속으로 답을 떠올린 다음 확인해 봐.' };
+    case 'build':
+      return buildQuestion(card, rng);
   }
+}
+
+const BUILD_LABEL: Record<BuildCard['mode'], string> = { order: '순서 맞추기', fullname: '영문 풀네임', sql: 'SQL 만들기' };
+
+function buildQuestion(card: BuildCard, rng: Rng): Question {
+  return {
+    type: 'build', card, label: BUILD_LABEL[card.mode], say: card.q,
+    answer: card.tokens, correct: card.tokens.join(card.join),
+    tiles: shuffle([...card.tokens, ...card.decoys], rng),
+  };
+}
+
+/**
+ * 출력값을 조각으로 나눈다.
+ * 띄어쓰기가 있으면 칸마다 한 조각("7 5 7" → 7, 5, 7), 없고 짧으면 한 글자씩("3345" → 3, 3, 4, 5).
+ */
+export function answerTokens(answer: string): string[] {
+  if (/\s/.test(answer.trim())) return answer.trim().split(/\s+/);
+  if (answer.length <= 10) return [...answer];
+  return [answer];
+}
+
+/** 헷갈리게 섞을 가짜 조각: 숫자는 ±1, true↔false, 한 글자는 옆 글자. 정답 조각과 겹치는 건 뺀다 */
+export function decoyTokens(tokens: string[], rng: Rng = Math.random): string[] {
+  const out: string[] = [];
+  for (const t of tokens) {
+    const n = t.match(/^(\[?)(-?\d+)(\]?,?\]?)$/);
+    if (n) {
+      const v = Number(n[2]);
+      out.push(`${n[1]}${v + 1}${n[3]}`, `${n[1]}${v - 1}${n[3]}`);
+    } else if (t === 'true' || t === 'false') out.push(t === 'true' ? 'false' : 'true');
+    else if (t.length === 1 && /[A-Za-z]/.test(t)) out.push(String.fromCharCode(t.charCodeAt(0) + 1));
+  }
+  const pool = uniq(out).filter((d) => !tokens.includes(d));
+  const want = tokens.length <= 4 ? 3 : 2;
+  const picked = shuffle(pool, rng).slice(0, want);
+  for (const extra of ['0', '1', '-1', 'null']) {
+    if (picked.length >= Math.min(want, 2)) break;
+    if (!tokens.includes(extra) && !picked.includes(extra)) picked.push(extra);
+  }
+  return picked;
 }
 
 function termQuestion(card: TermCard, all: Card[], rng: Rng): Question {
@@ -87,7 +130,11 @@ function termQuestion(card: TermCard, all: Card[], rng: Rng): Question {
 
 function answerQuestion(card: AnswerCard, all: Card[], rng: Rng): Question {
   if (!/[가-힣]/.test(card.answer)) {
-    return { type: 'typing', card, label: '직접 써 보기', say: '실행 결과를 <b>그대로</b> 써 봐!', correct: card.answer };
+    const tokens = answerTokens(card.answer);
+    return {
+      type: 'typing', card, label: '직접 써 보기', say: '실행 결과를 <b>그대로</b> 써 봐!', correct: card.answer,
+      tiles: shuffle([...tokens, ...decoyTokens(tokens, rng)], rng),
+    };
   }
   let wrong = CUSTOM_OPTIONS[card.id];
   if (!wrong) {
@@ -106,6 +153,11 @@ function answerQuestion(card: AnswerCard, all: Card[], rng: Rng): Question {
 /** 띄어쓰기·따옴표·끝 마침표는 무시한다. 쉼표와 괄호까지 빼고 같아도 정답으로 본다 */
 const normalize = (s: string) => s.toLowerCase().replace(/[\s'"`]/g, '').replace(/[.。]$/, '');
 const loose = (s: string) => normalize(s).replace(/[,[\]{}()]/g, '');
+
+/** 조각을 고른 순서가 정답 조각 순서와 똑같은지 */
+export function isBuildCorrect(picked: string[], answer: string[]): boolean {
+  return picked.length === answer.length && picked.every((t, i) => t === answer[i]);
+}
 
 export function isTypedAnswerCorrect(input: string, correct: string): boolean {
   if (normalize(input) === normalize(correct)) return true;

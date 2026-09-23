@@ -9,4 +9,5 @@ export const UNITS: Unit[] = [
   { id: 'net', name: '네트워크', color: '#00CD9C', dark: '#00A47D' },
   { id: 'sec', name: '보안', color: '#2B70C9', dark: '#1F57A0' },
   { id: 'uml', name: 'UML', color: '#E5A800', dark: '#B88700' },
+  { id: 'swe', name: '소프트웨어 공학', color: '#FF6FAE', dark: '#D9508E' },
 ];

@@ -4,7 +4,7 @@ import { FeedbackSheet } from '../components/FeedbackSheet';
 import { CloseIcon, HeartIcon } from '../components/Icons';
 import { QuestionView } from '../components/QuestionView';
 import { router } from '../router';
-import { quitLesson, startLesson, startPractice } from '../services/lessonService';
+import { quitLesson, startLesson, startPractice, usesTiles } from '../services/lessonService';
 import { prefersAutoFocus } from '../services/viewport';
 import { currentQuestion, lessonStore } from '../stores/lessonStore';
 
@@ -25,7 +25,7 @@ export const LessonPage = () => {
   const q = currentQuestion(session);
   const key = `${session.total}-${session.queue.length}-${q.card.id}-${session.lives}`;
   // 새 문제가 뜨면 입력칸에 바로 커서를 둔다 (PC만. 폰은 누를 때 키보드가 뜨게 둔다)
-  if (q.type === 'typing' && !session.feedback && key !== lastQuestionKey && prefersAutoFocus()) {
+  if (q.type === 'typing' && !usesTiles() && !session.feedback && key !== lastQuestionKey && prefersAutoFocus()) {
     afterRender(() => (document.getElementById('answer') as HTMLInputElement | null)?.focus({ preventScroll: true }));
   }
   if (session.feedback) afterRender(() => document.getElementById('continue-btn')?.focus({ preventScroll: true }));

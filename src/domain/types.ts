@@ -1,4 +1,4 @@
-export type UnitId = 'code-c' | 'code-java' | 'code-py' | 'code-sql' | 'db' | 'net' | 'sec' | 'uml';
+export type UnitId = 'code-c' | 'code-java' | 'code-py' | 'code-sql' | 'db' | 'net' | 'sec' | 'uml' | 'swe';
 
 interface BaseCard {
   id: string;
@@ -52,11 +52,26 @@ export interface RecallCard extends BaseCard {
   explain: string;
 }
 
-export type Card = TermCard | AnswerCard | RelCard | RecallCard;
+/** 조각을 순서대로 눌러 답을 만드는 카드 (순서 맞추기, 영문 풀네임, SQL 문장) */
+export interface BuildCard extends BaseCard {
+  kind: 'build';
+  mode: 'order' | 'fullname' | 'sql';
+  /** 정답을 보여 줄 때 조각 사이에 넣을 글자 (" → ", ", ", " ") */
+  join: string;
+  title: string;
+  q: string;
+  tokens: string[];
+  decoys: string[];
+  explain: string;
+}
+
+export type Card = TermCard | AnswerCard | RelCard | RecallCard | BuildCard;
 
 export type Question =
   | { type: 'choice'; card: Card; label: string; say: string; prompt?: string; promptHtml?: string; options: string[]; correct: string }
-  | { type: 'typing'; card: AnswerCard; label: string; say: string; correct: string }
+  /** tiles: 폰에서 키보드 대신 누르는 답 조각 (정답 조각 + 가짜 조각을 섞은 것) */
+  | { type: 'typing'; card: AnswerCard; label: string; say: string; correct: string; tiles: string[] }
+  | { type: 'build'; card: BuildCard; label: string; say: string; correct: string; answer: string[]; tiles: string[] }
   | { type: 'recall'; card: RecallCard; label: string; say: string };
 
 export interface Unit {

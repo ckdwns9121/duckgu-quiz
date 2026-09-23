@@ -3,7 +3,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { JSDOM } from 'jsdom';
 
-const UNITS = ['code-c', 'code-java', 'code-py', 'code-sql', 'db', 'net', 'sec', 'uml'];
+const UNITS = ['code-c', 'code-java', 'code-py', 'code-sql', 'db', 'net', 'sec', 'uml', 'swe'];
 const { document } = new JSDOM(readFileSync('public/notes.html', 'utf8')).window;
 const text = (html) => {
   const d = document.createElement('div');
@@ -73,6 +73,19 @@ for (const unit of UNITS) {
     }
     const clone = el.cloneNode(true);
     clone.querySelectorAll('input, label.chk').forEach((n) => n.remove());
+    // 조각으로 만들기 문제: 정답 조각은 .build-answer의 li 순서, 가짜 조각은 data-decoys
+    if (el.dataset.build) {
+      const tokens = [...clone.querySelectorAll('.build-answer li')].map((li) => li.textContent.trim());
+      const decoys = (el.dataset.decoys ?? '').split('|').filter(Boolean);
+      const explain = clone.querySelector('.ans')?.innerHTML.trim() ?? '';
+      const title = clone.querySelector('h3')?.textContent.trim() ?? '';
+      const q = clone.querySelector('.q')?.textContent.trim() ?? '';
+      const why = [...clone.querySelectorAll('.ans p.why')].pop();
+      const hints = [`첫 번째 조각은 <b>${tokens[0]}</b>`];
+      if (why) hints.push(why.innerHTML.trim());
+      cards.push({ kind: 'build', id, unit, mode: el.dataset.build, join: el.dataset.join ?? ' ', title, q, tokens, decoys, explain, hints });
+      continue;
+    }
     const ans = clone.querySelector('.ans');
     const title = (clone.querySelector('h3') ?? clone.querySelector('.name'))?.textContent.trim() ?? '';
     const explain = ans?.innerHTML.trim() ?? '';

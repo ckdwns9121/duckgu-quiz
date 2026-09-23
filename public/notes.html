@@ -88,6 +88,8 @@ td.c{width:34px}
 .steps{margin:0;padding-left:1.3em;display:grid;gap:4px}
 .steps li{padding-left:2px}
 .ans p + .steps,.ans .steps + p{margin-top:2px}
+.build-answer li{font-weight:700}
+.build-answer li::marker{color:var(--accent)}
 footer{margin-top:48px;color:var(--muted);font-size:13px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 @media (max-width:480px){.wrap{padding-inline:16px}nav{margin-inline:-16px;padding-inline:16px}}
@@ -118,6 +120,7 @@ footer{margin-top:48px;color:var(--muted);font-size:13px}
     <a href="#net">네트워크</a>
     <a href="#sec">보안</a>
     <a href="#uml">UML</a>
+    <a href="#swe">소프트웨어 공학</a>
   </nav>
 
   <!-- ================= C ================= -->
@@ -743,6 +746,35 @@ REVOKE SELECT ON 학생 FROM 홍길동 CASCADE;</pre>
 <p class="why"><b>기억할 것</b>: <mark>ASC = Ascending(올라감), DESC = Descending(내려감)</mark>. 기본은 올라가는 쪽.</p></div>
       </article>
     </div>
+    <p class="group-title">조각으로 만들기</p>
+    <div class="grid">
+      <article class="item" data-id="b-sqlorder" data-build="order" data-join=" → " data-decoys="">
+        <div class="item-h"><span class="lang">순서</span><h3>SQL 실행 순서</h3><label class="chk"><input type="checkbox" id="k-b-sqlorder">외움</label></div>
+        <p class="q">SELECT 문이 실제로 처리되는 순서대로 놓으세요.</p>
+        <div class="ans"><ol class="steps build-answer"><li>FROM</li><li>WHERE</li><li>GROUP BY</li><li>HAVING</li><li>SELECT</li><li>ORDER BY</li></ol><p class="why">쓰는 순서(SELECT가 맨 앞)와 <mark>실행 순서</mark>는 다르다. 테이블을 먼저 고르고(FROM) → 행을 거르고(WHERE) → 묶고(GROUP BY) → 묶음을 거르고(HAVING) → 열을 고르고(SELECT) → 정렬(ORDER BY). 그래서 WHERE에서는 SELECT의 별칭을 못 쓴다.</p></div>
+      </article>
+      <article class="item" data-id="b-grant" data-build="sql" data-join=" " data-decoys="FROM|CASCADE">
+        <div class="item-h"><span class="lang">SQL</span><h3>권한 주기 문장 만들기</h3><label class="chk"><input type="checkbox" id="k-b-grant">외움</label></div>
+        <p class="q">학생 테이블의 SELECT 권한을 홍길동에게 주고, 홍길동도 남에게 줄 수 있게 하세요.</p>
+        <div class="ans"><ol class="steps build-answer"><li>GRANT</li><li>SELECT</li><li>ON</li><li>학생</li><li>TO</li><li>홍길동</li><li>WITH GRANT OPTION</li></ol><p class="why">주는 건 <mark>TO</mark>(~에게). 받은 사람도 남에게 줄 수 있게 하려면 끝에 <b>WITH GRANT OPTION</b>.</p></div>
+      </article>
+      <article class="item" data-id="b-revoke" data-build="sql" data-join=" " data-decoys="TO|WITH GRANT OPTION">
+        <div class="item-h"><span class="lang">SQL</span><h3>권한 뺏기 문장 만들기</h3><label class="chk"><input type="checkbox" id="k-b-revoke">외움</label></div>
+        <p class="q">홍길동의 학생 테이블 SELECT 권한을 뺏고, 홍길동이 남에게 준 권한까지 같이 뺏으세요.</p>
+        <div class="ans"><ol class="steps build-answer"><li>REVOKE</li><li>SELECT</li><li>ON</li><li>학생</li><li>FROM</li><li>홍길동</li><li>CASCADE</li></ol><p class="why">뺏는 건 <mark>FROM</mark>(~에게서). 그 사람이 나눠 준 권한까지 줄줄이 뺏는 건 <b>CASCADE</b>.</p></div>
+      </article>
+      <article class="item" data-id="b-having" data-build="sql" data-join=" " data-decoys="WHERE|ORDER BY">
+        <div class="item-h"><span class="lang">SQL</span><h3>그룹 조건 문장 만들기</h3><label class="chk"><input type="checkbox" id="k-b-having">외움</label></div>
+        <p class="q">학생이 10명 넘는 학과만, 학과와 학생 수를 조회하세요.</p>
+        <div class="ans"><ol class="steps build-answer"><li>SELECT</li><li>학과, COUNT(*)</li><li>FROM</li><li>학생</li><li>GROUP BY</li><li>학과</li><li>HAVING</li><li>COUNT(*) &gt; 10</li></ol><p class="why">COUNT 같은 집계 조건은 묶은 뒤에 거르므로 WHERE가 아니라 <mark>HAVING</mark>. GROUP BY 바로 뒤에 온다.</p></div>
+      </article>
+      <article class="item" data-id="b-update" data-build="sql" data-join=" " data-decoys="INTO|VALUES">
+        <div class="item-h"><span class="lang">SQL</span><h3>값 바꾸기 문장 만들기</h3><label class="chk"><input type="checkbox" id="k-b-update">외움</label></div>
+        <p class="q">학번이 1001인 학생의 학년을 4로 바꾸세요.</p>
+        <div class="ans"><ol class="steps build-answer"><li>UPDATE</li><li>학생</li><li>SET</li><li>학년 = 4</li><li>WHERE</li><li>학번 = 1001</li></ol><p class="why">UPDATE 테이블 <b>SET</b> 열 = 값 <b>WHERE</b> 조건. INTO와 VALUES는 INSERT에서 쓴다. WHERE를 빼면 모든 학생의 학년이 바뀐다.</p></div>
+      </article>
+    </div>
+
   </section>
 
   <!-- ================= DB ================= -->
@@ -924,6 +956,30 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
         </tbody>
       </table>
     </div>
+    <p class="group-title">조각으로 만들기</p>
+    <div class="grid">
+      <article class="item" data-id="b-norm" data-build="order" data-join=" → " data-decoys="">
+        <div class="item-h"><span class="lang">순서</span><h3>정규화 순서</h3><label class="chk"><input type="checkbox" id="k-b-norm">외움</label></div>
+        <p class="q">정규화 단계를 순서대로 놓으세요.</p>
+        <div class="ans"><ol class="steps build-answer"><li>1NF</li><li>2NF</li><li>3NF</li><li>BCNF</li><li>4NF</li><li>5NF</li></ol><p class="why"><b>외우는 법</b>: 각 단계에서 없애는 것의 앞글자 "<mark>도 부 이 결 다 조</mark>" (도메인 원자값 → 부분 종속 → 이행 종속 → 결정자 → 다치 종속 → 조인 종속). BCNF는 3NF와 4NF 사이.</p></div>
+      </article>
+      <article class="item" data-id="b-dbdesign" data-build="order" data-join=" → " data-decoys="">
+        <div class="item-h"><span class="lang">순서</span><h3>DB 설계 순서</h3><label class="chk"><input type="checkbox" id="k-b-dbdesign">외움</label></div>
+        <p class="q">데이터베이스 설계 단계를 순서대로 놓으세요.</p>
+        <div class="ans"><ol class="steps build-answer"><li>요구 분석</li><li>개념 설계</li><li>논리 설계</li><li>물리 설계</li><li>구현</li></ol><p class="why"><b>외우는 법</b>: "<mark>요 개 논 물 구</mark>". 개념 설계에서 E-R 다이어그램을 그리고, 논리 설계에서 테이블로 바꾸고 정규화한다.</p></div>
+      </article>
+      <article class="item" data-id="b-txstate" data-build="order" data-join=" → " data-decoys="실패|철회">
+        <div class="item-h"><span class="lang">순서</span><h3>트랜잭션이 정상으로 끝나는 순서</h3><label class="chk"><input type="checkbox" id="k-b-txstate">외움</label></div>
+        <p class="q">트랜잭션이 문제없이 끝날 때 거치는 상태를 순서대로 놓으세요.</p>
+        <div class="ans"><ol class="steps build-answer"><li>활동</li><li>부분 완료</li><li>완료</li></ol><p class="why">실행 중(활동) → 마지막 명령까지 실행, Commit 직전(부분 완료) → Commit(완료). 문제가 생기면 실패 → 철회(Rollback)로 간다.</p></div>
+      </article>
+      <article class="item" data-id="b-acid" data-build="fullname" data-join=", " data-decoys="Availability|Integrity">
+        <div class="item-h"><span class="lang">영문</span><h3>ACID 풀네임</h3><label class="chk"><input type="checkbox" id="k-b-acid">외움</label></div>
+        <p class="q">트랜잭션 특성 A, C, I, D를 순서대로 놓으세요.</p>
+        <div class="ans"><ol class="steps build-answer"><li>Atomicity</li><li>Consistency</li><li>Isolation</li><li>Durability</li></ol><p class="why"><b>원자성</b>(전부 아니면 전무), <b>일관성</b>, <b>격리성</b>, <b>영속성</b>. Availability·Integrity는 보안 3요소(CIA)라서 섞어 내는 함정.</p></div>
+      </article>
+    </div>
+
   </section>
 
   <!-- ================= Network ================= -->
@@ -986,6 +1042,35 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
     </div>
 
     <div class="tip"><b>서브넷 계산 한 가지만</b><span><code>/26</code> 같은 숫자는 앞에서부터 1인 비트 수. 한 서브넷 주소 수 = <mark>2^(32−n)</mark>, 쓸 수 있는 호스트 = 그 값 −2 (네트워크 주소, 브로드캐스트 주소 제외).</span><span>예) 192.168.1.0/26 → 2^6 = 64개씩 4개로 나뉨 → 호스트 62개. 서브넷 마스크는 255.255.255.192.</span></div>
+    <p class="group-title">조각으로 만들기</p>
+    <div class="grid">
+      <article class="item" data-id="b-osi" data-build="order" data-join=" → " data-decoys="">
+        <div class="item-h"><span class="lang">순서</span><h3>OSI 7계층 순서</h3><label class="chk"><input type="checkbox" id="k-b-osi">외움</label></div>
+        <p class="q">아래(1계층)부터 위(7계층)까지 순서대로 놓으세요.</p>
+        <div class="ans"><ol class="steps build-answer"><li>물리</li><li>데이터링크</li><li>네트워크</li><li>전송</li><li>세션</li><li>표현</li><li>응용</li></ol><p class="why"><b>외우는 법</b>: 아래부터 "<mark>물 데 네 전 세 표 응</mark>". 택배로 치면 도로(물리) → 동네 집배원(데이터링크) → 경로 정하기(네트워크) → 분실 시 재전송(전송) → 배송 예약(세션) → 포장(표현) → 택배 앱(응용).</p></div>
+      </article>
+      <article class="item" data-id="b-tcpip" data-build="order" data-join=" → " data-decoys="세션">
+        <div class="item-h"><span class="lang">순서</span><h3>TCP/IP 4계층 순서</h3><label class="chk"><input type="checkbox" id="k-b-tcpip">외움</label></div>
+        <p class="q">아래부터 위까지 순서대로 놓으세요.</p>
+        <div class="ans"><ol class="steps build-answer"><li>네트워크 액세스</li><li>인터넷</li><li>전송</li><li>응용</li></ol><p class="why">OSI 7계층을 4개로 묶은 것. 물리·데이터링크 → <b>네트워크 액세스</b>, 네트워크 → <b>인터넷</b>(IP), 전송 → <b>전송</b>(TCP·UDP), 세션·표현·응용 → <b>응용</b>. 세션 계층은 따로 없다.</p></div>
+      </article>
+      <article class="item" data-id="b-3way" data-build="order" data-join=" → " data-decoys="FIN|RST">
+        <div class="item-h"><span class="lang">순서</span><h3>TCP 3-Way Handshake</h3><label class="chk"><input type="checkbox" id="k-b-3way">외움</label></div>
+        <p class="q">TCP가 연결을 맺을 때 주고받는 순서대로 놓으세요.</p>
+        <div class="ans"><ol class="steps build-answer"><li>SYN</li><li>SYN+ACK</li><li>ACK</li></ol><p class="why">"여보세요?"(SYN) → "네, 들려요. 제 말도 들려요?"(SYN+ACK) → "네"(ACK). <mark>FIN은 연결을 끊을 때</mark>, RST는 강제로 끊을 때 쓴다.</p></div>
+      </article>
+      <article class="item" data-id="b-dhcp" data-build="fullname" data-join=" " data-decoys="Domain|Control">
+        <div class="item-h"><span class="lang">영문</span><h3>DHCP 풀네임</h3><label class="chk"><input type="checkbox" id="k-b-dhcp">외움</label></div>
+        <p class="q">DHCP의 영문 풀네임을 만드세요.</p>
+        <div class="ans"><ol class="steps build-answer"><li>Dynamic</li><li>Host</li><li>Configuration</li><li>Protocol</li></ol><p class="why">IP 주소를 <b>자동으로(Dynamic)</b> 나눠 주는 프로토콜. Domain이 들어가는 건 DNS(Domain Name System).</p></div>
+      </article>
+      <article class="item" data-id="b-icmp" data-build="fullname" data-join=" " data-decoys="Management|Transfer">
+        <div class="item-h"><span class="lang">영문</span><h3>ICMP 풀네임</h3><label class="chk"><input type="checkbox" id="k-b-icmp">외움</label></div>
+        <p class="q">ICMP의 영문 풀네임을 만드세요.</p>
+        <div class="ans"><ol class="steps build-answer"><li>Internet</li><li>Control</li><li>Message</li><li>Protocol</li></ol><p class="why">오류와 상태를 알려 주는 <b>제어(Control) 메시지</b> 프로토콜. ping이 쓰는 것. Management가 들어가는 건 SNMP(Simple Network Management Protocol).</p></div>
+      </article>
+    </div>
+
   </section>
 
   <!-- ================= Security ================= -->
@@ -1075,6 +1160,30 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
         </tbody>
       </table>
     </div>
+    <p class="group-title">조각으로 만들기</p>
+    <div class="grid">
+      <article class="item" data-id="b-cia" data-build="fullname" data-join=", " data-decoys="Authentication|Durability">
+        <div class="item-h"><span class="lang">영문</span><h3>보안 3요소 CIA</h3><label class="chk"><input type="checkbox" id="k-b-cia">외움</label></div>
+        <p class="q">C, I, A가 각각 무엇인지 순서대로 놓으세요.</p>
+        <div class="ans"><ol class="steps build-answer"><li>Confidentiality</li><li>Integrity</li><li>Availability</li></ol><p class="why"><b>기밀성</b>(허락된 사람만 봄), <b>무결성</b>(함부로 못 바꿈), <b>가용성</b>(필요할 때 쓸 수 있음). Authentication(인증)은 A지만 3요소가 아니고, Durability는 DB의 ACID.</p></div>
+      </article>
+      <article class="item" data-id="b-csrf" data-build="fullname" data-join=" " data-decoys="Scripting|Server">
+        <div class="item-h"><span class="lang">영문</span><h3>CSRF 풀네임</h3><label class="chk"><input type="checkbox" id="k-b-csrf">외움</label></div>
+        <p class="q">CSRF의 영문 풀네임을 만드세요.</p>
+        <div class="ans"><ol class="steps build-answer"><li>Cross-Site</li><li>Request</li><li>Forgery</li></ol><p class="why">사용자 권한으로 <b>요청(Request)을 위조(Forgery)</b>하는 공격. Scripting이 들어가는 건 XSS.</p></div>
+      </article>
+      <article class="item" data-id="b-xss" data-build="fullname" data-join=" " data-decoys="Request|Forgery">
+        <div class="item-h"><span class="lang">영문</span><h3>XSS 풀네임</h3><label class="chk"><input type="checkbox" id="k-b-xss">외움</label></div>
+        <p class="q">XSS의 영문 풀네임을 만드세요.</p>
+        <div class="ans"><ol class="steps build-answer"><li>Cross-Site</li><li>Scripting</li></ol><p class="why">게시글 등에 <b>스크립트(Scripting)</b>를 심어 보는 사람 브라우저에서 실행하게 하는 공격. CSS와 헷갈리지 않게 X를 쓴다.</p></div>
+      </article>
+      <article class="item" data-id="b-apt" data-build="fullname" data-join=" " data-decoys="Attack|Protocol">
+        <div class="item-h"><span class="lang">영문</span><h3>APT 풀네임</h3><label class="chk"><input type="checkbox" id="k-b-apt">외움</label></div>
+        <p class="q">APT의 영문 풀네임을 만드세요.</p>
+        <div class="ans"><ol class="steps build-answer"><li>Advanced</li><li>Persistent</li><li>Threat</li></ol><p class="why">특정 조직을 <b>오랫동안 끈질기게(Persistent)</b> 노리는 지능형 <b>위협(Threat)</b>. Attack이 아니라 Threat.</p></div>
+      </article>
+    </div>
+
   </section>
 
   <!-- ================= UML ================= -->
@@ -1167,6 +1276,42 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
           <tr data-id="u-actor"><td class="c"><input type="checkbox" id="k-u-actor" aria-label="외움"></td><td class="term">액터 (Actor)</td><td class="ans">시스템 <b>바깥</b>에서 시스템을 사용하는 사람이나 다른 시스템. 유스케이스 다이어그램에 졸라맨 모양으로 그린다.</td><td class="hint">쇼핑몰 시스템에서 고객, 관리자, 외부 결제 시스템이 액터. 시스템 안에 있는 건 액터가 아님</td></tr>
         </tbody>
       </table>
+    </div>
+  </section>
+
+  <!-- ================= SWE ================= -->
+  <section id="swe">
+    <div class="sec-head">
+      <span class="sub">PART 5</span>
+      <h2>소프트웨어 공학, 순서로 외우기</h2>
+      <p>결합도·응집도, 테스트 단계, 개발 모델은 <mark>순서</mark>를 묻는 문제가 많습니다. 앞글자로 외우고 조각을 맞추며 확인하세요.</p>
+    </div>
+    <div class="grid">
+      <article class="item" data-id="b-coupling" data-build="order" data-join=" → " data-decoys="">
+        <div class="item-h"><span class="lang">순서</span><h3>결합도 순서</h3><label class="chk"><input type="checkbox" id="k-b-coupling">외움</label></div>
+        <p class="q">결합도가 약한 것(좋은 것)부터 강한 것(나쁜 것)까지 순서대로 놓으세요.</p>
+        <div class="ans"><ol class="steps build-answer"><li>자료</li><li>스탬프</li><li>제어</li><li>외부</li><li>공통</li><li>내용</li></ol><p class="why"><b>외우는 법</b>: "<mark>자 스 제 외 공 내</mark>". 결합도는 모듈끼리 얼마나 얽혔는지라서 <b>약할수록 좋다</b>. 필요한 값만 넘기면 자료 결합도, 남의 내부를 직접 건드리면 내용 결합도.</p></div>
+      </article>
+      <article class="item" data-id="b-cohesion" data-build="order" data-join=" → " data-decoys="">
+        <div class="item-h"><span class="lang">순서</span><h3>응집도 순서</h3><label class="chk"><input type="checkbox" id="k-b-cohesion">외움</label></div>
+        <p class="q">응집도가 강한 것(좋은 것)부터 약한 것(나쁜 것)까지 순서대로 놓으세요.</p>
+        <div class="ans"><ol class="steps build-answer"><li>기능적</li><li>순차적</li><li>교환적</li><li>절차적</li><li>시간적</li><li>논리적</li><li>우연적</li></ol><p class="why"><b>외우는 법</b>: "<mark>기 순 교 절 시 논 우</mark>". 응집도는 한 모듈 안이 얼마나 한 가지 일에 모였는지라서 <b>강할수록 좋다</b>. 결합도는 약할수록, 응집도는 강할수록 좋은 설계.</p></div>
+      </article>
+      <article class="item" data-id="b-vmodel" data-build="order" data-join=" → " data-decoys="회귀 테스트">
+        <div class="item-h"><span class="lang">순서</span><h3>테스트 단계 순서</h3><label class="chk"><input type="checkbox" id="k-b-vmodel">외움</label></div>
+        <p class="q">소프트웨어 테스트 단계를 작은 것부터 순서대로 놓으세요.</p>
+        <div class="ans"><ol class="steps build-answer"><li>단위 테스트</li><li>통합 테스트</li><li>시스템 테스트</li><li>인수 테스트</li></ol><p class="why">함수 하나(단위) → 모듈을 합쳐서(통합) → 전체 시스템(시스템) → 사용자가 받아들일지(인수). V-모델에서 각각 구현·설계·분석·요구사항 단계와 짝을 이룬다. 회귀 테스트는 고친 뒤 다시 확인하는 테스트라 순서 단계가 아니다.</p></div>
+      </article>
+      <article class="item" data-id="b-waterfall" data-build="order" data-join=" → " data-decoys="프로토타입">
+        <div class="item-h"><span class="lang">순서</span><h3>폭포수 모델 순서</h3><label class="chk"><input type="checkbox" id="k-b-waterfall">외움</label></div>
+        <p class="q">폭포수 모델의 개발 단계를 순서대로 놓으세요.</p>
+        <div class="ans"><ol class="steps build-answer"><li>계획</li><li>요구 분석</li><li>설계</li><li>구현</li><li>테스트</li><li>유지보수</li></ol><p class="why">물이 위에서 아래로만 흐르듯 <b>한 단계를 끝내야 다음 단계</b>로 간다. 프로토타입(시제품을 먼저 보여 주기)은 프로토타입 모델의 특징.</p></div>
+      </article>
+      <article class="item" data-id="b-integration" data-build="order" data-join=" → " data-decoys="">
+        <div class="item-h"><span class="lang">순서</span><h3>하향식 통합 테스트</h3><label class="chk"><input type="checkbox" id="k-b-integration">외움</label></div>
+        <p class="q">하향식 통합 테스트에서 모듈을 합치는 순서대로 놓으세요.</p>
+        <div class="ans"><ol class="steps build-answer"><li>상위 모듈</li><li>중간 모듈</li><li>하위 모듈</li></ol><p class="why">하향식은 <b>위에서 아래로</b> 합치고, 아직 없는 아래 모듈은 가짜 모듈인 <mark>스텁(Stub)</mark>으로 대신한다. 상향식은 반대로 아래부터 합치고 <mark>드라이버(Driver)</mark>를 쓴다.</p></div>
+      </article>
     </div>
   </section>
 
