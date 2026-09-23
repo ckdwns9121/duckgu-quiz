@@ -449,6 +449,8 @@ System.out.print(C.cnt);</pre>
       <article class="item" data-id="j9">
         <div class="item-h"><span class="lang">Java</span><h3>오버로딩 vs 오버라이딩</h3><label class="chk"><input type="checkbox" id="k-j9">외움</label></div>
         <p class="q">둘의 차이는?</p>
+        <ul class="quiz-opts" hidden data-q="부모 클래스의 메서드를 자식 클래스에서 이름·매개변수·반환형까지 똑같이 다시 정의하는 것은?"><li class="ok">오버라이딩 (Overriding)</li><li>오버로딩 (Overloading)</li><li>캡슐화 (Encapsulation)</li><li>추상화 (Abstraction)</li></ul>
+        <ul class="quiz-opts" hidden data-q="한 클래스 안에서 이름은 같고 매개변수의 개수나 타입만 다른 메서드를 여러 개 만드는 것은?"><li class="ok">오버로딩 (Overloading)</li><li>오버라이딩 (Overriding)</li><li>상속 (Inheritance)</li><li>인터페이스 구현 (implements)</li></ul>
         <div class="ans"><p><b>오버로딩 (Overloading)</b></p>
 <ol class="steps">
 <li>한 클래스 안에서 <b>이름이 같은 메서드를 여러 개</b> 만드는 것</li>
@@ -667,6 +669,7 @@ print(d.get("c", 0))</pre>
       <article class="item" data-id="s2">
         <div class="item-h"><span class="lang">SQL</span><h3>WHERE vs HAVING</h3><label class="chk"><input type="checkbox" id="k-s2">외움</label></div>
         <p class="q">둘의 차이는?</p>
+        <ul class="quiz-opts" hidden data-q="WHERE 절에 쓸 수 없는 조건은?"><li class="ok">COUNT(*) &gt; 10</li><li>학년 = 3</li><li>이름 LIKE &#x27;김%&#x27;</li><li>점수 BETWEEN 80 AND 90</li></ul>
         <div class="ans"><ol class="steps">
 <li>SQL 실행 순서: <b>FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY</b></li>
 <li><code>WHERE</code>는 GROUP BY <b>전</b>: 한 줄 한 줄을 거름 (예: 학년 = 3인 학생만)</li>
@@ -681,6 +684,8 @@ HAVING COUNT(*) &gt; 10;   -- 10명 넘는 학과만</pre>
       <article class="item" data-id="s3">
         <div class="item-h"><span class="lang">SQL</span><h3>LIKE 기호</h3><label class="chk"><input type="checkbox" id="k-s3">외움</label></div>
         <p class="q"><code>'김%'</code>, <code>'김_'</code>, <code>'%김%'</code>의 뜻은?</p>
+        <ul class="quiz-opts" hidden data-q="이름 LIKE &#x27;김_&#x27; 조건에 맞는 이름은?"><li class="ok">김철</li><li>김철수</li><li>김</li><li>박김철</li></ul>
+        <ul class="quiz-opts" hidden data-q="이름 LIKE &#x27;%수&#x27; 조건에 맞는 이름은?"><li class="ok">박민수</li><li>수민</li><li>민수진</li><li>김수현</li></ul>
         <div class="ans"><ol class="steps">
 <li><code>%</code> = 글자 <b>0개 이상 아무거나</b></li>
 <li><code>_</code> = 글자 <b>딱 1개</b></li>
@@ -693,6 +698,7 @@ HAVING COUNT(*) &gt; 10;   -- 10명 넘는 학과만</pre>
       <article class="item" data-id="s4">
         <div class="item-h"><span class="lang">SQL</span><h3>DELETE · TRUNCATE · DROP</h3><label class="chk"><input type="checkbox" id="k-s4">외움</label></div>
         <p class="q">셋의 차이는?</p>
+        <ul class="quiz-opts" hidden data-q="테이블 구조는 남기고 모든 행을 한 번에 지우는 DDL 명령은?"><li class="ok">TRUNCATE</li><li>DELETE</li><li>DROP</li><li>ALTER</li></ul>
         <div class="ans"><ol class="steps">
 <li><code>DELETE FROM 학생 WHERE ...</code> → <b>원하는 행만</b> 지움. 조건 없으면 전부. 테이블 틀은 남음. 롤백 가능 (DML)</li>
 <li><code>TRUNCATE TABLE 학생</code> → <b>모든 행</b>을 한 번에 비움. 틀은 남음. 되돌릴 수 없음 (DDL)</li>
@@ -703,6 +709,8 @@ HAVING COUNT(*) &gt; 10;   -- 10명 넘는 학과만</pre>
       <article class="item" data-id="s5">
         <div class="item-h"><span class="lang">SQL</span><h3>DDL · DML · DCL</h3><label class="chk"><input type="checkbox" id="k-s5">외움</label></div>
         <p class="q">각각 어떤 명령어?</p>
+        <ul class="quiz-opts" hidden data-q="다음 중 DDL(데이터 정의어)이 아닌 것은?"><li class="ok">DELETE</li><li>CREATE</li><li>ALTER</li><li>TRUNCATE</li></ul>
+        <ul class="quiz-opts" hidden data-q="GRANT와 REVOKE는 어느 종류의 SQL일까?"><li class="ok">DCL (데이터 제어어)</li><li>DDL (데이터 정의어)</li><li>DML (데이터 조작어)</li><li>SQL이 아니라 DBMS 설정</li></ul>
         <div class="ans"><ol class="steps">
 <li><b>DDL</b> (Definition, 정의): 테이블 <b>틀</b>을 만들고 고치고 없앰 → <code>CREATE, ALTER, DROP, TRUNCATE</code></li>
 <li><b>DML</b> (Manipulation, 조작): 틀 안의 <b>데이터</b>를 다룸 → <code>SELECT, INSERT, UPDATE, DELETE</code></li>
@@ -715,6 +723,8 @@ HAVING COUNT(*) &gt; 10;   -- 10명 넘는 학과만</pre>
 <pre>GRANT SELECT ON 학생 TO 홍길동 WITH GRANT OPTION;
 REVOKE SELECT ON 학생 FROM 홍길동 CASCADE;</pre>
         <p class="q">빈칸으로 자주 나오는 단어는?</p>
+        <ul class="quiz-opts" hidden data-q="권한을 받은 사람이 그 권한을 다시 남에게 줄 수 있게 하려면 GRANT 문 끝에 무엇을 붙일까?"><li class="ok">WITH GRANT OPTION</li><li>CASCADE</li><li>ON DELETE</li><li>RESTRICT</li></ul>
+        <ul class="quiz-opts" hidden data-q="REVOKE할 때, 그 사람이 남에게 나눠 준 권한까지 줄줄이 회수하는 옵션은?"><li class="ok">CASCADE</li><li>WITH GRANT OPTION</li><li>RESTRICT</li><li>DISTINCT</li></ul>
         <div class="ans"><ol class="steps">
 <li><code>GRANT 권한 ON 테이블 TO 사용자</code> → 권한을 <b>준다</b> (~에게 = TO)</li>
 <li><code>REVOKE 권한 ON 테이블 FROM 사용자</code> → 권한을 <b>뺏는다</b> (~에게서 = FROM)</li>
@@ -920,7 +930,7 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
           <tr data-id="d-acid-c"><td class="c"><input type="checkbox" id="k-d-acid-c" aria-label="외움"></td><td class="term">일관성<small>Consistency</small></td><td class="ans">트랜잭션 전과 후 모두 DB가 <b>규칙에 맞는 올바른 상태</b>여야 한다.</td><td class="hint">이체 전 두 계좌 합계 100만 원이면, 이체 후에도 합계 100만 원</td></tr>
           <tr data-id="d-acid-i"><td class="c"><input type="checkbox" id="k-d-acid-i" aria-label="외움"></td><td class="term">격리성<small>Isolation</small></td><td class="ans">여러 트랜잭션이 동시에 실행돼도 <b>서로의 중간 과정을 보거나 끼어들지 않는다</b>.</td><td class="hint">내가 이체하는 도중에 다른 사람이 내 잔액을 조회해도 반쯤 처리된 금액은 안 보임</td></tr>
           <tr data-id="d-acid-d"><td class="c"><input type="checkbox" id="k-d-acid-d" aria-label="외움"></td><td class="term">영속성<small>Durability</small></td><td class="ans">Commit으로 완료된 결과는 <mark>영구히</mark> 저장된다. 서버가 꺼져도 사라지지 않는다.</td><td class="hint">이체 완료 문자를 받은 직후 은행 서버가 꺼져도, 켜 보면 이체 기록이 그대로 있음</td></tr>
-          <tr data-id="d-tx-state"><td class="c"><input type="checkbox" id="k-d-tx-state" aria-label="외움"></td><td class="term">트랜잭션 상태</td><td class="ans"><b>활동</b>(실행 중) → <b>부분 완료</b>(마지막 명령까지 실행, 아직 Commit 전) → <b>완료</b>(Commit). 중간에 문제가 생기면 <b>실패</b> → <b>철회</b>(Rollback).</td><td class="hint">부분 완료와 완료가 헷갈리면: 부분 완료 = 도장 찍기 직전, 완료 = 도장 찍음</td></tr>
+          <tr data-quiz="off" data-id="d-tx-state"><td class="c"><input type="checkbox" id="k-d-tx-state" aria-label="외움"></td><td class="term">트랜잭션 상태</td><td class="ans"><b>활동</b>(실행 중) → <b>부분 완료</b>(마지막 명령까지 실행, 아직 Commit 전) → <b>완료</b>(Commit). 중간에 문제가 생기면 <b>실패</b> → <b>철회</b>(Rollback).</td><td class="hint">부분 완료와 완료가 헷갈리면: 부분 완료 = 도장 찍기 직전, 완료 = 도장 찍음</td></tr>
         </tbody>
       </table>
     </div>
@@ -930,12 +940,12 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
       <table>
         <thead><tr><th class="c"></th><th>용어</th><th>뜻</th><th>예시 · 외우는 법</th></tr></thead>
         <tbody>
-          <tr data-id="d-cc-prob"><td class="c"><input type="checkbox" id="k-d-cc-prob" aria-label="외움"></td><td class="term">병행 제어 안 하면</td><td class="ans">여러 트랜잭션을 동시에 막 실행하면 생기는 문제: <b>갱신 분실</b>(한 사람의 수정이 덮여 사라짐), <b>모순성</b>(값이 앞뒤가 안 맞음), <b>연쇄 복귀</b>(하나를 취소하면 그걸 쓴 다른 것도 줄줄이 취소).</td><td class="hint">두 사람이 같은 문서를 동시에 고치고 저장 → 나중에 저장한 사람 것만 남음 = 갱신 분실</td></tr>
+          <tr data-quiz="off" data-id="d-cc-prob"><td class="c"><input type="checkbox" id="k-d-cc-prob" aria-label="외움"></td><td class="term">병행 제어 안 하면</td><td class="ans">여러 트랜잭션을 동시에 막 실행하면 생기는 문제: <b>갱신 분실</b>(한 사람의 수정이 덮여 사라짐), <b>모순성</b>(값이 앞뒤가 안 맞음), <b>연쇄 복귀</b>(하나를 취소하면 그걸 쓴 다른 것도 줄줄이 취소).</td><td class="hint">두 사람이 같은 문서를 동시에 고치고 저장 → 나중에 저장한 사람 것만 남음 = 갱신 분실</td></tr>
           <tr data-id="d-cc-lock"><td class="c"><input type="checkbox" id="k-d-cc-lock" aria-label="외움"></td><td class="term">로킹<small>Locking</small></td><td class="ans">데이터를 쓰는 동안 <b>잠가서(Lock)</b> 다른 트랜잭션이 못 건드리게 한다. 다 쓰면 풀어 줌(Unlock).</td><td class="hint">화장실 문 잠그기. 쓰는 동안 다른 사람은 기다림</td></tr>
-          <tr data-id="d-cc-unit"><td class="c"><input type="checkbox" id="k-d-cc-unit" aria-label="외움"></td><td class="term">로킹 단위</td><td class="ans">잠그는 단위가 <mark>크면</mark>(DB 전체, 테이블) → 관리가 쉽지만 동시에 쓸 수 있는 사람이 적음(병행성 낮음). 단위가 <mark>작으면</mark>(행 하나) → 여럿이 동시에 쓸 수 있지만 관리가 복잡함(오버헤드 큼).</td><td class="hint">건물 정문을 잠그면 편하지만 아무도 못 들어감. 방마다 잠그면 여럿이 쓰지만 열쇠 관리가 힘듦</td></tr>
+          <tr data-quiz="off" data-id="d-cc-unit"><td class="c"><input type="checkbox" id="k-d-cc-unit" aria-label="외움"></td><td class="term">로킹 단위</td><td class="ans">잠그는 단위가 <mark>크면</mark>(DB 전체, 테이블) → 관리가 쉽지만 동시에 쓸 수 있는 사람이 적음(병행성 낮음). 단위가 <mark>작으면</mark>(행 하나) → 여럿이 동시에 쓸 수 있지만 관리가 복잡함(오버헤드 큼).</td><td class="hint">건물 정문을 잠그면 편하지만 아무도 못 들어감. 방마다 잠그면 여럿이 쓰지만 열쇠 관리가 힘듦</td></tr>
           <tr data-id="d-cc-ts"><td class="c"><input type="checkbox" id="k-d-cc-ts" aria-label="외움"></td><td class="term">타임스탬프 / 낙관적 검증 / 다중 버전</td><td class="ans"><b>타임스탬프</b>: 먼저 시작한 트랜잭션 순서대로 처리. <b>낙관적 검증</b>: 일단 다 실행하고 끝날 때 충돌 검사. <b>다중 버전(MVCC)</b>: 데이터 버전을 여러 개 두고 각자 맞는 버전을 읽음.</td><td class="hint">로킹 말고 다른 병행 제어 방법들. 번호표 순서대로 / 일단 하고 나중에 확인 / 복사본 여러 개</td></tr>
           <tr data-id="d-rc-redo"><td class="c"><input type="checkbox" id="k-d-rc-redo" aria-label="외움"></td><td class="term">REDO / UNDO</td><td class="ans"><b>REDO</b>: Commit까지 <mark>끝난 작업</mark>을 다시 실행해서 결과를 살림. <b>UNDO</b>: Commit 못 한 <mark>덜 끝난 작업</mark>을 되돌려서 없앰.</td><td class="hint">장애 후 회복할 때: 끝낸 숙제는 다시 써 두기(Redo), 쓰다 만 숙제는 지우기(Undo)</td></tr>
-          <tr data-id="d-rc-imm"><td class="c"><input type="checkbox" id="k-d-rc-imm" aria-label="외움"></td><td class="term">즉시 갱신 / 지연 갱신</td><td class="ans"><b>즉시 갱신</b>: 작업하는 즉시 DB에 반영 → 끝난 건 REDO, 덜 끝난 것도 이미 DB에 썼으니 UNDO 필요 → <b>둘 다</b>. <b>지연 갱신</b>: Commit할 때 한꺼번에 반영 → Commit 전엔 DB에 쓴 게 없어서 UNDO 불필요 → <mark>REDO만</mark>.</td><td class="hint">지연 갱신 = 초안에만 쓰다가 확정할 때 옮겨 적기. 확정 전이면 원본은 멀쩡하니 지울 게 없음</td></tr>
+          <tr data-quiz="off" data-id="d-rc-imm"><td class="c"><input type="checkbox" id="k-d-rc-imm" aria-label="외움"></td><td class="term">즉시 갱신 / 지연 갱신</td><td class="ans"><b>즉시 갱신</b>: 작업하는 즉시 DB에 반영 → 끝난 건 REDO, 덜 끝난 것도 이미 DB에 썼으니 UNDO 필요 → <b>둘 다</b>. <b>지연 갱신</b>: Commit할 때 한꺼번에 반영 → Commit 전엔 DB에 쓴 게 없어서 UNDO 불필요 → <mark>REDO만</mark>.</td><td class="hint">지연 갱신 = 초안에만 쓰다가 확정할 때 옮겨 적기. 확정 전이면 원본은 멀쩡하니 지울 게 없음</td></tr>
           <tr data-id="d-rc-etc"><td class="c"><input type="checkbox" id="k-d-rc-etc" aria-label="외움"></td><td class="term">체크포인트 / 그림자 페이징</td><td class="ans"><b>체크포인트</b>: 중간중간 저장 지점을 찍어 두고, 장애가 나면 그 지점부터만 회복. <b>그림자 페이징</b>: 원본(그림자) 페이지를 따로 보관하다가 실패하면 그걸로 바꿔 끼움.</td><td class="hint">체크포인트 = 게임 세이브 포인트, 그림자 페이징 = 원본 백업본</td></tr>
         </tbody>
       </table>
@@ -950,8 +960,8 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
           <tr data-id="d-sch-con"><td class="c"><input type="checkbox" id="k-d-sch-con" aria-label="외움"></td><td class="term">개념 스키마</td><td class="ans">조직 <b>전체 입장</b>에서 본 DB의 논리 구조. 모든 테이블과 관계, 제약조건. DB 하나에 하나만 있다.</td><td class="hint">학교 전체 데이터 설계도 한 장. 보통 그냥 "스키마"라고 하면 이것</td></tr>
           <tr data-id="d-sch-int"><td class="c"><input type="checkbox" id="k-d-sch-int" aria-label="외움"></td><td class="term">내부 스키마</td><td class="ans">데이터가 <b>실제로 디스크에 어떻게 저장되는지</b>의 물리 구조. 저장 방식, 인덱스 등.</td><td class="hint">창고 안에 상자가 어느 선반에 어떻게 쌓였는지</td></tr>
           <tr data-id="d-indep"><td class="c"><input type="checkbox" id="k-d-indep" aria-label="외움"></td><td class="term">논리적 / 물리적 독립성</td><td class="ans"><b>논리적 독립성</b>: 개념 스키마(전체 설계)를 바꿔도 외부 스키마(앱)는 안 고쳐도 됨. <b>물리적 독립성</b>: 내부 스키마(저장 방식)를 바꿔도 개념 스키마는 그대로.</td><td class="hint">외부 ↔ 개념 사이 = 논리적, 개념 ↔ 내부 사이 = 물리적. 아래층을 고쳐도 위층은 모름</td></tr>
-          <tr data-id="d-design"><td class="c"><input type="checkbox" id="k-d-design" aria-label="외움"></td><td class="term">DB 설계 순서</td><td class="ans"><b>요구 분석</b>(뭘 저장할지 정리) → <b>개념 설계</b>(E-R 다이어그램 그림) → <b>논리 설계</b>(테이블·키로 바꾸고 정규화) → <b>물리 설계</b>(저장 방식·인덱스) → <b>구현</b>(실제 SQL로 생성).</td><td class="hint">"요개논물구". 집 짓기: 요구 듣기 → 스케치 → 도면 → 자재·시공 방법 → 시공</td></tr>
-          <tr data-id="d-er"><td class="c"><input type="checkbox" id="k-d-er" aria-label="외움"></td><td class="term">E-R 다이어그램 기호</td><td class="ans">E-R 다이어그램 기호: <b>사각형</b> = 개체(학생), <b>마름모</b> = 관계(수강한다), <b>타원</b> = 속성(이름), <b>밑줄 친 속성</b> = 기본키.</td><td class="hint">개체 = 명사, 관계 = 동사, 속성 = 형용사처럼 생각하기. UML의 마름모(집합·합성)와는 다른 것</td></tr>
+          <tr data-quiz="off" data-id="d-design"><td class="c"><input type="checkbox" id="k-d-design" aria-label="외움"></td><td class="term">DB 설계 순서</td><td class="ans"><b>요구 분석</b>(뭘 저장할지 정리) → <b>개념 설계</b>(E-R 다이어그램 그림) → <b>논리 설계</b>(테이블·키로 바꾸고 정규화) → <b>물리 설계</b>(저장 방식·인덱스) → <b>구현</b>(실제 SQL로 생성).</td><td class="hint">"요개논물구". 집 짓기: 요구 듣기 → 스케치 → 도면 → 자재·시공 방법 → 시공</td></tr>
+          <tr data-id="d-er"><td class="c"><input type="checkbox" id="k-d-er" aria-label="외움"></td><td class="term">E-R 다이어그램 기호</td><td class="ans"><b>사각형</b> = 개체(학생), <b>마름모</b> = 관계(수강한다), <b>타원</b> = 속성(이름), <b>밑줄 친 속성</b> = 기본키.</td><td class="hint">개체 = 명사, 관계 = 동사, 속성 = 형용사처럼 생각하기. UML의 마름모(집합·합성)와는 다른 것</td></tr>
           <tr data-id="d-view"><td class="c"><input type="checkbox" id="k-d-view" aria-label="외움"></td><td class="term">뷰<small>View</small></td><td class="ans">실제 데이터를 저장하지 않고, 다른 테이블에서 <b>필요한 부분만 골라 보여주는 가상 테이블</b>. <mark>ALTER로 수정 불가</mark> → DROP하고 다시 CREATE.</td><td class="hint">보여주고 싶은 열만 골라 보여줄 수 있어서 보안에 좋음. 뷰를 지워도 원본 테이블은 멀쩡함</td></tr>
         </tbody>
       </table>
@@ -977,6 +987,26 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
         <div class="item-h"><span class="lang">영문</span><h3>ACID 풀네임</h3><label class="chk"><input type="checkbox" id="k-b-acid">외움</label></div>
         <p class="q">트랜잭션 특성 A, C, I, D를 순서대로 놓으세요.</p>
         <div class="ans"><ol class="steps build-answer"><li>Atomicity</li><li>Consistency</li><li>Isolation</li><li>Durability</li></ol><p class="why"><b>원자성</b>(전부 아니면 전무), <b>일관성</b>, <b>격리성</b>, <b>영속성</b>. Availability·Integrity는 보안 3요소(CIA)라서 섞어 내는 함정.</p></div>
+      </article>
+    </div>
+
+    <p class="group-title">개념 확인 문제</p>
+    <div class="grid">
+      <article class="item" data-id="q-cc-unit">
+        <div class="item-h"><span class="lang">개념</span><h3>로킹 단위</h3><label class="chk"><input type="checkbox" id="k-q-cc-unit">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="로킹 단위를 작게(행 하나 단위로) 하면 어떻게 될까?"><li class="ok">병행성은 높아지고, 관리 부담(오버헤드)은 커진다</li><li>병행성은 낮아지고, 관리 부담은 작아진다</li><li>병행성도 높아지고, 관리 부담도 작아진다</li><li>병행성은 낮아지고, 관리 부담은 커진다</li></ul>
+        <div class="ans"><p>잠그는 단위가 <mark>작으면</mark> 여럿이 동시에 쓸 수 있지만(병행성↑) 잠금이 많아 관리가 복잡하다(오버헤드↑). <mark>크면</mark> 그 반대.</p><p class="why"><b>기억할 것</b>: 건물 정문을 잠그면 편하지만 아무도 못 들어가고, 방마다 잠그면 여럿이 쓰지만 열쇠 관리가 힘들다.</p></div>
+      </article>
+      <article class="item" data-id="q-rc-imm">
+        <div class="item-h"><span class="lang">개념</span><h3>즉시 갱신 · 지연 갱신</h3><label class="chk"><input type="checkbox" id="k-q-rc-imm">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="지연 갱신 회복 기법에서 장애가 났을 때 필요한 연산은?"><li class="ok">REDO만</li><li>UNDO만</li><li>REDO와 UNDO 모두</li><li>필요 없음</li></ul>
+        <ul class="quiz-opts" hidden data-q="즉시 갱신 회복 기법에서 장애가 났을 때 필요한 연산은?"><li class="ok">REDO와 UNDO 모두</li><li>REDO만</li><li>UNDO만</li><li>필요 없음</li></ul>
+        <div class="ans"><p><b>즉시 갱신</b>: 작업하는 즉시 DB에 반영 → 끝난 건 REDO, 덜 끝난 것도 이미 DB에 썼으니 UNDO → <b>둘 다</b>.</p><p><b>지연 갱신</b>: Commit할 때 한꺼번에 반영 → Commit 전엔 DB에 쓴 게 없어서 UNDO 불필요 → <mark>REDO만</mark>.</p><p class="why"><b>기억할 것</b>: 지연 갱신 = 초안에만 쓰다가 확정할 때 옮겨 적기. 확정 전이면 원본은 멀쩡하니 지울 게 없다.</p></div>
+      </article>
+      <article class="item" data-id="q-cc-prob">
+        <div class="item-h"><span class="lang">개념</span><h3>병행 제어를 안 하면</h3><label class="chk"><input type="checkbox" id="k-q-cc-prob">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="병행 제어를 하지 않을 때 생기는 문제가 아닌 것은?"><li class="ok">정규화 위반</li><li>갱신 분실</li><li>모순성</li><li>연쇄 복귀</li></ul>
+        <div class="ans"><p>여러 트랜잭션을 동시에 막 실행하면 <b>갱신 분실</b>(한 사람의 수정이 덮여 사라짐), <b>모순성</b>(값이 앞뒤가 안 맞음), <b>연쇄 복귀</b>(하나를 취소하면 그걸 쓴 다른 것도 줄줄이 취소)가 생긴다.</p><p class="why">정규화는 테이블 설계 문제라 병행 제어와 관계없다.</p></div>
       </article>
     </div>
 
@@ -1014,7 +1044,7 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
         <tbody>
           <tr data-id="n-tcp"><td class="c"><input type="checkbox" id="k-n-tcp" aria-label="외움"></td><td class="term">TCP<small>Transmission Control Protocol</small></td><td class="ans">보내기 전에 <b>연결을 맺고</b>, 데이터가 <b>빠짐없이 순서대로</b> 도착했는지 확인하는 전송 방식. 못 받은 건 다시 보낸다.</td><td class="hint">등기 우편. 도착 확인까지 받아서 느리지만 확실함. 웹, 이메일, 파일 전송에 사용</td></tr>
           <tr data-id="n-udp"><td class="c"><input type="checkbox" id="k-n-udp" aria-label="외움"></td><td class="term">UDP<small>User Datagram Protocol</small></td><td class="ans">연결 없이 <b>그냥 바로 보내는</b> 방식. 도착 확인을 안 해서 빠르지만 중간에 빠져도 모른다.</td><td class="hint">전단지 뿌리기. 조금 빠져도 괜찮고 빠른 게 중요한 곳: 영상 스트리밍, 게임, DNS</td></tr>
-          <tr data-id="n-3way"><td class="c"><input type="checkbox" id="k-n-3way" aria-label="외움"></td><td class="term">3-Way Handshake</td><td class="ans">TCP가 연결을 맺는 3단계: ① <b>SYN</b>(연결하자) → ② <b>SYN+ACK</b>(좋아, 너도 들려?) → ③ <b>ACK</b>(응, 들려).</td><td class="hint">전화: "여보세요?" → "네, 들려요. 제 말도 들려요?" → "네, 들려요." 이후 대화 시작</td></tr>
+          <tr data-quiz="off" data-id="n-3way"><td class="c"><input type="checkbox" id="k-n-3way" aria-label="외움"></td><td class="term">3-Way Handshake</td><td class="ans">TCP가 연결을 맺는 3단계: ① <b>SYN</b>(연결하자) → ② <b>SYN+ACK</b>(좋아, 너도 들려?) → ③ <b>ACK</b>(응, 들려).</td><td class="hint">전화: "여보세요?" → "네, 들려요. 제 말도 들려요?" → "네, 들려요." 이후 대화 시작</td></tr>
           <tr data-id="n-ip"><td class="c"><input type="checkbox" id="k-n-ip" aria-label="외움"></td><td class="term">IPv4 / IPv6</td><td class="ans">IPv4 = <mark>32비트</mark>, 8비트씩 4덩어리를 점으로 구분 (192.168.0.1). IPv6 = <mark>128비트</mark>, 16비트씩 8덩어리를 콜론으로 구분 (2001:db8::1).</td><td class="hint">IPv4 주소가 부족해서 IPv6가 나옴. IPv6에는 <b>브로드캐스트가 없고</b> 유니캐스트(1:1)·멀티캐스트(1:그룹)·애니캐스트(1:가장 가까운 하나)가 있음</td></tr>
           <tr data-id="n-arp"><td class="c"><input type="checkbox" id="k-n-arp" aria-label="외움"></td><td class="term">ARP / RARP<small>Address Resolution Protocol</small></td><td class="ans"><b>ARP</b>: IP 주소를 알 때 그 컴퓨터의 <b>MAC 주소(랜카드 고유 번호)</b>를 알아낸다. <b>RARP</b>: 반대로 MAC 주소로 IP 주소를 알아낸다.</td><td class="hint">R = Reverse(거꾸로). ARP = 이름(IP)으로 얼굴(MAC) 찾기</td></tr>
           <tr data-id="n-icmp"><td class="c"><input type="checkbox" id="k-n-icmp" aria-label="외움"></td><td class="term">ICMP<small>Internet Control Message Protocol</small></td><td class="ans">네트워크에서 <b>오류가 났거나 상태를 알려줄 때</b> 쓰는 메시지 프로토콜. "목적지에 도달할 수 없음" 같은 알림.</td><td class="hint"><code>ping</code> 명령어가 ICMP를 씀. Smurf, Ping of Death 공격에도 등장</td></tr>
@@ -1088,7 +1118,7 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
       <table>
         <thead><tr><th class="c"></th><th>용어</th><th>뜻</th><th>예시 · 외우는 법</th></tr></thead>
         <tbody>
-          <tr data-id="x-dos"><td class="c"><input type="checkbox" id="k-x-dos" aria-label="외움"></td><td class="term">DoS / DDoS<small>(Distributed) Denial of Service</small></td><td class="ans">서버에 요청을 한꺼번에 엄청 보내서 <b>진짜 사용자가 못 쓰게</b> 만드는 공격. DDoS는 해커가 감염시킨 수많은 PC(좀비 PC, 봇넷)로 <b>동시에</b> 공격한다.</td><td class="hint">가게 앞에 가짜 손님 수천 명을 줄 세워 진짜 손님이 못 들어오게 함. 보안 3요소 중 <b>가용성</b>을 깨는 공격</td></tr>
+          <tr data-id="x-dos"><td class="c"><input type="checkbox" id="k-x-dos" aria-label="외움"></td><td class="term">DoS / DDoS<small>(Distributed) Denial of Service</small></td><td class="ans"><b>DoS</b>: 서버에 요청을 한꺼번에 엄청 보내서 <b>진짜 사용자가 못 쓰게</b> 만드는 공격. <b>DDoS</b>: 해커가 감염시킨 수많은 PC(좀비 PC, 봇넷)로 <b>동시에</b> 하는 서비스 거부 공격.</td><td class="hint">가게 앞에 가짜 손님 수천 명을 줄 세워 진짜 손님이 못 들어오게 함. 보안 3요소 중 <b>가용성</b>을 깨는 공격</td></tr>
           <tr data-id="x-syn"><td class="c"><input type="checkbox" id="k-x-syn" aria-label="외움"></td><td class="term">SYN Flooding</td><td class="ans">TCP 연결 3단계 중 <b>SYN만 계속 보내고 마지막 ACK를 안 보낸다</b>. 서버는 답을 기다리며 연결 자리를 잡아 두다가 자리가 꽉 차서 진짜 연결을 못 받는다.</td><td class="hint">전화를 걸어 "여보세요?"만 하고 대답 없이 끊기를 수천 번. 키워드: <b>SYN, 3-way handshake, 반쯤 열린 연결</b></td></tr>
           <tr data-id="x-smurf"><td class="c"><input type="checkbox" id="k-x-smurf" aria-label="외움"></td><td class="term">Smurf (스머핑)</td><td class="ans">보내는 사람 주소를 <b>피해자 IP로 속이고</b>, ICMP(ping)를 네트워크 전체(<b>브로드캐스트</b>)에 보낸다. 그러면 모든 컴퓨터가 피해자에게 한꺼번에 답장을 보낸다.</td><td class="hint">내 이름으로 전교생에게 "답장 주세요" 쪽지를 돌려서 답장 폭탄 맞게 하기. 키워드: <b>ICMP + 브로드캐스트 + IP 위조</b></td></tr>
           <tr data-id="x-pod"><td class="c"><input type="checkbox" id="k-x-pod" aria-label="외움"></td><td class="term">Ping of Death</td><td class="ans">ping(ICMP) 패킷을 허용된 최대 크기(<b>65,535바이트</b>)보다 <b>크게</b> 만들어 보낸다. 받는 쪽이 처리하다 멈추거나 다운된다.</td><td class="hint">이름 그대로 "죽음의 핑". 너무 큰 핑 하나로 쓰러뜨림</td></tr>
@@ -1149,14 +1179,14 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
         <tbody>
           <tr data-id="x-sym"><td class="c"><input type="checkbox" id="k-x-sym" aria-label="외움"></td><td class="term">대칭키 암호</td><td class="ans">암호화할 때와 풀 때 <b>같은 키 하나</b>를 쓴다. 빠르지만 키를 안전하게 나눠 주기가 어렵다. 종류: <mark>DES, AES, SEED, ARIA</mark>.</td><td class="hint">집 열쇠 하나를 복사해 나눠 갖기. SEED와 ARIA는 한국에서 만든 것</td></tr>
           <tr data-id="x-asym"><td class="c"><input type="checkbox" id="k-x-asym" aria-label="외움"></td><td class="term">비대칭키(공개키) 암호</td><td class="ans"><b>공개키</b>(누구나 가짐)로 잠그고 <b>개인키</b>(나만 가짐)로 연다. 키 나눠 주기 문제가 없지만 느리다. 종류: <mark>RSA, ECC, ElGamal</mark>.</td><td class="hint">우체통: 편지는 누구나 넣을 수 있지만(공개키) 꺼내는 건 열쇠 가진 주인만(개인키)</td></tr>
-          <tr data-id="x-keys"><td class="c"><input type="checkbox" id="k-x-keys" aria-label="외움"></td><td class="term">필요한 키 개수 (n명)</td><td class="ans">n명이 서로 암호 통신할 때 필요한 키 개수. 대칭키 = <mark>n(n−1)/2</mark> (두 명마다 하나씩), 비대칭키 = <mark>2n</mark> (한 명당 공개키·개인키 2개).</td><td class="hint">10명이면 대칭키 10×9/2 = 45개, 비대칭키 10×2 = 20개</td></tr>
+          <tr data-quiz="off" data-id="x-keys"><td class="c"><input type="checkbox" id="k-x-keys" aria-label="외움"></td><td class="term">필요한 키 개수 (n명)</td><td class="ans">n명이 서로 암호 통신할 때 필요한 키 개수. 대칭키 = <mark>n(n−1)/2</mark> (두 명마다 하나씩), 비대칭키 = <mark>2n</mark> (한 명당 공개키·개인키 2개).</td><td class="hint">10명이면 대칭키 10×9/2 = 45개, 비대칭키 10×2 = 20개</td></tr>
           <tr data-id="x-hash"><td class="c"><input type="checkbox" id="k-x-hash" aria-label="외움"></td><td class="term">해시<small>MD5, SHA</small></td><td class="ans">어떤 데이터든 <b>정해진 길이의 값</b>으로 바꾼다. 거꾸로 원래 값을 알아낼 수 없다. 데이터가 바뀌었는지(무결성) 확인할 때 쓴다. 종류: MD5, SHA.</td><td class="hint">사람의 지문. 지문으로 사람을 되살릴 순 없지만 같은 사람인지는 알 수 있음. 비밀번호도 해시로 저장</td></tr>
           <tr data-id="x-mac"><td class="c"><input type="checkbox" id="k-x-mac" aria-label="외움"></td><td class="term">MAC / DAC / RBAC</td><td class="ans"><b>MAC</b>(강제적): 관리자가 정한 <b>보안 등급</b>으로 접근을 강제로 통제. <b>DAC</b>(임의적): 데이터 <b>주인</b>이 누구에게 줄지 마음대로 정함. <b>RBAC</b>(역할 기반): <b>직급·역할</b>에 따라 권한을 줌.</td><td class="hint">MAC = 군대 비밀 등급(Mandatory 강제). DAC = 내 구글 드라이브 공유 설정(Discretionary 재량). RBAC = 팀장이면 결재 권한(Role)</td></tr>
           <tr data-id="x-ids"><td class="c"><input type="checkbox" id="k-x-ids" aria-label="외움"></td><td class="term">방화벽 / IDS / IPS</td><td class="ans"><b>방화벽</b>: 정해 둔 규칙대로 통과·차단. <b>IDS</b>: 침입을 <mark>탐지</mark>하고 알리기만 함. <b>IPS</b>: 침입을 탐지해서 <mark>차단</mark>까지 함.</td><td class="hint">IDS = Detection = CCTV(보고 알림만), IPS = Prevention = 경비원(보고 막음)</td></tr>
           <tr data-id="x-honey"><td class="c"><input type="checkbox" id="k-x-honey" aria-label="외움"></td><td class="term">허니팟<small>Honeypot</small></td><td class="ans">일부러 <b>허술해 보이는 가짜 시스템</b>을 만들어 공격자를 끌어들이고, 공격 방법을 관찰·기록한다.</td><td class="hint">꿀단지(Honey pot)로 벌레를 모으는 함정</td></tr>
           <tr data-id="x-vpn"><td class="c"><input type="checkbox" id="k-x-vpn" aria-label="외움"></td><td class="term">VPN / SSO</td><td class="ans"><b>VPN</b>: 인터넷 같은 공용망 위에 <b>암호화된 나만의 통로</b>를 만들어 사설망처럼 쓴다. <b>SSO</b>: <b>한 번 로그인</b>으로 여러 서비스를 이어서 쓴다.</td><td class="hint">VPN = 공용 도로 위의 전용 터널. SSO = Single Sign-On, 구글 로그인 한 번으로 유튜브·지메일 다 쓰기</td></tr>
           <tr data-id="x-proto"><td class="c"><input type="checkbox" id="k-x-proto" aria-label="외움"></td><td class="term">SSL/TLS · IPSec</td><td class="ans"><b>SSL/TLS</b>: 웹 브라우저와 서버 사이 통신을 암호화 (HTTPS). <b>IPSec</b>: IP 계층(3계층)에서 암호화. AH(인증·무결성)와 ESP(암호화까지)로 구성.</td><td class="hint">IPSec 모드 두 가지: 전송 모드(데이터만 보호), 터널 모드(패킷 전체를 보호, VPN에 사용)</td></tr>
-          <tr data-id="x-auth"><td class="c"><input type="checkbox" id="k-x-auth" aria-label="외움"></td><td class="term">인증 유형</td><td class="ans">본인 확인 방법 4가지: <b>지식</b>(아는 것: 비밀번호, PIN), <b>소유</b>(가진 것: OTP, 스마트카드), <b>존재</b>(나 자체: 지문, 홍채, 얼굴), <b>행위</b>(내 행동: 서명, 걸음걸이, 목소리).</td><td class="hint">두 가지 이상을 섞으면 다중 인증(MFA). 예) 비밀번호(지식) + 문자 인증번호(소유)</td></tr>
+          <tr data-id="x-auth"><td class="c"><input type="checkbox" id="k-x-auth" aria-label="외움"></td><td class="term">지식 / 소유 / 존재 / 행위<small>인증 유형</small></td><td class="ans"><b>지식</b>: 아는 것으로 확인 (비밀번호, PIN). <b>소유</b>: 가진 것으로 확인 (OTP, 스마트카드). <b>존재</b>: 내 몸 자체로 확인 (지문, 홍채, 얼굴). <b>행위</b>: 내 행동으로 확인 (서명, 걸음걸이, 목소리).</td><td class="hint">두 가지 이상을 섞으면 다중 인증(MFA). 예) 비밀번호(지식) + 문자 인증번호(소유)</td></tr>
         </tbody>
       </table>
     </div>
@@ -1184,6 +1214,16 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
       </article>
     </div>
 
+    <p class="group-title">개념 확인 문제</p>
+    <div class="grid">
+      <article class="item" data-id="q-keys">
+        <div class="item-h"><span class="lang">계산</span><h3>필요한 키 개수</h3><label class="chk"><input type="checkbox" id="k-q-keys">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="10명이 대칭키 방식으로 서로 1:1 암호 통신을 하려면 키가 몇 개 필요할까?"><li class="ok">45개</li><li>20개</li><li>10개</li><li>90개</li></ul>
+        <ul class="quiz-opts" hidden data-q="같은 10명이 비대칭키(공개키) 방식을 쓰면 키가 몇 개 필요할까?"><li class="ok">20개</li><li>45개</li><li>10개</li><li>100개</li></ul>
+        <div class="ans"><p>대칭키 = <mark>n(n−1)/2</mark> (두 명마다 하나씩) → 10×9/2 = 45개. 비대칭키 = <mark>2n</mark> (한 명당 공개키·개인키 2개) → 20개.</p></div>
+      </article>
+    </div>
+
   </section>
 
   <!-- ================= UML ================= -->
@@ -1200,6 +1240,8 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
       <article class="item" data-id="u-struct">
         <div class="item-h"><h3>구조 다이어그램 (사진)</h3><label class="chk"><input type="checkbox" id="k-u-struct">외움</label></div>
         <span class="mnemo">클 · 객 · 컴 · 배 · 복 · 패</span>
+        <ul class="quiz-opts" hidden data-q="다음 중 구조(정적) 다이어그램이 아닌 것은?"><li class="ok">시퀀스 다이어그램</li><li>클래스 다이어그램</li><li>컴포넌트 다이어그램</li><li>배치 다이어그램</li></ul>
+        <ul class="quiz-opts" hidden data-q="서버, PC 같은 물리적 장비에 무엇이 설치되는지 보여 주는 다이어그램은?"><li class="ok">배치 다이어그램</li><li>컴포넌트 다이어그램</li><li>패키지 다이어그램</li><li>객체 다이어그램</li></ul>
         <div class="ans"><p class="why">시스템이 <b>무엇으로 이루어져 있는지</b>를 보여 주는 그림. 시간이 흘러도 안 변하는 모습 = 사진.</p>
 <ol class="steps">
 <li><b>클래스</b>: 클래스들과 그 속성·메서드, 서로의 관계. 프로그램의 설계도. <mark>가장 많이 나옴</mark></li>
@@ -1214,6 +1256,8 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
       <article class="item" data-id="u-behav">
         <div class="item-h"><h3>행위 다이어그램 (동영상)</h3><label class="chk"><input type="checkbox" id="k-u-behav">외움</label></div>
         <span class="mnemo">유 · 시 · 커 · 상 · 활 · 타 · 상호</span>
+        <ul class="quiz-opts" hidden data-q="객체끼리 주고받는 메시지를 시간 순서대로 보여 주는 다이어그램은?"><li class="ok">시퀀스 다이어그램</li><li>커뮤니케이션 다이어그램</li><li>상태 다이어그램</li><li>활동 다이어그램</li></ul>
+        <ul class="quiz-opts" hidden data-q="주문이 &#x27;접수 → 결제완료 → 배송중&#x27;처럼 한 객체의 상태가 바뀌는 과정을 그리는 다이어그램은?"><li class="ok">상태 다이어그램</li><li>활동 다이어그램</li><li>시퀀스 다이어그램</li><li>유스케이스 다이어그램</li></ul>
         <div class="ans"><p class="why">시스템이 <b>어떻게 움직이는지</b>를 보여 주는 그림. 시간에 따라 일어나는 일 = 동영상.</p>
 <ol class="steps">
 <li><b>유스케이스</b>: 사용자(액터)가 시스템으로 <b>할 수 있는 기능</b> 목록. 식당 메뉴판</li>
@@ -1270,13 +1314,22 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
       <table>
         <thead><tr><th class="c"></th><th>기호</th><th>뜻</th><th>예시 · 외우는 법</th></tr></thead>
         <tbody>
-          <tr data-id="u-vis"><td class="c"><input type="checkbox" id="k-u-vis" aria-label="외움"></td><td class="term">+ − # ~</td><td class="ans">클래스 속성·메서드 앞에 붙이는 접근 범위: <b>+</b> public(누구나), <b>−</b> private(나만), <b>#</b> protected(나와 자식 클래스), <b>~</b> package(같은 패키지만).</td><td class="hint">+ 는 열려 있음, − 는 빼서 숨김, # 은 울타리 쳐서 가족(자식)만, ~ 는 동네(패키지)만</td></tr>
+          <tr data-id="u-vis"><td class="c"><input type="checkbox" id="k-u-vis" aria-label="외움"></td><td class="term">+ / − / # / ~<small>접근 제어자</small></td><td class="ans"><b>+</b>: public, 누구나 접근. <b>−</b>: private, 자기 클래스 안에서만. <b>#</b>: protected, 자기와 자식 클래스만. <b>~</b>: package, 같은 패키지 안에서만.</td><td class="hint">+ 는 열려 있음, − 는 빼서 숨김, # 은 울타리 쳐서 가족(자식)만, ~ 는 동네(패키지)만</td></tr>
           <tr data-id="u-inc"><td class="c"><input type="checkbox" id="k-u-inc" aria-label="외움"></td><td class="term">&lt;&lt;include&gt;&gt; / &lt;&lt;extend&gt;&gt;</td><td class="ans">유스케이스 사이 관계. <b>&lt;&lt;include&gt;&gt;</b>: 실행하면 <b>반드시 같이</b> 실행되는 기능(필수). <b>&lt;&lt;extend&gt;&gt;</b>: <b>조건에 따라 가끔</b> 추가되는 기능(선택).</td><td class="hint">"결제하기"는 항상 "로그인"을 포함(include). "결제하기"에 "쿠폰 적용"은 원할 때만(extend). include = 포함, extend = 확장(덤)</td></tr>
-          <tr data-id="u-parts"><td class="c"><input type="checkbox" id="k-u-parts" aria-label="외움"></td><td class="term">UML 구성요소</td><td class="ans">UML을 이루는 3가지: <b>사물</b>(Things, 클래스·객체 같은 대상), <b>관계</b>(Relationships, 대상끼리 연결), <b>다이어그램</b>(Diagram, 이것들을 그린 그림).</td><td class="hint">"무엇이(사물), 어떻게 연결돼서(관계), 그림으로(다이어그램)"</td></tr>
+          <tr data-quiz="off" data-id="u-parts"><td class="c"><input type="checkbox" id="k-u-parts" aria-label="외움"></td><td class="term">UML 구성요소</td><td class="ans">UML을 이루는 3가지: <b>사물</b>(Things, 클래스·객체 같은 대상), <b>관계</b>(Relationships, 대상끼리 연결), <b>다이어그램</b>(Diagram, 이것들을 그린 그림).</td><td class="hint">"무엇이(사물), 어떻게 연결돼서(관계), 그림으로(다이어그램)"</td></tr>
           <tr data-id="u-actor"><td class="c"><input type="checkbox" id="k-u-actor" aria-label="외움"></td><td class="term">액터 (Actor)</td><td class="ans">시스템 <b>바깥</b>에서 시스템을 사용하는 사람이나 다른 시스템. 유스케이스 다이어그램에 졸라맨 모양으로 그린다.</td><td class="hint">쇼핑몰 시스템에서 고객, 관리자, 외부 결제 시스템이 액터. 시스템 안에 있는 건 액터가 아님</td></tr>
         </tbody>
       </table>
     </div>
+    <p class="group-title">개념 확인 문제</p>
+    <div class="grid">
+      <article class="item" data-id="q-uml-parts">
+        <div class="item-h"><span class="lang">개념</span><h3>UML 구성요소</h3><label class="chk"><input type="checkbox" id="k-q-uml-parts">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="UML의 3가지 구성요소가 아닌 것은?"><li class="ok">속성 (Attribute)</li><li>사물 (Things)</li><li>관계 (Relationships)</li><li>다이어그램 (Diagram)</li></ul>
+        <div class="ans"><p>UML = <b>사물</b>(클래스·객체 같은 대상) + <b>관계</b>(대상끼리 연결) + <b>다이어그램</b>(이것들을 그린 그림). 속성은 클래스 안의 항목이다.</p></div>
+      </article>
+    </div>
+
   </section>
 
   <!-- ================= SWE ================= -->

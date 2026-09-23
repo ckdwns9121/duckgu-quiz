@@ -147,9 +147,7 @@
   "q": "출력은?",
   "answer": "B",
   "explain": "<span class=\"a\">B</span>\n<ol class=\"steps\">\n<li><code>A obj = new B();</code> → 변수 타입은 A, <b>실제로 만든 객체는 B</b></li>\n<li>B가 show()를 <b>오버라이딩</b>(같은 모양으로 다시 정의)함</li>\n<li>메서드를 부를 때는 <b>실제 객체(B)</b>의 것을 씀 → \"B\"</li>\n</ol>\n<p class=\"why\"><b>기억할 것</b>: <mark>메서드는 new 뒤를 본다</mark>. 겉포장(A)이 아니라 안에 든 물건(B)이 일한다. 이걸 동적 바인딩이라고 한다.</p>",
-  "hints": [
-   "<b>기억할 것</b>: <mark>메서드는 new 뒤를 본다</mark>. 겉포장(A)이 아니라 안에 든 물건(B)이 일한다. 이걸 동적 바인딩이라고 한다."
-  ]
+  "hints": []
  },
  {
   "kind": "answer",
@@ -250,13 +248,38 @@
   ]
  },
  {
-  "kind": "recall",
+  "kind": "mcq",
   "id": "j9",
   "unit": "code-java",
   "title": "오버로딩 vs 오버라이딩",
+  "q": "부모 클래스의 메서드를 자식 클래스에서 이름·매개변수·반환형까지 똑같이 다시 정의하는 것은?",
   "pre": "",
-  "q": "둘의 차이는?",
-  "mnemo": "",
+  "options": [
+   "오버라이딩 (Overriding)",
+   "오버로딩 (Overloading)",
+   "캡슐화 (Encapsulation)",
+   "추상화 (Abstraction)"
+  ],
+  "correct": "오버라이딩 (Overriding)",
+  "explain": "<p><b>오버로딩 (Overloading)</b></p>\n<ol class=\"steps\">\n<li>한 클래스 안에서 <b>이름이 같은 메서드를 여러 개</b> 만드는 것</li>\n<li>조건: <mark>매개변수의 개수나 타입이 달라야 함</mark></li>\n<li>반환형만 다르면 안 됨 (컴파일 에러)</li>\n<li>예) <code>add(int a, int b)</code>, <code>add(double a, double b)</code></li>\n</ol>\n<p><b>오버라이딩 (Overriding)</b></p>\n<ol class=\"steps\">\n<li>상속받은 <b>부모 메서드를 자식이 다시 정의</b>하는 것</li>\n<li>조건: 이름, 매개변수, 반환형이 <mark>부모와 똑같아야 함</mark></li>\n<li>예) 부모 <code>sound()</code> \"...\" → 자식 강아지 <code>sound()</code> \"멍멍\"</li>\n</ol>\n<p class=\"why\"><b>외우는 법</b>: 로딩(loading) = 짐을 다르게 싣기(매개변수가 다름). 라이딩(riding) = 부모 위에 올라타 덮어쓰기.</p>",
+  "hints": [
+   "<b>외우는 법</b>: 로딩(loading) = 짐을 다르게 싣기(매개변수가 다름). 라이딩(riding) = 부모 위에 올라타 덮어쓰기."
+  ]
+ },
+ {
+  "kind": "mcq",
+  "id": "j9-2",
+  "unit": "code-java",
+  "title": "오버로딩 vs 오버라이딩",
+  "q": "한 클래스 안에서 이름은 같고 매개변수의 개수나 타입만 다른 메서드를 여러 개 만드는 것은?",
+  "pre": "",
+  "options": [
+   "오버로딩 (Overloading)",
+   "오버라이딩 (Overriding)",
+   "상속 (Inheritance)",
+   "인터페이스 구현 (implements)"
+  ],
+  "correct": "오버로딩 (Overloading)",
   "explain": "<p><b>오버로딩 (Overloading)</b></p>\n<ol class=\"steps\">\n<li>한 클래스 안에서 <b>이름이 같은 메서드를 여러 개</b> 만드는 것</li>\n<li>조건: <mark>매개변수의 개수나 타입이 달라야 함</mark></li>\n<li>반환형만 다르면 안 됨 (컴파일 에러)</li>\n<li>예) <code>add(int a, int b)</code>, <code>add(double a, double b)</code></li>\n</ol>\n<p><b>오버라이딩 (Overriding)</b></p>\n<ol class=\"steps\">\n<li>상속받은 <b>부모 메서드를 자식이 다시 정의</b>하는 것</li>\n<li>조건: 이름, 매개변수, 반환형이 <mark>부모와 똑같아야 함</mark></li>\n<li>예) 부모 <code>sound()</code> \"...\" → 자식 강아지 <code>sound()</code> \"멍멍\"</li>\n</ol>\n<p class=\"why\"><b>외우는 법</b>: 로딩(loading) = 짐을 다르게 싣기(매개변수가 다름). 라이딩(riding) = 부모 위에 올라타 덮어쓰기.</p>",
   "hints": [
    "<b>외우는 법</b>: 로딩(loading) = 짐을 다르게 싣기(매개변수가 다름). 라이딩(riding) = 부모 위에 올라타 덮어쓰기."
@@ -431,65 +454,148 @@
   ]
  },
  {
-  "kind": "recall",
+  "kind": "mcq",
   "id": "s2",
   "unit": "code-sql",
   "title": "WHERE vs HAVING",
+  "q": "WHERE 절에 쓸 수 없는 조건은?",
   "pre": "<pre>SELECT 학과, COUNT(*) FROM 학생\nWHERE 학년 = 3          -- 3학년만 남기고\nGROUP BY 학과            -- 학과별로 묶고\nHAVING COUNT(*) &gt; 10;   -- 10명 넘는 학과만</pre>",
-  "q": "둘의 차이는?",
-  "mnemo": "",
+  "options": [
+   "COUNT(*) > 10",
+   "학년 = 3",
+   "이름 LIKE '김%'",
+   "점수 BETWEEN 80 AND 90"
+  ],
+  "correct": "COUNT(*) > 10",
   "explain": "<ol class=\"steps\">\n<li>SQL 실행 순서: <b>FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY</b></li>\n<li><code>WHERE</code>는 GROUP BY <b>전</b>: 한 줄 한 줄을 거름 (예: 학년 = 3인 학생만)</li>\n<li><code>HAVING</code>은 GROUP BY <b>후</b>: 묶인 그룹을 거름 (예: 학생 수가 10명 넘는 학과만)</li>\n</ol>\n<pre>SELECT 학과, COUNT(*) FROM 학생\nWHERE 학년 = 3          -- 3학년만 남기고\nGROUP BY 학과            -- 학과별로 묶고\nHAVING COUNT(*) &gt; 10;   -- 10명 넘는 학과만</pre>\n<p class=\"why\"><b>기억할 것</b>: <mark>COUNT, AVG 같은 집계 함수 조건은 HAVING</mark>. WHERE에는 집계 함수를 못 쓴다.</p>",
   "hints": [
    "<b>기억할 것</b>: <mark>COUNT, AVG 같은 집계 함수 조건은 HAVING</mark>. WHERE에는 집계 함수를 못 쓴다."
   ]
  },
  {
-  "kind": "recall",
+  "kind": "mcq",
   "id": "s3",
   "unit": "code-sql",
   "title": "LIKE 기호",
+  "q": "이름 LIKE '김_' 조건에 맞는 이름은?",
   "pre": "",
-  "q": "<code>'김%'</code>, <code>'김_'</code>, <code>'%김%'</code>의 뜻은?",
-  "mnemo": "",
+  "options": [
+   "김철",
+   "김철수",
+   "김",
+   "박김철"
+  ],
+  "correct": "김철",
   "explain": "<ol class=\"steps\">\n<li><code>%</code> = 글자 <b>0개 이상 아무거나</b></li>\n<li><code>_</code> = 글자 <b>딱 1개</b></li>\n<li><code>'김%'</code> → 김으로 시작 (김, 김철수, 김수한무 모두 OK)</li>\n<li><code>'김_'</code> → 김 + 한 글자 = <b>두 글자</b>만 (김철 OK, 김철수 X)</li>\n<li><code>'%김%'</code> → 어디든 김이 들어감 (박김수도 OK)</li>\n</ol>\n<p class=\"why\"><b>기억할 것</b>: <mark>% 는 몇 개든, _ 는 한 개</mark>. 밑줄 하나 = 빈칸 하나.</p>",
   "hints": [
    "<b>기억할 것</b>: <mark>% 는 몇 개든, _ 는 한 개</mark>. 밑줄 하나 = 빈칸 하나."
   ]
  },
  {
-  "kind": "recall",
-  "id": "s4",
+  "kind": "mcq",
+  "id": "s3-2",
   "unit": "code-sql",
-  "title": "DELETE · TRUNCATE · DROP",
+  "title": "LIKE 기호",
+  "q": "이름 LIKE '%수' 조건에 맞는 이름은?",
   "pre": "",
-  "q": "셋의 차이는?",
-  "mnemo": "",
-  "explain": "<ol class=\"steps\">\n<li><code>DELETE FROM 학생 WHERE ...</code> → <b>원하는 행만</b> 지움. 조건 없으면 전부. 테이블 틀은 남음. 롤백 가능 (DML)</li>\n<li><code>TRUNCATE TABLE 학생</code> → <b>모든 행</b>을 한 번에 비움. 틀은 남음. 되돌릴 수 없음 (DDL)</li>\n<li><code>DROP TABLE 학생</code> → <b>테이블 자체</b>를 없앰. 틀도 사라짐 (DDL)</li>\n</ol>\n<p class=\"why\"><b>비유</b>: 서랍장에서 DELETE = 물건 골라서 버리기, TRUNCATE = 서랍 싹 비우기, DROP = <mark>서랍장을 통째로 버리기</mark>.</p>",
+  "options": [
+   "박민수",
+   "수민",
+   "민수진",
+   "김수현"
+  ],
+  "correct": "박민수",
+  "explain": "<ol class=\"steps\">\n<li><code>%</code> = 글자 <b>0개 이상 아무거나</b></li>\n<li><code>_</code> = 글자 <b>딱 1개</b></li>\n<li><code>'김%'</code> → 김으로 시작 (김, 김철수, 김수한무 모두 OK)</li>\n<li><code>'김_'</code> → 김 + 한 글자 = <b>두 글자</b>만 (김철 OK, 김철수 X)</li>\n<li><code>'%김%'</code> → 어디든 김이 들어감 (박김수도 OK)</li>\n</ol>\n<p class=\"why\"><b>기억할 것</b>: <mark>% 는 몇 개든, _ 는 한 개</mark>. 밑줄 하나 = 빈칸 하나.</p>",
   "hints": [
-   "<b>비유</b>: 서랍장에서 DELETE = 물건 골라서 버리기, TRUNCATE = 서랍 싹 비우기, DROP = <mark>서랍장을 통째로 버리기</mark>."
+   "<b>기억할 것</b>: <mark>% 는 몇 개든, _ 는 한 개</mark>. 밑줄 하나 = 빈칸 하나."
   ]
  },
  {
-  "kind": "recall",
+  "kind": "mcq",
+  "id": "s4",
+  "unit": "code-sql",
+  "title": "DELETE · TRUNCATE · DROP",
+  "q": "테이블 구조는 남기고 모든 행을 한 번에 지우는 DDL 명령은?",
+  "pre": "",
+  "options": [
+   "TRUNCATE",
+   "DELETE",
+   "DROP",
+   "ALTER"
+  ],
+  "correct": "TRUNCATE",
+  "explain": "<ol class=\"steps\">\n<li><code>DELETE FROM 학생 WHERE ...</code> → <b>원하는 행만</b> 지움. 조건 없으면 전부. 테이블 틀은 남음. 롤백 가능 (DML)</li>\n<li><code>TRUNCATE TABLE 학생</code> → <b>모든 행</b>을 한 번에 비움. 틀은 남음. 되돌릴 수 없음 (DDL)</li>\n<li><code>DROP TABLE 학생</code> → <b>테이블 자체</b>를 없앰. 틀도 사라짐 (DDL)</li>\n</ol>\n<p class=\"why\"><b>비유</b>: 서랍장에서 DELETE = 물건 골라서 버리기, TRUNCATE = 서랍 싹 비우기, DROP = <mark>서랍장을 통째로 버리기</mark>.</p>",
+  "hints": []
+ },
+ {
+  "kind": "mcq",
   "id": "s5",
   "unit": "code-sql",
   "title": "DDL · DML · DCL",
+  "q": "다음 중 DDL(데이터 정의어)이 아닌 것은?",
   "pre": "",
-  "q": "각각 어떤 명령어?",
-  "mnemo": "",
+  "options": [
+   "DELETE",
+   "CREATE",
+   "ALTER",
+   "TRUNCATE"
+  ],
+  "correct": "DELETE",
+  "explain": "<ol class=\"steps\">\n<li><b>DDL</b> (Definition, 정의): 테이블 <b>틀</b>을 만들고 고치고 없앰 → <code>CREATE, ALTER, DROP, TRUNCATE</code></li>\n<li><b>DML</b> (Manipulation, 조작): 틀 안의 <b>데이터</b>를 다룸 → <code>SELECT, INSERT, UPDATE, DELETE</code></li>\n<li><b>DCL</b> (Control, 제어): <b>권한</b>과 확정·취소 → <code>GRANT, REVOKE, COMMIT, ROLLBACK</code></li>\n</ol>\n<p class=\"why\"><b>기억할 것</b>: <mark>틀 = DDL, 내용 = DML, 권한 = DCL</mark>. 헷갈리는 것: DELETE는 DML, DROP과 TRUNCATE는 DDL.</p>",
+  "hints": []
+ },
+ {
+  "kind": "mcq",
+  "id": "s5-2",
+  "unit": "code-sql",
+  "title": "DDL · DML · DCL",
+  "q": "GRANT와 REVOKE는 어느 종류의 SQL일까?",
+  "pre": "",
+  "options": [
+   "DCL (데이터 제어어)",
+   "DDL (데이터 정의어)",
+   "DML (데이터 조작어)",
+   "SQL이 아니라 DBMS 설정"
+  ],
+  "correct": "DCL (데이터 제어어)",
   "explain": "<ol class=\"steps\">\n<li><b>DDL</b> (Definition, 정의): 테이블 <b>틀</b>을 만들고 고치고 없앰 → <code>CREATE, ALTER, DROP, TRUNCATE</code></li>\n<li><b>DML</b> (Manipulation, 조작): 틀 안의 <b>데이터</b>를 다룸 → <code>SELECT, INSERT, UPDATE, DELETE</code></li>\n<li><b>DCL</b> (Control, 제어): <b>권한</b>과 확정·취소 → <code>GRANT, REVOKE, COMMIT, ROLLBACK</code></li>\n</ol>\n<p class=\"why\"><b>기억할 것</b>: <mark>틀 = DDL, 내용 = DML, 권한 = DCL</mark>. 헷갈리는 것: DELETE는 DML, DROP과 TRUNCATE는 DDL.</p>",
   "hints": [
    "<b>기억할 것</b>: <mark>틀 = DDL, 내용 = DML, 권한 = DCL</mark>. 헷갈리는 것: DELETE는 DML, DROP과 TRUNCATE는 DDL."
   ]
  },
  {
-  "kind": "recall",
+  "kind": "mcq",
   "id": "s6",
   "unit": "code-sql",
   "title": "GRANT / REVOKE 문법",
+  "q": "권한을 받은 사람이 그 권한을 다시 남에게 줄 수 있게 하려면 GRANT 문 끝에 무엇을 붙일까?",
   "pre": "<pre>GRANT SELECT ON 학생 TO 홍길동 WITH GRANT OPTION;\nREVOKE SELECT ON 학생 FROM 홍길동 CASCADE;</pre>",
-  "q": "빈칸으로 자주 나오는 단어는?",
-  "mnemo": "",
+  "options": [
+   "WITH GRANT OPTION",
+   "CASCADE",
+   "ON DELETE",
+   "RESTRICT"
+  ],
+  "correct": "WITH GRANT OPTION",
+  "explain": "<ol class=\"steps\">\n<li><code>GRANT 권한 ON 테이블 TO 사용자</code> → 권한을 <b>준다</b> (~에게 = TO)</li>\n<li><code>REVOKE 권한 ON 테이블 FROM 사용자</code> → 권한을 <b>뺏는다</b> (~에게서 = FROM)</li>\n<li><code>WITH GRANT OPTION</code> → 받은 사람도 <b>다른 사람에게 권한을 줄 수 있음</b></li>\n<li><code>CASCADE</code> → 뺏을 때, 그 사람이 남에게 나눠 준 권한까지 <b>줄줄이 같이</b> 회수</li>\n</ol>\n<p class=\"why\"><b>기억할 것</b>: <mark>주는 건 TO, 뺏는 건 FROM</mark>. 선물은 친구에게(to) 주고, 친구로부터(from) 돌려받는다.</p>",
+  "hints": [
+   "<b>기억할 것</b>: <mark>주는 건 TO, 뺏는 건 FROM</mark>. 선물은 친구에게(to) 주고, 친구로부터(from) 돌려받는다."
+  ]
+ },
+ {
+  "kind": "mcq",
+  "id": "s6-2",
+  "unit": "code-sql",
+  "title": "GRANT / REVOKE 문법",
+  "q": "REVOKE할 때, 그 사람이 남에게 나눠 준 권한까지 줄줄이 회수하는 옵션은?",
+  "pre": "<pre>GRANT SELECT ON 학생 TO 홍길동 WITH GRANT OPTION;\nREVOKE SELECT ON 학생 FROM 홍길동 CASCADE;</pre>",
+  "options": [
+   "CASCADE",
+   "WITH GRANT OPTION",
+   "RESTRICT",
+   "DISTINCT"
+  ],
+  "correct": "CASCADE",
   "explain": "<ol class=\"steps\">\n<li><code>GRANT 권한 ON 테이블 TO 사용자</code> → 권한을 <b>준다</b> (~에게 = TO)</li>\n<li><code>REVOKE 권한 ON 테이블 FROM 사용자</code> → 권한을 <b>뺏는다</b> (~에게서 = FROM)</li>\n<li><code>WITH GRANT OPTION</code> → 받은 사람도 <b>다른 사람에게 권한을 줄 수 있음</b></li>\n<li><code>CASCADE</code> → 뺏을 때, 그 사람이 남에게 나눠 준 권한까지 <b>줄줄이 같이</b> 회수</li>\n</ol>\n<p class=\"why\"><b>기억할 것</b>: <mark>주는 건 TO, 뺏는 건 FROM</mark>. 선물은 친구에게(to) 주고, 친구로부터(from) 돌려받는다.</p>",
   "hints": [
    "<b>기억할 것</b>: <mark>주는 건 TO, 뺏는 건 FROM</mark>. 선물은 친구에게(to) 주고, 친구로부터(from) 돌려받는다."
@@ -663,6 +769,8 @@
   "term": "릴레이션",
   "sub": "Relation",
   "meaning": "데이터를 담는 표 하나. 관계형 DB에서는 테이블을 릴레이션이라고 부른다.",
+  "short": "데이터를 담는 표 하나",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -688,6 +796,8 @@
   "term": "튜플",
   "sub": "Tuple",
   "meaning": "표의 가로 한 줄. 대상 하나에 대한 정보 묶음. 레코드, 행이라고도 한다.",
+  "short": "표의 가로 한 줄",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -713,6 +823,8 @@
   "term": "속성",
   "sub": "Attribute",
   "meaning": "표의 세로 한 줄. 데이터의 항목 이름. 열, 컬럼, 필드라고도 한다.",
+  "short": "표의 세로 한 줄",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -738,6 +850,8 @@
   "term": "도메인",
   "sub": "Domain",
   "meaning": "한 속성에 들어갈 수 있는 값의 범위. 이 밖의 값은 들어가면 안 된다.",
+  "short": "한 속성에 들어갈 수 있는 값의 범위",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -763,6 +877,8 @@
   "term": "차수",
   "sub": "Degree",
   "meaning": "표에 있는 속성(세로줄)의 개수.",
+  "short": "표에 있는 속성(세로줄)의 개수",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -788,6 +904,8 @@
   "term": "카디널리티",
   "sub": "Cardinality",
   "meaning": "표에 들어 있는 튜플(가로줄)의 개수.",
+  "short": "표에 들어 있는 튜플(가로줄)의 개수",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -813,6 +931,17 @@
   "term": "스키마 / 인스턴스",
   "sub": "",
   "meaning": "스키마: 표의 구조(어떤 열이 있고 타입이 뭔지). 인스턴스: 어느 순간 실제로 들어 있는 데이터.",
+  "short": "스키마: 표의 구조(어떤 열이 있고 타입이 뭔지)",
+  "segments": [
+   {
+    "label": "스키마",
+    "text": "표의 구조(어떤 열이 있고 타입이 뭔지)"
+   },
+   {
+    "label": "인스턴스",
+    "text": "어느 순간 실제로 들어 있는 데이터"
+   }
+  ],
   "parts": [
    {
     "label": "뜻",
@@ -878,6 +1007,8 @@
   "term": "개체 무결성",
   "sub": "",
   "meaning": "기본키에는 NULL(빈 값)도, 중복 값도 들어갈 수 없다.",
+  "short": "기본키에는 NULL(빈 값)도, 중복 값도 들어갈 수 없다",
+  "segments": [],
   "parts": [
    {
     "label": "규칙",
@@ -903,6 +1034,8 @@
   "term": "참조 무결성",
   "sub": "",
   "meaning": "외래키 값은 상대 테이블의 기본키에 실제로 있는 값이거나 NULL이어야 한다.",
+  "short": "외래키 값은 상대 테이블의 기본키에 실제로 있는 값이거나 NULL이어야 한다",
+  "segments": [],
   "parts": [
    {
     "label": "규칙",
@@ -928,6 +1061,8 @@
   "term": "도메인 무결성",
   "sub": "",
   "meaning": "각 속성 값은 그 속성에 정해진 도메인(범위·형식) 안에 있어야 한다.",
+  "short": "각 속성 값은 그 속성에 정해진 도메인(범위·형식) 안에 있어야 한다",
+  "segments": [],
   "parts": [
    {
     "label": "규칙",
@@ -953,6 +1088,8 @@
   "term": "키 무결성",
   "sub": "",
   "meaning": "한 테이블 안에 같은 키 값을 가진 행이 두 개 있으면 안 된다.",
+  "short": "한 테이블 안에 같은 키 값을 가진 행이 두 개 있으면 안 된다",
+  "segments": [],
   "parts": [
    {
     "label": "규칙",
@@ -978,6 +1115,8 @@
   "term": "사용자 정의 무결성",
   "sub": "",
   "meaning": "회사나 업무에서 정한 추가 규칙을 지켜야 한다.",
+  "short": "회사나 업무에서 정한 추가 규칙을 지켜야 한다",
+  "segments": [],
   "parts": [
    {
     "label": "규칙",
@@ -1003,6 +1142,8 @@
   "term": "슈퍼키",
   "sub": "",
   "meaning": "한 행을 구별할 수만 있으면 되는 키. 유일성 O, 최소성 X (쓸데없는 속성이 붙어 있어도 됨)",
+  "short": "한 행을 구별할 수만 있으면 되는 키",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -1028,6 +1169,8 @@
   "term": "후보키",
   "sub": "",
   "meaning": "구별도 되고 군더더기도 없는 키. 유일성 O, 최소성 O",
+  "short": "구별도 되고 군더더기도 없는 키",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -1053,6 +1196,8 @@
   "term": "기본키",
   "sub": "Primary Key",
   "meaning": "후보키 중에서 대표로 하나 고른 것. NULL도 중복도 안 된다.",
+  "short": "후보키 중에서 대표로 하나 고른 것",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -1078,6 +1223,8 @@
   "term": "대체키",
   "sub": "",
   "meaning": "후보키 중에서 기본키로 뽑히지 않은 나머지.",
+  "short": "후보키 중에서 기본키로 뽑히지 않은 나머지",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -1103,6 +1250,8 @@
   "term": "외래키",
   "sub": "Foreign Key",
   "meaning": "다른 테이블의 기본키를 가리키는 속성. 두 표를 연결하는 고리.",
+  "short": "다른 테이블의 기본키를 가리키는 속성",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -1128,6 +1277,8 @@
   "term": "1NF",
   "sub": "",
   "meaning": "모든 칸의 값을 원자값(더 쪼갤 수 없는 하나의 값)으로 만든다.",
+  "short": "모든 칸의 값을 원자값(더 쪼갤 수 없는 하나의 값)으로 만든다",
+  "segments": [],
   "parts": [
    {
     "label": "하는 일",
@@ -1153,6 +1304,8 @@
   "term": "2NF",
   "sub": "",
   "meaning": "기본키가 여러 속성일 때, 그중 일부에만 종속된 속성을 떼어 낸다(부분 함수 종속 제거).",
+  "short": "기본키가 여러 속성일 때, 그중 일부에만 종속된 속성을 떼어 낸다(부분 함수 종속 제거)",
+  "segments": [],
   "parts": [
    {
     "label": "하는 일",
@@ -1178,6 +1331,8 @@
   "term": "3NF",
   "sub": "",
   "meaning": "A → B, B → C처럼 건너서 결정되는 속성을 떼어 낸다(이행 함수 종속 제거).",
+  "short": "A → B, B → C처럼 건너서 결정되는 속성을 떼어 낸다(이행 함수 종속 제거)",
+  "segments": [],
   "parts": [
    {
     "label": "하는 일",
@@ -1203,6 +1358,8 @@
   "term": "BCNF",
   "sub": "",
   "meaning": "어떤 속성을 결정하는 것(결정자)은 전부 후보키여야 한다.",
+  "short": "어떤 속성을 결정하는 것(결정자)은 전부 후보키여야 한다",
+  "segments": [],
   "parts": [
    {
     "label": "하는 일",
@@ -1228,6 +1385,8 @@
   "term": "4NF",
   "sub": "",
   "meaning": "한 값이 여러 값의 묶음을 결정하는 관계(다치 종속)를 없앤다.",
+  "short": "한 값이 여러 값의 묶음을 결정하는 관계(다치 종속)를 없앤다",
+  "segments": [],
   "parts": [
    {
     "label": "하는 일",
@@ -1253,6 +1412,8 @@
   "term": "5NF",
   "sub": "",
   "meaning": "표를 쪼갰다가 다시 합칠 때 생기는 문제(조인 종속)를 없앤다.",
+  "short": "표를 쪼갰다가 다시 합칠 때 생기는 문제(조인 종속)를 없앤다",
+  "segments": [],
   "parts": [
    {
     "label": "하는 일",
@@ -1278,6 +1439,8 @@
   "term": "반정규화",
   "sub": "",
   "meaning": "정규화로 너무 잘게 쪼개서 느려졌을 때, 성능을 위해 일부러 합치거나 중복을 허용하는 것.",
+  "short": "정규화로 너무 잘게 쪼개서 느려졌을 때, 성능을 위해 일부러 합치거나 중복을 허용하는 것",
+  "segments": [],
   "parts": [
    {
     "label": "하는 일",
@@ -1303,6 +1466,8 @@
   "term": "σ",
   "sub": "",
   "meaning": "Select (셀렉트)",
+  "short": "Select (셀렉트)",
+  "segments": [],
   "parts": [
    {
     "label": "이름",
@@ -1328,6 +1493,8 @@
   "term": "π",
   "sub": "",
   "meaning": "Project (프로젝트)",
+  "short": "Project (프로젝트)",
+  "segments": [],
   "parts": [
    {
     "label": "이름",
@@ -1353,6 +1520,8 @@
   "term": "⋈",
   "sub": "",
   "meaning": "Join (조인)",
+  "short": "Join (조인)",
+  "segments": [],
   "parts": [
    {
     "label": "이름",
@@ -1378,6 +1547,8 @@
   "term": "÷",
   "sub": "",
   "meaning": "Division (디비전)",
+  "short": "Division (디비전)",
+  "segments": [],
   "parts": [
    {
     "label": "이름",
@@ -1403,6 +1574,8 @@
   "term": "∪ ∩ − ×",
   "sub": "",
   "meaning": "합집합, 교집합, 차집합, 카티션 프로덕트(교차곱)",
+  "short": "합집합, 교집합, 차집합, 카티션 프로덕트(교차곱)",
+  "segments": [],
   "parts": [
    {
     "label": "이름",
@@ -1428,6 +1601,8 @@
   "term": "관계대수 vs 관계해석",
   "sub": "",
   "meaning": "관계대수 = 절차적 (어떻게 구할지 순서를 적음). 관계해석 = 비절차적 (무엇을 원하는지만 적음).",
+  "short": "관계대수 = 절차적 (어떻게 구할지 순서를 적음)",
+  "segments": [],
   "parts": [
    {
     "label": "이름",
@@ -1453,6 +1628,8 @@
   "term": "원자성",
   "sub": "Atomicity",
   "meaning": "트랜잭션 안의 작업은 전부 성공하거나, 하나라도 실패하면 전부 취소된다. 성공하면 Commit, 취소하면 Rollback.",
+  "short": "트랜잭션 안의 작업은 전부 성공하거나, 하나라도 실패하면 전부 취소된다",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -1478,6 +1655,8 @@
   "term": "일관성",
   "sub": "Consistency",
   "meaning": "트랜잭션 전과 후 모두 DB가 규칙에 맞는 올바른 상태여야 한다.",
+  "short": "트랜잭션 전과 후 모두 DB가 규칙에 맞는 올바른 상태여야 한다",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -1503,6 +1682,8 @@
   "term": "격리성",
   "sub": "Isolation",
   "meaning": "여러 트랜잭션이 동시에 실행돼도 서로의 중간 과정을 보거나 끼어들지 않는다.",
+  "short": "여러 트랜잭션이 동시에 실행돼도 서로의 중간 과정을 보거나 끼어들지 않는다",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -1528,6 +1709,8 @@
   "term": "영속성",
   "sub": "Durability",
   "meaning": "Commit으로 완료된 결과는 영구히 저장된다. 서버가 꺼져도 사라지지 않는다.",
+  "short": "Commit으로 완료된 결과는 영구히 저장된다",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -1546,56 +1729,6 @@
  },
  {
   "kind": "term",
-  "id": "d-tx-state",
-  "unit": "db",
-  "table": "db:6",
-  "col": "특성",
-  "term": "트랜잭션 상태",
-  "sub": "",
-  "meaning": "활동(실행 중) → 부분 완료(마지막 명령까지 실행, 아직 Commit 전) → 완료(Commit). 중간에 문제가 생기면 실패 → 철회(Rollback).",
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "<b>활동</b>(실행 중) → <b>부분 완료</b>(마지막 명령까지 실행, 아직 Commit 전) → <b>완료</b>(Commit). 중간에 문제가 생기면 <b>실패</b> → <b>철회</b>(Rollback).",
-    "hint": false
-   },
-   {
-    "label": "계좌이체로 치면",
-    "html": "부분 완료와 완료가 헷갈리면: 부분 완료 = 도장 찍기 직전, 완료 = 도장 찍음",
-    "hint": true
-   }
-  ],
-  "hints": [
-   "부분 완료와 완료가 헷갈리면: 부분 완료 = 도장 찍기 직전, 완료 = 도장 찍음"
-  ]
- },
- {
-  "kind": "term",
-  "id": "d-cc-prob",
-  "unit": "db",
-  "table": "db:7",
-  "col": "용어",
-  "term": "병행 제어 안 하면",
-  "sub": "",
-  "meaning": "여러 트랜잭션을 동시에 막 실행하면 생기는 문제: 갱신 분실(한 사람의 수정이 덮여 사라짐), 모순성(값이 앞뒤가 안 맞음), 연쇄 복귀(하나를 취소하면 그걸 쓴 다른 것도 줄줄이 취소).",
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "여러 트랜잭션을 동시에 막 실행하면 생기는 문제: <b>갱신 분실</b>(한 사람의 수정이 덮여 사라짐), <b>모순성</b>(값이 앞뒤가 안 맞음), <b>연쇄 복귀</b>(하나를 취소하면 그걸 쓴 다른 것도 줄줄이 취소).",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "두 사람이 같은 문서를 동시에 고치고 저장 → 나중에 저장한 사람 것만 남음 = 갱신 분실",
-    "hint": true
-   }
-  ],
-  "hints": [
-   "두 사람이 같은 문서를 동시에 고치고 저장 → 나중에 저장한 사람 것만 남음 = 갱신 분실"
-  ]
- },
- {
-  "kind": "term",
   "id": "d-cc-lock",
   "unit": "db",
   "table": "db:7",
@@ -1603,6 +1736,8 @@
   "term": "로킹",
   "sub": "Locking",
   "meaning": "데이터를 쓰는 동안 잠가서(Lock) 다른 트랜잭션이 못 건드리게 한다. 다 쓰면 풀어 줌(Unlock).",
+  "short": "데이터를 쓰는 동안 잠가서(Lock) 다른 트랜잭션이 못 건드리게 한다",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -1621,31 +1756,6 @@
  },
  {
   "kind": "term",
-  "id": "d-cc-unit",
-  "unit": "db",
-  "table": "db:7",
-  "col": "용어",
-  "term": "로킹 단위",
-  "sub": "",
-  "meaning": "잠그는 단위가 크면(DB 전체, 테이블) → 관리가 쉽지만 동시에 쓸 수 있는 사람이 적음(병행성 낮음). 단위가 작으면(행 하나) → 여럿이 동시에 쓸 수 있지만 관리가 복잡함(오버헤드 큼).",
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "잠그는 단위가 <mark>크면</mark>(DB 전체, 테이블) → 관리가 쉽지만 동시에 쓸 수 있는 사람이 적음(병행성 낮음). 단위가 <mark>작으면</mark>(행 하나) → 여럿이 동시에 쓸 수 있지만 관리가 복잡함(오버헤드 큼).",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "건물 정문을 잠그면 편하지만 아무도 못 들어감. 방마다 잠그면 여럿이 쓰지만 열쇠 관리가 힘듦",
-    "hint": true
-   }
-  ],
-  "hints": [
-   "건물 정문을 잠그면 편하지만 아무도 못 들어감. 방마다 잠그면 여럿이 쓰지만 열쇠 관리가 힘듦"
-  ]
- },
- {
-  "kind": "term",
   "id": "d-cc-ts",
   "unit": "db",
   "table": "db:7",
@@ -1653,6 +1763,21 @@
   "term": "타임스탬프 / 낙관적 검증 / 다중 버전",
   "sub": "",
   "meaning": "타임스탬프: 먼저 시작한 트랜잭션 순서대로 처리. 낙관적 검증: 일단 다 실행하고 끝날 때 충돌 검사. 다중 버전(MVCC): 데이터 버전을 여러 개 두고 각자 맞는 버전을 읽음.",
+  "short": "타임스탬프: 먼저 시작한 트랜잭션 순서대로 처리",
+  "segments": [
+   {
+    "label": "타임스탬프",
+    "text": "먼저 시작한 트랜잭션 순서대로 처리"
+   },
+   {
+    "label": "낙관적 검증",
+    "text": "일단 다 실행하고 끝날 때 충돌 검사"
+   },
+   {
+    "label": "다중 버전(MVCC)",
+    "text": "데이터 버전을 여러 개 두고 각자 맞는 버전을 읽음"
+   }
+  ],
   "parts": [
    {
     "label": "뜻",
@@ -1678,6 +1803,17 @@
   "term": "REDO / UNDO",
   "sub": "",
   "meaning": "REDO: Commit까지 끝난 작업을 다시 실행해서 결과를 살림. UNDO: Commit 못 한 덜 끝난 작업을 되돌려서 없앰.",
+  "short": "REDO: Commit까지 끝난 작업을 다시 실행해서 결과를 살림",
+  "segments": [
+   {
+    "label": "REDO",
+    "text": "Commit까지 끝난 작업을 다시 실행해서 결과를 살림"
+   },
+   {
+    "label": "UNDO",
+    "text": "Commit 못 한 덜 끝난 작업을 되돌려서 없앰"
+   }
+  ],
   "parts": [
    {
     "label": "뜻",
@@ -1696,31 +1832,6 @@
  },
  {
   "kind": "term",
-  "id": "d-rc-imm",
-  "unit": "db",
-  "table": "db:7",
-  "col": "용어",
-  "term": "즉시 갱신 / 지연 갱신",
-  "sub": "",
-  "meaning": "즉시 갱신: 작업하는 즉시 DB에 반영 → 끝난 건 REDO, 덜 끝난 것도 이미 DB에 썼으니 UNDO 필요 → 둘 다. 지연 갱신: Commit할 때 한꺼번에 반영 → Commit 전엔 DB에 쓴 게 없어서 UNDO 불필요 → REDO만.",
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "<b>즉시 갱신</b>: 작업하는 즉시 DB에 반영 → 끝난 건 REDO, 덜 끝난 것도 이미 DB에 썼으니 UNDO 필요 → <b>둘 다</b>. <b>지연 갱신</b>: Commit할 때 한꺼번에 반영 → Commit 전엔 DB에 쓴 게 없어서 UNDO 불필요 → <mark>REDO만</mark>.",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "지연 갱신 = 초안에만 쓰다가 확정할 때 옮겨 적기. 확정 전이면 원본은 멀쩡하니 지울 게 없음",
-    "hint": true
-   }
-  ],
-  "hints": [
-   "○○ = 초안에만 쓰다가 확정할 때 옮겨 적기. 확정 전이면 원본은 멀쩡하니 지울 게 없음"
-  ]
- },
- {
-  "kind": "term",
   "id": "d-rc-etc",
   "unit": "db",
   "table": "db:7",
@@ -1728,6 +1839,17 @@
   "term": "체크포인트 / 그림자 페이징",
   "sub": "",
   "meaning": "체크포인트: 중간중간 저장 지점을 찍어 두고, 장애가 나면 그 지점부터만 회복. 그림자 페이징: 원본(그림자) 페이지를 따로 보관하다가 실패하면 그걸로 바꿔 끼움.",
+  "short": "체크포인트: 중간중간 저장 지점을 찍어 두고, 장애가 나면 그 지점부터만 회복",
+  "segments": [
+   {
+    "label": "체크포인트",
+    "text": "중간중간 저장 지점을 찍어 두고, 장애가 나면 그 지점부터만 회복"
+   },
+   {
+    "label": "그림자 페이징",
+    "text": "원본(그림자) 페이지를 따로 보관하다가 실패하면 그걸로 바꿔 끼움"
+   }
+  ],
   "parts": [
    {
     "label": "뜻",
@@ -1753,6 +1875,8 @@
   "term": "외부 스키마",
   "sub": "",
   "meaning": "사용자나 프로그램 하나하나가 보는 DB의 일부분. 서브 스키마라고도 한다. 여러 개 있을 수 있다.",
+  "short": "사용자나 프로그램 하나하나가 보는 DB의 일부분",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -1778,6 +1902,8 @@
   "term": "개념 스키마",
   "sub": "",
   "meaning": "조직 전체 입장에서 본 DB의 논리 구조. 모든 테이블과 관계, 제약조건. DB 하나에 하나만 있다.",
+  "short": "조직 전체 입장에서 본 DB의 논리 구조",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -1803,6 +1929,8 @@
   "term": "내부 스키마",
   "sub": "",
   "meaning": "데이터가 실제로 디스크에 어떻게 저장되는지의 물리 구조. 저장 방식, 인덱스 등.",
+  "short": "데이터가 실제로 디스크에 어떻게 저장되는지의 물리 구조",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -1828,6 +1956,17 @@
   "term": "논리적 / 물리적 독립성",
   "sub": "",
   "meaning": "논리적 독립성: 개념 스키마(전체 설계)를 바꿔도 외부 스키마(앱)는 안 고쳐도 됨. 물리적 독립성: 내부 스키마(저장 방식)를 바꿔도 개념 스키마는 그대로.",
+  "short": "논리적 독립성: 개념 스키마(전체 설계)를 바꿔도 외부 스키마(앱)는 안 고쳐도 됨",
+  "segments": [
+   {
+    "label": "논리적 독립성",
+    "text": "개념 스키마(전체 설계)를 바꿔도 외부 스키마(앱)는 안 고쳐도 됨"
+   },
+   {
+    "label": "물리적 독립성",
+    "text": "내부 스키마(저장 방식)를 바꿔도 개념 스키마는 그대로"
+   }
+  ],
   "parts": [
    {
     "label": "뜻",
@@ -1846,42 +1985,19 @@
  },
  {
   "kind": "term",
-  "id": "d-design",
-  "unit": "db",
-  "table": "db:8",
-  "col": "용어",
-  "term": "DB 설계 순서",
-  "sub": "",
-  "meaning": "요구 분석(뭘 저장할지 정리) → 개념 설계(E-R 다이어그램 그림) → 논리 설계(테이블·키로 바꾸고 정규화) → 물리 설계(저장 방식·인덱스) → 구현(실제 SQL로 생성).",
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "<b>요구 분석</b>(뭘 저장할지 정리) → <b>개념 설계</b>(E-R 다이어그램 그림) → <b>논리 설계</b>(테이블·키로 바꾸고 정규화) → <b>물리 설계</b>(저장 방식·인덱스) → <b>구현</b>(실제 SQL로 생성).",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "\"요개논물구\". 집 짓기: 요구 듣기 → 스케치 → 도면 → 자재·시공 방법 → 시공",
-    "hint": true
-   }
-  ],
-  "hints": [
-   "\"요개논물구\". 집 짓기: 요구 듣기 → 스케치 → 도면 → 자재·시공 방법 → 시공"
-  ]
- },
- {
-  "kind": "term",
   "id": "d-er",
   "unit": "db",
   "table": "db:8",
   "col": "용어",
   "term": "E-R 다이어그램 기호",
   "sub": "",
-  "meaning": "E-R 다이어그램 기호: 사각형 = 개체(학생), 마름모 = 관계(수강한다), 타원 = 속성(이름), 밑줄 친 속성 = 기본키.",
+  "meaning": "사각형 = 개체(학생), 마름모 = 관계(수강한다), 타원 = 속성(이름), 밑줄 친 속성 = 기본키.",
+  "short": "사각형 = 개체(학생), 마름모 = 관계(수강한다), 타원 = 속성(이름), 밑줄 친 속성 = 기본키",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
-    "html": "E-R 다이어그램 기호: <b>사각형</b> = 개체(학생), <b>마름모</b> = 관계(수강한다), <b>타원</b> = 속성(이름), <b>밑줄 친 속성</b> = 기본키.",
+    "html": "<b>사각형</b> = 개체(학생), <b>마름모</b> = 관계(수강한다), <b>타원</b> = 속성(이름), <b>밑줄 친 속성</b> = 기본키.",
     "hint": false
    },
    {
@@ -1903,6 +2019,8 @@
   "term": "뷰",
   "sub": "View",
   "meaning": "실제 데이터를 저장하지 않고, 다른 테이블에서 필요한 부분만 골라 보여주는 가상 테이블. ALTER로 수정 불가 → DROP하고 다시 CREATE.",
+  "short": "실제 데이터를 저장하지 않고, 다른 테이블에서 필요한 부분만 골라 보여주는 가상 테이블",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -2009,6 +2127,82 @@
   ]
  },
  {
+  "kind": "mcq",
+  "id": "q-cc-unit",
+  "unit": "db",
+  "title": "로킹 단위",
+  "q": "로킹 단위를 작게(행 하나 단위로) 하면 어떻게 될까?",
+  "pre": "",
+  "options": [
+   "병행성은 높아지고, 관리 부담(오버헤드)은 커진다",
+   "병행성은 낮아지고, 관리 부담은 작아진다",
+   "병행성도 높아지고, 관리 부담도 작아진다",
+   "병행성은 낮아지고, 관리 부담은 커진다"
+  ],
+  "correct": "병행성은 높아지고, 관리 부담(오버헤드)은 커진다",
+  "explain": "<p>잠그는 단위가 <mark>작으면</mark> 여럿이 동시에 쓸 수 있지만(병행성↑) 잠금이 많아 관리가 복잡하다(오버헤드↑). <mark>크면</mark> 그 반대.</p><p class=\"why\"><b>기억할 것</b>: 건물 정문을 잠그면 편하지만 아무도 못 들어가고, 방마다 잠그면 여럿이 쓰지만 열쇠 관리가 힘들다.</p>",
+  "hints": [
+   "<b>기억할 것</b>: 건물 정문을 잠그면 편하지만 아무도 못 들어가고, 방마다 잠그면 여럿이 쓰지만 열쇠 관리가 힘들다."
+  ]
+ },
+ {
+  "kind": "mcq",
+  "id": "q-rc-imm",
+  "unit": "db",
+  "title": "즉시 갱신 · 지연 갱신",
+  "q": "지연 갱신 회복 기법에서 장애가 났을 때 필요한 연산은?",
+  "pre": "",
+  "options": [
+   "REDO만",
+   "UNDO만",
+   "REDO와 UNDO 모두",
+   "필요 없음"
+  ],
+  "correct": "REDO만",
+  "explain": "<p><b>즉시 갱신</b>: 작업하는 즉시 DB에 반영 → 끝난 건 REDO, 덜 끝난 것도 이미 DB에 썼으니 UNDO → <b>둘 다</b>.</p><p><b>지연 갱신</b>: Commit할 때 한꺼번에 반영 → Commit 전엔 DB에 쓴 게 없어서 UNDO 불필요 → <mark>REDO만</mark>.</p><p class=\"why\"><b>기억할 것</b>: 지연 갱신 = 초안에만 쓰다가 확정할 때 옮겨 적기. 확정 전이면 원본은 멀쩡하니 지울 게 없다.</p>",
+  "hints": [
+   "<b>기억할 것</b>: 지연 갱신 = 초안에만 쓰다가 확정할 때 옮겨 적기. 확정 전이면 원본은 멀쩡하니 지울 게 없다."
+  ]
+ },
+ {
+  "kind": "mcq",
+  "id": "q-rc-imm-2",
+  "unit": "db",
+  "title": "즉시 갱신 · 지연 갱신",
+  "q": "즉시 갱신 회복 기법에서 장애가 났을 때 필요한 연산은?",
+  "pre": "",
+  "options": [
+   "REDO와 UNDO 모두",
+   "REDO만",
+   "UNDO만",
+   "필요 없음"
+  ],
+  "correct": "REDO와 UNDO 모두",
+  "explain": "<p><b>즉시 갱신</b>: 작업하는 즉시 DB에 반영 → 끝난 건 REDO, 덜 끝난 것도 이미 DB에 썼으니 UNDO → <b>둘 다</b>.</p><p><b>지연 갱신</b>: Commit할 때 한꺼번에 반영 → Commit 전엔 DB에 쓴 게 없어서 UNDO 불필요 → <mark>REDO만</mark>.</p><p class=\"why\"><b>기억할 것</b>: 지연 갱신 = 초안에만 쓰다가 확정할 때 옮겨 적기. 확정 전이면 원본은 멀쩡하니 지울 게 없다.</p>",
+  "hints": [
+   "<b>기억할 것</b>: 지연 갱신 = 초안에만 쓰다가 확정할 때 옮겨 적기. 확정 전이면 원본은 멀쩡하니 지울 게 없다."
+  ]
+ },
+ {
+  "kind": "mcq",
+  "id": "q-cc-prob",
+  "unit": "db",
+  "title": "병행 제어를 안 하면",
+  "q": "병행 제어를 하지 않을 때 생기는 문제가 아닌 것은?",
+  "pre": "",
+  "options": [
+   "정규화 위반",
+   "갱신 분실",
+   "모순성",
+   "연쇄 복귀"
+  ],
+  "correct": "정규화 위반",
+  "explain": "<p>여러 트랜잭션을 동시에 막 실행하면 <b>갱신 분실</b>(한 사람의 수정이 덮여 사라짐), <b>모순성</b>(값이 앞뒤가 안 맞음), <b>연쇄 복귀</b>(하나를 취소하면 그걸 쓴 다른 것도 줄줄이 취소)가 생긴다.</p><p class=\"why\">정규화는 테이블 설계 문제라 병행 제어와 관계없다.</p>",
+  "hints": [
+   "정규화는 테이블 설계 문제라 병행 제어와 관계없다."
+  ]
+ },
+ {
   "kind": "term",
   "id": "n-osi7",
   "unit": "net",
@@ -2017,6 +2211,8 @@
   "term": "7 응용",
   "sub": "Application",
   "meaning": "사람이 직접 쓰는 프로그램과 서비스가 동작하는 층. 웹 보기, 메일, 파일 전송.",
+  "short": "사람이 직접 쓰는 프로그램과 서비스가 동작하는 층",
+  "segments": [],
   "parts": [
    {
     "label": "하는 일",
@@ -2047,6 +2243,8 @@
   "term": "6 표현",
   "sub": "Presentation",
   "meaning": "데이터를 상대가 알아볼 수 있는 형식으로 바꾼다. 암호화, 압축, 문자 인코딩.",
+  "short": "데이터를 상대가 알아볼 수 있는 형식으로 바꾼다",
+  "segments": [],
   "parts": [
    {
     "label": "하는 일",
@@ -2077,6 +2275,8 @@
   "term": "5 세션",
   "sub": "Session",
   "meaning": "두 컴퓨터 사이의 대화(연결)를 시작하고 유지하고 끝낸다. 중간 저장점(동기점)을 둔다.",
+  "short": "두 컴퓨터 사이의 대화(연결)를 시작하고 유지하고 끝낸다",
+  "segments": [],
   "parts": [
    {
     "label": "하는 일",
@@ -2107,6 +2307,8 @@
   "term": "4 전송",
   "sub": "Transport",
   "meaning": "보낸 데이터가 빠짐없이 순서대로 도착하게 한다. 잘못되면 다시 보낸다(오류 제어), 너무 빠르면 속도를 맞춘다(흐름 제어).",
+  "short": "보낸 데이터가 빠짐없이 순서대로 도착하게 한다",
+  "segments": [],
   "parts": [
    {
     "label": "하는 일",
@@ -2137,6 +2339,8 @@
   "term": "3 네트워크",
   "sub": "Network",
   "meaning": "IP 주소를 보고 목적지까지 가장 좋은 길을 찾는다(라우팅).",
+  "short": "IP 주소를 보고 목적지까지 가장 좋은 길을 찾는다(라우팅)",
+  "segments": [],
   "parts": [
    {
     "label": "하는 일",
@@ -2167,6 +2371,8 @@
   "term": "2 데이터링크",
   "sub": "Data Link",
   "meaning": "바로 옆 장비까지 MAC 주소로 전달하고, 전송 중 오류를 검사한다.",
+  "short": "바로 옆 장비까지 MAC 주소로 전달하고, 전송 중 오류를 검사한다",
+  "segments": [],
   "parts": [
    {
     "label": "하는 일",
@@ -2197,6 +2403,8 @@
   "term": "1 물리",
   "sub": "Physical",
   "meaning": "0과 1을 전기 신호·빛·전파로 바꿔 실제로 선을 타고 보낸다.",
+  "short": "0과 1을 전기 신호·빛·전파로 바꿔 실제로 선을 타고 보낸다",
+  "segments": [],
   "parts": [
    {
     "label": "하는 일",
@@ -2227,6 +2435,8 @@
   "term": "TCP",
   "sub": "Transmission Control Protocol",
   "meaning": "보내기 전에 연결을 맺고, 데이터가 빠짐없이 순서대로 도착했는지 확인하는 전송 방식. 못 받은 건 다시 보낸다.",
+  "short": "보내기 전에 연결을 맺고, 데이터가 빠짐없이 순서대로 도착했는지 확인하는 전송 방식",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -2252,6 +2462,8 @@
   "term": "UDP",
   "sub": "User Datagram Protocol",
   "meaning": "연결 없이 그냥 바로 보내는 방식. 도착 확인을 안 해서 빠르지만 중간에 빠져도 모른다.",
+  "short": "연결 없이 그냥 바로 보내는 방식",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -2270,31 +2482,6 @@
  },
  {
   "kind": "term",
-  "id": "n-3way",
-  "unit": "net",
-  "table": "net:2",
-  "col": "용어",
-  "term": "3-Way Handshake",
-  "sub": "",
-  "meaning": "TCP가 연결을 맺는 3단계: ① SYN(연결하자) → ② SYN+ACK(좋아, 너도 들려?) → ③ ACK(응, 들려).",
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "TCP가 연결을 맺는 3단계: ① <b>SYN</b>(연결하자) → ② <b>SYN+ACK</b>(좋아, 너도 들려?) → ③ <b>ACK</b>(응, 들려).",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "전화: \"여보세요?\" → \"네, 들려요. 제 말도 들려요?\" → \"네, 들려요.\" 이후 대화 시작",
-    "hint": true
-   }
-  ],
-  "hints": [
-   "전화: \"여보세요?\" → \"네, 들려요. 제 말도 들려요?\" → \"네, 들려요.\" 이후 대화 시작"
-  ]
- },
- {
-  "kind": "term",
   "id": "n-ip",
   "unit": "net",
   "table": "net:2",
@@ -2302,6 +2489,17 @@
   "term": "IPv4 / IPv6",
   "sub": "",
   "meaning": "IPv4 = 32비트, 8비트씩 4덩어리를 점으로 구분 (192.168.0.1). IPv6 = 128비트, 16비트씩 8덩어리를 콜론으로 구분 (2001:db8::1).",
+  "short": "IPv4 = 32비트, 8비트씩 4덩어리를 점으로 구분 (192.168.0.1)",
+  "segments": [
+   {
+    "label": "IPv4",
+    "text": "32비트, 8비트씩 4덩어리를 점으로 구분 (192.168.0.1)"
+   },
+   {
+    "label": "IPv6",
+    "text": "128비트, 16비트씩 8덩어리를 콜론으로 구분 (2001:db8::1)"
+   }
+  ],
   "parts": [
    {
     "label": "뜻",
@@ -2327,6 +2525,17 @@
   "term": "ARP / RARP",
   "sub": "Address Resolution Protocol",
   "meaning": "ARP: IP 주소를 알 때 그 컴퓨터의 MAC 주소(랜카드 고유 번호)를 알아낸다. RARP: 반대로 MAC 주소로 IP 주소를 알아낸다.",
+  "short": "ARP: IP 주소를 알 때 그 컴퓨터의 MAC 주소(랜카드 고유 번호)를 알아낸다",
+  "segments": [
+   {
+    "label": "ARP",
+    "text": "IP 주소를 알 때 그 컴퓨터의 MAC 주소(랜카드 고유 번호)를 알아낸다"
+   },
+   {
+    "label": "RARP",
+    "text": "반대로 MAC 주소로 IP 주소를 알아낸다"
+   }
+  ],
   "parts": [
    {
     "label": "뜻",
@@ -2352,6 +2561,8 @@
   "term": "ICMP",
   "sub": "Internet Control Message Protocol",
   "meaning": "네트워크에서 오류가 났거나 상태를 알려줄 때 쓰는 메시지 프로토콜. \"목적지에 도달할 수 없음\" 같은 알림.",
+  "short": "네트워크에서 오류가 났거나 상태를 알려줄 때 쓰는 메시지 프로토콜",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -2377,6 +2588,8 @@
   "term": "DNS",
   "sub": "Domain Name System",
   "meaning": "사람이 외우기 쉬운 도메인 이름(naver.com)을 컴퓨터가 쓰는 IP 주소로 바꿔 준다.",
+  "short": "사람이 외우기 쉬운 도메인 이름(naver.com)을 컴퓨터가 쓰는 IP 주소로 바꿔 준다",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -2402,6 +2615,8 @@
   "term": "DHCP",
   "sub": "Dynamic Host Configuration Protocol",
   "meaning": "네트워크에 접속한 기기에 IP 주소를 자동으로 빌려 준다.",
+  "short": "네트워크에 접속한 기기에 IP 주소를 자동으로 빌려 준다",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -2427,6 +2642,8 @@
   "term": "NAT",
   "sub": "Network Address Translation",
   "meaning": "내부에서 쓰는 사설 IP를 인터넷에 나갈 때 공인 IP로 바꿔 준다. 공인 IP 하나로 여러 기기가 인터넷을 쓴다.",
+  "short": "내부에서 쓰는 사설 IP를 인터넷에 나갈 때 공인 IP로 바꿔 준다",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -2452,6 +2669,21 @@
   "term": "RIP / OSPF / BGP",
   "sub": "",
   "meaning": "RIP: 거리(거쳐 가는 라우터 수, 홉)로 길을 고름. 최대 15홉, 소규모용. OSPF: 네트워크 전체 지도(링크 상태)를 보고 고름, 대규모용. BGP: 서로 다른 조직 네트워크(AS)끼리 길을 주고받음.",
+  "short": "RIP: 거리(거쳐 가는 라우터 수, 홉)로 길을 고름",
+  "segments": [
+   {
+    "label": "RIP",
+    "text": "거리(거쳐 가는 라우터 수, 홉)로 길을 고름"
+   },
+   {
+    "label": "OSPF",
+    "text": "네트워크 전체 지도(링크 상태)를 보고 고름, 대규모용"
+   },
+   {
+    "label": "BGP",
+    "text": "서로 다른 조직 네트워크(AS)끼리 길을 주고받음"
+   }
+  ],
   "parts": [
    {
     "label": "뜻",
@@ -2477,6 +2709,8 @@
   "term": "장비와 계층",
   "sub": "",
   "meaning": "1계층: 허브, 리피터 (신호만 키우거나 뿌림). 2계층: 스위치, 브리지 (MAC 주소 보고 전달). 3계층: 라우터 (IP 주소 보고 길 찾기).",
+  "short": "1계층: 허브, 리피터 (신호만 키우거나 뿌림)",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -2502,6 +2736,8 @@
   "term": "FTP",
   "sub": "",
   "meaning": "20(데이터 전송), 21(제어·명령)",
+  "short": "20(데이터 전송), 21(제어·명령)",
+  "segments": [],
   "parts": [
    {
     "label": "포트",
@@ -2527,6 +2763,17 @@
   "term": "SSH / Telnet",
   "sub": "",
   "meaning": "22 / 23",
+  "short": "22 / 23",
+  "segments": [
+   {
+    "label": "SSH",
+    "text": "22"
+   },
+   {
+    "label": "Telnet",
+    "text": "23"
+   }
+  ],
   "parts": [
    {
     "label": "포트",
@@ -2552,6 +2799,21 @@
   "term": "SMTP / POP3 / IMAP",
   "sub": "",
   "meaning": "25 / 110 / 143",
+  "short": "25 / 110 / 143",
+  "segments": [
+   {
+    "label": "SMTP",
+    "text": "25"
+   },
+   {
+    "label": "POP3",
+    "text": "110"
+   },
+   {
+    "label": "IMAP",
+    "text": "143"
+   }
+  ],
   "parts": [
    {
     "label": "포트",
@@ -2577,6 +2839,8 @@
   "term": "DNS",
   "sub": "",
   "meaning": "53",
+  "short": "53",
+  "segments": [],
   "parts": [
    {
     "label": "포트",
@@ -2602,6 +2866,17 @@
   "term": "HTTP / HTTPS",
   "sub": "",
   "meaning": "80 / 443",
+  "short": "80 / 443",
+  "segments": [
+   {
+    "label": "HTTP",
+    "text": "80"
+   },
+   {
+    "label": "HTTPS",
+    "text": "443"
+   }
+  ],
   "parts": [
    {
     "label": "포트",
@@ -2739,11 +3014,22 @@
   "col": "용어",
   "term": "DoS / DDoS",
   "sub": "(Distributed) Denial of Service",
-  "meaning": "서버에 요청을 한꺼번에 엄청 보내서 진짜 사용자가 못 쓰게 만드는 공격. DDoS는 해커가 감염시킨 수많은 PC(좀비 PC, 봇넷)로 동시에 공격한다.",
+  "meaning": "DoS: 서버에 요청을 한꺼번에 엄청 보내서 진짜 사용자가 못 쓰게 만드는 공격. DDoS: 해커가 감염시킨 수많은 PC(좀비 PC, 봇넷)로 동시에 하는 서비스 거부 공격.",
+  "short": "DoS: 서버에 요청을 한꺼번에 엄청 보내서 진짜 사용자가 못 쓰게 만드는 공격",
+  "segments": [
+   {
+    "label": "DoS",
+    "text": "서버에 요청을 한꺼번에 엄청 보내서 진짜 사용자가 못 쓰게 만드는 공격"
+   },
+   {
+    "label": "DDoS",
+    "text": "해커가 감염시킨 수많은 PC(좀비 PC, 봇넷)로 동시에 하는 서비스 거부 공격"
+   }
+  ],
   "parts": [
    {
     "label": "뜻",
-    "html": "서버에 요청을 한꺼번에 엄청 보내서 <b>진짜 사용자가 못 쓰게</b> 만드는 공격. DDoS는 해커가 감염시킨 수많은 PC(좀비 PC, 봇넷)로 <b>동시에</b> 공격한다.",
+    "html": "<b>DoS</b>: 서버에 요청을 한꺼번에 엄청 보내서 <b>진짜 사용자가 못 쓰게</b> 만드는 공격. <b>DDoS</b>: 해커가 감염시킨 수많은 PC(좀비 PC, 봇넷)로 <b>동시에</b> 하는 서비스 거부 공격.",
     "hint": false
    },
    {
@@ -2765,6 +3051,8 @@
   "term": "SYN Flooding",
   "sub": "",
   "meaning": "TCP 연결 3단계 중 SYN만 계속 보내고 마지막 ACK를 안 보낸다. 서버는 답을 기다리며 연결 자리를 잡아 두다가 자리가 꽉 차서 진짜 연결을 못 받는다.",
+  "short": "TCP 연결 3단계 중 SYN만 계속 보내고 마지막 ACK를 안 보낸다",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -2790,6 +3078,8 @@
   "term": "Smurf (스머핑)",
   "sub": "",
   "meaning": "보내는 사람 주소를 피해자 IP로 속이고, ICMP(ping)를 네트워크 전체(브로드캐스트)에 보낸다. 그러면 모든 컴퓨터가 피해자에게 한꺼번에 답장을 보낸다.",
+  "short": "보내는 사람 주소를 피해자 IP로 속이고, ICMP(ping)를 네트워크 전체(브로드캐스트)에 보낸다",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -2815,6 +3105,8 @@
   "term": "Ping of Death",
   "sub": "",
   "meaning": "ping(ICMP) 패킷을 허용된 최대 크기(65,535바이트)보다 크게 만들어 보낸다. 받는 쪽이 처리하다 멈추거나 다운된다.",
+  "short": "ping(ICMP) 패킷을 허용된 최대 크기(65,535바이트)보다 크게 만들어 보낸다",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -2840,6 +3132,8 @@
   "term": "Land Attack",
   "sub": "",
   "meaning": "패킷의 보내는 IP와 받는 IP를 똑같이(피해자 IP로) 만들어 보낸다. 피해자는 자기 자신에게 계속 응답하다 멈춘다.",
+  "short": "패킷의 보내는 IP와 받는 IP를 똑같이(피해자 IP로) 만들어 보낸다",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -2865,6 +3159,8 @@
   "term": "Teardrop",
   "sub": "",
   "meaning": "큰 데이터는 조각(Fragment)으로 나눠 보내고 받는 쪽이 순서 번호(Offset)로 다시 맞춘다. 이 번호를 일부러 겹치거나 틀리게 만들어 조립하다 오류가 나게 한다.",
+  "short": "큰 데이터는 조각(Fragment)으로 나눠 보내고 받는 쪽이 순서 번호(Offset)로 다시 맞춘다",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -2890,6 +3186,8 @@
   "term": "SQL Injection",
   "sub": "",
   "meaning": "로그인 칸, 검색창 같은 입력칸에 SQL 문을 몰래 넣어서 DB를 마음대로 조회·수정한다.",
+  "short": "로그인 칸, 검색창 같은 입력칸에 SQL 문을 몰래 넣어서 DB를 마음대로 조회·수정한다",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -2915,6 +3213,8 @@
   "term": "XSS",
   "sub": "Cross-Site Scripting",
   "meaning": "게시판 글 등에 악성 스크립트(JavaScript)를 심어 두면, 그 글을 연 다른 사람 브라우저에서 실행되어 쿠키·정보를 빼 간다.",
+  "short": "게시판 글 등에 악성 스크립트(JavaScript)를 심어 두면, 그 글을 연 다른 사람 브라우저에서 실행되어 쿠키·정보를 빼 간다",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -2940,6 +3240,8 @@
   "term": "CSRF",
   "sub": "Cross-Site Request Forgery",
   "meaning": "로그인한 사용자가 악성 링크를 누르면, 그 사람 권한으로 원치 않는 요청(송금, 비밀번호 변경)이 서버로 날아간다.",
+  "short": "로그인한 사용자가 악성 링크를 누르면, 그 사람 권한으로 원치 않는 요청(송금, 비밀번호 변경)이 서버로 날아간다",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -2965,6 +3267,21 @@
   "term": "피싱 / 스미싱 / 스피어 피싱",
   "sub": "",
   "meaning": "피싱: 은행·기관인 척 가짜 메일·사이트로 개인정보를 빼 감. 스미싱: 문자(SMS)로 하는 피싱. 스피어 피싱: 특정 한 사람을 조사해서 맞춤으로 속임.",
+  "short": "피싱: 은행·기관인 척 가짜 메일·사이트로 개인정보를 빼 감",
+  "segments": [
+   {
+    "label": "피싱",
+    "text": "은행·기관인 척 가짜 메일·사이트로 개인정보를 빼 감"
+   },
+   {
+    "label": "스미싱",
+    "text": "문자(SMS)로 하는 ○○"
+   },
+   {
+    "label": "스피어 피싱",
+    "text": "특정 한 사람을 조사해서 맞춤으로 속임"
+   }
+  ],
   "parts": [
    {
     "label": "뜻",
@@ -2990,6 +3307,8 @@
   "term": "파밍",
   "sub": "Pharming",
   "meaning": "DNS나 PC의 hosts 파일을 조작해서, 사용자가 주소를 정확히 입력해도 가짜 사이트로 보낸다.",
+  "short": "DNS나 PC의 hosts 파일을 조작해서, 사용자가 주소를 정확히 입력해도 가짜 사이트로 보낸다",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -3015,6 +3334,8 @@
   "term": "스니핑",
   "sub": "Sniffing",
   "meaning": "네트워크에 흐르는 데이터를 몰래 엿보거나 엿듣는 공격. 데이터를 바꾸지는 않는다.",
+  "short": "네트워크에 흐르는 데이터를 몰래 엿보거나 엿듣는 공격",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -3040,6 +3361,8 @@
   "term": "스푸핑",
   "sub": "Spoofing",
   "meaning": "IP 주소, MAC 주소, DNS 등을 위조해서 다른 사람인 척 속이는 공격. 예) ARP 스푸핑: 내 MAC을 게이트웨이 것처럼 속여 남의 데이터를 나한테 오게 함.",
+  "short": "IP 주소, MAC 주소, DNS 등을 위조해서 다른 사람인 척 속이는 공격",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -3065,6 +3388,8 @@
   "term": "세션 하이재킹",
   "sub": "",
   "meaning": "이미 로그인되어 열려 있는 세션(연결)을 가로채서 그 사용자인 척한다. 비밀번호 없이도 들어갈 수 있다.",
+  "short": "이미 로그인되어 열려 있는 세션(연결)을 가로채서 그 사용자인 척한다",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -3090,6 +3415,8 @@
   "term": "사회공학",
   "sub": "Social Engineering",
   "meaning": "기술 대신 사람의 심리를 속여서 비밀번호나 정보를 얻는 방법.",
+  "short": "기술 대신 사람의 심리를 속여서 비밀번호나 정보를 얻는 방법",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -3115,6 +3442,8 @@
   "term": "APT",
   "sub": "Advanced Persistent Threat",
   "meaning": "특정 조직을 목표로 정하고 오랫동안 몰래, 끈질기게 여러 방법을 써서 공격한다.",
+  "short": "특정 조직을 목표로 정하고 오랫동안 몰래, 끈질기게 여러 방법을 써서 공격한다",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -3140,6 +3469,8 @@
   "term": "제로데이 공격",
   "sub": "",
   "meaning": "취약점이 알려진 뒤 보안 패치가 나오기 전에 그 틈을 노리는 공격.",
+  "short": "취약점이 알려진 뒤 보안 패치가 나오기 전에 그 틈을 노리는 공격",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -3165,6 +3496,8 @@
   "term": "워터링 홀",
   "sub": "Watering Hole",
   "meaning": "공격 대상이 자주 방문하는 웹사이트를 먼저 감염시켜 놓고, 대상이 들어오기를 기다린다.",
+  "short": "공격 대상이 자주 방문하는 웹사이트를 먼저 감염시켜 놓고, 대상이 들어오기를 기다린다",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -3190,6 +3523,8 @@
   "term": "바이러스",
   "sub": "",
   "meaning": "다른 정상 파일에 붙어서(숙주 필요) 그 파일이 실행될 때 퍼진다. 혼자서는 못 퍼진다.",
+  "short": "다른 정상 파일에 붙어서(숙주 필요) 그 파일이 실행될 때 퍼진다",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -3215,6 +3550,8 @@
   "term": "웜",
   "sub": "Worm",
   "meaning": "다른 파일 없이 혼자서 자기를 복제해 네트워크를 타고 퍼진다.",
+  "short": "다른 파일 없이 혼자서 자기를 복제해 네트워크를 타고 퍼진다",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -3240,6 +3577,8 @@
   "term": "트로이 목마",
   "sub": "",
   "meaning": "게임, 유틸리티 같은 정상 프로그램인 척 숨어 있다가 몰래 나쁜 짓을 한다. 스스로 복제해 퍼지지는 않는다.",
+  "short": "게임, 유틸리티 같은 정상 프로그램인 척 숨어 있다가 몰래 나쁜 짓을 한다",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -3265,6 +3604,8 @@
   "term": "랜섬웨어",
   "sub": "",
   "meaning": "파일을 암호화해서 못 열게 만들고, 풀어 주는 대가로 돈(주로 암호화폐)을 요구한다.",
+  "short": "파일을 암호화해서 못 열게 만들고, 풀어 주는 대가로 돈(주로 암호화폐)을 요구한다",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -3290,6 +3631,21 @@
   "term": "루트킷 / 백도어 / 키로거",
   "sub": "",
   "meaning": "루트킷: 관리자(root) 권한을 얻고 자기 흔적을 숨기는 도구 모음. 백도어: 정상 인증을 거치지 않고 몰래 들어오는 뒷문. 키로거: 키보드로 친 내용을 몰래 기록.",
+  "short": "루트킷: 관리자(root) 권한을 얻고 자기 흔적을 숨기는 도구 모음",
+  "segments": [
+   {
+    "label": "루트킷",
+    "text": "관리자(root) 권한을 얻고 자기 흔적을 숨기는 도구 모음"
+   },
+   {
+    "label": "백도어",
+    "text": "정상 인증을 거치지 않고 몰래 들어오는 뒷문"
+   },
+   {
+    "label": "키로거",
+    "text": "키보드로 친 내용을 몰래 기록"
+   }
+  ],
   "parts": [
    {
     "label": "뜻",
@@ -3315,6 +3671,8 @@
   "term": "대칭키 암호",
   "sub": "",
   "meaning": "암호화할 때와 풀 때 같은 키 하나를 쓴다. 빠르지만 키를 안전하게 나눠 주기가 어렵다. 종류: DES, AES, SEED, ARIA.",
+  "short": "암호화할 때와 풀 때 같은 키 하나를 쓴다",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -3340,6 +3698,8 @@
   "term": "비대칭키(공개키) 암호",
   "sub": "",
   "meaning": "공개키(누구나 가짐)로 잠그고 개인키(나만 가짐)로 연다. 키 나눠 주기 문제가 없지만 느리다. 종류: RSA, ECC, ElGamal.",
+  "short": "공개키(누구나 가짐)로 잠그고 개인키(나만 가짐)로 연다",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -3358,31 +3718,6 @@
  },
  {
   "kind": "term",
-  "id": "x-keys",
-  "unit": "sec",
-  "table": "sec:5",
-  "col": "용어",
-  "term": "필요한 키 개수 (n명)",
-  "sub": "",
-  "meaning": "n명이 서로 암호 통신할 때 필요한 키 개수. 대칭키 = n(n−1)/2 (두 명마다 하나씩), 비대칭키 = 2n (한 명당 공개키·개인키 2개).",
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "n명이 서로 암호 통신할 때 필요한 키 개수. 대칭키 = <mark>n(n−1)/2</mark> (두 명마다 하나씩), 비대칭키 = <mark>2n</mark> (한 명당 공개키·개인키 2개).",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "10명이면 대칭키 10×9/2 = 45개, 비대칭키 10×2 = 20개",
-    "hint": true
-   }
-  ],
-  "hints": [
-   "10명이면 대칭키 10×9/2 = 45개, 비대칭키 10×2 = 20개"
-  ]
- },
- {
-  "kind": "term",
   "id": "x-hash",
   "unit": "sec",
   "table": "sec:5",
@@ -3390,6 +3725,8 @@
   "term": "해시",
   "sub": "MD5, SHA",
   "meaning": "어떤 데이터든 정해진 길이의 값으로 바꾼다. 거꾸로 원래 값을 알아낼 수 없다. 데이터가 바뀌었는지(무결성) 확인할 때 쓴다. 종류: MD5, SHA.",
+  "short": "어떤 데이터든 정해진 길이의 값으로 바꾼다",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -3415,6 +3752,21 @@
   "term": "MAC / DAC / RBAC",
   "sub": "",
   "meaning": "MAC(강제적): 관리자가 정한 보안 등급으로 접근을 강제로 통제. DAC(임의적): 데이터 주인이 누구에게 줄지 마음대로 정함. RBAC(역할 기반): 직급·역할에 따라 권한을 줌.",
+  "short": "MAC(강제적): 관리자가 정한 보안 등급으로 접근을 강제로 통제",
+  "segments": [
+   {
+    "label": "MAC(강제적)",
+    "text": "관리자가 정한 보안 등급으로 접근을 강제로 통제"
+   },
+   {
+    "label": "DAC(임의적)",
+    "text": "데이터 주인이 누구에게 줄지 마음대로 정함"
+   },
+   {
+    "label": "RBAC(역할 기반)",
+    "text": "직급·역할에 따라 권한을 줌"
+   }
+  ],
   "parts": [
    {
     "label": "뜻",
@@ -3440,6 +3792,21 @@
   "term": "방화벽 / IDS / IPS",
   "sub": "",
   "meaning": "방화벽: 정해 둔 규칙대로 통과·차단. IDS: 침입을 탐지하고 알리기만 함. IPS: 침입을 탐지해서 차단까지 함.",
+  "short": "방화벽: 정해 둔 규칙대로 통과·차단",
+  "segments": [
+   {
+    "label": "방화벽",
+    "text": "정해 둔 규칙대로 통과·차단"
+   },
+   {
+    "label": "IDS",
+    "text": "침입을 탐지하고 알리기만 함"
+   },
+   {
+    "label": "IPS",
+    "text": "침입을 탐지해서 차단까지 함"
+   }
+  ],
   "parts": [
    {
     "label": "뜻",
@@ -3465,6 +3832,8 @@
   "term": "허니팟",
   "sub": "Honeypot",
   "meaning": "일부러 허술해 보이는 가짜 시스템을 만들어 공격자를 끌어들이고, 공격 방법을 관찰·기록한다.",
+  "short": "일부러 허술해 보이는 가짜 시스템을 만들어 공격자를 끌어들이고, 공격 방법을 관찰·기록한다",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -3490,6 +3859,17 @@
   "term": "VPN / SSO",
   "sub": "",
   "meaning": "VPN: 인터넷 같은 공용망 위에 암호화된 나만의 통로를 만들어 사설망처럼 쓴다. SSO: 한 번 로그인으로 여러 서비스를 이어서 쓴다.",
+  "short": "VPN: 인터넷 같은 공용망 위에 암호화된 나만의 통로를 만들어 사설망처럼 쓴다",
+  "segments": [
+   {
+    "label": "VPN",
+    "text": "인터넷 같은 공용망 위에 암호화된 나만의 통로를 만들어 사설망처럼 쓴다"
+   },
+   {
+    "label": "SSO",
+    "text": "한 번 로그인으로 여러 서비스를 이어서 쓴다"
+   }
+  ],
   "parts": [
    {
     "label": "뜻",
@@ -3515,6 +3895,17 @@
   "term": "SSL/TLS · IPSec",
   "sub": "",
   "meaning": "SSL/TLS: 웹 브라우저와 서버 사이 통신을 암호화 (HTTPS). IPSec: IP 계층(3계층)에서 암호화. AH(인증·무결성)와 ESP(암호화까지)로 구성.",
+  "short": "SSL/TLS: 웹 브라우저와 서버 사이 통신을 암호화 (HTTPS)",
+  "segments": [
+   {
+    "label": "SSL/TLS",
+    "text": "웹 브라우저와 서버 사이 통신을 암호화 (HTTPS)"
+   },
+   {
+    "label": "IPSec",
+    "text": "IP 계층(3계층)에서 암호화"
+   }
+  ],
   "parts": [
    {
     "label": "뜻",
@@ -3537,13 +3928,32 @@
   "unit": "sec",
   "table": "sec:5",
   "col": "용어",
-  "term": "인증 유형",
-  "sub": "",
-  "meaning": "본인 확인 방법 4가지: 지식(아는 것: 비밀번호, PIN), 소유(가진 것: OTP, 스마트카드), 존재(나 자체: 지문, 홍채, 얼굴), 행위(내 행동: 서명, 걸음걸이, 목소리).",
+  "term": "지식 / 소유 / 존재 / 행위",
+  "sub": "인증 유형",
+  "meaning": "지식: 아는 것으로 확인 (비밀번호, PIN). 소유: 가진 것으로 확인 (OTP, 스마트카드). 존재: 내 몸 자체로 확인 (지문, 홍채, 얼굴). 행위: 내 행동으로 확인 (서명, 걸음걸이, 목소리).",
+  "short": "지식: 아는 것으로 확인 (비밀번호, PIN)",
+  "segments": [
+   {
+    "label": "지식",
+    "text": "아는 것으로 확인 (비밀번호, PIN)"
+   },
+   {
+    "label": "소유",
+    "text": "가진 것으로 확인 (OTP, 스마트카드)"
+   },
+   {
+    "label": "존재",
+    "text": "내 몸 자체로 확인 (지문, 홍채, 얼굴)"
+   },
+   {
+    "label": "행위",
+    "text": "내 행동으로 확인 (서명, 걸음걸이, 목소리)"
+   }
+  ],
   "parts": [
    {
     "label": "뜻",
-    "html": "본인 확인 방법 4가지: <b>지식</b>(아는 것: 비밀번호, PIN), <b>소유</b>(가진 것: OTP, 스마트카드), <b>존재</b>(나 자체: 지문, 홍채, 얼굴), <b>행위</b>(내 행동: 서명, 걸음걸이, 목소리).",
+    "html": "<b>지식</b>: 아는 것으로 확인 (비밀번호, PIN). <b>소유</b>: 가진 것으로 확인 (OTP, 스마트카드). <b>존재</b>: 내 몸 자체로 확인 (지문, 홍채, 얼굴). <b>행위</b>: 내 행동으로 확인 (서명, 걸음걸이, 목소리).",
     "hint": false
    },
    {
@@ -3553,7 +3963,7 @@
    }
   ],
   "hints": [
-   "두 가지 이상을 섞으면 다중 인증(MFA). 예) 비밀번호(지식) + 문자 인증번호(소유)"
+   "두 가지 이상을 섞으면 다중 인증(MFA). 예) 비밀번호(○○) + 문자 인증번호(○○)"
   ]
  },
  {
@@ -3648,26 +4058,110 @@
   ]
  },
  {
-  "kind": "recall",
+  "kind": "mcq",
+  "id": "q-keys",
+  "unit": "sec",
+  "title": "필요한 키 개수",
+  "q": "10명이 대칭키 방식으로 서로 1:1 암호 통신을 하려면 키가 몇 개 필요할까?",
+  "pre": "",
+  "options": [
+   "45개",
+   "20개",
+   "10개",
+   "90개"
+  ],
+  "correct": "45개",
+  "explain": "<p>대칭키 = <mark>n(n−1)/2</mark> (두 명마다 하나씩) → 10×9/2 = 45개. 비대칭키 = <mark>2n</mark> (한 명당 공개키·개인키 2개) → 20개.</p>",
+  "hints": []
+ },
+ {
+  "kind": "mcq",
+  "id": "q-keys-2",
+  "unit": "sec",
+  "title": "필요한 키 개수",
+  "q": "같은 10명이 비대칭키(공개키) 방식을 쓰면 키가 몇 개 필요할까?",
+  "pre": "",
+  "options": [
+   "20개",
+   "45개",
+   "10개",
+   "100개"
+  ],
+  "correct": "20개",
+  "explain": "<p>대칭키 = <mark>n(n−1)/2</mark> (두 명마다 하나씩) → 10×9/2 = 45개. 비대칭키 = <mark>2n</mark> (한 명당 공개키·개인키 2개) → 20개.</p>",
+  "hints": []
+ },
+ {
+  "kind": "mcq",
   "id": "u-struct",
   "unit": "uml",
   "title": "구조 다이어그램 (사진)",
+  "q": "다음 중 구조(정적) 다이어그램이 아닌 것은?",
   "pre": "",
-  "q": "",
-  "mnemo": "클 · 객 · 컴 · 배 · 복 · 패",
+  "options": [
+   "시퀀스 다이어그램",
+   "클래스 다이어그램",
+   "컴포넌트 다이어그램",
+   "배치 다이어그램"
+  ],
+  "correct": "시퀀스 다이어그램",
   "explain": "<p class=\"why\">시스템이 <b>무엇으로 이루어져 있는지</b>를 보여 주는 그림. 시간이 흘러도 안 변하는 모습 = 사진.</p>\n<ol class=\"steps\">\n<li><b>클래스</b>: 클래스들과 그 속성·메서드, 서로의 관계. 프로그램의 설계도. <mark>가장 많이 나옴</mark></li>\n<li><b>객체</b>: 클래스로 실제 만든 객체들이 <b>어느 한 순간</b>에 어떤 값을 갖고 연결돼 있는지. 설계도로 지은 집의 사진</li>\n<li><b>컴포넌트</b>: 프로그램을 이루는 <b>부품(모듈)</b>과 그 연결</li>\n<li><b>배치</b>: 서버, PC 같은 <b>물리적 장비</b>에 무엇이 설치되는지. 서버실 배치도</li>\n<li><b>복합체 구조</b>: 클래스 <b>내부</b>가 어떻게 생겼는지</li>\n<li><b>패키지</b>: 관련 요소를 <b>폴더처럼 묶은</b> 것과 그 관계</li>\n</ol>\n<p class=\"why\"><b>외우는 법</b>: \"클래스 객체가 컴퓨터에 배치돼서 복잡해서 패스\"</p>",
   "hints": [
    "<b>외우는 법</b>: \"클래스 객체가 컴퓨터에 배치돼서 복잡해서 패스\""
   ]
  },
  {
-  "kind": "recall",
+  "kind": "mcq",
+  "id": "u-struct-2",
+  "unit": "uml",
+  "title": "구조 다이어그램 (사진)",
+  "q": "서버, PC 같은 물리적 장비에 무엇이 설치되는지 보여 주는 다이어그램은?",
+  "pre": "",
+  "options": [
+   "배치 다이어그램",
+   "컴포넌트 다이어그램",
+   "패키지 다이어그램",
+   "객체 다이어그램"
+  ],
+  "correct": "배치 다이어그램",
+  "explain": "<p class=\"why\">시스템이 <b>무엇으로 이루어져 있는지</b>를 보여 주는 그림. 시간이 흘러도 안 변하는 모습 = 사진.</p>\n<ol class=\"steps\">\n<li><b>클래스</b>: 클래스들과 그 속성·메서드, 서로의 관계. 프로그램의 설계도. <mark>가장 많이 나옴</mark></li>\n<li><b>객체</b>: 클래스로 실제 만든 객체들이 <b>어느 한 순간</b>에 어떤 값을 갖고 연결돼 있는지. 설계도로 지은 집의 사진</li>\n<li><b>컴포넌트</b>: 프로그램을 이루는 <b>부품(모듈)</b>과 그 연결</li>\n<li><b>배치</b>: 서버, PC 같은 <b>물리적 장비</b>에 무엇이 설치되는지. 서버실 배치도</li>\n<li><b>복합체 구조</b>: 클래스 <b>내부</b>가 어떻게 생겼는지</li>\n<li><b>패키지</b>: 관련 요소를 <b>폴더처럼 묶은</b> 것과 그 관계</li>\n</ol>\n<p class=\"why\"><b>외우는 법</b>: \"클래스 객체가 컴퓨터에 배치돼서 복잡해서 패스\"</p>",
+  "hints": [
+   "<b>외우는 법</b>: \"클래스 객체가 컴퓨터에 배치돼서 복잡해서 패스\""
+  ]
+ },
+ {
+  "kind": "mcq",
   "id": "u-behav",
   "unit": "uml",
   "title": "행위 다이어그램 (동영상)",
+  "q": "객체끼리 주고받는 메시지를 시간 순서대로 보여 주는 다이어그램은?",
   "pre": "",
-  "q": "",
-  "mnemo": "유 · 시 · 커 · 상 · 활 · 타 · 상호",
+  "options": [
+   "시퀀스 다이어그램",
+   "커뮤니케이션 다이어그램",
+   "상태 다이어그램",
+   "활동 다이어그램"
+  ],
+  "correct": "시퀀스 다이어그램",
+  "explain": "<p class=\"why\">시스템이 <b>어떻게 움직이는지</b>를 보여 주는 그림. 시간에 따라 일어나는 일 = 동영상.</p>\n<ol class=\"steps\">\n<li><b>유스케이스</b>: 사용자(액터)가 시스템으로 <b>할 수 있는 기능</b> 목록. 식당 메뉴판</li>\n<li><b>시퀀스</b>: 객체끼리 <mark>시간 순서대로</mark> 메시지를 주고받는 모습. 위에서 아래로 시간이 흐름. 카톡 대화창</li>\n<li><b>커뮤니케이션</b>: 시퀀스와 같은 내용을 객체 간 <b>연결 관계</b> 중심으로 그림</li>\n<li><b>상태</b>: 객체 하나의 <b>상태가 어떻게 바뀌는지</b>. 주문: 접수 → 결제완료 → 배송중 → 완료. 신호등</li>\n<li><b>활동</b>: 일이 처리되는 <b>흐름과 조건 분기</b>. 순서도(flowchart)</li>\n<li><b>타이밍</b>: 시간에 따라 상태가 <b>언제</b> 바뀌는지 시간축으로</li>\n<li><b>상호작용 개요</b>: 여러 상호작용 다이어그램을 묶어 <b>큰 흐름</b>으로</li>\n</ol>\n<p class=\"why\"><b>외우는 법</b>: \"유시커 상활 타상\". 문제에 \"시간 순서, 메시지\"가 보이면 시퀀스, \"상태 변화\"면 상태, \"흐름, 분기\"면 활동.</p>",
+  "hints": [
+   "<b>외우는 법</b>: \"유시커 상활 타상\". 문제에 \"시간 순서, 메시지\"가 보이면 시퀀스, \"상태 변화\"면 상태, \"흐름, 분기\"면 활동."
+  ]
+ },
+ {
+  "kind": "mcq",
+  "id": "u-behav-2",
+  "unit": "uml",
+  "title": "행위 다이어그램 (동영상)",
+  "q": "주문이 '접수 → 결제완료 → 배송중'처럼 한 객체의 상태가 바뀌는 과정을 그리는 다이어그램은?",
+  "pre": "",
+  "options": [
+   "상태 다이어그램",
+   "활동 다이어그램",
+   "시퀀스 다이어그램",
+   "유스케이스 다이어그램"
+  ],
+  "correct": "상태 다이어그램",
   "explain": "<p class=\"why\">시스템이 <b>어떻게 움직이는지</b>를 보여 주는 그림. 시간에 따라 일어나는 일 = 동영상.</p>\n<ol class=\"steps\">\n<li><b>유스케이스</b>: 사용자(액터)가 시스템으로 <b>할 수 있는 기능</b> 목록. 식당 메뉴판</li>\n<li><b>시퀀스</b>: 객체끼리 <mark>시간 순서대로</mark> 메시지를 주고받는 모습. 위에서 아래로 시간이 흐름. 카톡 대화창</li>\n<li><b>커뮤니케이션</b>: 시퀀스와 같은 내용을 객체 간 <b>연결 관계</b> 중심으로 그림</li>\n<li><b>상태</b>: 객체 하나의 <b>상태가 어떻게 바뀌는지</b>. 주문: 접수 → 결제완료 → 배송중 → 완료. 신호등</li>\n<li><b>활동</b>: 일이 처리되는 <b>흐름과 조건 분기</b>. 순서도(flowchart)</li>\n<li><b>타이밍</b>: 시간에 따라 상태가 <b>언제</b> 바뀌는지 시간축으로</li>\n<li><b>상호작용 개요</b>: 여러 상호작용 다이어그램을 묶어 <b>큰 흐름</b>으로</li>\n</ol>\n<p class=\"why\"><b>외우는 법</b>: \"유시커 상활 타상\". 문제에 \"시간 순서, 메시지\"가 보이면 시퀀스, \"상태 변화\"면 상태, \"흐름, 분기\"면 활동.</p>",
   "hints": [
    "<b>외우는 법</b>: \"유시커 상활 타상\". 문제에 \"시간 순서, 메시지\"가 보이면 시퀀스, \"상태 변화\"면 상태, \"흐름, 분기\"면 활동."
@@ -3745,13 +4239,32 @@
   "unit": "uml",
   "table": "uml:1",
   "col": "기호",
-  "term": "+ − # ~",
-  "sub": "",
-  "meaning": "클래스 속성·메서드 앞에 붙이는 접근 범위: + public(누구나), − private(나만), # protected(나와 자식 클래스), ~ package(같은 패키지만).",
+  "term": "+ / − / # / ~",
+  "sub": "접근 제어자",
+  "meaning": "+: public, 누구나 접근. −: private, 자기 클래스 안에서만. #: protected, 자기와 자식 클래스만. ~: package, 같은 패키지 안에서만.",
+  "short": "+: public, 누구나 접근",
+  "segments": [
+   {
+    "label": "+",
+    "text": "public, 누구나 접근"
+   },
+   {
+    "label": "−",
+    "text": "private, 자기 클래스 안에서만"
+   },
+   {
+    "label": "#",
+    "text": "protected, 자기와 자식 클래스만"
+   },
+   {
+    "label": "~",
+    "text": "package, 같은 패키지 안에서만"
+   }
+  ],
   "parts": [
    {
     "label": "뜻",
-    "html": "클래스 속성·메서드 앞에 붙이는 접근 범위: <b>+</b> public(누구나), <b>−</b> private(나만), <b>#</b> protected(나와 자식 클래스), <b>~</b> package(같은 패키지만).",
+    "html": "<b>+</b>: public, 누구나 접근. <b>−</b>: private, 자기 클래스 안에서만. <b>#</b>: protected, 자기와 자식 클래스만. <b>~</b>: package, 같은 패키지 안에서만.",
     "hint": false
    },
    {
@@ -3773,6 +4286,17 @@
   "term": "<<include>> / <<extend>>",
   "sub": "",
   "meaning": "유스케이스 사이 관계. <<include>>: 실행하면 반드시 같이 실행되는 기능(필수). <<extend>>: 조건에 따라 가끔 추가되는 기능(선택).",
+  "short": "유스케이스 사이 관계",
+  "segments": [
+   {
+    "label": "<<include>>",
+    "text": "실행하면 반드시 같이 실행되는 기능(필수)"
+   },
+   {
+    "label": "<<extend>>",
+    "text": "조건에 따라 가끔 추가되는 기능(선택)"
+   }
+  ],
   "parts": [
    {
     "label": "뜻",
@@ -3791,31 +4315,6 @@
  },
  {
   "kind": "term",
-  "id": "u-parts",
-  "unit": "uml",
-  "table": "uml:1",
-  "col": "기호",
-  "term": "UML 구성요소",
-  "sub": "",
-  "meaning": "UML을 이루는 3가지: 사물(Things, 클래스·객체 같은 대상), 관계(Relationships, 대상끼리 연결), 다이어그램(Diagram, 이것들을 그린 그림).",
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "UML을 이루는 3가지: <b>사물</b>(Things, 클래스·객체 같은 대상), <b>관계</b>(Relationships, 대상끼리 연결), <b>다이어그램</b>(Diagram, 이것들을 그린 그림).",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "\"무엇이(사물), 어떻게 연결돼서(관계), 그림으로(다이어그램)\"",
-    "hint": true
-   }
-  ],
-  "hints": [
-   "\"무엇이(사물), 어떻게 연결돼서(관계), 그림으로(다이어그램)\""
-  ]
- },
- {
-  "kind": "term",
   "id": "u-actor",
   "unit": "uml",
   "table": "uml:1",
@@ -3823,6 +4322,8 @@
   "term": "액터 (Actor)",
   "sub": "",
   "meaning": "시스템 바깥에서 시스템을 사용하는 사람이나 다른 시스템. 유스케이스 다이어그램에 졸라맨 모양으로 그린다.",
+  "short": "시스템 바깥에서 시스템을 사용하는 사람이나 다른 시스템",
+  "segments": [],
   "parts": [
    {
     "label": "뜻",
@@ -3838,6 +4339,23 @@
   "hints": [
    "쇼핑몰 시스템에서 고객, 관리자, 외부 결제 시스템이 액터. 시스템 안에 있는 건 액터가 아님"
   ]
+ },
+ {
+  "kind": "mcq",
+  "id": "q-uml-parts",
+  "unit": "uml",
+  "title": "UML 구성요소",
+  "q": "UML의 3가지 구성요소가 아닌 것은?",
+  "pre": "",
+  "options": [
+   "속성 (Attribute)",
+   "사물 (Things)",
+   "관계 (Relationships)",
+   "다이어그램 (Diagram)"
+  ],
+  "correct": "속성 (Attribute)",
+  "explain": "<p>UML = <b>사물</b>(클래스·객체 같은 대상) + <b>관계</b>(대상끼리 연결) + <b>다이어그램</b>(이것들을 그린 그림). 속성은 클래스 안의 항목이다.</p>",
+  "hints": []
  },
  {
   "kind": "build",

@@ -21,6 +21,10 @@ export interface TermCard extends BaseCard {
   term: string;
   sub: string;
   meaning: string;
+  /** 보기에 쓰는 짧은 설명 (첫 문장, 용어 이름은 가림) */
+  short: string;
+  /** "RIP / OSPF / BGP"처럼 묶은 카드를 이름별로 나눈 것. 나눌 수 없으면 빈 배열 */
+  segments: { label: string; text: string }[];
   parts: TermPart[];
 }
 
@@ -65,7 +69,18 @@ export interface BuildCard extends BaseCard {
   explain: string;
 }
 
-export type Card = TermCard | AnswerCard | RelCard | RecallCard | BuildCard;
+/** 노트에 직접 써 둔 4지선다 문제 */
+export interface McqCard extends BaseCard {
+  kind: 'mcq';
+  title: string;
+  q: string;
+  pre: string;
+  options: string[];
+  correct: string;
+  explain: string;
+}
+
+export type Card = TermCard | AnswerCard | RelCard | RecallCard | BuildCard | McqCard;
 
 export type Question =
   | { type: 'choice'; card: Card; label: string; say: string; prompt?: string; promptHtml?: string; options: string[]; correct: string }
