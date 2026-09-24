@@ -5,7 +5,7 @@ from fe_content import UNITS
 e = html.escape
 src = open('public/notes.html', encoding='utf-8').read()
 head = src[:src.index('<div class="wrap">')]
-head = head.replace('<title>정처기 실기 노트 · 출근길 IT 퀴즈</title>', '<title>프론트엔드 노트 · 출근길 IT 퀴즈</title>').replace('./course/jeongcheogi', './course/frontend')
+head = head.replace('<title>정보처리기사 노트 · 출근길 IT 퀴즈</title>', '<title>프론트엔드 노트 · 출근길 IT 퀴즈</title>').replace('./course/jeongcheogi', './course/frontend')
 tail = src[src.index('  <footer>'):]
 tail = tail.replace("var KEY = 'jck-known-v1';", "var KEY = 'jck-known-frontend-v1';")
 

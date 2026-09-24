@@ -34,7 +34,7 @@ describe('출력값 답 조각', () => {
 describe('조각으로 만들기 문제', () => {
   const builds = CARDS.filter((c): c is BuildCard => c.kind === 'build');
 
-  it('정처기 23문제·프론트엔드 4문제가 있고, 조각에 정답이 모두 들어 있다', () => {
+  it('정보처리기사 23문제·프론트엔드 4문제가 있고, 조각에 정답이 모두 들어 있다', () => {
     expect(builds.filter((c) => !c.unit.startsWith('fe-'))).toHaveLength(23);
     expect(builds.filter((c) => c.unit.startsWith('fe-'))).toHaveLength(4);
     builds.forEach((card) => {
