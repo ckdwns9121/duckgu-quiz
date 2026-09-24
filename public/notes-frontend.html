@@ -118,6 +118,7 @@ footer{margin-top:48px;color:var(--muted);font-size:13px}
     <a href="#fe-browser">브라우저 · DOM</a>
     <a href="#fe-css">CSS</a>
     <a href="#fe-react">React</a>
+    <a href="#fe-next">Next.js</a>
     <a href="#fe-web">웹 · 성능 · 보안</a>
   </nav>
 
@@ -588,6 +589,185 @@ list.addEventListener(&#x27;click&#x27;, (e) =&gt; {
         <p class="q">로그인 세션 id처럼 서버가 요청마다 받아야 하는 값은?</p>
         <div class="ans"><p><b>쿠키</b>: 요청마다 서버로 자동 전송 (약 4KB). <b>localStorage</b>: 지우기 전까지 남고 서버로 안 감. <b>sessionStorage</b>: 탭을 닫으면 사라짐. 자바스크립트 변수는 새로고침만 해도 사라진다.</p></div>
       </article>
+      <article class="item" data-id="fe-br-q-deferorder">
+        <div class="item-h"><span class="lang">script</span><h3>defer 두 개와 인라인</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-deferorder">외움</label></div>
+<pre>&lt;!-- a.js는 log(&#x27;a&#x27;), b.js는 log(&#x27;b&#x27;)만 한다 --&gt;
+&lt;script defer src=&quot;a.js&quot;&gt;&lt;/script&gt;
+&lt;script defer src=&quot;b.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;log(&#x27;inline&#x27;)&lt;/script&gt;
+&lt;script&gt;
+  document.addEventListener(&#x27;DOMContentLoaded&#x27;,
+    () =&gt; log(&#x27;DOMContentLoaded&#x27;));
+&lt;/script&gt;</pre>
+        <ul class="quiz-opts" hidden data-q="a.js는 늦게, b.js는 먼저 도착한다. 로그 순서는?"><li class="ok">inline → a → b → DOMContentLoaded</li><li>inline → b → a → DOMContentLoaded</li><li>a → b → inline → DOMContentLoaded</li><li>inline → DOMContentLoaded → a → b</li></ul>
+        <p class="q">a.js는 늦게, b.js는 먼저 도착한다. 로그 순서는?</p>
+        <div class="ans"><p>defer 스크립트는 받는 동안 파싱을 막지 않고, <b>파싱이 끝난 뒤 문서에 적힌 순서대로</b> 실행된다. 먼저 도착한 b.js도 a.js를 기다린다. 그리고 defer 스크립트가 모두 끝나야 <b>DOMContentLoaded</b>가 발생한다. 인라인 스크립트는 파서가 만나는 즉시 실행된다.</p></div>
+      </article>
+      <article class="item" data-id="fe-br-q-module">
+        <div class="item-h"><span class="lang">script</span><h3>type=&quot;module&quot;의 실행 시점</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-module">외움</label></div>
+<pre>&lt;script type=&quot;module&quot;&gt;log(&#x27;module&#x27;)&lt;/script&gt;
+&lt;script&gt;log(&#x27;classic&#x27;)&lt;/script&gt;</pre>
+        <ul class="quiz-opts" hidden data-q="로그 순서는?"><li class="ok">classic → module</li><li>module → classic</li><li>module은 실행되지 않는다</li><li>매번 순서가 다르다</li></ul>
+        <p class="q">로그 순서는?</p>
+        <div class="ans"><p><code>type="module"</code> 스크립트는 인라인이어도 <b>기본으로 defer처럼</b> 동작해서, 파싱이 끝난 뒤(DOMContentLoaded 전에) 실행된다. 그래서 뒤에 있는 일반 스크립트가 먼저다. module에 async를 주면 준비되는 대로 실행된다.</p></div>
+      </article>
+      <article class="item" data-id="fe-br-q-dynscript">
+        <div class="item-h"><span class="lang">script</span><h3>JS로 넣은 script</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-dynscript">외움</label></div>
+<pre>for (const name of [&#x27;one&#x27;, &#x27;two&#x27;]) {
+  const s = document.createElement(&#x27;script&#x27;);
+  s.src = `/${name}.js`;
+  document.head.append(s);
+}</pre>
+        <ul class="quiz-opts" hidden data-q="one.js는 늦게, two.js는 먼저 도착한다. 실행 순서는?"><li class="ok">two → one</li><li>one → two</li><li>one만 실행된다</li><li>two만 실행된다</li></ul>
+        <ul class="quiz-opts" hidden data-q="JS로 넣은 두 스크립트를 넣은 순서대로 실행하려면?"><li class="ok">s.async = false</li><li>s.defer = true</li><li>s.type = &#x27;module&#x27;</li><li>document.head 대신 body에 넣는다</li></ul>
+        <p class="q">one.js는 늦게, two.js는 먼저 도착한다. 실행 순서는?</p>
+        <div class="ans"><p>createElement로 넣은 script는 <b>기본이 async</b>라 도착하는 대로 실행된다. <code>s.async = false</code>를 주면 넣은 순서가 지켜진다. 동적으로 넣은 script에는 <b>defer가 효과가 없다</b>(실제 Chrome에서도 two → one 그대로).</p></div>
+      </article>
+      <article class="item" data-id="fe-br-q-innerscript">
+        <div class="item-h"><span class="lang">보안</span><h3>innerHTML로 넣은 script</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-innerscript">외움</label></div>
+<pre>box.innerHTML =
+  &#x27;&lt;script&gt;log(&quot;script&quot;)&lt;\/script&gt;&#x27; +
+  &#x27;&lt;img src=&quot;x&quot; onerror=&quot;log(\&#x27;onerror\&#x27;)&quot;&gt;&#x27;;</pre>
+        <ul class="quiz-opts" hidden data-q="이 코드를 실행하면?"><li class="ok">script는 실행되지 않고, img의 onerror는 실행된다</li><li>script와 onerror 모두 실행된다</li><li>둘 다 실행되지 않는다</li><li>script만 실행된다</li></ul>
+        <p class="q">이 코드를 실행하면?</p>
+        <div class="ans"><p>HTML 표준상 <b>innerHTML로 넣은 &lt;script&gt;는 실행되지 않는다</b>. 그렇다고 안전한 것은 아니다. <code>onerror</code> 같은 이벤트 속성은 실행되므로 innerHTML에 사용자 입력을 넣으면 XSS가 된다. 사용자 입력은 textContent로 넣는다.</p></div>
+      </article>
+      <article class="item" data-id="fe-br-q-hints">
+        <div class="item-h"><span class="lang">성능</span><h3>미리 연결하기와 미리 받기</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-hints">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="다른 도메인(CDN)에서 곧 파일을 받을 테니 연결(DNS·TCP·TLS)만 먼저 맺어 두고 싶다."><li class="ok">&lt;link rel=&quot;preconnect&quot;&gt;</li><li>&lt;link rel=&quot;preload&quot;&gt;</li><li>&lt;link rel=&quot;prefetch&quot;&gt;</li><li>&lt;link rel=&quot;modulepreload&quot;&gt;</li></ul>
+        <ul class="quiz-opts" hidden data-q="지금 페이지가 곧 쓸 폰트 파일을 높은 우선순위로 먼저 받고 싶다."><li class="ok">&lt;link rel=&quot;preload&quot;&gt;</li><li>&lt;link rel=&quot;prefetch&quot;&gt;</li><li>&lt;link rel=&quot;preconnect&quot;&gt;</li><li>&lt;link rel=&quot;dns-prefetch&quot;&gt;</li></ul>
+        <ul class="quiz-opts" hidden data-q="사용자가 다음에 갈 페이지의 JS를 한가할 때 미리 받아 두고 싶다."><li class="ok">&lt;link rel=&quot;prefetch&quot;&gt;</li><li>&lt;link rel=&quot;preload&quot;&gt;</li><li>&lt;link rel=&quot;preconnect&quot;&gt;</li><li>&lt;link rel=&quot;modulepreload&quot;&gt;</li></ul>
+        <p class="q">다른 도메인(CDN)에서 곧 파일을 받을 테니 연결(DNS·TCP·TLS)만 먼저 맺어 두고 싶다.</p>
+        <div class="ans"><p><b>preconnect</b>: 연결만 미리 (파일은 아직). <b>preload</b>: <b>지금 페이지</b>가 곧 쓸 파일을 높은 우선순위로. <b>prefetch</b>: <b>다음 탐색</b>에 쓸 파일을 낮은 우선순위로. dns-prefetch는 DNS 조회만, modulepreload는 JS 모듈을 preload하는 것.</p></div>
+      </article>
+      <article class="item" data-id="fe-br-q-bfcache">
+        <div class="item-h"><span class="lang">성능</span><h3>뒤로 가기 캐시(bfcache)</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-bfcache">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="뒤로 가기를 눌렀을 때 페이지를 메모리에서 바로 복원하는 bfcache를 막는 대표적인 코드는?"><li class="ok">window.addEventListener(&#x27;unload&#x27;, ...)</li><li>document.addEventListener(&#x27;DOMContentLoaded&#x27;, ...)</li><li>localStorage.setItem(...)</li><li>&lt;script defer&gt;</li></ul>
+        <p class="q">뒤로 가기를 눌렀을 때 페이지를 메모리에서 바로 복원하는 bfcache를 막는 대표적인 코드는?</p>
+        <div class="ans"><p><b>unload 리스너</b>가 있으면 브라우저가 페이지를 bfcache에 넣지 못해 뒤로 가기 때 새로 불러온다. 페이지를 떠날 때 할 일은 <code>pagehide</code>나 <code>visibilitychange</code>에서 한다. 복원됐는지는 <code>pageshow</code> 이벤트의 <code>persisted</code>로 알 수 있다.</p></div>
+      </article>
+      <article class="item" data-id="fe-br-q-clickseq">
+        <div class="item-h"><span class="lang">이벤트</span><h3>클릭 한 번의 이벤트 순서</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-clickseq">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="사용자가 마우스로 버튼을 한 번 클릭하면, 버튼에서 일어나는 이벤트 순서는?"><li class="ok">pointerdown → mousedown → focus → pointerup → mouseup → click</li><li>mousedown → mouseup → click → focus</li><li>click → mousedown → mouseup → focus</li><li>focus → pointerdown → mousedown → pointerup → mouseup → click</li></ul>
+        <p class="q">사용자가 마우스로 버튼을 한 번 클릭하면, 버튼에서 일어나는 이벤트 순서는?</p>
+        <div class="ans"><p>누르는 순간 <b>pointerdown → mousedown</b>, 그 기본 동작으로 <b>focus</b>가 옮겨지고, 떼면 <b>pointerup → mouseup</b>, 마지막에 <b>click</b>. 그래서 mousedown에서 preventDefault하면 포커스가 옮겨지지 않는다(드롭다운 항목을 누를 때 입력창 포커스를 지키는 요령).</p></div>
+      </article>
+      <article class="item" data-id="fe-br-q-phases">
+        <div class="item-h"><span class="lang">이벤트</span><h3>캡처와 버블 순서</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-phases">외움</label></div>
+<pre>// &lt;div id=&quot;outer&quot;&gt;&lt;button id=&quot;btn&quot;&gt;&lt;/button&gt;&lt;/div&gt;
+const on = (el, name, capture) =&gt;
+  el.addEventListener(&#x27;click&#x27;, () =&gt; log(name), capture);
+
+on(outer, &#x27;O버블&#x27;);
+on(outer, &#x27;O캡처&#x27;, true);
+on(btn, &#x27;B버블&#x27;);
+on(btn, &#x27;B캡처&#x27;, true);
+on(document, &#x27;D캡처&#x27;, true);</pre>
+        <ul class="quiz-opts" hidden data-q="button을 클릭하면 로그 순서는?"><li class="ok">D캡처 → O캡처 → B캡처 → B버블 → O버블</li><li>D캡처 → O버블 → O캡처 → B버블 → B캡처</li><li>O버블 → O캡처 → B버블 → B캡처 → D캡처</li><li>B캡처 → B버블 → O캡처 → O버블 → D캡처</li></ul>
+        <p class="q">button을 클릭하면 로그 순서는?</p>
+        <div class="ans"><p>이벤트는 위에서 아래로 내려가며 <b>캡처</b> 리스너를 부르고, 타깃에 도착한 뒤 아래에서 위로 올라가며 <b>버블</b> 리스너를 부른다. <b>등록한 순서는 상관없다</b>(outer에 버블을 먼저 달았어도 캡처가 먼저). 타깃 자신에서도 캡처가 버블보다 먼저다.</p></div>
+      </article>
+      <article class="item" data-id="fe-br-q-stopprop2">
+        <div class="item-h"><span class="lang">이벤트</span><h3>stopPropagation 뒤의 리스너</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-stopprop2">외움</label></div>
+<pre>btn.addEventListener(&#x27;click&#x27;, (e) =&gt; {
+  log(&#x27;btn 1&#x27;);
+  e.stopPropagation();
+});
+btn.addEventListener(&#x27;click&#x27;, () =&gt; log(&#x27;btn 2&#x27;));
+outer.addEventListener(&#x27;click&#x27;, () =&gt; log(&#x27;outer&#x27;));</pre>
+        <ul class="quiz-opts" hidden data-q="버튼을 클릭하면 로그 순서는?"><li class="ok">btn 1 → btn 2</li><li>btn 1</li><li>btn 1 → btn 2 → outer</li><li>btn 1 → outer</li></ul>
+        <ul class="quiz-opts" hidden data-q="btn 1에서 같은 버튼의 btn 2까지 막으려면?"><li class="ok">e.stopImmediatePropagation()</li><li>e.stopPropagation()을 두 번 부른다</li><li>e.preventDefault()</li><li>return false</li></ul>
+        <p class="q">버튼을 클릭하면 로그 순서는?</p>
+        <div class="ans"><p><b>stopPropagation</b>은 이벤트가 <b>다른 요소로</b> 전파되는 것만 막는다. 같은 요소에 달린 나머지 리스너(btn 2)는 그대로 실행된다. 같은 요소의 나머지 리스너까지 막는 것이 <b>stopImmediatePropagation</b>이다.</p></div>
+      </article>
+      <article class="item" data-id="fe-br-q-samefn">
+        <div class="item-h"><span class="lang">이벤트</span><h3>같은 함수를 두 번 등록</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-samefn">외움</label></div>
+<pre>let n = 0;
+const onClick = () =&gt; n++;
+btn.addEventListener(&#x27;click&#x27;, onClick);
+btn.addEventListener(&#x27;click&#x27;, onClick);</pre>
+        <ul class="quiz-opts" hidden data-q="버튼을 한 번 클릭하면 n은?"><li class="ok">1</li><li>2</li><li>0</li><li>에러가 난다</li></ul>
+        <p class="q">버튼을 한 번 클릭하면 n은?</p>
+        <div class="ans"><p>같은 요소, 같은 이벤트, <b>같은 함수</b>, 같은 capture 설정으로 두 번 등록하면 <b>한 번만 등록</b>된다. 반대로 매번 새 화살표 함수를 넘기면 서로 다른 함수라 여러 번 등록된다.</p></div>
+      </article>
+      <article class="item" data-id="fe-br-q-removeanon">
+        <div class="item-h"><span class="lang">이벤트</span><h3>익명 함수 제거하기</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-removeanon">외움</label></div>
+<pre>let n = 0;
+btn.addEventListener(&#x27;click&#x27;, () =&gt; n++);
+btn.removeEventListener(&#x27;click&#x27;, () =&gt; n++);</pre>
+        <ul class="quiz-opts" hidden data-q="버튼을 한 번 클릭하면 n은?"><li class="ok">1</li><li>0</li><li>2</li><li>에러가 난다</li></ul>
+        <p class="q">버튼을 한 번 클릭하면 n은?</p>
+        <div class="ans"><p>removeEventListener는 등록할 때와 <b>같은 함수 참조</b>를 넘겨야 지운다. 모양이 같아도 새로 만든 화살표 함수는 다른 함수라 아무것도 지워지지 않는다. 지울 계획이면 함수를 변수에 담아 두거나, <code>{ once: true }</code>나 <code>AbortController</code>의 signal을 쓴다.</p></div>
+      </article>
+      <article class="item" data-id="fe-br-q-focusin">
+        <div class="item-h"><span class="lang">이벤트</span><h3>form에서 포커스 감지</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-focusin">외움</label></div>
+<pre>form.addEventListener(&#x27;focus&#x27;, () =&gt; log(&#x27;focus&#x27;));
+form.addEventListener(&#x27;focusin&#x27;, () =&gt; log(&#x27;focusin&#x27;));
+
+// &lt;form id=&quot;form&quot;&gt;&lt;input&gt;&lt;/form&gt;</pre>
+        <ul class="quiz-opts" hidden data-q="input을 클릭해 포커스하면 로그에 찍히는 것은?"><li class="ok">focusin만</li><li>focus와 focusin</li><li>focus만</li><li>아무것도 안 찍힌다</li></ul>
+        <p class="q">input을 클릭해 포커스하면 로그에 찍히는 것은?</p>
+        <div class="ans"><p><b>focus와 blur는 버블링하지 않는다</b>. 그래서 부모(form)에 단 focus 리스너는 자식 input의 포커스를 받지 못한다. 버블링하는 <b>focusin / focusout</b>을 쓰거나, focus를 캡처 단계(<code>true</code>)로 단다.</p></div>
+      </article>
+      <article class="item" data-id="fe-br-q-passive">
+        <div class="item-h"><span class="lang">이벤트</span><h3>passive 리스너</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-passive">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="passive: true로 단 wheel 리스너에서 e.preventDefault()를 부르면?"><li class="ok">무시되고 스크롤은 그대로 된다</li><li>스크롤이 막힌다</li><li>에러가 던져진다</li><li>리스너가 자동으로 제거된다</li></ul>
+        <p class="q">passive: true로 단 wheel 리스너에서 e.preventDefault()를 부르면?</p>
+        <div class="ans"><p><code>passive: true</code>는 "이 리스너는 기본 동작을 막지 않는다"는 약속이다. 그래서 브라우저가 리스너를 기다리지 않고 바로 스크롤해 부드럽다. 그 안의 preventDefault는 <b>무시</b>되고(defaultPrevented도 false) 콘솔 경고만 뜬다. 스크롤을 막아야 하면 passive: false로 단다.</p></div>
+      </article>
+      <article class="item" data-id="fe-br-q-mo">
+        <div class="item-h"><span class="lang">이벤트 루프</span><h3>MutationObserver의 실행 시점</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-mo">외움</label></div>
+<pre>new MutationObserver(() =&gt; log(&#x27;mo&#x27;))
+  .observe(el, { childList: true });
+setTimeout(() =&gt; log(&#x27;timeout&#x27;));
+el.textContent = &#x27;x&#x27;;
+Promise.resolve().then(() =&gt; log(&#x27;then&#x27;));
+log(&#x27;sync&#x27;);</pre>
+        <ul class="quiz-opts" hidden data-q="로그 순서는?"><li class="ok">sync → mo → then → timeout</li><li>sync → then → mo → timeout</li><li>sync → timeout → mo → then</li><li>mo → sync → then → timeout</li></ul>
+        <p class="q">로그 순서는?</p>
+        <div class="ans"><p>MutationObserver 콜백은 <b>마이크로태스크</b>로 실행된다. DOM을 바꾼 순간(textContent 대입) 마이크로태스크가 줄을 서고, then은 그 뒤에 줄을 서서 mo가 먼저다. 동기 코드가 끝나면 마이크로태스크를 모두 실행한 뒤 setTimeout(매크로태스크)이 실행된다.</p></div>
+      </article>
+      <article class="item" data-id="fe-br-q-raf">
+        <div class="item-h"><span class="lang">렌더링</span><h3>requestAnimationFrame의 시점</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-raf">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="requestAnimationFrame(fn)의 fn은 언제 실행될까?"><li class="ok">다음 화면을 그리기 직전</li><li>지금 코드가 끝난 직후, then보다 먼저</li><li>정확히 16ms 뒤 setTimeout처럼</li><li>화면을 그린 직후</li></ul>
+        <p class="q">requestAnimationFrame(fn)의 fn은 언제 실행될까?</p>
+        <div class="ans"><p>rAF 콜백은 브라우저가 <b>다음 프레임을 그리기 직전</b>(스타일·레이아웃 계산 전)에 실행된다. 그래서 애니메이션에 setTimeout 대신 쓴다. 마이크로태스크(then)보다는 늦다(실제 Chrome: sync → then → raf). 백그라운드 탭에서는 멈춘다.</p></div>
+      </article>
+      <article class="item" data-id="fe-br-q-thrash">
+        <div class="item-h"><span class="lang">렌더링</span><h3>반복문 안에서 읽고 쓰기</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-thrash">외움</label></div>
+<pre>for (const el of items) {
+  el.style.width = box.offsetWidth + &#x27;px&#x27;;
+}</pre>
+        <ul class="quiz-opts" hidden data-q="항목이 1000개면 이 코드가 느린 이유는?"><li class="ok">offsetWidth를 읽을 때마다 레이아웃을 다시 계산해서</li><li>style.width를 바꿀 때마다 화면을 새로 그려서</li><li>box를 찾는 querySelector가 반복마다 실행돼서</li><li>+ &#x27;px&#x27; 문자열 더하기가 반복마다 느려서</li></ul>
+        <ul class="quiz-opts" hidden data-q="어떻게 고치면 될까?"><li class="ok">offsetWidth를 반복문 밖에서 한 번만 읽는다</li><li>style.width 대신 setAttribute로 바꾼다</li><li>반복문을 forEach로 바꾼다</li><li>requestIdleCallback 안에서 같은 반복문을 돌린다</li></ul>
+        <p class="q">항목이 1000개면 이 코드가 느린 이유는?</p>
+        <div class="ans"><p>스타일을 바꾼 뒤 <b>offsetWidth 같은 레이아웃 값을 읽으면</b> 브라우저는 정확한 값을 주려고 그 자리에서 레이아웃을 다시 계산한다(강제 동기 레이아웃). 반복마다 쓰기 → 읽기가 번갈아 1000번 계산된다(layout thrashing). <b>읽기를 먼저 몰아서, 쓰기는 나중에 몰아서</b> 하면 한 번이면 된다.</p></div>
+      </article>
+      <article class="item" data-id="fe-br-q-storageevent">
+        <div class="item-h"><span class="lang">저장소</span><h3>storage 이벤트</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-storageevent">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="탭 A에서 localStorage.setItem(&#x27;theme&#x27;, &#x27;dark&#x27;)를 하면, storage 이벤트는 어디서 발생할까?"><li class="ok">같은 사이트를 연 다른 탭(B)에서만</li><li>값을 바꾼 탭 A에서만</li><li>A와 B 모두</li><li>발생하지 않는다</li></ul>
+        <p class="q">탭 A에서 localStorage.setItem(&#x27;theme&#x27;, &#x27;dark&#x27;)를 하면, storage 이벤트는 어디서 발생할까?</p>
+        <div class="ans"><p>storage 이벤트는 <b>다른 탭(같은 출처)</b>에 "저장소가 바뀌었다"고 알려 주는 용도라, 값을 바꾼 탭 자신에서는 발생하지 않는다. 그래서 탭 사이 로그아웃·테마 동기화에 쓴다. 같은 탭 안에서 알리려면 직접 이벤트를 만들거나 BroadcastChannel을 쓴다.</p></div>
+      </article>
+      <article class="item" data-id="fe-br-q-swupdate">
+        <div class="item-h"><span class="lang">서비스 워커</span><h3>새 서비스 워커가 안 켜질 때</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-swupdate">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="새 서비스 워커를 배포했는데 새로고침해도 예전 버전이 계속 동작한다. 가장 흔한 이유는?"><li class="ok">새 워커가 설치된 뒤 waiting 상태로 기다려서</li><li>브라우저가 워커 파일을 영원히 캐시해서</li><li>워커는 하루에 한 번만 업데이트를 확인해서</li><li>사이트가 HTTPS가 아니라 워커가 안 켜져서</li></ul>
+        <p class="q">새 서비스 워커를 배포했는데 새로고침해도 예전 버전이 계속 동작한다. 가장 흔한 이유는?</p>
+        <div class="ans"><p>새 서비스 워커는 설치된 뒤 <b>waiting</b> 상태로 기다린다. 예전 워커가 관리하는 탭이 하나라도 열려 있으면 새로고침만으로는 교체되지 않는다(새로고침하는 동안에도 탭이 유지되기 때문). 바로 교체하려면 install에서 <code>skipWaiting()</code>, activate에서 <code>clients.claim()</code>을 쓴다.</p></div>
+      </article>
+      <article class="item" data-id="fe-br-q-cred">
+        <div class="item-h"><span class="lang">CORS</span><h3>쿠키를 실은 요청</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-cred">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="fetch(url, { credentials: &#x27;include&#x27; })에 서버가 Access-Control-Allow-Origin: *로 답하면?"><li class="ok">브라우저가 응답을 막는다</li><li>쿠키 없이 성공한다</li><li>쿠키와 함께 성공한다</li><li>preflight만 실패하고 본 요청은 성공한다</li></ul>
+        <ul class="quiz-opts" hidden data-q="다음 중 preflight(OPTIONS) 없이 바로 가는 요청은?"><li class="ok">헤더를 따로 붙이지 않은 GET</li><li>Authorization 헤더를 붙인 GET</li><li>Content-Type이 application/json인 POST</li><li>PUT 요청</li></ul>
+        <p class="q">fetch(url, { credentials: &#x27;include&#x27; })에 서버가 Access-Control-Allow-Origin: *로 답하면?</p>
+        <div class="ans"><p>쿠키를 실은(credentials) 요청은 서버가 <b>와일드카드(*) 대신 정확한 출처</b>를 적고 <code>Access-Control-Allow-Credentials: true</code>를 보내야 브라우저가 응답을 넘겨준다. <b>단순 요청</b>(GET·HEAD·POST, 기본 헤더만, form 계열 Content-Type)만 preflight 없이 간다. Authorization 헤더나 JSON Content-Type을 붙이면 OPTIONS로 먼저 묻는다.</p></div>
+      </article>
+      <article class="item" data-id="fe-br-q-samesite">
+        <div class="item-h"><span class="lang">쿠키</span><h3>SameSite=Lax</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-samesite">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="SameSite=Lax 쿠키는 다른 사이트에서 시작된 어떤 요청에 붙을까?"><li class="ok">링크를 눌러 이동하는 GET 요청</li><li>다른 사이트 form의 POST 제출</li><li>다른 사이트 페이지가 보낸 fetch</li><li>다른 사이트에 넣은 iframe 안의 요청</li></ul>
+        <p class="q">SameSite=Lax 쿠키는 다른 사이트에서 시작된 어떤 요청에 붙을까?</p>
+        <div class="ans"><p><b>Lax</b>(현재 브라우저 기본값)는 다른 사이트에서 온 요청에는 쿠키를 붙이지 않되, <b>링크를 눌러 주소창이 바뀌는 최상위 GET 이동</b>에는 붙인다. 그래서 외부 링크로 들어와도 로그인이 유지되면서 다른 사이트의 POST를 이용한 CSRF는 막힌다. Strict는 이동에도 안 붙이고, None은 다 붙인다(Secure 필수).</p></div>
+      </article>
     </div>
     <p class="group-title">브라우저 용어</p>
     <div class="table-wrap">
@@ -886,6 +1066,239 @@ const Child = React.memo(
         <p class="q">Child는 React.memo로 감싸져 있다. Parent가 다시 렌더링되면 Child는?</p>
         <div class="ans"><p>화살표 함수는 렌더링할 때마다 <b>새 함수</b>라서, memo가 props를 비교하면 onSave가 매번 바뀐 것으로 보인다. <code>useCallback(() =&gt; save(id), [id])</code>로 같은 함수를 넘기면 id가 바뀔 때만 다시 렌더링된다.</p></div>
       </article>
+      <article class="item" data-id="fe-re-q-order">
+        <div class="item-h"><span class="lang">렌더링</span><h3>부모와 자식의 effect 순서</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-order">외움</label></div>
+<pre>function Child() {
+  log(&#x27;C render&#x27;);
+  useEffect(() =&gt; log(&#x27;C effect&#x27;));
+  return null;
+}
+
+function Parent() {
+  log(&#x27;P render&#x27;);
+  useEffect(() =&gt; log(&#x27;P effect&#x27;));
+  return &lt;Child /&gt;;
+}</pre>
+        <ul class="quiz-opts" hidden data-q="처음 화면에 그려질 때 로그 순서는?"><li class="ok">P render → C render → C effect → P effect</li><li>P render → P effect → C render → C effect</li><li>P render → C render → P effect → C effect</li><li>C render → P render → C effect → P effect</li></ul>
+        <p class="q">처음 화면에 그려질 때 로그 순서는?</p>
+        <div class="ans"><p>렌더링(컴포넌트 함수 실행)은 <b>위에서 아래로</b>, effect는 자식이 먼저 끝나야 부모가 끝나므로 <b>아래에서 위로</b> 실행된다. 그래서 부모 effect에서는 자식 DOM이 이미 준비돼 있다.</p></div>
+      </article>
+      <article class="item" data-id="fe-re-q-layoutfx">
+        <div class="item-h"><span class="lang">useLayoutEffect</span><h3>n이 바뀔 때 cleanup 순서</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-layoutfx">외움</label></div>
+<pre>useLayoutEffect(() =&gt; {
+  log(&#x27;layout &#x27; + n);
+  return () =&gt; log(&#x27;layout cleanup &#x27; + n);
+}, [n]);
+
+useEffect(() =&gt; {
+  log(&#x27;effect &#x27; + n);
+  return () =&gt; log(&#x27;effect cleanup &#x27; + n);
+}, [n]);</pre>
+        <ul class="quiz-opts" hidden data-q="n이 0에서 1로 바뀔 때 로그 순서는?"><li class="ok">layout cleanup 0 → layout 1 → effect cleanup 0 → effect 1</li><li>layout cleanup 0 → effect cleanup 0 → layout 1 → effect 1</li><li>effect cleanup 0 → layout cleanup 0 → layout 1 → effect 1</li><li>layout 1 → effect 1 → layout cleanup 0 → effect cleanup 0</li></ul>
+        <p class="q">n이 0에서 1로 바뀔 때 로그 순서는?</p>
+        <div class="ans"><p><b>useLayoutEffect</b>는 DOM을 바꾼 직후, 화면에 그리기 <b>전에</b> 동기로 실행된다(이전 cleanup → 새 effect). <b>useEffect</b>는 그 뒤, 보통 화면을 그린 다음에 실행된다(역시 이전 cleanup → 새 effect). 그래서 layout 쪽 한 쌍이 먼저, effect 쪽 한 쌍이 나중이다. 깜빡임 없이 크기를 재야 할 때 useLayoutEffect를 쓴다.</p></div>
+      </article>
+      <article class="item" data-id="fe-re-q-strictrender">
+        <div class="item-h"><span class="lang">StrictMode</span><h3>개발 모드의 렌더링 횟수</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-strictrender">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="개발 모드 StrictMode에서 첫 화면을 그릴 때 컴포넌트 함수는 몇 번 호출될까?"><li class="ok">2번</li><li>1번</li><li>3번</li><li>0번</li></ul>
+        <p class="q">개발 모드 StrictMode에서 첫 화면을 그릴 때 컴포넌트 함수는 몇 번 호출될까?</p>
+        <div class="ans"><p>StrictMode는 개발 모드에서 컴포넌트 함수를 <b>두 번</b> 불러, 렌더링 중에 바깥 값을 바꾸는 등 순수하지 않은 코드를 드러낸다. effect도 마운트 → cleanup → 마운트를 한 번 더 한다. 프로덕션에서는 한 번씩이다.</p></div>
+      </article>
+      <article class="item" data-id="fe-re-q-position">
+        <div class="item-h"><span class="lang">state 보존</span><h3>같은 자리의 같은 컴포넌트</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-position">외움</label></div>
+<pre>function Counter({ label }) {
+  const [n, setN] = useState(0);
+  return (
+    &lt;button onClick={() =&gt; setN(n + 1)}&gt;
+      {label}{n}
+    &lt;/button&gt;
+  );
+}
+
+// App
+{isA
+  ? &lt;Counter label=&quot;A&quot; /&gt;
+  : &lt;Counter label=&quot;B&quot; /&gt;}</pre>
+        <ul class="quiz-opts" hidden data-q="A 버튼을 두 번 눌러 A2가 된 뒤 isA를 false로 바꾸면 화면은?"><li class="ok">B2</li><li>B0</li><li>A2</li><li>A0</li></ul>
+        <p class="q">A 버튼을 두 번 눌러 A2가 된 뒤 isA를 false로 바꾸면 화면은?</p>
+        <div class="ans"><p>React는 state를 컴포넌트가 아니라 <b>트리의 자리</b>에 붙인다. 삼항의 두 쪽이 <b>같은 자리의 같은 타입(Counter)</b>이라 React는 "props만 바뀐 같은 Counter"로 보고 count 2를 유지한다. 서로 다른 Counter로 다루려면 <code>key="A"</code>, <code>key="B"</code>를 준다.</p></div>
+      </article>
+      <article class="item" data-id="fe-re-q-position2">
+        <div class="item-h"><span class="lang">state 보존</span><h3>감싸는 태그가 바뀌면</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-position2">외움</label></div>
+<pre>{isA ? (
+  &lt;div&gt;&lt;Counter label=&quot;A&quot; /&gt;&lt;/div&gt;
+) : (
+  &lt;section&gt;&lt;Counter label=&quot;B&quot; /&gt;&lt;/section&gt;
+)}</pre>
+        <ul class="quiz-opts" hidden data-q="A2가 된 뒤 isA를 false로 바꾸면 화면은?"><li class="ok">B0</li><li>B2</li><li>A2</li><li>A0</li></ul>
+        <p class="q">A2가 된 뒤 isA를 false로 바꾸면 화면은?</p>
+        <div class="ans"><p>이번에는 Counter를 감싼 부모 태그가 <b>div → section으로 타입이 바뀐다</b>. 타입이 다르면 React는 그 아래를 통째로 버리고 새로 만들어서 state가 0으로 돌아간다. 같은 자리·같은 타입일 때만 state가 유지된다.</p></div>
+      </article>
+      <article class="item" data-id="fe-re-q-inner">
+        <div class="item-h"><span class="lang">state 보존</span><h3>컴포넌트 안에서 컴포넌트 정의</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-inner">외움</label></div>
+<pre>function App() {
+  const [t, setT] = useState(0);
+
+  function Input() {
+    const [v, setV] = useState(&#x27;&#x27;);
+    return (
+      &lt;input
+        value={v}
+        onChange={(e) =&gt; setV(e.target.value)}
+      /&gt;
+    );
+  }
+
+  return &lt;&gt;&lt;Input /&gt;&lt;Clock onTick={setT} /&gt;&lt;/&gt;;
+}</pre>
+        <ul class="quiz-opts" hidden data-q="Input에 글자를 입력한 뒤 App의 t가 바뀌면?"><li class="ok">Input에 입력한 글자가 사라진다</li><li>입력한 글자는 그대로 남는다</li><li>Input은 다시 렌더링되지 않는다</li><li>에러가 난다</li></ul>
+        <p class="q">Input에 글자를 입력한 뒤 App의 t가 바뀌면?</p>
+        <div class="ans"><p>App이 렌더링될 때마다 <code>function Input</code>이 <b>새 함수</b>로 만들어진다. React 입장에서는 매번 타입이 다른 컴포넌트라 이전 Input을 버리고 새로 만들어서 state가 사라진다(포커스도 잃는다). 컴포넌트는 항상 다른 컴포넌트 밖(파일 최상단)에서 정의한다.</p></div>
+      </article>
+      <article class="item" data-id="fe-re-q-init">
+        <div class="item-h"><span class="lang">useState</span><h3>초기값 계산 횟수</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-init">외움</label></div>
+<pre>function TodoList() {
+  const [todos, setTodos] =
+    useState(createTodos());
+
+  return (
+    &lt;button onClick={() =&gt; setTodos([...todos])}&gt;
+      +
+    &lt;/button&gt;
+  );
+}</pre>
+        <ul class="quiz-opts" hidden data-q="버튼을 두 번 누르면 createTodos()는 모두 몇 번 호출될까?"><li class="ok">3번</li><li>1번</li><li>2번</li><li>0번</li></ul>
+        <ul class="quiz-opts" hidden data-q="createTodos를 처음 한 번만 부르려면?"><li class="ok">useState(createTodos)처럼 함수 자체를 넘긴다</li><li>useRef(createTodos())로 바꾼다</li><li>createTodos를 async 함수로 바꾼다</li><li>useEffect 안에서 useState를 부른다</li></ul>
+        <p class="q">버튼을 두 번 누르면 createTodos()는 모두 몇 번 호출될까?</p>
+        <div class="ans"><p><code>useState(createTodos())</code>는 초기값을 처음에만 쓰지만, <b>함수 호출은 렌더링마다</b> 일어난다(처음 1 + 클릭 2 = 3번). <b>함수 자체</b>를 넘기면(<code>useState(createTodos)</code>) React가 처음 한 번만 부른다. useRef(createTodos())도 매번 호출된다.</p></div>
+      </article>
+      <article class="item" data-id="fe-re-q-children2">
+        <div class="item-h"><span class="lang">렌더링</span><h3>children으로 받은 요소</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-children2">외움</label></div>
+<pre>function Wrapper({ children }) {
+  const [n, setN] = useState(0);
+  return (
+    &lt;button onClick={() =&gt; setN(n + 1)}&gt;
+      {children}
+    &lt;/button&gt;
+  );
+}
+
+function App() {
+  return &lt;Wrapper&gt;&lt;Expensive /&gt;&lt;/Wrapper&gt;;
+}</pre>
+        <ul class="quiz-opts" hidden data-q="Wrapper의 버튼을 두 번 누르면 Expensive는 모두 몇 번 렌더링될까?"><li class="ok">1번 (처음에만)</li><li>3번 (처음 + 클릭마다)</li><li>memo로 감싸지 않았으니 3번</li><li>0번</li></ul>
+        <p class="q">Wrapper의 버튼을 두 번 누르면 Expensive는 모두 몇 번 렌더링될까?</p>
+        <div class="ans"><p>Expensive 요소는 <b>App이 만들어서</b> children으로 넘긴 것이다. Wrapper의 state가 바뀌어 Wrapper가 다시 렌더링돼도 children은 App이 만든 <b>같은 요소</b>라 React가 건너뛴다. Wrapper 안에서 <code>&lt;Expensive /&gt;</code>를 직접 쓰면 클릭마다 다시 렌더링된다. memo 없이 렌더링을 줄이는 방법이다.</p></div>
+      </article>
+      <article class="item" data-id="fe-re-q-context">
+        <div class="item-h"><span class="lang">Context</span><h3>Provider의 value</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-context">외움</label></div>
+<pre>const Ctx = createContext(null);
+const Child = memo(() =&gt; {
+  useContext(Ctx);
+  return null;
+});
+
+function App() {
+  const [n, setN] = useState(0);
+  return (
+    &lt;Ctx.Provider value={{ theme: &#x27;dark&#x27; }}&gt;
+      &lt;button onClick={() =&gt; setN(n + 1)} /&gt;
+      &lt;Child /&gt;
+    &lt;/Ctx.Provider&gt;
+  );
+}</pre>
+        <ul class="quiz-opts" hidden data-q="App의 버튼을 누를 때마다 memo로 감싼 Child는?"><li class="ok">매번 다시 렌더링된다</li><li>memo라서 다시 렌더링되지 않는다</li><li>theme 값이 &#x27;dark&#x27; 그대로라 건너뛴다</li><li>처음 한 번만 렌더링된다</li></ul>
+        <ul class="quiz-opts" hidden data-q="Child가 불필요하게 다시 렌더링되지 않게 하려면?"><li class="ok">value 객체를 useMemo로 고정한다</li><li>Child를 memo로 한 번 더 감싼다</li><li>Provider에 key를 준다</li><li>createContext의 기본값을 객체로 바꾼다</li></ul>
+        <p class="q">App의 버튼을 누를 때마다 memo로 감싼 Child는?</p>
+        <div class="ans"><p>Provider의 value가 <code>{ theme: 'dark' }</code>처럼 <b>렌더링마다 새 객체</b>면, 내용이 같아도 React는 바뀐 것으로 보고(Object.is 비교) 그 context를 쓰는 컴포넌트를 모두 다시 렌더링한다. <b>memo도 context 변경은 막지 못한다</b>. value를 useMemo로 고정하거나 컴포넌트 밖 상수로 둔다.</p></div>
+      </article>
+      <article class="item" data-id="fe-re-q-timeoutbatch">
+        <div class="item-h"><span class="lang">배치</span><h3>setTimeout 안의 두 업데이트</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-timeoutbatch">외움</label></div>
+<pre>function onClick() {
+  setTimeout(() =&gt; {
+    setA(1);
+    setB(1);
+  }, 0);
+}</pre>
+        <ul class="quiz-opts" hidden data-q="React 18 이상에서 버튼을 누르면, setTimeout 안의 두 set 때문에 다시 렌더링되는 횟수는?"><li class="ok">1번</li><li>2번</li><li>0번</li><li>3번</li></ul>
+        <p class="q">React 18 이상에서 버튼을 누르면, setTimeout 안의 두 set 때문에 다시 렌더링되는 횟수는?</p>
+        <div class="ans"><p>React 18부터는 이벤트 핸들러뿐 아니라 <b>setTimeout, Promise, 네이티브 이벤트 안의 업데이트도 자동으로 묶어서</b>(automatic batching) 한 번만 렌더링한다. React 17에서는 setTimeout 안이면 2번이었다.</p></div>
+      </article>
+      <article class="item" data-id="fe-re-q-flushsync">
+        <div class="item-h"><span class="lang">배치</span><h3>flushSync 직후의 DOM</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-flushsync">외움</label></div>
+<pre>const ref = useRef(null);
+
+function onClick() {
+  flushSync(() =&gt; setA(1));
+  console.log(ref.current.textContent);
+}
+
+return (
+  &lt;button ref={ref} onClick={onClick}&gt;
+    {a}
+  &lt;/button&gt;
+);</pre>
+        <ul class="quiz-opts" hidden data-q="a가 0일 때 버튼을 누르면 로그에 찍히는 값은?"><li class="ok">1</li><li>0</li><li>undefined</li><li>에러가 난다</li></ul>
+        <p class="q">a가 0일 때 버튼을 누르면 로그에 찍히는 값은?</p>
+        <div class="ans"><p>보통 set은 다음 렌더링을 예약할 뿐이라 바로 뒤에서 DOM을 읽으면 옛 값이다. <b>flushSync</b>로 감싸면 그 자리에서 <b>렌더링과 DOM 반영을 동기로</b> 끝낸다. 새로 추가한 항목으로 바로 스크롤해야 할 때처럼 드물게 쓴다(성능에 나쁘다).</p></div>
+      </article>
+      <article class="item" data-id="fe-re-q-derived">
+        <div class="item-h"><span class="lang">상태 설계</span><h3>effect로 파생 값 만들기</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-derived">외움</label></div>
+<pre>const [first, setFirst] = useState(&#x27;&#x27;);
+const [last, setLast] = useState(&#x27;&#x27;);
+const [fullName, setFullName] = useState(&#x27;&#x27;);
+
+useEffect(() =&gt; {
+  setFullName(first + &#x27; &#x27; + last);
+}, [first, last]);</pre>
+        <ul class="quiz-opts" hidden data-q="이 코드의 가장 큰 문제는?"><li class="ok">렌더링이 한 번 더 일어나고 잠깐 옛 값이 보인다</li><li>effect 안에서 set해서 무한 루프에 빠진다</li><li>first가 바뀌어도 fullName은 그대로다</li><li>의존성 배열에 fullName이 빠져서 경고가 난다</li></ul>
+        <p class="q">이 코드의 가장 큰 문제는?</p>
+        <div class="ans"><p>first가 바뀌면 옛 fullName으로 한 번 그리고, effect가 setFullName을 해서 <b>한 번 더</b> 그린다. 다른 state로 계산할 수 있는 값은 state로 두지 말고 <b>렌더링 중에 바로 계산</b>한다: <code>const fullName = first + ' ' + last</code>. 계산이 무거우면 useMemo.</p></div>
+      </article>
+      <article class="item" data-id="fe-re-q-race">
+        <div class="item-h"><span class="lang">useEffect</span><h3>늦게 온 응답</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-race">외움</label></div>
+<pre>useEffect(() =&gt; {
+  fetch(`/api/users/${id}`)
+    .then((r) =&gt; r.json())
+    .then(setUser);
+}, [id]);</pre>
+        <ul class="quiz-opts" hidden data-q="id를 1에서 2로 빠르게 바꿨는데, 1번 응답이 2번보다 늦게 왔다. 화면에는?"><li class="ok">1번 사용자가 보인다</li><li>2번 사용자가 보인다</li><li>두 사용자가 번갈아 보인다</li><li>에러가 난다</li></ul>
+        <ul class="quiz-opts" hidden data-q="이 문제를 막는 방법은?"><li class="ok">cleanup에서 이전 요청을 무시하거나 abort한다</li><li>의존성 배열을 []로 바꾼다</li><li>setUser를 useCallback으로 감싼다</li><li>fetch 앞에 await를 붙인다</li></ul>
+        <p class="q">id를 1에서 2로 빠르게 바꿨는데, 1번 응답이 2번보다 늦게 왔다. 화면에는?</p>
+        <div class="ans"><p>두 요청이 동시에 날아가고 <b>늦게 도착한 응답이 마지막으로 setUser</b>한다. id가 바뀌면 이전 effect의 cleanup이 먼저 실행되므로, 거기서 <code>ignore = true</code>로 표시하거나 <code>AbortController</code>로 요청을 취소한다. 데이터 요청 라이브러리(TanStack Query 등)는 이 처리를 대신 해 준다.</p></div>
+      </article>
+      <article class="item" data-id="fe-re-q-eb">
+        <div class="item-h"><span class="lang">에러 바운더리</span><h3>이벤트 핸들러의 에러</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-eb">외움</label></div>
+<pre>&lt;ErrorBoundary fallback={&lt;p&gt;문제가 생겼어요&lt;/p&gt;}&gt;
+  &lt;button onClick={() =&gt; { throw new Error(&#x27;boom&#x27;); }}&gt;
+    저장
+  &lt;/button&gt;
+&lt;/ErrorBoundary&gt;</pre>
+        <ul class="quiz-opts" hidden data-q="ErrorBoundary 안의 버튼을 누르면?"><li class="ok">fallback으로 바뀌지 않고 화면은 그대로다</li><li>fallback 화면으로 바뀐다</li><li>앱 전체가 흰 화면이 된다</li><li>버튼만 사라지고 나머지는 그대로다</li></ul>
+        <p class="q">ErrorBoundary 안의 버튼을 누르면?</p>
+        <div class="ans"><p>에러 바운더리는 <b>렌더링 중·생명주기·effect</b>에서 난 에러만 잡는다. <b>이벤트 핸들러, setTimeout, Promise</b> 안의 에러는 React 렌더링 밖에서 일어나서 잡지 못한다(전역 에러로 간다). 이벤트 핸들러에서는 try/catch로 잡고, 필요하면 state로 에러 화면을 보여 준다.</p></div>
+      </article>
+      <article class="item" data-id="fe-re-q-ref19">
+        <div class="item-h"><span class="lang">React 19</span><h3>ref를 prop으로 받기</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-ref19">외움</label></div>
+<pre>function MyInput({ ref }) {
+  return &lt;input ref={ref} /&gt;;
+}
+
+function App() {
+  const r = useRef(null);
+  useEffect(() =&gt; console.log(r.current?.tagName));
+  return &lt;MyInput ref={r} /&gt;;
+}</pre>
+        <ul class="quiz-opts" hidden data-q="React 19에서 App의 effect가 찍는 값은?"><li class="ok">INPUT</li><li>undefined</li><li>에러: forwardRef로 감싸야 한다</li><li>MyInput 컴포넌트 객체</li></ul>
+        <p class="q">React 19에서 App의 effect가 찍는 값은?</p>
+        <div class="ans"><p>React 19부터 함수 컴포넌트는 <b>ref를 일반 prop처럼</b> 받을 수 있다. 그래서 forwardRef 없이 input까지 ref를 이어 줄 수 있다. React 18에서는 ref prop이 전달되지 않아 undefined였다.</p></div>
+      </article>
+      <article class="item" data-id="fe-re-q-deferred">
+        <div class="item-h"><span class="lang">동시성</span><h3>입력은 빠르게, 목록은 나중에</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-deferred">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="검색어 입력은 바로 반영하고, 느린 결과 목록 렌더링은 뒤로 미뤄 타이핑이 끊기지 않게 하고 싶다. React 기능만 쓴다면?"><li class="ok">useDeferredValue(query)로 목록에 넘긴다</li><li>useMemo로 목록을 감싼다</li><li>useLayoutEffect에서 목록을 그린다</li><li>query를 useRef에 담는다</li></ul>
+        <p class="q">검색어 입력은 바로 반영하고, 느린 결과 목록 렌더링은 뒤로 미뤄 타이핑이 끊기지 않게 하고 싶다. React 기능만 쓴다면?</p>
+        <div class="ans"><p><b>useDeferredValue</b>는 급한 업데이트(입력)를 먼저 그리고, 미룬 값으로 그리는 무거운 부분은 여유가 있을 때 다시 그린다. 새 입력이 오면 하던 목록 렌더링을 중단할 수도 있다. setState 쪽을 미루고 싶으면 useTransition을 쓴다. useMemo는 같은 입력의 재계산만 줄일 뿐 입력이 바뀔 때마다의 렌더링은 막지 못한다.</p></div>
+      </article>
     </div>
     <p class="group-title">React 용어</p>
     <div class="table-wrap">
@@ -903,9 +1316,229 @@ const Child = React.memo(
     </div>
   </section>
 
-  <section id="fe-web">
+  <section id="fe-next">
     <div class="sec-head">
       <span class="sub">PART 6</span>
+      <h2>Next.js</h2>
+      <p>Next.js 16 App Router 기준입니다. 서버·클라이언트 컴포넌트 경계, 정적·동적 렌더링, 캐시, Server Action처럼 실무에서 사고가 나는 지점을 코드로 확인합니다. 캐시 문제는 설정(cacheComponents)에 따라 답이 달라서 질문에 조건을 적었습니다.</p>
+    </div>
+    <div class="grid">
+      <article class="item" data-id="fe-nx-q-usestate">
+        <div class="item-h"><span class="lang">서버 컴포넌트</span><h3>page에서 state 쓰기</h3><label class="chk"><input type="checkbox" id="k-fe-nx-q-usestate">외움</label></div>
+<pre>import { useState } from &#x27;react&#x27;;
+
+export default function Page() {
+  const [n, setN] = useState(0);
+  return &lt;p&gt;{n}&lt;/p&gt;;
+}</pre>
+        <ul class="quiz-opts" hidden data-q="app/page.tsx가 이렇게 생겼다. next build를 하면?"><li class="ok">빌드 에러: 서버 컴포넌트에서는 useState를 못 쓴다</li><li>잘 빌드되고, state는 브라우저에서만 동작한다</li><li>경고만 뜨고 서버에서는 useState를 무시한다</li><li>자동으로 클라이언트 컴포넌트로 바뀐다</li></ul>
+        <p class="q">app/page.tsx가 이렇게 생겼다. next build를 하면?</p>
+        <div class="ans"><p>App Router의 page와 layout은 기본이 <b>서버 컴포넌트</b>다. useState·useEffect·onClick처럼 브라우저에서 돌아야 하는 것은 파일 맨 위에 <code>'use client'</code>가 있어야 한다. 없으면 Next가 빌드할 때 "This API is only available in Client Components" 에러를 낸다. 자동으로 바꿔 주지 않는다.</p></div>
+      </article>
+      <article class="item" data-id="fe-nx-q-children">
+        <div class="item-h"><span class="lang">경계</span><h3>클라이언트 안의 서버 컴포넌트</h3><label class="chk"><input type="checkbox" id="k-fe-nx-q-children">외움</label></div>
+<pre>// Shell.tsx
+&#x27;use client&#x27;;
+export function Shell({ children }) {
+  const [open, setOpen] = useState(true);
+  return open ? &lt;div&gt;{children}&lt;/div&gt; : null;
+}
+
+// page.tsx (서버 컴포넌트)
+&lt;Shell&gt;
+  &lt;ServerList /&gt;
+&lt;/Shell&gt;</pre>
+        <ul class="quiz-opts" hidden data-q="ServerList는 어디서 렌더링될까?"><li class="ok">서버에서. children으로 받은 건 서버 컴포넌트 그대로다</li><li>브라우저에서. Shell 안에 있으니 클라이언트 컴포넌트가 된다</li><li>에러가 난다. 클라이언트 안에 서버 컴포넌트를 둘 수 없다</li><li>서버와 브라우저에서 한 번씩 렌더링된다</li></ul>
+        <p class="q">ServerList는 어디서 렌더링될까?</p>
+        <div class="ans"><p>서버 컴포넌트를 클라이언트 컴포넌트의 <b>props(children)로 넘기면</b> 서버에서 렌더링된 결과가 그 자리에 끼워질 뿐, 클라이언트 번들에 들어가지 않는다. 반대로 Shell 파일이 ServerList를 <b>직접 import</b>하면 그때는 클라이언트 번들에 들어간다. 경계는 "어디서 import했는가"로 정해진다.</p></div>
+      </article>
+      <article class="item" data-id="fe-nx-q-import">
+        <div class="item-h"><span class="lang">경계</span><h3>클라이언트 파일이 import하면</h3><label class="chk"><input type="checkbox" id="k-fe-nx-q-import">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="&#x27;use client&#x27; 파일인 Chart.tsx가 import한 formatPrice.ts는?"><li class="ok">클라이언트 번들에 들어간다</li><li>서버 번들에만 들어간다</li><li>양쪽에 따로 복사돼 서버 것이 먼저 실행된다</li><li>formatPrice.ts에도 &#x27;use client&#x27;를 따로 붙여야 번들에 들어간다</li></ul>
+        <p class="q">&#x27;use client&#x27; 파일인 Chart.tsx가 import한 formatPrice.ts는?</p>
+        <div class="ans"><p><code>'use client'</code>는 파일 하나가 아니라 <b>경계</b>를 선언한다. 그 파일이 import하는 모듈과 직접 렌더링하는 컴포넌트는 모두 클라이언트 번들에 들어가므로, 거기서 import한 파일에 따로 표시할 필요가 없다. 그래서 무거운 라이브러리를 쓰는 부분만 작은 클라이언트 컴포넌트로 떼어 내는 것이 좋다.</p></div>
+      </article>
+      <article class="item" data-id="fe-nx-q-fnprop">
+        <div class="item-h"><span class="lang">경계</span><h3>서버에서 함수 넘기기</h3><label class="chk"><input type="checkbox" id="k-fe-nx-q-fnprop">외움</label></div>
+<pre>// Btn.tsx
+&#x27;use client&#x27;;
+export default function Btn({ onPick }) {
+  return &lt;button onClick={onPick}&gt;b&lt;/button&gt;;
+}
+
+// page.tsx (서버 컴포넌트)
+export default function Page() {
+  return &lt;Btn onPick={() =&gt; console.log(&#x27;x&#x27;)} /&gt;;
+}</pre>
+        <ul class="quiz-opts" hidden data-q="이 page를 next build하면?"><li class="ok">에러: 이벤트 핸들러(함수)는 클라이언트 컴포넌트 props로 못 넘긴다</li><li>잘 동작하고, 클릭하면 서버 터미널에 x가 찍힌다</li><li>잘 동작하고, 클릭하면 브라우저 콘솔에 x가 찍힌다</li><li>함수가 문자열로 바뀌어 전달된다</li></ul>
+        <p class="q">이 page를 next build하면?</p>
+        <div class="ans"><p>서버 컴포넌트에서 클라이언트 컴포넌트로 넘기는 props는 <b>직렬화할 수 있어야</b> 한다(문자열, 숫자, 객체, 배열, JSX 등). 일반 함수는 안 되어서 "Event handlers cannot be passed to Client Component props" 에러가 난다. 예외는 <code>'use server'</code>로 만든 <b>Server Action</b>이다. 클릭 처리는 Btn 안(클라이언트)에서 정의한다.</p></div>
+      </article>
+      <article class="item" data-id="fe-nx-q-params">
+        <div class="item-h"><span class="lang">라우팅</span><h3>params 읽기</h3><label class="chk"><input type="checkbox" id="k-fe-nx-q-params">외움</label></div>
+<pre>export default async function Page({ params }: {
+  params: Promise&lt;{ id: string }&gt;;
+}) {
+  // ?
+}</pre>
+        <ul class="quiz-opts" hidden data-q="Next 16의 app/post/[id]/page.tsx에서 id를 읽는 올바른 코드는?"><li class="ok">const { id } = await params</li><li>const { id } = params</li><li>const id = params.get(&#x27;id&#x27;)</li><li>const { id } = useParams()</li></ul>
+        <p class="q">Next 16의 app/post/[id]/page.tsx에서 id를 읽는 올바른 코드는?</p>
+        <div class="ans"><p>Next 15부터 <code>params</code>와 <code>searchParams</code>는 <b>Promise</b>가 됐고, Next 16에서는 동기로 읽는 방식이 완전히 사라졌다. <code>useParams()</code>는 클라이언트 컴포넌트용 훅이라 서버 컴포넌트인 page에서는 쓸 수 없다. cookies(), headers()도 똑같이 await해야 한다.</p></div>
+      </article>
+      <article class="item" data-id="fe-nx-q-serveronly">
+        <div class="item-h"><span class="lang">경계</span><h3>서버 전용 모듈 지키기</h3><label class="chk"><input type="checkbox" id="k-fe-nx-q-serveronly">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="DB 비밀번호를 쓰는 lib/db.ts가 실수로 클라이언트 컴포넌트에 import되는 걸 빌드에서 막으려면?"><li class="ok">lib/db.ts에 import &#x27;server-only&#x27;</li><li>lib/db.ts 맨 위에 &#x27;use server&#x27;</li><li>lib/db.ts를 app 폴더 밖으로 옮긴다</li><li>환경 변수 이름에서 NEXT_PUBLIC_을 뺀다</li></ul>
+        <p class="q">DB 비밀번호를 쓰는 lib/db.ts가 실수로 클라이언트 컴포넌트에 import되는 걸 빌드에서 막으려면?</p>
+        <div class="ans"><p><code>import 'server-only'</code>를 넣은 모듈을 클라이언트 컴포넌트가 import하면 <b>빌드 에러</b>가 난다. <code>'use server'</code>는 파일의 함수들을 브라우저에서 부를 수 있는 Server Action으로 만드는 것이라, 오히려 엉뚱하게 외부에 공개될 수 있다.</p></div>
+      </article>
+      <article class="item" data-id="fe-nx-q-dynamic">
+        <div class="item-h"><span class="lang">렌더링</span><h3>정적과 동적 렌더링</h3><label class="chk"><input type="checkbox" id="k-fe-nx-q-dynamic">외움</label></div>
+<pre>// app/dashboard/page.tsx
+import { cookies } from &#x27;next/headers&#x27;;
+
+export default async function Page() {
+  const theme = (await cookies()).get(&#x27;theme&#x27;);
+  return &lt;p&gt;{theme?.value}&lt;/p&gt;;
+}</pre>
+        <ul class="quiz-opts" hidden data-q="기본 설정(cacheComponents 끔)에서 next build를 하면 /dashboard가 ƒ(Dynamic)로 표시된다. 이유는?"><li class="ok">요청마다 달라지는 쿠키를 읽어서</li><li>page가 async 함수라서</li><li>서버 컴포넌트라서</li><li>use client가 없어서</li></ul>
+        <p class="q">기본 설정(cacheComponents 끔)에서 next build를 하면 /dashboard가 ƒ(Dynamic)로 표시된다. 이유는?</p>
+        <div class="ans"><p>빌드 결과의 <b>○</b>는 빌드할 때 미리 만든 정적 페이지, <b>ƒ</b>는 요청이 올 때마다 서버에서 렌더링하는 동적 페이지다. <code>cookies()</code>, <code>headers()</code>, <code>searchParams</code>처럼 <b>요청마다 달라지는 값</b>을 읽으면 동적이 된다. async 함수인 것만으로는 동적이 되지 않는다(빌드 때 기다렸다가 정적으로 만든다).</p></div>
+      </article>
+      <article class="item" data-id="fe-nx-q-ssg">
+        <div class="item-h"><span class="lang">렌더링</span><h3>미리 만들지 않은 경로</h3><label class="chk"><input type="checkbox" id="k-fe-nx-q-ssg">외움</label></div>
+<pre>// app/post/[id]/page.tsx
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return [{ id: &#x27;1&#x27; }, { id: &#x27;2&#x27; }];
+}</pre>
+        <ul class="quiz-opts" hidden data-q="기본 설정에서 /post/3으로 들어가면?"><li class="ok">404</li><li>요청할 때 새로 렌더링해서 보여 준다</li><li>/post/1로 리다이렉트된다</li><li>빈 페이지가 200으로 온다</li></ul>
+        <p class="q">기본 설정에서 /post/3으로 들어가면?</p>
+        <div class="ans"><p><code>generateStaticParams</code>가 돌려준 1, 2만 빌드 때 만들어지고(●), <code>dynamicParams = false</code>면 목록에 없는 경로는 <b>404</b>다. true(기본값)면 요청할 때 렌더링한다. cacheComponents를 켜면 dynamicParams 설정 자체를 쓸 수 없고 notFound()로 처리한다.</p></div>
+      </article>
+      <article class="item" data-id="fe-nx-q-redirect">
+        <div class="item-h"><span class="lang">내비게이션</span><h3>try 안의 redirect</h3><label class="chk"><input type="checkbox" id="k-fe-nx-q-redirect">외움</label></div>
+<pre>import { redirect } from &#x27;next/navigation&#x27;;
+
+export default async function Page() {
+  try {
+    redirect(&#x27;/&#x27;);
+  } catch (e) {
+    return &lt;p&gt;caught {e.message}&lt;/p&gt;;
+  }
+}</pre>
+        <ul class="quiz-opts" hidden data-q="이 페이지에 들어가면?"><li class="ok">이동하지 않고 &quot;caught NEXT_REDIRECT&quot;가 보인다</li><li>/로 이동한다</li><li>빌드 에러가 난다</li><li>/로 이동한 뒤 catch 안의 화면이 잠깐 보인다</li></ul>
+        <p class="q">이 페이지에 들어가면?</p>
+        <div class="ans"><p><code>redirect()</code>는 내부적으로 <b>특별한 에러를 던져서</b> 동작한다. try 안에서 부르면 catch가 그 에러를 잡아 버려 이동이 일어나지 않는다. 공식 문서도 redirect는 try 블록 <b>밖에서</b> 부르라고 한다. notFound()도 같은 방식이다.</p></div>
+      </article>
+      <article class="item" data-id="fe-nx-q-error">
+        <div class="item-h"><span class="lang">에러 처리</span><h3>error.tsx</h3><label class="chk"><input type="checkbox" id="k-fe-nx-q-error">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="app/dashboard/error.tsx 맨 위에 꼭 있어야 하는 것은?"><li class="ok">&#x27;use client&#x27;</li><li>&#x27;use server&#x27;</li><li>export const dynamic = &#x27;force-dynamic&#x27;</li><li>아무것도 필요 없다</li></ul>
+        <p class="q">app/dashboard/error.tsx 맨 위에 꼭 있어야 하는 것은?</p>
+        <div class="ans"><p>error.tsx는 React 에러 바운더리로 동작하고, 에러 바운더리는 <b>클라이언트 컴포넌트</b>여야 한다. 그래서 <code>'use client'</code>가 필요하다. 다시 시도 버튼(reset)을 누르는 것처럼 브라우저에서 동작해야 하는 기능도 여기에 있다.</p></div>
+      </article>
+      <article class="item" data-id="fe-nx-q-loading">
+        <div class="item-h"><span class="lang">스트리밍</span><h3>loading.tsx</h3><label class="chk"><input type="checkbox" id="k-fe-nx-q-loading">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="app/dashboard/loading.tsx를 두면?"><li class="ok">dashboard의 page를 Suspense로 감싸 로딩 UI를 바로 보여 준다</li><li>page의 데이터가 다 올 때까지 기다렸다가 한꺼번에 보여 준다</li><li>서버 렌더링을 끄고 브라우저에서 로딩 화면을 그린다</li><li>같은 폴더의 layout.tsx까지 로딩 화면으로 바뀐다</li></ul>
+        <p class="q">app/dashboard/loading.tsx를 두면?</p>
+        <div class="ans"><p>loading.tsx는 같은 폴더의 page(와 그 아래)를 <b>Suspense 경계</b>로 감싼다. 서버가 page를 준비하는 동안 로딩 UI를 먼저 보내고, 준비되면 스트리밍으로 채운다. <b>같은 폴더의 layout은 감싸지 않아서</b> 사이드바 같은 레이아웃은 그대로 보이고 조작도 된다.</p></div>
+      </article>
+      <article class="item" data-id="fe-nx-q-stream">
+        <div class="item-h"><span class="lang">스트리밍</span><h3>느린 컴포넌트</h3><label class="chk"><input type="checkbox" id="k-fe-nx-q-stream">외움</label></div>
+<pre>export default function Page() {
+  return (
+    &lt;&gt;
+      &lt;Header /&gt;
+      &lt;Suspense fallback={&lt;Skeleton /&gt;}&gt;
+        &lt;Reviews /&gt; {/* 3초 걸림 */}
+      &lt;/Suspense&gt;
+    &lt;/&gt;
+  );
+}</pre>
+        <ul class="quiz-opts" hidden data-q="Reviews가 3초 걸린다. 사용자에게는 어떻게 보일까?"><li class="ok">헤더가 먼저 보이고, 리뷰 자리는 3초 뒤 채워진다</li><li>3초 동안 흰 화면이다가 한꺼번에 보인다</li><li>리뷰만 브라우저에서 따로 fetch해서 채운다</li><li>헤더도 리뷰도 3초 뒤에 스켈레톤 없이 보인다</li></ul>
+        <ul class="quiz-opts" hidden data-q="Suspense를 빼면(loading.tsx도 없음) 이 페이지는 어떻게 보일까?"><li class="ok">3초 뒤에 한꺼번에 보인다</li><li>헤더가 먼저 보이고 리뷰만 늦게 보인다</li><li>Reviews가 자동으로 스트리밍된다</li><li>빌드 에러가 난다</li></ul>
+        <p class="q">Reviews가 3초 걸린다. 사용자에게는 어떻게 보일까?</p>
+        <div class="ans"><p><b>Suspense 밖</b>의 내용은 바로 보내고, 안쪽은 준비되는 대로 <b>스트리밍</b>으로 끼워 넣는다. Suspense도 loading.tsx도 없으면 페이지 전체가 가장 느린 부분을 기다린다. 서버에서 렌더링한 뒤 HTML을 흘려보내는 것이지 브라우저가 따로 fetch하는 것이 아니다.</p></div>
+      </article>
+      <article class="item" data-id="fe-nx-q-layout">
+        <div class="item-h"><span class="lang">레이아웃</span><h3>페이지를 옮겨도 남는 것</h3><label class="chk"><input type="checkbox" id="k-fe-nx-q-layout">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="/settings/profile에서 /settings/account로 이동하면 settings/layout.tsx 안 검색창의 입력값은?"><li class="ok">그대로 남는다. layout은 다시 마운트되지 않는다</li><li>지워진다. 페이지를 옮기면 layout도 새로 만든다</li><li>새로고침되며 지워진다</li><li>layout이 서버 컴포넌트라 원래 입력값을 가질 수 없다</li></ul>
+        <ul class="quiz-opts" hidden data-q="settings 아래에서 페이지를 옮길 때마다 입력값을 초기화하고 싶다. 무엇을 쓸까?"><li class="ok">layout.tsx 대신 template.tsx</li><li>layout.tsx에 loading.tsx를 추가한다</li><li>layout.tsx의 &#x27;use client&#x27;를 뺀다</li><li>export const dynamic = &#x27;force-dynamic&#x27;</li></ul>
+        <p class="q">/settings/profile에서 /settings/account로 이동하면 settings/layout.tsx 안 검색창의 입력값은?</p>
+        <div class="ans"><p>layout은 같은 layout을 쓰는 페이지끼리 이동할 때 <b>상태를 유지하고 다시 렌더링되지 않는다</b>. 검색창 같은 클라이언트 컴포넌트의 state도 남는다. <b>template.tsx</b>는 이동할 때마다 새 key를 받아 안의 클라이언트 컴포넌트 state가 초기화된다.</p></div>
+      </article>
+      <article class="item" data-id="fe-nx-q-action">
+        <div class="item-h"><span class="lang">Server Action</span><h3>Server Action과 권한</h3><label class="chk"><input type="checkbox" id="k-fe-nx-q-action">외움</label></div>
+<pre>&#x27;use server&#x27;;
+
+export async function deletePost(id: string) {
+  await db.post.delete({ where: { id } });
+}</pre>
+        <ul class="quiz-opts" hidden data-q="이 액션은 관리자 페이지 버튼에서만 부른다. 문제는?"><li class="ok">누구나 POST로 직접 부를 수 있어 액션 안에서 권한을 확인해야 한다</li><li>문제없다. 관리자 페이지에서만 import하므로 다른 곳에서 못 부른다</li><li>Server Action은 GET이라 결과가 캐시된다</li><li>DB 코드가 브라우저 번들에 노출된다</li></ul>
+        <p class="q">이 액션은 관리자 페이지 버튼에서만 부른다. 문제는?</p>
+        <div class="ans"><p>Server Action은 화면 버튼뿐 아니라 <b>직접 보낸 POST 요청으로도 호출</b>된다. 공식 문서도 "모든 Server Function 안에서 인증과 권한을 확인하라"고 한다. 코드 자체는 서버에만 있어서 번들에 노출되지는 않는다. 페이지 접근 제한(proxy, layout)만 믿으면 안 된다.</p></div>
+      </article>
+      <article class="item" data-id="fe-nx-q-env">
+        <div class="item-h"><span class="lang">환경 변수</span><h3>NEXT_PUBLIC_ 값</h3><label class="chk"><input type="checkbox" id="k-fe-nx-q-env">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="NEXT_PUBLIC_API=hello로 next build를 하고, NEXT_PUBLIC_API=changed로 next start를 했다. 클라이언트 컴포넌트의 process.env.NEXT_PUBLIC_API는?"><li class="ok">hello</li><li>changed</li><li>undefined</li><li>빌드 에러가 난다</li></ul>
+        <ul class="quiz-opts" hidden data-q="접두사 없는 SECRET_KEY를 클라이언트 컴포넌트에서 process.env.SECRET_KEY로 읽으면, 브라우저 번들에는?"><li class="ok">값이 들어가지 않는다 (브라우저에서는 undefined)</li><li>값이 그대로 들어간다</li><li>암호화된 값이 들어간다</li><li>빌드 에러가 난다</li></ul>
+        <p class="q">NEXT_PUBLIC_API=hello로 next build를 하고, NEXT_PUBLIC_API=changed로 next start를 했다. 클라이언트 컴포넌트의 process.env.NEXT_PUBLIC_API는?</p>
+        <div class="ans"><p><code>NEXT_PUBLIC_</code> 값은 <b>빌드할 때 코드에 문자열로 박힌다</b>. 빌드 뒤에 바꿔도 번들은 그대로 hello다. 접두사가 없는 값은 번들에 들어가지 않는다. 단, 클라이언트 컴포넌트도 서버에서 먼저 렌더링되므로 그때 찍힌 값이 HTML에 들어가고 브라우저와 값이 달라 hydration 에러가 날 수 있다. 비밀 값은 서버 컴포넌트나 Server Action에서만 읽는다.</p></div>
+      </article>
+      <article class="item" data-id="fe-nx-q-hydration">
+        <div class="item-h"><span class="lang">hydration</span><h3>서버와 브라우저의 값</h3><label class="chk"><input type="checkbox" id="k-fe-nx-q-hydration">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="&#x27;use client&#x27; 컴포넌트가 &lt;p&gt;{new Date().toLocaleTimeString()}&lt;/p&gt;를 그린다. 페이지를 열면?"><li class="ok">서버와 브라우저가 그린 시간이 달라 hydration 에러가 난다</li><li>서버에서 찍은 시간이 그대로 보이고 아무 일 없다</li><li>클라이언트 컴포넌트라 서버에서는 렌더링되지 않는다</li><li>빌드 에러가 난다</li></ul>
+        <p class="q">&#x27;use client&#x27; 컴포넌트가 &lt;p&gt;{new Date().toLocaleTimeString()}&lt;/p&gt;를 그린다. 페이지를 열면?</p>
+        <div class="ans"><p>클라이언트 컴포넌트도 <b>처음에는 서버에서 HTML로 렌더링</b>되고, 브라우저가 같은 결과를 다시 그려 연결한다(hydration). 시간, 난수, <code>typeof window</code> 분기처럼 양쪽 결과가 다르면 hydration 에러가 난다. 브라우저 값은 useEffect 안에서 넣거나, 시간처럼 달라도 되는 곳은 suppressHydrationWarning을 쓴다.</p></div>
+      </article>
+      <article class="item" data-id="fe-nx-q-searchparams">
+        <div class="item-h"><span class="lang">렌더링</span><h3>useSearchParams와 Suspense</h3><label class="chk"><input type="checkbox" id="k-fe-nx-q-searchparams">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="정적 페이지의 클라이언트 컴포넌트가 Suspense 없이 useSearchParams()를 쓰면 next build는?"><li class="ok">실패한다. Suspense로 감싸라는 에러가 난다</li><li>성공하고, 페이지 전체가 동적이 된다</li><li>성공하고, searchParams는 늘 비어 있다</li><li>성공하고, 경고도 없다</li></ul>
+        <p class="q">정적 페이지의 클라이언트 컴포넌트가 Suspense 없이 useSearchParams()를 쓰면 next build는?</p>
+        <div class="ans"><p>정적 페이지는 빌드할 때 쿼리 문자열을 알 수 없다. 그래서 useSearchParams를 쓰는 부분은 <b>가장 가까운 Suspense까지 브라우저에서 렌더링</b>되고, 프로덕션 빌드에서는 Suspense가 없으면 "Missing Suspense boundary with useSearchParams" 에러가 난다. 개발 서버에서는 문제없어 보여서 배포할 때 처음 알게 된다.</p></div>
+      </article>
+      <article class="item" data-id="fe-nx-q-prefetch">
+        <div class="item-h"><span class="lang">내비게이션</span><h3>Link 미리 받기</h3><label class="chk"><input type="checkbox" id="k-fe-nx-q-prefetch">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="&lt;Link&gt;가 화면(뷰포트)에 들어오면 링크된 페이지를 미리 받아 둔다. 이 동작은 언제 일어날까?"><li class="ok">프로덕션에서만. 개발 서버에서는 하지 않는다</li><li>개발 서버와 프로덕션 모두</li><li>마우스를 올렸을 때만</li><li>prefetch prop을 직접 줄 때만</li></ul>
+        <p class="q">&lt;Link&gt;가 화면(뷰포트)에 들어오면 링크된 페이지를 미리 받아 둔다. 이 동작은 언제 일어날까?</p>
+        <div class="ans"><p>Link의 prefetch는 <b>프로덕션에서만</b> 동작한다. 개발 서버에서 "페이지 이동이 느리다"고 느껴도 배포하면 다를 수 있다. 기본값(auto)에서 정적 경로는 통째로, 동적 경로는 가장 가까운 loading.tsx까지만 미리 받는다.</p></div>
+      </article>
+      <article class="item" data-id="fe-nx-q-fetch">
+        <div class="item-h"><span class="lang">캐시</span><h3>fetch 결과 캐시하기</h3><label class="chk"><input type="checkbox" id="k-fe-nx-q-fetch">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="기본 설정(cacheComponents 끔)의 Next 16에서, 서버 컴포넌트의 fetch 결과를 1시간 동안 캐시하려면?"><li class="ok">fetch(url, { next: { revalidate: 3600 } })</li><li>아무것도 안 해도 기본으로 캐시된다</li><li>fetch(url, { cache: &#x27;no-store&#x27; })</li><li>export const runtime = &#x27;edge&#x27;</li></ul>
+        <p class="q">기본 설정(cacheComponents 끔)의 Next 16에서, 서버 컴포넌트의 fetch 결과를 1시간 동안 캐시하려면?</p>
+        <div class="ans"><p>Next 14까지는 fetch가 기본으로 캐시됐지만, <b>Next 15부터는 기본이 캐시하지 않음</b>이다. 캐시하려면 <code>cache: 'force-cache'</code>나 <code>next: { revalidate: 초 }</code>로 직접 켠다. cacheComponents를 켠 프로젝트에서는 <code>'use cache'</code>와 <code>cacheLife</code>를 쓴다.</p></div>
+      </article>
+      <article class="item" data-id="fe-nx-q-cachecomp">
+        <div class="item-h"><span class="lang">캐시</span><h3>cacheComponents와 Suspense</h3><label class="chk"><input type="checkbox" id="k-fe-nx-q-cachecomp">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="cacheComponents를 켠 프로젝트에서 page가 Suspense 없이 await cookies()를 하면 next build는?"><li class="ok">빌드 에러: Suspense로 감싸거나 캐시하라고 한다</li><li>조용히 페이지 전체가 동적 렌더링이 된다</li><li>쿠키 없이 정적 페이지로 만든다</li><li>경고만 뜨고 빌드된다</li></ul>
+        <p class="q">cacheComponents를 켠 프로젝트에서 page가 Suspense 없이 await cookies()를 하면 next build는?</p>
+        <div class="ans"><p>cacheComponents에서는 요청마다 달라지는 데이터(cookies, headers, 캐시하지 않은 fetch)를 <b>Suspense 밖에서</b> 읽으면 빌드가 실패한다("uncached or runtime data during prerendering"). 나머지는 정적으로 미리 만들고 그 부분만 스트리밍하기 위해서다. 해결: Suspense로 감싸거나, <code>'use cache'</code>로 캐시한다. 조용히 전체를 동적으로 바꾸는 건 예전(끈 상태) 동작이다.</p></div>
+      </article>
+      <article class="item" data-id="fe-nx-q-updatetag">
+        <div class="item-h"><span class="lang">캐시</span><h3>저장 직후 내 화면</h3><label class="chk"><input type="checkbox" id="k-fe-nx-q-updatetag">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="Next 16의 Server Action에서 글을 저장한 직후, 저장한 사람의 다음 화면에 새 글이 바로 보여야 한다."><li class="ok">updateTag(&#x27;posts&#x27;)</li><li>revalidateTag(&#x27;posts&#x27;, &#x27;max&#x27;)</li><li>cacheLife(&#x27;seconds&#x27;)</li><li>connection()</li></ul>
+        <p class="q">Next 16의 Server Action에서 글을 저장한 직후, 저장한 사람의 다음 화면에 새 글이 바로 보여야 한다.</p>
+        <div class="ans"><p><b>updateTag</b>는 태그를 즉시 만료시켜 다음 요청이 새 데이터를 기다리게 한다(내가 쓴 걸 바로 보기, Server Action 안에서만). <b>revalidateTag(tag, 'max')</b>는 stale-while-revalidate라 다음 방문자에게 옛 데이터를 한 번 보여 주고 뒤에서 새로 만든다. Next 16에서 인자 하나짜리 revalidateTag는 deprecated.</p></div>
+      </article>
+      <article class="item" data-id="fe-nx-q-proxy">
+        <div class="item-h"><span class="lang">Next 16</span><h3>요청 가로채기 파일</h3><label class="chk"><input type="checkbox" id="k-fe-nx-q-proxy">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="Next 16에서 모든 요청 앞에서 로그인 여부를 보고 리다이렉트하는 파일(예전 middleware.ts)의 새 이름은?"><li class="ok">proxy.ts</li><li>interceptor.ts</li><li>edge.ts</li><li>route.ts</li></ul>
+        <p class="q">Next 16에서 모든 요청 앞에서 로그인 여부를 보고 리다이렉트하는 파일(예전 middleware.ts)의 새 이름은?</p>
+        <div class="ans"><p>Next 16에서 middleware 파일 규칙은 deprecated되고 <b>proxy</b>로 이름이 바뀌었다(함수 이름도 proxy). 기본 런타임은 Node.js다. 다만 proxy에서의 인증 확인은 빠른 1차 차단일 뿐이고, 데이터를 읽는 곳과 Server Action 안에서 다시 확인해야 한다.</p></div>
+      </article>
+      <article class="item" data-id="fe-nx-q-image">
+        <div class="item-h"><span class="lang">이미지</span><h3>next/image 크기</h3><label class="chk"><input type="checkbox" id="k-fe-nx-q-image">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="next/image로 크기를 모르는 원격 이미지를 넣을 때 반드시 줘야 하는 것은?"><li class="ok">width와 height (또는 fill)</li><li>priority</li><li>loading=&quot;lazy&quot;</li><li>placeholder=&quot;blur&quot;</li></ul>
+        <p class="q">next/image로 크기를 모르는 원격 이미지를 넣을 때 반드시 줘야 하는 것은?</p>
+        <div class="ans"><p>next/image는 이미지가 오기 전에 <b>자리를 먼저 잡아 레이아웃이 밀리지 않게(CLS)</b> 하려고 크기를 요구한다. 정적으로 import한 이미지는 크기를 알아서 채운다. Next 16에서 priority는 deprecated됐고, 첫 화면 큰 이미지에는 보통 loading="eager"나 fetchPriority="high"를 쓴다.</p></div>
+      </article>
+    </div>
+  </section>
+
+  <section id="fe-web">
+    <div class="sec-head">
+      <span class="sub">PART 7</span>
       <h2>웹 · 성능 · 보안</h2>
       <p>HTTP 상태 코드와 메서드, Core Web Vitals, 캐시처럼 프론트엔드 개발자가 매일 보는 웹 기본기입니다.</p>
     </div>

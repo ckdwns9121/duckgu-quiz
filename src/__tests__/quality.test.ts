@@ -74,7 +74,8 @@ describe('문제 품질', () => {
   });
   it('정답 고르기 문제의 제목(화면에 보임)에 정답이 들어 있지 않다', () => {
     const leaks = CARDS.filter((c): c is McqCard => c.kind === 'mcq')
-      .filter((c) => c.correct.length >= 3 && plain(c.title).toLowerCase().includes(plain(c.correct).toLowerCase()))
+      // 보기는 화면에 글자 그대로 나오므로(<link> 같은 태그 모양 글자 포함) 태그를 지우지 않고 비교한다
+      .filter((c) => c.correct.length >= 3 && plain(c.title).toLowerCase().includes(c.correct.toLowerCase()))
       .map((c) => `${c.id}: ${c.title} ⊃ ${c.correct}`);
     expect(leaks).toEqual([]);
   });

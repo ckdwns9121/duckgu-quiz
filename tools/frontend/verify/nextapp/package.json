@@ -1,0 +1,1 @@
+{ "name": "nextapp", "private": true, "scripts": { "build": "next build", "start": "next start -p 4311" } }

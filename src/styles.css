@@ -291,3 +291,8 @@ svg .hollow{fill:#fff} svg .solid{fill:currentColor}
 .brand-back .brandmini{overflow:hidden;text-overflow:ellipsis}
 .course-badge{white-space:pre-line;text-align:center}
 .course-badge.long{font-size:13px;line-height:1.15}
+
+/* 폰에서는 코드가 옆으로 숨지 않게 줄바꿈하고 글자를 조금 줄인다 (문제를 풀려면 코드를 끝까지 봐야 한다) */
+@media (max-width: 480px) {
+  .lesson-body pre{font-size:12.5px;white-space:pre-wrap;overflow-wrap:anywhere}
+}
