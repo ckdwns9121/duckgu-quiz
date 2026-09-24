@@ -6,7 +6,7 @@
 
 **출근길 5분, 개발 공부를 게임처럼.**
 
-정보처리기사 186문제, 프론트엔드 171문제를<br>
+정보처리기사 186문제, 프론트엔드 171문제, AWS 79문제를<br>
 듀오링고처럼 짧은 레슨으로, 러버덕 **덕구**와 같이 풀어 보세요.
 
 ### [👉 지금 풀어 보기](https://ckdwns9121.github.io/duckgu-quiz/)
@@ -22,13 +22,14 @@
 - 정보처리기사 실기가 코앞인데 **코드 출력값 문제**에서 자꾸 틀리는 분
 - 보안 공격 이름, 네트워크 용어, UML 다이어그램이 **아무리 봐도 안 외워지는** 분
 - 이벤트 루프 출력 순서, 호이스팅, `==`와 `===`처럼 **프론트엔드 기본기를 다시 다지고 싶은** 분
+- S3 + CloudFront 배포, IAM 권한, VPC처럼 **AWS에서 막히는 지점**을 미리 알고 싶은 분
 - 두꺼운 책 대신 **출퇴근길에 폰으로 5분씩** 공부하고 싶은 분
 
 <br>
 
 ## 무엇을 공부하나요
 
-첫 화면에서 코스를 고르면 그 코스의 레슨 지도가 열려요. 코스마다 진행률이 따로 쌓이고, 마지막에 풀던 코스에는 **이어하기** 표시가 붙어요. 백엔드, AWS, Kubernetes 코스도 준비하고 있어요.
+첫 화면에서 코스를 고르면 그 코스의 레슨 지도가 열려요. 코스마다 진행률이 따로 쌓이고, 마지막에 풀던 코스에는 **이어하기** 표시가 붙어요. 백엔드, Kubernetes 코스도 준비하고 있어요.
 
 ### 정보처리기사 (186문제)
 
@@ -63,6 +64,22 @@
 <br clear="right">
 
 모든 카드에 **한 줄씩 따라가는 풀이**와 **"기억할 것" 한 줄 요약**, 외우는 요령이 들어 있습니다.
+
+<br>
+
+### AWS (79문제)
+
+| 유닛 | 내용 | 카드 |
+|---|---|---|
+| IAM · 보안 | Allow와 Deny가 겹칠 때, 암묵적 거부, EC2 역할, 임시 자격 증명, 팀원 계정 나누기, 유출된 키 대응, 버킷 ARN과 객체 ARN, 다른 계정 역할, IMDSv2 | 10 |
+| VPC · 네트워크 | 퍼블릭 서브넷의 조건, NAT 게이트웨이 위치, 예약 IP, 보안 그룹(상태 저장)과 NACL(상태 비저장·번호 순서), 보안 그룹 참조, 피어링 전이 불가, S3 게이트웨이 엔드포인트, 루트 도메인 별칭, ALB와 NLB | 15 |
+| EC2 · Lambda · 컨테이너 | 스팟과 2분 알림, 인스턴스 스토어, EBS의 AZ, ELB 상태 검사, Lambda 15분 제한, 실행 환경 재사용, 예약·프로비저닝 동시성, 비동기 재시도, Fargate | 12 |
+| S3 | 퍼블릭 액세스 차단, 강한 일관성, 최소 저장 기간, presigned URL과 임시 자격 증명, 브라우저 업로드 CORS, 버전 관리, 멀티파트, 수명 주기 | 11 |
+| CloudFront · 배포 | 요청 흐름, OAC, us-east-1 인증서, SPA 새로고침 403, 무효화, TTL, 캐시 키, CloudFront Functions와 Lambda@Edge | 11 |
+| DB · 메시징 | RDS Multi-AZ와 읽기 복제본, 장애 조치 엔드포인트, 복제 지연, DynamoDB 일관성·핫 파티션, SQS 가시성 제한·표준과 FIFO·DLQ, SNS 팬아웃 | 12 |
+| 운영 · 비용 | 공동 책임 모델, CloudTrail, CloudWatch 경보, Budgets 예측 알림, 요금이 붙는 트래픽, 여러 AZ, RPO와 RTO | 8 |
+
+정답은 AWS 공식 문서로 하나씩 확인했어요. 요금이나 한도처럼 자주 바뀌는 숫자(예: S3 최대 객체 크기가 2025년 12월에 50TB로 늘어남)는 문제로 내지 않았어요.
 
 <br>
 
@@ -191,10 +208,12 @@ src/
   components/   캐릭터(SVG + Rive 연결), 레슨 지도, 문제, 해설 시트, 효과
   pages/        Intro · Courses(코스 고르기) · Course(레슨 지도) · Lesson · Result · NotFound
   data/         courses.json(코스·유닛 목록), cards/<코스>.json (학습 노트에서 추출)
-public/         notes.html · notes-frontend.html(코스별 학습 노트), rive/duck.riv(캐릭터), manifest, service worker, 아이콘
+public/         notes.html · notes-frontend.html · notes-aws.html(코스별 학습 노트), rive/duck.riv(캐릭터), manifest, service worker, 아이콘
 scripts/        카드 추출, 캐릭터 부위 그림(mascot-parts.mjs), Rive 파일 만들기, 아이콘 만들기
 tools/
-  frontend/     프론트엔드 노트 생성기(문제·출력값 코드), verify/(정답 검증 실험)
+  notes_gen.py  코스 노트 HTML 생성기 (공통)
+  frontend/     프론트엔드 문제·출력값 코드, verify/(정답 검증 실험)
+  aws/          AWS 문제
 docs/
   backlog/      코스별 보강할 것
   screenshots/  README 스크린샷
@@ -214,6 +233,6 @@ pnpm build:riv  # 캐릭터 duck.riv 다시 만들기 (공식 런타임으로 �
 
 문제를 만들거나 고칠 때의 원칙과 검토 순서는 `.claude/skills/quiz-quality/SKILL.md`에 있어요. `DUMP=frontend pnpm test dump`로 모든 문제를 텍스트로 뽑아 읽어 볼 수 있어요.
 
-카드 내용은 코스마다 학습 노트 한 곳(`public/notes.html`, `public/notes-frontend.html`)에서 관리해요. 노트를 고치고 `pnpm extract`를 실행하면 퀴즈에도 반영됩니다.
+카드 내용은 코스마다 학습 노트 한 곳(`public/notes.html`, `public/notes-frontend.html`, `public/notes-aws.html`)에서 관리해요. 프론트엔드·AWS 노트는 `tools/`의 파이썬 파일로 만들어요(`python3 tools/frontend/gen_fe.py`, `python3 tools/aws/gen_aws.py`). 노트를 고치고 `pnpm extract`를 실행하면 퀴즈에도 반영됩니다.
 
 새 코스는 `src/data/courses.json`에 코스와 유닛을 적고, 같은 형식의 노트를 만든 뒤 `pnpm extract`로 뽑은 카드를 `src/domain/content.ts`에 이어 주면 돼요.

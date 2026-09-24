@@ -28,6 +28,7 @@ description: 출근길 IT 퀴즈의 문제를 새로 만들거나 고치거나 �
    - React 동작: 실제 React를 jsdom에서 실행 (`tools/frontend/verify/react-lab.mjs`)
    - 브라우저 동작: Playwright로 실제 Chrome에서 실행 (`tools/frontend/verify/browser-lab.mjs`). jsdom은 렌더링·로딩 순서를 흉내 내지 못한다.
    - 프레임워크(Next.js 등): 설치한 패키지에 든 그 버전의 공식 문서(`next/dist/docs`)와 실제 build·start 결과. 버전·설정(예: cacheComponents)에 따라 답이 다르면 조건을 질문에 적는다.
+   - 클라우드(AWS 등)처럼 직접 돌려 볼 수 없는 것: 문제로 낼 주장을 목록으로 뽑아 **공식 문서(docs.aws.amazon.com 등)와 대조**한다(원문 인용·URL). 요금·한도처럼 자주 바뀌는 숫자는 문제로 내지 않는다(예: S3 최대 객체 크기 5TB → 2025년 12월 50TB).
    - 문서에 명시가 없고 실험으로도 확인 못 한 내용은 문제로 내지 않는다. 문서상 "그럴 수도 있다"인 동작(예: 같은 값 set 뒤 한 번 더 렌더링될 수 있음)도 피한다.
 9. **답 조각(타일) 문제는 조각을 확인한다.** 한 단어 답은 글자 단위로 쪼개지므로 피한다. 숫자·true/false·한 글자 출력이 좋다. 그러면 ±1, 반대값 같은 가짜 조각이 착각을 잘 담는다.
 10. **순서 맞추기(order)에는 가짜 조각을 넣지 않는다.** 사용자가 헷갈려했다.
@@ -38,23 +39,25 @@ description: 출근길 IT 퀴즈의 문제를 새로 만들거나 고치거나 �
 
 1. 내용을 고친다.
    - 정보처리기사: `public/notes.html` (필요하면 `tools/content_*.py`)
-   - 프론트엔드: `tools/frontend/cases.mjs`(출력값 코드), `fe_quiz.py`(문제), `fe_content.py`(풀이·용어 표)
+   - 프론트엔드: `tools/frontend/cases.mjs`(출력값 코드), `fe_quiz.py`·`fe_quiz_deep.py`(문제), `fe_content.py`(풀이·용어 표)
+   - AWS: `tools/aws/aws_quiz.py`
 2. 다시 만든다.
    ```bash
    node tools/frontend/run.mjs        # 프론트엔드 출력값 정답 (코드를 고쳤을 때)
    python3 tools/frontend/gen_fe.py   # 프론트엔드 노트
+   python3 tools/aws/gen_aws.py       # AWS 노트
    pnpm extract                       # 노트 → src/data/cards/<코스>.json
    pnpm test                          # 품질 테스트 (답 노출, 보기 길이·중복, 조각 수 등)
    ```
 3. **덤프를 뽑아 전부 읽는다.** 레슨별로 실제 나오는 모양(보기 순서, 조각)이 찍힌다.
    ```bash
-   DUMP=frontend pnpm test dump       # 또는 DUMP=jeongcheogi
+   DUMP=frontend pnpm test dump       # 또는 DUMP=jeongcheogi, DUMP=aws
    # 출력 파일 경로가 찍힌다 (OS 임시 폴더의 questions-<코스>.txt)
    ```
    문제마다 스스로 묻는다.
    - 몰라도 소거법으로 맞힐 수 있나?
    - 오답 보기 하나하나가 어떤 착각인가? 설명 못 하는 보기는 바꾼다.
-   - 정답만 길거나 자세하지 않나?
+   - 정답만 길거나 자세하지 않나? (상황형 문제는 정답에 조건을 붙이다 정답만 길어지기 쉽다. 정답을 줄이고 오답을 늘려 맞춘다)
    - 질문이나 제목에 답이 새지 않나? (덤프의 `·` 뒤가 화면에 보이는 제목)
    - 앞 질문 없이 이 질문만 봐도 풀리나?
    - 조각에 이상한 글자 조각이나 같은 뜻의 보기가 없나?
@@ -63,6 +66,6 @@ description: 출근길 IT 퀴즈의 문제를 새로 만들거나 고치거나 �
 
 ## 새 코스를 만들 때
 
-- `src/data/courses.json`에 코스와 유닛을 적고, 노트를 만들고, `src/domain/content.ts`의 `CARDS_BY_COURSE`에 카드를 잇는다.
+- `src/data/courses.json`에 코스와 유닛을 적고, `tools/<코스>/`에 문제 파일과 생성 스크립트(공통 `tools/notes_gen.py`의 `write_notes`)를 만들고, `src/domain/content.ts`의 `CARDS_BY_COURSE`와 `public/sw.js`의 SHELL에 잇는다. `tools/aws/`가 가장 단순한 예다.
 - 한 코스는 유닛 5~7개, 유닛당 12~20문제 정도로 시작한다. 절반 이상을 코드·상황형 문제로 채운다.
 - 주제는 "면접에 나오고, 실무에서 실제로 사고가 나는 것" 위주로 고른다. 사전식 정의 암기는 노트로 보낸다.
