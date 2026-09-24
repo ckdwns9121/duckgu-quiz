@@ -58,13 +58,10 @@ UNITS = [
    ('fe-js-t-copy','얕은 복사 / 깊은 복사','','<b>얕은 복사</b>: 바깥 객체만 새로 만들고 안쪽 객체는 원본과 같은 것을 가리킴. <b>깊은 복사</b>: 안쪽 객체까지 전부 새로 만듦.','얕은 복사: spread, Object.assign. 깊은 복사: structuredClone'),
    ('fe-js-t-scope','함수 스코프 / 블록 스코프','','<b>함수 스코프</b>: 함수 안 어디서든 같은 변수 (var). <b>블록 스코프</b>: 중괄호 { } 안에서만 사는 변수 (let, const).','반복문의 var가 하나만 생기는 이유'),
  ]),
- Q('fe-js-q-tdz','JS','let과 TDZ',[
+ Q('fe-js-q-tdz','JS','let 선언 전에 읽기',[
    ('이 코드의 출력은?','ReferenceError','undefined','2','TypeError')],
    '<p>let은 선언 전 구간(TDZ)에서 읽으면 <b>ReferenceError</b>를 던진다. var였다면 undefined.</p>',
    code="try {\n  console.log(b);\n} catch (e) {\n  console.log(e.name);\n}\nlet b = 2;"),
- Q('fe-js-q-arrow','JS','화살표 함수의 this',[
-   ('화살표 함수의 this는 어떻게 정해질까?','선언된 위치의 바깥 스코프 this를 그대로 쓴다','호출한 객체(점 앞의 객체)를 가리킨다','항상 전역 객체(window)를 가리킨다','call로 넘긴 객체로 바뀐다')],
-   '<p>화살표 함수는 자기 this가 없어서 <mark>바깥의 this를 그대로</mark> 쓴다. call·apply·bind로도 바꿀 수 없다. 그래서 객체 메서드로 쓰면 this가 객체를 가리키지 않는다.</p>'),
  Q('fe-js-q-reduce','JS','filter · map · reduce',[
    ('이 코드의 출력은?','60','100','6','[20, 40]')],
    '<p>filter로 짝수 [2, 4] → map으로 [20, 40] → reduce로 더해서 <b>60</b>. filter를 빼먹으면 100, map을 빼먹으면 6.</p>',
@@ -96,13 +93,6 @@ UNITS = [
    ('fe-as-t-state','pending / fulfilled / rejected','Promise 상태','<b>pending</b>: 아직 결과가 없는 대기 상태. <b>fulfilled</b>: 성공해서 값이 정해진 상태 (then 실행). <b>rejected</b>: 실패한 상태 (catch 실행).','한 번 fulfilled나 rejected가 되면 다시 바뀌지 않는다'),
    ('fe-as-t-async','async / await','','<b>async</b>: 항상 Promise를 돌려주는 함수로 만든다. <b>await</b>: Promise가 끝날 때까지 그 함수의 나머지를 멈추고 기다린다.','await는 async 함수 안에서만 (모듈 최상단은 예외)'),
  ]),
- Q('fe-as-q-all','Promise','Promise 조합',[
-   ('Promise.all([p1, p2, p3]) 중 하나가 실패하면?','바로 실패(reject)하고 그 에러를 돌려준다','전부 끝날 때까지 기다린 뒤 성공한 것만 돌려준다','실패한 것만 빼고 성공으로 끝난다','실패한 것을 한 번 더 시도한다'),
-   ('성공·실패와 상관없이 모든 Promise의 결과를 한꺼번에 받고 싶을 때 쓰는 것은?','Promise.allSettled','Promise.all','Promise.race','Promise.any')],
-   '<p><b>all</b>: 전부 성공해야 성공, 하나라도 실패하면 바로 실패. <b>allSettled</b>: 성공·실패 결과를 모두 모아 줌. <b>race</b>: 가장 먼저 끝난 것(성공이든 실패든). <b>any</b>: 가장 먼저 성공한 것.</p>'),
- Q('fe-as-q-timeout','이벤트루프','setTimeout(fn, 0)',[
-   ('setTimeout(fn, 0)의 fn은 언제 실행될까?','지금 코드와 마이크로태스크가 모두 끝난 뒤','바로 다음 줄보다 먼저','0ms 뒤 지금 코드를 멈추고 즉시','Promise.then보다 먼저')],
-   '<p>0ms라도 <b>매크로태스크</b>라서 콜 스택이 비고 마이크로태스크가 다 끝나야 실행된다. 실제로는 브라우저가 최소 지연을 둘 수도 있다.</p>'),
 ]),
 # =====================================================================
 ('fe-browser', '브라우저 · DOM', '렌더링 과정, 스크립트 로딩, 이벤트 전파, 저장소, CORS처럼 브라우저가 실제로 하는 일을 다룹니다.', [
@@ -128,9 +118,9 @@ UNITS = [
  Q('fe-br-q-anim','성능','애니메이션 속성',[
    ('다음 중 리플로우 없이 처리돼 애니메이션에 가장 좋은 속성은?','transform','width','top','margin')],
    '<p>transform과 opacity는 레이아웃·페인트를 건너뛰고 <b>합성</b> 단계만 다시 해서 부드럽다. width·top·margin은 바꿀 때마다 리플로우가 일어난다.</p>'),
- Q('fe-br-q-load','이벤트','DOMContentLoaded vs load',[
-   ('DOMContentLoaded와 load에 대한 설명으로 맞는 것은?','DOMContentLoaded는 HTML 파싱이 끝나면, load는 이미지·CSS까지 다 받으면 발생한다','load는 HTML 파싱이 끝나면, DOMContentLoaded는 이미지까지 다 받으면 발생한다','둘은 항상 같은 시점에 발생한다','DOMContentLoaded는 이미지가 다 떠야 발생한다')],
-   '<p><b>DOMContentLoaded</b>: DOM이 다 만들어진 시점 (defer 스크립트 실행 뒤). <b>load</b>: 이미지, 스타일시트 같은 모든 리소스까지 받은 시점. 보통 DOMContentLoaded가 먼저.</p>'),
+ Q('fe-br-q-load','이벤트','페이지 로딩 이벤트',[
+   ('이미지가 다 뜨기 전이라도 DOM이 준비되면 바로 버튼에 이벤트를 달고 싶다. 어떤 이벤트를 기다릴까?','DOMContentLoaded','load','pageshow','readystatechange의 complete')],
+   '<p><b>DOMContentLoaded</b>: HTML을 다 읽어 DOM이 만들어진 시점 (defer 스크립트 실행 뒤). <b>load</b>: 이미지, 스타일시트 같은 리소스까지 모두 받은 시점이라 더 늦다. readyState가 complete가 되는 것도 load와 같은 때다.</p>'),
 ]),
 # =====================================================================
 ('fe-css', 'CSS', '박스 모델, 명시도, position, 단위처럼 레이아웃이 깨질 때 원인이 되는 것들입니다.', [
@@ -149,11 +139,8 @@ UNITS = [
    '<p>#main(ID 1) + .card(클래스 1) + p(태그 1) = <b>(1, 1, 1)</b>. 비교는 앞자리부터: ID가 하나라도 있으면 클래스가 몇 개든 이긴다. #nav .item = (1, 1, 0)이 가장 높다.</p>'),
  Q('fe-css-q-unit','단위','em과 rem 계산',[
    ('html은 16px, 부모는 20px일 때 자식의 font-size: 1.5em은 몇 px일까?','30px','24px','20px','36px'),
-   ('같은 상황에서 자식의 font-size: 1.5rem은 몇 px일까?','24px','30px','20px','16px')],
+   ('html은 16px, 부모는 20px일 때 자식의 font-size: 1.5rem은 몇 px일까?','24px','30px','20px','16px')],
    '<p>font-size의 em은 <b>부모 글자 크기</b> 기준: 20 × 1.5 = <b>30px</b>. rem은 <b>html 글자 크기</b> 기준: 16 × 1.5 = <b>24px</b>.</p>'),
- Q('fe-css-q-hide','CSS','숨기기 방법',[
-   ('요소를 안 보이게 하면서 자리는 그대로 차지하게 하려면?','visibility: hidden','display: none','position: absolute','content: none')],
-   '<p><b>visibility: hidden</b>은 보이지만 않고 자리를 차지한다. <b>display: none</b>은 자리까지 없어져서 주변 요소가 당겨진다(리플로우). opacity: 0은 자리도 차지하고 클릭도 받는다.</p>'),
 ]),
 # =====================================================================
 ('fe-react', 'React', '상태 업데이트, 렌더링, useEffect, key처럼 React에서 실수가 가장 잦은 부분입니다. React 18 기준입니다.', [
@@ -174,11 +161,11 @@ UNITS = [
    '<p><code>setN(p =&gt; p + 1)</code>은 <b>바로 앞 업데이트 결과(p)</b>를 받아서 계산한다. 0 → 1 → 2 → 3. 이전 값에 기대는 업데이트는 함수형으로 쓴다.</p>',
    code="const [n, setN] = useState(0);\n\nfunction onClick() {\n  setN((p) => p + 1);\n  setN((p) => p + 1);\n  setN((p) => p + 1);\n}"),
  Q('fe-re-q-effect','useEffect','useEffect 실행 시점',[
-   ('useEffect(fn, [])의 fn은 언제 실행될까?','처음 화면에 나타난(마운트된) 뒤 한 번','렌더링할 때마다','렌더링 전에 한 번','화면에서 사라질 때만'),
-   ('useEffect에서 돌려준 cleanup 함수는 언제 실행될까?','다음 effect가 실행되기 직전, 그리고 화면에서 사라질 때','처음 마운트될 때 한 번','렌더링이 시작되기 직전마다','직접 부르기 전에는 실행되지 않는다')],
+   ('useEffect(fn, [])의 fn은 언제 실행될까?','처음 화면에 그려진 뒤 한 번','렌더링할 때마다','처음 렌더링 직전에 한 번','state가 바뀔 때마다'),
+   ('useEffect(fn, [id])에서 fn이 돌려준 cleanup은 언제 실행될까?','id가 바뀌어 fn이 다시 실행되기 직전과 언마운트될 때','언마운트될 때만','fn이 실행된 직후','렌더링할 때마다 fn보다 먼저')],
    '<p>effect는 <b>화면에 반영(커밋)된 뒤</b> 실행된다. 의존성 배열이 []면 마운트 뒤 한 번. cleanup은 <b>의존성이 바뀌어 effect가 다시 실행되기 직전</b>과 <b>언마운트될 때</b> 실행된다.</p>'),
  Q('fe-re-q-key','key','key로 index 쓰기',[
-   ('목록의 key로 배열 index를 쓰면 생길 수 있는 문제는?','항목 순서가 바뀔 때 입력값 같은 상태가 다른 항목에 붙는다','목록이 화면에 나오지 않는다','항목을 추가할 수 없다','React가 에러를 던지고 멈춘다')],
+   ('할 일 목록(각 항목에 체크박스 입력 상태가 있음)의 key로 배열 index를 쓰고, 맨 앞에 새 항목을 추가하면?','체크 상태가 한 칸씩 밀려 엉뚱한 항목에 붙는다','문제없이 잘 동작하고 조금 느려질 뿐이다','콘솔 경고만 뜨고 동작은 같다','key가 겹쳐서 새 항목이 안 보인다')],
    '<p>index는 순서가 바뀌면 같은 항목이 다른 key를 받는다. React는 key로 항목을 짝지어서 <b>상태를 엉뚱한 항목에 붙인다</b>. 추가·삭제·정렬이 있는 목록은 고유 id를 쓴다.</p>'),
  Q('fe-re-q-immut','상태','배열 state 바꾸기',[
    ('state 배열 list에 item을 추가하는 올바른 방법은?','setList([...list, item])','list.push(item)','list.push(item); setList(list)','list = [...list, item]')],
@@ -208,14 +195,8 @@ UNITS = [
    ('fe-web-cache','no-cache / no-store / max-age','Cache-Control','<b>no-cache</b>: 저장은 해 두되, 쓰기 전에 서버에 바뀌었는지 매번 확인한다. <b>no-store</b>: 아예 저장하지 않는다. <b>max-age</b>: 정한 초 동안은 서버에 묻지 않고 저장해 둔 것을 그대로 쓴다.','이름과 반대로 no-cache도 저장은 한다. 민감한 정보는 no-store. 파일 이름에 해시가 붙은 JS·CSS는 max-age를 길게'),
    ('fe-web-method','GET / POST / PUT / PATCH / DELETE','HTTP 메서드','<b>GET</b>: 리소스를 조회한다. <b>POST</b>: 새 리소스를 만든다. <b>PUT</b>: 리소스 전체를 새 값으로 바꾼다. <b>PATCH</b>: 리소스의 일부만 고친다. <b>DELETE</b>: 리소스를 지운다.','PUT은 통째로 교체, PATCH는 일부 수정'),
  ]),
- Q('fe-web-q-auth','상태 코드','401 vs 403',[
-   ('로그인은 했지만 관리자 페이지에 들어갈 권한이 없을 때 서버가 돌려줄 상태 코드는?','403','401','404','400')],
-   '<p><b>401</b>은 "누군지 모름"(인증 필요), <b>403</b>은 "누군지는 알지만 권한 없음". 로그인한 상태에서 권한이 없으면 403.</p>'),
  Q('fe-web-q-idem','HTTP','멱등성',[
    ('같은 요청을 여러 번 보내면 결과가 달라질 수 있는(멱등하지 않은) 메서드는?','POST','GET','PUT','DELETE')],
    '<p><b>멱등</b>: 여러 번 보내도 결과가 한 번 보낸 것과 같음. GET·PUT·DELETE는 멱등하고, <b>POST</b>는 보낼 때마다 새 리소스가 생길 수 있어 멱등하지 않다. 결제 버튼 중복 클릭을 조심하는 이유.</p>'),
- Q('fe-web-q-cls','성능','CLS 줄이기',[
-   ('img 태그에 width·height를 지정하지 않으면 가장 나빠지는 지표는?','CLS','LCP','INP','TTFB')],
-   '<p>이미지 크기를 모르면 이미지가 늦게 도착했을 때 아래 내용이 갑자기 밀린다. 이것이 <b>CLS</b>(레이아웃 이동). width·height나 aspect-ratio로 자리를 미리 잡아 두면 막을 수 있다.</p>'),
 ]),
 ]

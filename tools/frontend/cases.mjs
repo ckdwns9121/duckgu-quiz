@@ -70,4 +70,43 @@ setTimeout(() => console.log(4));`,
   resolve();
 }).then(() => console.log('then'));
 console.log('end');`,
+  'fe-js-this2': `const user = {
+  nick: 'kim',
+  hi() { return this.nick; },
+  bye: () => this.nick,
+};
+console.log(user.hi());
+console.log(user.bye());`,
+  'fe-js-sort': `const nums = [10, 1, 2];
+nums.sort();
+console.log(...nums);`,
+  'fe-as-mix': `console.log('A');
+setTimeout(() => console.log('B'));
+(async () => {
+  console.log('C');
+  await null;
+  console.log('D');
+})();
+Promise.resolve().then(() => console.log('E'));
+console.log('F');`,
+  'fe-as-return': `async function getN() {
+  return 1;
+}
+getN().then((n) => console.log(n));
+console.log(2);`,
+  'fe-as-foreach': `const wait = (ms) =>
+  new Promise((r) => setTimeout(r, ms));
+
+async function main() {
+  [30, 10].forEach(async (ms) => {
+    await wait(ms);
+    console.log(ms);
+  });
+  console.log('done');
+}
+main();`,
+  'fe-as-catch': `Promise.reject(new Error('x'))
+  .then(() => console.log(1))
+  .catch(() => console.log(2))
+  .then(() => console.log(3));`,
 };

@@ -136,6 +136,15 @@ console.log(a);</pre>
         <p class="q">출력은? (여러 줄이면 띄어쓰기로 이어서)</p>
         <div class="ans"><span class="a">undefined 1</span><ol class="steps"><li><code>var a</code> 선언이 맨 위로 끌어올려진 것처럼 동작하고, 값은 <b>undefined</b>로 시작</li><li>첫 <code>console.log(a)</code> → <b>undefined</b> (에러가 아님)</li><li><code>a = 1</code> 대입 뒤 두 번째 출력 → <b>1</b></li></ol><p class="why"><b>기억할 것</b>: <mark>var는 선언만 올라가고 값은 안 올라간다</mark>. let·const였다면 첫 줄에서 ReferenceError.</p></div>
       </article>
+      <article class="item" data-id="fe-js-q-const">
+        <div class="item-h"><span class="lang">JS</span><h3>const 객체 바꾸기</h3><label class="chk"><input type="checkbox" id="k-fe-js-q-const">외움</label></div>
+<pre>const cfg = { dark: false };
+cfg.dark = true;
+console.log(cfg.dark);</pre>
+        <ul class="quiz-opts" hidden data-q="이 코드를 실행하면?"><li class="ok">true가 출력된다</li><li>TypeError가 난다</li><li>false가 출력된다</li><li>SyntaxError가 난다</li></ul>
+        <p class="q">이 코드를 실행하면?</p>
+        <div class="ans"><p>const가 막는 건 <b>변수에 다시 대입하는 것</b>(<code>cfg = {}</code>)뿐이다. 변수가 가리키는 객체의 속성은 바꿀 수 있다. 속성까지 막으려면 <code>Object.freeze(cfg)</code>.</p></div>
+      </article>
       <article class="item" data-id="fe-js-closure">
         <div class="item-h"><span class="lang">JS</span><h3>클로저 카운터</h3><label class="chk"><input type="checkbox" id="k-fe-js-closure">외움</label></div>
 <pre>function makeCounter() {
@@ -147,6 +156,12 @@ const c2 = makeCounter();
 console.log(c1(), c1(), c2());</pre>
         <p class="q">출력은? (여러 줄이면 띄어쓰기로 이어서)</p>
         <div class="ans"><span class="a">1 2 1</span><ol class="steps"><li><code>makeCounter()</code>를 부를 때마다 <b>새 n</b>이 만들어짐</li><li>c1은 자기 n을 기억 → 1, 2</li><li>c2는 따로 만든 n → 1</li></ol><p class="why"><b>기억할 것</b>: <mark>클로저는 만들어질 때의 변수를 각자 따로 기억</mark>한다. c1과 c2는 서로의 n을 모른다.</p></div>
+      </article>
+      <article class="item" data-id="fe-js-q-redeclare">
+        <div class="item-h"><span class="lang">JS</span><h3>다시 선언하기</h3><label class="chk"><input type="checkbox" id="k-fe-js-q-redeclare">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="같은 스코프에서 같은 이름으로 한 번 더 선언해도 에러가 나지 않는 것은?"><li class="ok">var</li><li>let</li><li>const</li><li>let과 const 둘 다</li></ul>
+        <p class="q">같은 스코프에서 같은 이름으로 한 번 더 선언해도 에러가 나지 않는 것은?</p>
+        <div class="ans"><p><code>var a = 1; var a = 2;</code>는 조용히 넘어가서 실수를 숨긴다. let·const는 같은 스코프에서 다시 선언하면 <b>SyntaxError</b>. var 대신 let·const를 쓰는 이유 중 하나.</p></div>
       </article>
       <article class="item" data-id="fe-js-varloop">
         <div class="item-h"><span class="lang">JS</span><h3>var + setTimeout 반복문</h3><label class="chk"><input type="checkbox" id="k-fe-js-varloop">외움</label></div>
@@ -175,6 +190,44 @@ console.log(obj.hi.call({ name: &#x27;B&#x27; }));</pre>
         <p class="q">출력은? (여러 줄이면 띄어쓰기로 이어서)</p>
         <div class="ans"><span class="a">A B</span><ol class="steps"><li><code>obj.hi()</code> → 점 앞의 객체(obj)가 this → <b>A</b></li><li><code>obj.hi.call({ name: 'B' })</code> → call로 넘긴 객체가 this → <b>B</b></li></ol><p class="why"><b>기억할 것</b>: 일반 함수의 this는 <mark>어떻게 불렀는지</mark>로 정해진다. 점 앞의 객체, 또는 call·apply·bind로 넘긴 객체.</p></div>
       </article>
+      <article class="item" data-id="fe-js-this2">
+        <div class="item-h"><span class="lang">JS</span><h3>메서드와 화살표 함수의 this</h3><label class="chk"><input type="checkbox" id="k-fe-js-this2">외움</label></div>
+<pre>const user = {
+  nick: &#x27;kim&#x27;,
+  hi() { return this.nick; },
+  bye: () =&gt; this.nick,
+};
+console.log(user.hi());
+console.log(user.bye());</pre>
+        <p class="q">출력은? (여러 줄이면 띄어쓰기로 이어서)</p>
+        <div class="ans"><span class="a">kim undefined</span><ol class="steps"><li><code>user.hi()</code> → 일반 메서드라 점 앞의 user가 this → <b>kim</b></li><li><code>bye</code>는 화살표 함수라 자기 this가 없고, 객체 리터럴을 감싼 바깥(최상위)의 this를 씀</li><li>최상위 this에는 nick이 없음 → <b>undefined</b></li></ol><p class="why"><b>기억할 것</b>: <mark>객체 메서드를 화살표 함수로 쓰면 this가 객체가 아니다</mark>. 객체 리터럴의 중괄호는 스코프가 아니다.</p></div>
+      </article>
+      <article class="item" data-id="fe-js-q-timer">
+        <div class="item-h"><span class="lang">JS</span><h3>콜백 안의 this</h3><label class="chk"><input type="checkbox" id="k-fe-js-q-timer">외움</label></div>
+<pre>class Timer {
+  count = 0;
+  start() {
+    setTimeout(function () {
+      this.count++;
+    }, 100);
+  }
+}</pre>
+        <ul class="quiz-opts" hidden data-q="start() 뒤 100ms가 지나도 count가 늘지 않는다. 가장 간단한 해결은?"><li class="ok">function을 화살표 함수로 바꾼다</li><li>setTimeout 시간을 0으로 바꾼다</li><li>this.count 대신 count++로 쓴다</li><li>count를 let으로 선언한다</li></ul>
+        <p class="q">start() 뒤 100ms가 지나도 count가 늘지 않는다. 가장 간단한 해결은?</p>
+        <div class="ans"><p>setTimeout에 넘긴 <b>일반 함수</b>는 나중에 그냥 호출되므로 this가 인스턴스가 아니다. 화살표 함수는 자기 this가 없어서 <b>start()의 this(인스턴스)</b>를 그대로 쓴다. <code>count++</code>만 쓰면 없는 변수를 찾다가 ReferenceError.</p></div>
+      </article>
+      <article class="item" data-id="fe-js-q-tdz">
+        <div class="item-h"><span class="lang">JS</span><h3>let 선언 전에 읽기</h3><label class="chk"><input type="checkbox" id="k-fe-js-q-tdz">외움</label></div>
+<pre>try {
+  console.log(b);
+} catch (e) {
+  console.log(e.name);
+}
+let b = 2;</pre>
+        <ul class="quiz-opts" hidden data-q="이 코드의 출력은?"><li class="ok">ReferenceError</li><li>undefined</li><li>2</li><li>TypeError</li></ul>
+        <p class="q">이 코드의 출력은?</p>
+        <div class="ans"><p>let은 선언 전 구간(TDZ)에서 읽으면 <b>ReferenceError</b>를 던진다. var였다면 undefined.</p></div>
+      </article>
       <article class="item" data-id="fe-js-equal">
         <div class="item-h"><span class="lang">JS</span><h3>== 와 ===</h3><label class="chk"><input type="checkbox" id="k-fe-js-equal">외움</label></div>
 <pre>console.log(0 == &#x27;0&#x27;);
@@ -194,16 +247,6 @@ console.log(typeof function () {});</pre>
         <p class="q">출력은? (여러 줄이면 띄어쓰기로 이어서)</p>
         <div class="ans"><span class="a">object object undefined function</span><ol class="steps"><li><code>typeof null</code> → <b>object</b> (JS 초기 설계 버그가 그대로 남음)</li><li><code>typeof []</code> → 배열도 <b>object</b></li><li><code>typeof undefined</code> → <b>undefined</b></li><li><code>typeof function(){}</code> → <b>function</b></li></ol><p class="why"><b>기억할 것</b>: <mark>null과 배열은 typeof로 구별이 안 된다</mark>. 배열은 Array.isArray(), null은 === null.</p></div>
       </article>
-      <article class="item" data-id="fe-js-shallow">
-        <div class="item-h"><span class="lang">JS</span><h3>spread 얕은 복사</h3><label class="chk"><input type="checkbox" id="k-fe-js-shallow">외움</label></div>
-<pre>const a = { x: 1, inner: { y: 1 } };
-const b = { ...a };
-b.x = 2;
-b.inner.y = 2;
-console.log(a.x, a.inner.y);</pre>
-        <p class="q">출력은? (여러 줄이면 띄어쓰기로 이어서)</p>
-        <div class="ans"><span class="a">1 2</span><ol class="steps"><li><code>{ ...a }</code>는 바깥 객체만 새로 만든다</li><li><code>b.x = 2</code> → b만 바뀜 → a.x는 <b>1</b></li><li><code>b.inner</code>는 a.inner와 <b>같은 객체</b> → a.inner.y도 <b>2</b></li></ol><p class="why"><b>기억할 것</b>: <mark>spread는 얕은 복사</mark>. 안쪽 객체까지 복사하려면 structuredClone().</p></div>
-      </article>
       <article class="item" data-id="fe-js-truthy">
         <div class="item-h"><span class="lang">JS</span><h3>truthy · falsy</h3><label class="chk"><input type="checkbox" id="k-fe-js-truthy">외움</label></div>
 <pre>console.log(Boolean(&#x27;&#x27;));
@@ -222,38 +265,29 @@ console.log(u.x?.y);</pre>
         <p class="q">출력은? (여러 줄이면 띄어쓰기로 이어서)</p>
         <div class="ans"><span class="a">5 0 undefined</span><ol class="steps"><li><code>u.n || 5</code> → 0은 falsy라 <b>5</b></li><li><code>u.n ?? 5</code> → ??는 null·undefined일 때만 뒤를 씀 → <b>0</b></li><li><code>u.x?.y</code> → u.x가 없으니 에러 대신 <b>undefined</b></li></ol><p class="why"><b>기억할 것</b>: <mark>||는 falsy면 대체, ??는 null·undefined일 때만 대체</mark>. 0이나 빈 문자열을 살리고 싶으면 ??.</p></div>
       </article>
-    </div>
-    <p class="group-title">JavaScript 용어</p>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th class="c"></th><th>용어</th><th>뜻</th><th>예시 · 외우는 법</th></tr></thead>
-        <tbody>
-          <tr data-id="fe-js-t-hoist"><td class="c"><input type="checkbox" id="k-fe-js-t-hoist" aria-label="외움"></td><td class="term">호이스팅<small>Hoisting</small></td><td class="ans">선언이 스코프 맨 위로 끌어올려진 것처럼 동작하는 것. var는 undefined로 시작하고, let·const는 선언 전에 접근하면 에러.</td><td class="hint">var로 선언한 변수를 선언 줄보다 위에서 읽으면 undefined</td></tr>
-          <tr data-id="fe-js-t-closure"><td class="c"><input type="checkbox" id="k-fe-js-t-closure" aria-label="외움"></td><td class="term">클로저<small>Closure</small></td><td class="ans">함수가 만들어질 때의 바깥 변수를 기억해서, 바깥 함수가 끝난 뒤에도 그 변수를 쓰는 것.</td><td class="hint">카운터, 디바운스, React 훅이 모두 클로저로 동작</td></tr>
-          <tr data-id="fe-js-t-tdz"><td class="c"><input type="checkbox" id="k-fe-js-t-tdz" aria-label="외움"></td><td class="term">TDZ<small>Temporal Dead Zone</small></td><td class="ans">let·const가 선언되기 전까지의 구간. 여기서 변수를 읽으면 ReferenceError가 난다.</td><td class="hint">"아직 태어나지 않은 변수" 구간</td></tr>
-          <tr data-id="fe-js-t-copy"><td class="c"><input type="checkbox" id="k-fe-js-t-copy" aria-label="외움"></td><td class="term">얕은 복사 / 깊은 복사</td><td class="ans"><b>얕은 복사</b>: 바깥 객체만 새로 만들고 안쪽 객체는 원본과 같은 것을 가리킴. <b>깊은 복사</b>: 안쪽 객체까지 전부 새로 만듦.</td><td class="hint">얕은 복사: spread, Object.assign. 깊은 복사: structuredClone</td></tr>
-          <tr data-id="fe-js-t-scope"><td class="c"><input type="checkbox" id="k-fe-js-t-scope" aria-label="외움"></td><td class="term">함수 스코프 / 블록 스코프</td><td class="ans"><b>함수 스코프</b>: 함수 안 어디서든 같은 변수 (var). <b>블록 스코프</b>: 중괄호 { } 안에서만 사는 변수 (let, const).</td><td class="hint">반복문의 var가 하나만 생기는 이유</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="grid">
-      <article class="item" data-id="fe-js-q-tdz">
-        <div class="item-h"><span class="lang">JS</span><h3>let과 TDZ</h3><label class="chk"><input type="checkbox" id="k-fe-js-q-tdz">외움</label></div>
-<pre>try {
-  console.log(b);
-} catch (e) {
-  console.log(e.name);
-}
-let b = 2;</pre>
-        <ul class="quiz-opts" hidden data-q="이 코드의 출력은?"><li class="ok">ReferenceError</li><li>undefined</li><li>2</li><li>TypeError</li></ul>
-        <p class="q">이 코드의 출력은?</p>
-        <div class="ans"><p>let은 선언 전 구간(TDZ)에서 읽으면 <b>ReferenceError</b>를 던진다. var였다면 undefined.</p></div>
+      <article class="item" data-id="fe-js-shallow">
+        <div class="item-h"><span class="lang">JS</span><h3>spread 얕은 복사</h3><label class="chk"><input type="checkbox" id="k-fe-js-shallow">외움</label></div>
+<pre>const a = { x: 1, inner: { y: 1 } };
+const b = { ...a };
+b.x = 2;
+b.inner.y = 2;
+console.log(a.x, a.inner.y);</pre>
+        <p class="q">출력은? (여러 줄이면 띄어쓰기로 이어서)</p>
+        <div class="ans"><span class="a">1 2</span><ol class="steps"><li><code>{ ...a }</code>는 바깥 객체만 새로 만든다</li><li><code>b.x = 2</code> → b만 바뀜 → a.x는 <b>1</b></li><li><code>b.inner</code>는 a.inner와 <b>같은 객체</b> → a.inner.y도 <b>2</b></li></ol><p class="why"><b>기억할 것</b>: <mark>spread는 얕은 복사</mark>. 안쪽 객체까지 복사하려면 structuredClone().</p></div>
       </article>
-      <article class="item" data-id="fe-js-q-arrow">
-        <div class="item-h"><span class="lang">JS</span><h3>화살표 함수의 this</h3><label class="chk"><input type="checkbox" id="k-fe-js-q-arrow">외움</label></div>
-        <ul class="quiz-opts" hidden data-q="화살표 함수의 this는 어떻게 정해질까?"><li class="ok">선언된 위치의 바깥 스코프 this를 그대로 쓴다</li><li>호출한 객체(점 앞의 객체)를 가리킨다</li><li>항상 전역 객체(window)를 가리킨다</li><li>call로 넘긴 객체로 바뀐다</li></ul>
-        <p class="q">화살표 함수의 this는 어떻게 정해질까?</p>
-        <div class="ans"><p>화살표 함수는 자기 this가 없어서 <mark>바깥의 this를 그대로</mark> 쓴다. call·apply·bind로도 바꿀 수 없다. 그래서 객체 메서드로 쓰면 this가 객체를 가리키지 않는다.</p></div>
+      <article class="item" data-id="fe-js-q-clone">
+        <div class="item-h"><span class="lang">JS</span><h3>깊은 복사</h3><label class="chk"><input type="checkbox" id="k-fe-js-q-clone">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="안쪽 객체까지 원본과 완전히 끊어진 복사본을 만드는 것은?"><li class="ok">structuredClone(obj)</li><li>{ ...obj }</li><li>Object.assign({}, obj)</li><li>const copy = obj</li></ul>
+        <p class="q">안쪽 객체까지 원본과 완전히 끊어진 복사본을 만드는 것은?</p>
+        <div class="ans"><p>spread와 Object.assign은 <b>얕은 복사</b>라 안쪽 객체는 원본과 같은 것을 가리킨다. <code>const copy = obj</code>는 복사가 아니라 같은 객체를 하나 더 가리키는 것. 안쪽까지 복사하려면 <b>structuredClone</b>.</p></div>
+      </article>
+      <article class="item" data-id="fe-js-sort">
+        <div class="item-h"><span class="lang">JS</span><h3>sort() 기본 정렬</h3><label class="chk"><input type="checkbox" id="k-fe-js-sort">외움</label></div>
+<pre>const nums = [10, 1, 2];
+nums.sort();
+console.log(...nums);</pre>
+        <p class="q">출력은? (여러 줄이면 띄어쓰기로 이어서)</p>
+        <div class="ans"><span class="a">1 10 2</span><ol class="steps"><li>인자 없는 <code>sort()</code>는 값을 <b>문자열로 바꿔서</b> 사전 순으로 비교</li><li>"10", "1", "2" → 사전 순으로 "1" &lt; "10" &lt; "2"</li><li>결과 <b>1 10 2</b></li></ol><p class="why"><b>기억할 것</b>: <mark>숫자 정렬은 sort((a, b) =&gt; a - b)</mark>. 그리고 sort는 원본 배열을 바꾼다.</p></div>
       </article>
       <article class="item" data-id="fe-js-q-reduce">
         <div class="item-h"><span class="lang">JS</span><h3>filter · map · reduce</h3><label class="chk"><input type="checkbox" id="k-fe-js-q-reduce">외움</label></div>
@@ -267,6 +301,26 @@ let b = 2;</pre>
         <p class="q">이 코드의 출력은?</p>
         <div class="ans"><p>filter로 짝수 [2, 4] → map으로 [20, 40] → reduce로 더해서 <b>60</b>. filter를 빼먹으면 100, map을 빼먹으면 6.</p></div>
       </article>
+      <article class="item" data-id="fe-js-q-debounce">
+        <div class="item-h"><span class="lang">JS</span><h3>이벤트 호출 줄이기</h3><label class="chk"><input type="checkbox" id="k-fe-js-q-debounce">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="검색창에서 입력이 멈추고 300ms가 지나면 API를 한 번만 부르고 싶다. 무엇을 쓸까?"><li class="ok">디바운스</li><li>스로틀</li><li>setInterval 폴링</li><li>메모이제이션</li></ul>
+        <ul class="quiz-opts" hidden data-q="스크롤하는 동안 위치 계산을 최대 100ms에 한 번만 하고 싶다. 무엇을 쓸까?"><li class="ok">스로틀</li><li>디바운스</li><li>setInterval 폴링</li><li>메모이제이션</li></ul>
+        <p class="q">검색창에서 입력이 멈추고 300ms가 지나면 API를 한 번만 부르고 싶다. 무엇을 쓸까?</p>
+        <div class="ans"><p><b>디바운스</b>: 이벤트가 멈추고 일정 시간이 지나면 <b>마지막 한 번</b>만 실행 (검색어 자동완성, 창 크기 조절 끝). <b>스로틀</b>: 이벤트가 계속 와도 <b>정해진 간격마다 한 번</b>씩 실행 (스크롤, 드래그). 메모이제이션은 같은 입력의 계산 결과를 재사용하는 것이라 호출 횟수와는 상관없다.</p></div>
+      </article>
+    </div>
+    <p class="group-title">JavaScript 용어</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="c"></th><th>용어</th><th>뜻</th><th>예시 · 외우는 법</th></tr></thead>
+        <tbody>
+          <tr data-id="fe-js-t-hoist" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-js-t-hoist" aria-label="외움"></td><td class="term">호이스팅<small>Hoisting</small></td><td class="ans">선언이 스코프 맨 위로 끌어올려진 것처럼 동작하는 것. var는 undefined로 시작하고, let·const는 선언 전에 접근하면 에러.</td><td class="hint">var로 선언한 변수를 선언 줄보다 위에서 읽으면 undefined</td></tr>
+          <tr data-id="fe-js-t-closure" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-js-t-closure" aria-label="외움"></td><td class="term">클로저<small>Closure</small></td><td class="ans">함수가 만들어질 때의 바깥 변수를 기억해서, 바깥 함수가 끝난 뒤에도 그 변수를 쓰는 것.</td><td class="hint">카운터, 디바운스, React 훅이 모두 클로저로 동작</td></tr>
+          <tr data-id="fe-js-t-tdz" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-js-t-tdz" aria-label="외움"></td><td class="term">TDZ<small>Temporal Dead Zone</small></td><td class="ans">let·const가 선언되기 전까지의 구간. 여기서 변수를 읽으면 ReferenceError가 난다.</td><td class="hint">"아직 태어나지 않은 변수" 구간</td></tr>
+          <tr data-id="fe-js-t-copy" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-js-t-copy" aria-label="외움"></td><td class="term">얕은 복사 / 깊은 복사</td><td class="ans"><b>얕은 복사</b>: 바깥 객체만 새로 만들고 안쪽 객체는 원본과 같은 것을 가리킴. <b>깊은 복사</b>: 안쪽 객체까지 전부 새로 만듦.</td><td class="hint">얕은 복사: spread, Object.assign. 깊은 복사: structuredClone</td></tr>
+          <tr data-id="fe-js-t-scope" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-js-t-scope" aria-label="외움"></td><td class="term">함수 스코프 / 블록 스코프</td><td class="ans"><b>함수 스코프</b>: 함수 안 어디서든 같은 변수 (var). <b>블록 스코프</b>: 중괄호 { } 안에서만 사는 변수 (let, const).</td><td class="hint">반복문의 var가 하나만 생기는 이유</td></tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
@@ -286,6 +340,14 @@ console.log(4);</pre>
         <p class="q">출력은? (여러 줄이면 띄어쓰기로 이어서)</p>
         <div class="ans"><span class="a">1 4 3 2</span><ol class="steps"><li>동기 코드 먼저: <b>1</b>, <b>4</b></li><li>동기 코드가 끝나면 마이크로태스크(Promise.then) 전부: <b>3</b></li><li>그다음 매크로태스크(setTimeout): <b>2</b></li></ol><p class="why"><b>기억할 것</b>: <mark>동기 → 마이크로태스크 → 매크로태스크</mark>. setTimeout 0초여도 Promise.then보다 늦다.</p></div>
       </article>
+      <article class="item" data-id="fe-as-q-first">
+        <div class="item-h"><span class="lang">이벤트루프</span><h3>setTimeout 0과 then</h3><label class="chk"><input type="checkbox" id="k-fe-as-q-first">외움</label></div>
+<pre>setTimeout(fn, 0);
+Promise.resolve().then(g);</pre>
+        <ul class="quiz-opts" hidden data-q="fn과 g 중 먼저 실행되는 것은?"><li class="ok">g</li><li>fn</li><li>둘이 동시에 실행된다</li><li>브라우저마다 다르다</li></ul>
+        <p class="q">fn과 g 중 먼저 실행되는 것은?</p>
+        <div class="ans"><p>setTimeout은 0ms여도 <b>매크로태스크</b>, then은 <b>마이크로태스크</b>. 지금 코드가 끝나면 마이크로태스크를 전부 먼저 실행하므로 <b>g</b>가 먼저다. 이 순서는 표준으로 정해져 있다.</p></div>
+      </article>
       <article class="item" data-id="fe-as-micro">
         <div class="item-h"><span class="lang">이벤트루프</span><h3>queueMicrotask</h3><label class="chk"><input type="checkbox" id="k-fe-as-micro">외움</label></div>
 <pre>setTimeout(() =&gt; console.log(&#x27;t&#x27;), 0);
@@ -293,6 +355,31 @@ queueMicrotask(() =&gt; console.log(&#x27;m&#x27;));
 console.log(&#x27;s&#x27;);</pre>
         <p class="q">출력은? (여러 줄이면 띄어쓰기로 이어서)</p>
         <div class="ans"><span class="a">s m t</span><ol class="steps"><li>동기 코드: <b>s</b></li><li>queueMicrotask는 마이크로태스크 → <b>m</b></li><li>setTimeout은 매크로태스크 → <b>t</b></li></ol><p class="why"><b>기억할 것</b>: queueMicrotask는 <mark>Promise.then과 같은 줄</mark>(마이크로태스크 큐)에 선다.</p></div>
+      </article>
+      <article class="item" data-id="fe-as-executor">
+        <div class="item-h"><span class="lang">Promise</span><h3>Promise 생성자 안의 코드</h3><label class="chk"><input type="checkbox" id="k-fe-as-executor">외움</label></div>
+<pre>new Promise((resolve) =&gt; {
+  console.log(&#x27;p&#x27;);
+  resolve();
+}).then(() =&gt; console.log(&#x27;then&#x27;));
+console.log(&#x27;end&#x27;);</pre>
+        <p class="q">출력은? (여러 줄이면 띄어쓰기로 이어서)</p>
+        <div class="ans"><span class="a">p end then</span><ol class="steps"><li><code>new Promise(콜백)</code>의 콜백은 <b>즉시 동기로</b> 실행 → <b>p</b></li><li>then은 마이크로태스크로 미뤄짐</li><li>동기 코드 → <b>end</b></li><li>마이크로태스크 → <b>then</b></li></ol><p class="why"><b>기억할 것</b>: <mark>Promise 생성자 콜백(executor)은 동기</mark>, then·catch·finally만 비동기.</p></div>
+      </article>
+      <article class="item" data-id="fe-as-return">
+        <div class="item-h"><span class="lang">async</span><h3>async 함수의 반환값</h3><label class="chk"><input type="checkbox" id="k-fe-as-return">외움</label></div>
+<pre>async function getN() {
+  return 1;
+}
+getN().then((n) =&gt; console.log(n));
+console.log(2);</pre>
+        <p class="q">출력은? (여러 줄이면 띄어쓰기로 이어서)</p>
+        <div class="ans"><span class="a">2 1</span><ol class="steps"><li>async 함수는 값을 return해도 <b>Promise로 감싸서</b> 돌려줌</li><li>then 콜백은 마이크로태스크 → 동기 코드 <b>2</b>가 먼저</li><li>그다음 <b>1</b></li></ol><p class="why"><b>기억할 것</b>: <mark>async 함수의 결과는 항상 Promise</mark>. 값을 바로 쓰려면 await나 then.</p></div>
+      </article>
+      <article class="item" data-id="fe-as-b-loop" data-build="order" data-join=" → " data-decoys="">
+        <div class="item-h"><span class="lang">순서</span><h3>이벤트 루프 한 바퀴</h3><label class="chk"><input type="checkbox" id="k-fe-as-b-loop">외움</label></div>
+        <p class="q">이벤트 루프가 한 바퀴 도는 순서대로 놓으세요.</p>
+        <div class="ans"><ol class="steps build-answer"><li>콜 스택의 동기 코드</li><li>마이크로태스크 전부</li><li>화면 렌더링 (필요할 때)</li><li>매크로태스크 하나</li></ol><p class="why">지금 실행 중인 코드(콜 스택)가 끝나면 <mark>마이크로태스크를 큐가 빌 때까지 전부</mark> 실행하고, 필요하면 화면을 그린 뒤, 매크로태스크를 <b>하나</b> 꺼낸다. 이것을 반복한다.</p></div>
       </article>
       <article class="item" data-id="fe-as-await">
         <div class="item-h"><span class="lang">async</span><h3>await 뒤의 코드</h3><label class="chk"><input type="checkbox" id="k-fe-as-await">외움</label></div>
@@ -306,6 +393,20 @@ console.log(&#x27;c&#x27;);</pre>
         <p class="q">출력은? (여러 줄이면 띄어쓰기로 이어서)</p>
         <div class="ans"><span class="a">a c b</span><ol class="steps"><li><code>f()</code> 안의 <code>console.log('a')</code>는 바로 실행 → <b>a</b></li><li><code>await</code>를 만나면 f의 나머지는 마이크로태스크로 미뤄짐</li><li>바깥 동기 코드 → <b>c</b></li><li>마이크로태스크로 f 재개 → <b>b</b></li></ol><p class="why"><b>기억할 것</b>: <mark>await 앞은 동기, await 뒤는 마이크로태스크</mark>. async 함수도 처음 await 전까지는 그냥 동기 코드.</p></div>
       </article>
+      <article class="item" data-id="fe-as-mix">
+        <div class="item-h"><span class="lang">이벤트루프</span><h3>async 함수와 Promise 섞기</h3><label class="chk"><input type="checkbox" id="k-fe-as-mix">외움</label></div>
+<pre>console.log(&#x27;A&#x27;);
+setTimeout(() =&gt; console.log(&#x27;B&#x27;));
+(async () =&gt; {
+  console.log(&#x27;C&#x27;);
+  await null;
+  console.log(&#x27;D&#x27;);
+})();
+Promise.resolve().then(() =&gt; console.log(&#x27;E&#x27;));
+console.log(&#x27;F&#x27;);</pre>
+        <p class="q">출력은? (여러 줄이면 띄어쓰기로 이어서)</p>
+        <div class="ans"><span class="a">A C F D E B</span><ol class="steps"><li>동기 코드: <b>A</b> → async 함수 안의 await 앞까지 <b>C</b> → <b>F</b></li><li>마이크로태스크는 등록된 순서대로: await 뒤의 <b>D</b>가 먼저 줄 섬, 그다음 then의 <b>E</b></li><li>마지막으로 매크로태스크 setTimeout: <b>B</b></li></ol><p class="why"><b>기억할 것</b>: <mark>async 함수는 await를 만나기 전까지 동기</mark>로 돈다. 마이크로태스크끼리는 줄 선 순서대로.</p></div>
+      </article>
       <article class="item" data-id="fe-as-nested">
         <div class="item-h"><span class="lang">이벤트루프</span><h3>then 안에서 setTimeout</h3><label class="chk"><input type="checkbox" id="k-fe-as-nested">외움</label></div>
 <pre>Promise.resolve()
@@ -318,20 +419,68 @@ setTimeout(() =&gt; console.log(4));</pre>
         <p class="q">출력은? (여러 줄이면 띄어쓰기로 이어서)</p>
         <div class="ans"><span class="a">1 3 4 2</span><ol class="steps"><li>처음에 등록: 첫 then(마이크로), setTimeout 4(매크로)</li><li>마이크로태스크: 첫 then → <b>1</b>, 이때 setTimeout 2를 등록 (4 뒤에 줄 섬)</li><li>이어서 두 번째 then → <b>3</b></li><li>매크로태스크는 줄 선 순서대로: <b>4</b>, <b>2</b></li></ol><p class="why"><b>기억할 것</b>: <mark>마이크로태스크는 큐가 빌 때까지 이어서</mark> 실행되고, 매크로태스크는 등록된 순서대로 하나씩.</p></div>
       </article>
-      <article class="item" data-id="fe-as-executor">
-        <div class="item-h"><span class="lang">Promise</span><h3>Promise 생성자 안의 코드</h3><label class="chk"><input type="checkbox" id="k-fe-as-executor">외움</label></div>
-<pre>new Promise((resolve) =&gt; {
-  console.log(&#x27;p&#x27;);
-  resolve();
-}).then(() =&gt; console.log(&#x27;then&#x27;));
-console.log(&#x27;end&#x27;);</pre>
-        <p class="q">출력은? (여러 줄이면 띄어쓰기로 이어서)</p>
-        <div class="ans"><span class="a">p end then</span><ol class="steps"><li><code>new Promise(콜백)</code>의 콜백은 <b>즉시 동기로</b> 실행 → <b>p</b></li><li>then은 마이크로태스크로 미뤄짐</li><li>동기 코드 → <b>end</b></li><li>마이크로태스크 → <b>then</b></li></ol><p class="why"><b>기억할 것</b>: <mark>Promise 생성자 콜백(executor)은 동기</mark>, then·catch·finally만 비동기.</p></div>
+      <article class="item" data-id="fe-as-q-block">
+        <div class="item-h"><span class="lang">이벤트루프</span><h3>무거운 동기 코드</h3><label class="chk"><input type="checkbox" id="k-fe-as-q-block">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="클릭 핸들러에서 3초 걸리는 동기 반복문을 돌리면 어떻게 될까?"><li class="ok">3초 동안 화면이 멈추고 다른 클릭도 처리되지 않는다</li><li>반복문은 뒤에서 돌고 화면은 계속 반응한다</li><li>브라우저가 알아서 잘게 나눠 실행한다</li><li>setTimeout 콜백이 반복문 중간에 끼어든다</li></ul>
+        <p class="q">클릭 핸들러에서 3초 걸리는 동기 반복문을 돌리면 어떻게 될까?</p>
+        <div class="ans"><p>JS는 메인 스레드 하나에서 돈다. 콜 스택이 비지 않으면 이벤트 루프가 다음 작업(클릭, 렌더링, 타이머)을 꺼내지 못해 <b>화면 전체가 멈춘다</b>. 오래 걸리는 계산은 Web Worker로 보내거나 잘게 나눠 실행한다.</p></div>
       </article>
-      <article class="item" data-id="fe-as-b-loop" data-build="order" data-join=" → " data-decoys="">
-        <div class="item-h"><span class="lang">순서</span><h3>이벤트 루프 한 바퀴</h3><label class="chk"><input type="checkbox" id="k-fe-as-b-loop">외움</label></div>
-        <p class="q">이벤트 루프가 한 바퀴 도는 순서대로 놓으세요.</p>
-        <div class="ans"><ol class="steps build-answer"><li>콜 스택의 동기 코드</li><li>마이크로태스크 전부</li><li>화면 렌더링 (필요할 때)</li><li>매크로태스크 하나</li></ol><p class="why">지금 실행 중인 코드(콜 스택)가 끝나면 <mark>마이크로태스크를 큐가 빌 때까지 전부</mark> 실행하고, 필요하면 화면을 그린 뒤, 매크로태스크를 <b>하나</b> 꺼낸다. 이것을 반복한다.</p></div>
+      <article class="item" data-id="fe-as-catch">
+        <div class="item-h"><span class="lang">Promise</span><h3>catch 뒤의 then</h3><label class="chk"><input type="checkbox" id="k-fe-as-catch">외움</label></div>
+<pre>Promise.reject(new Error(&#x27;x&#x27;))
+  .then(() =&gt; console.log(1))
+  .catch(() =&gt; console.log(2))
+  .then(() =&gt; console.log(3));</pre>
+        <p class="q">출력은? (여러 줄이면 띄어쓰기로 이어서)</p>
+        <div class="ans"><span class="a">2 3</span><ol class="steps"><li>reject된 Promise라 첫 then은 <b>건너뜀</b> → 1은 안 찍힘</li><li><code>.catch</code>가 에러를 받아 <b>2</b></li><li>catch가 에러 없이 끝나면 체인은 <b>다시 성공 상태</b> → 다음 then이 실행되어 <b>3</b></li></ol><p class="why"><b>기억할 것</b>: <mark>catch 뒤의 then은 실행된다</mark>. catch가 에러를 "처리"한 것으로 보기 때문. 계속 실패로 두려면 catch 안에서 다시 throw.</p></div>
+      </article>
+      <article class="item" data-id="fe-as-q-trycatch">
+        <div class="item-h"><span class="lang">Promise</span><h3>then 안의 에러와 try/catch</h3><label class="chk"><input type="checkbox" id="k-fe-as-q-trycatch">외움</label></div>
+<pre>try {
+  fetch(&#x27;/api&#x27;).then(() =&gt; {
+    throw new Error(&#x27;bad&#x27;);
+  });
+} catch (e) {
+  console.log(&#x27;잡힘&#x27;);
+}</pre>
+        <ul class="quiz-opts" hidden data-q="&#x27;잡힘&#x27;은 출력될까?"><li class="ok">안 된다. 처리 안 된 Promise 에러가 된다</li><li>된다. try/catch가 잡는다</li><li>fetch가 끝나기 전에 바로 출력된다</li><li>SyntaxError가 나서 실행이 안 된다</li></ul>
+        <p class="q">&#x27;잡힘&#x27;은 출력될까?</p>
+        <div class="ans"><p>try 블록은 fetch를 <b>시작만</b> 하고 바로 끝난다. then 콜백은 나중에 마이크로태스크로 실행되므로 그때는 이미 try 밖이다. 잡으려면 <code>.catch()</code>를 붙이거나, async 함수 안에서 <code>await fetch(...)</code>로 기다린다.</p></div>
+      </article>
+      <article class="item" data-id="fe-as-foreach">
+        <div class="item-h"><span class="lang">async</span><h3>forEach 안의 await</h3><label class="chk"><input type="checkbox" id="k-fe-as-foreach">외움</label></div>
+<pre>const wait = (ms) =&gt;
+  new Promise((r) =&gt; setTimeout(r, ms));
+
+async function main() {
+  [30, 10].forEach(async (ms) =&gt; {
+    await wait(ms);
+    console.log(ms);
+  });
+  console.log(&#x27;done&#x27;);
+}
+main();</pre>
+        <p class="q">출력은? (여러 줄이면 띄어쓰기로 이어서)</p>
+        <div class="ans"><span class="a">done 10 30</span><ol class="steps"><li>forEach는 콜백이 돌려준 Promise를 <b>기다리지 않음</b> → 곧바로 <b>done</b></li><li>두 콜백의 wait는 동시에 시작 → 10ms짜리가 먼저 끝나 <b>10</b></li><li>그다음 <b>30</b></li></ol><p class="why"><b>기억할 것</b>: <mark>forEach는 await를 기다려 주지 않는다</mark>. 차례로 하려면 for...of + await, 동시에 하려면 Promise.all(arr.map(...)).</p></div>
+      </article>
+      <article class="item" data-id="fe-as-q-serial">
+        <div class="item-h"><span class="lang">async</span><h3>await를 차례로 쓰면</h3><label class="chk"><input type="checkbox" id="k-fe-as-q-serial">외움</label></div>
+<pre>// a(), b()는 각각 1초 걸리는 요청
+const x = await a();
+const y = await b();</pre>
+        <ul class="quiz-opts" hidden data-q="a()와 b()는 서로 상관없고 각각 1초 걸린다. 이 코드는 약 몇 초 걸릴까?"><li class="ok">약 2초</li><li>약 1초</li><li>0초 (await가 바로 끝남)</li><li>약 3초</li></ul>
+        <ul class="quiz-opts" hidden data-q="이 코드를 약 1초로 줄이려면?"><li class="ok">await Promise.all([a(), b()])로 받는다</li><li>await를 지우고 then으로 바꾼다</li><li>a와 b를 async 함수로 바꾼다</li><li>for await...of로 돌린다</li></ul>
+        <p class="q">a()와 b()는 서로 상관없고 각각 1초 걸린다. 이 코드는 약 몇 초 걸릴까?</p>
+        <div class="ans"><p>await는 앞 요청이 끝날 때까지 다음 줄로 가지 않으므로 <b>1초 + 1초</b>. 서로 기다릴 필요가 없으면 두 요청을 <b>먼저 동시에 시작</b>하고 한꺼번에 기다린다: <code>const [x, y] = await Promise.all([a(), b()])</code>.</p></div>
+      </article>
+      <article class="item" data-id="fe-as-q-combo">
+        <div class="item-h"><span class="lang">Promise</span><h3>Promise 조합 고르기</h3><label class="chk"><input type="checkbox" id="k-fe-as-q-combo">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="상품·리뷰·추천 API를 동시에 부르고, 하나라도 실패하면 바로 에러 화면을 띄우고 싶다."><li class="ok">Promise.all</li><li>Promise.allSettled</li><li>Promise.race</li><li>Promise.any</li></ul>
+        <ul class="quiz-opts" hidden data-q="상품·리뷰·추천 API 중 실패한 게 있어도, 성공한 것만이라도 보여 주고 싶다."><li class="ok">Promise.allSettled</li><li>Promise.all</li><li>Promise.race</li><li>Promise.any</li></ul>
+        <ul class="quiz-opts" hidden data-q="같은 데이터를 주는 서버 세 곳 중 가장 먼저 성공한 응답만 쓰고 싶다."><li class="ok">Promise.any</li><li>Promise.race</li><li>Promise.all</li><li>Promise.allSettled</li></ul>
+        <ul class="quiz-opts" hidden data-q="fetch가 3초 안에 안 끝나면 실패로 처리하고 싶다 (3초 뒤 reject되는 Promise와 겨루기)."><li class="ok">Promise.race</li><li>Promise.any</li><li>Promise.all</li><li>Promise.allSettled</li></ul>
+        <p class="q">상품·리뷰·추천 API를 동시에 부르고, 하나라도 실패하면 바로 에러 화면을 띄우고 싶다.</p>
+        <div class="ans"><p><b>all</b>: 전부 성공해야 성공, 하나라도 실패하면 바로 실패. <b>allSettled</b>: 성공·실패를 가리지 않고 결과를 모두 모아 줌. <b>any</b>: 가장 먼저 <b>성공</b>한 것 (실패는 건너뜀). <b>race</b>: 가장 먼저 <b>끝난</b> 것 (실패여도 그걸로 끝) → 타임아웃에 쓴다.</p></div>
       </article>
     </div>
     <p class="group-title">비동기 용어</p>
@@ -339,27 +488,12 @@ console.log(&#x27;end&#x27;);</pre>
       <table>
         <thead><tr><th class="c"></th><th>용어</th><th>뜻</th><th>예시 · 외우는 법</th></tr></thead>
         <tbody>
-          <tr data-id="fe-as-t-queue"><td class="c"><input type="checkbox" id="k-fe-as-t-queue" aria-label="외움"></td><td class="term">마이크로태스크 / 매크로태스크</td><td class="ans"><b>마이크로태스크</b>: 지금 작업이 끝나면 큐가 빌 때까지 전부 먼저 실행하는 작업. <b>매크로태스크</b>: 이벤트 루프가 한 바퀴에 하나씩 꺼내는 작업.</td><td class="hint">마이크로: Promise.then, await 뒤, queueMicrotask. 매크로: setTimeout, setInterval, 클릭 이벤트</td></tr>
-          <tr data-id="fe-as-t-stack"><td class="c"><input type="checkbox" id="k-fe-as-t-stack" aria-label="외움"></td><td class="term">콜 스택<small>Call Stack</small></td><td class="ans">지금 실행 중인 함수들이 쌓이는 곳. 콜 스택이 비어야 큐에서 다음 작업을 꺼낸다.</td><td class="hint">무거운 동기 코드가 콜 스택을 오래 붙잡으면 화면이 멈춘다</td></tr>
-          <tr data-id="fe-as-t-state"><td class="c"><input type="checkbox" id="k-fe-as-t-state" aria-label="외움"></td><td class="term">pending / fulfilled / rejected<small>Promise 상태</small></td><td class="ans"><b>pending</b>: 아직 결과가 없는 대기 상태. <b>fulfilled</b>: 성공해서 값이 정해진 상태 (then 실행). <b>rejected</b>: 실패한 상태 (catch 실행).</td><td class="hint">한 번 fulfilled나 rejected가 되면 다시 바뀌지 않는다</td></tr>
-          <tr data-id="fe-as-t-async"><td class="c"><input type="checkbox" id="k-fe-as-t-async" aria-label="외움"></td><td class="term">async / await</td><td class="ans"><b>async</b>: 항상 Promise를 돌려주는 함수로 만든다. <b>await</b>: Promise가 끝날 때까지 그 함수의 나머지를 멈추고 기다린다.</td><td class="hint">await는 async 함수 안에서만 (모듈 최상단은 예외)</td></tr>
+          <tr data-id="fe-as-t-queue" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-as-t-queue" aria-label="외움"></td><td class="term">마이크로태스크 / 매크로태스크</td><td class="ans"><b>마이크로태스크</b>: 지금 작업이 끝나면 큐가 빌 때까지 전부 먼저 실행하는 작업. <b>매크로태스크</b>: 이벤트 루프가 한 바퀴에 하나씩 꺼내는 작업.</td><td class="hint">마이크로: Promise.then, await 뒤, queueMicrotask. 매크로: setTimeout, setInterval, 클릭 이벤트</td></tr>
+          <tr data-id="fe-as-t-stack" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-as-t-stack" aria-label="외움"></td><td class="term">콜 스택<small>Call Stack</small></td><td class="ans">지금 실행 중인 함수들이 쌓이는 곳. 콜 스택이 비어야 큐에서 다음 작업을 꺼낸다.</td><td class="hint">무거운 동기 코드가 콜 스택을 오래 붙잡으면 화면이 멈춘다</td></tr>
+          <tr data-id="fe-as-t-state" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-as-t-state" aria-label="외움"></td><td class="term">pending / fulfilled / rejected<small>Promise 상태</small></td><td class="ans"><b>pending</b>: 아직 결과가 없는 대기 상태. <b>fulfilled</b>: 성공해서 값이 정해진 상태 (then 실행). <b>rejected</b>: 실패한 상태 (catch 실행).</td><td class="hint">한 번 fulfilled나 rejected가 되면 다시 바뀌지 않는다</td></tr>
+          <tr data-id="fe-as-t-async" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-as-t-async" aria-label="외움"></td><td class="term">async / await</td><td class="ans"><b>async</b>: 항상 Promise를 돌려주는 함수로 만든다. <b>await</b>: Promise가 끝날 때까지 그 함수의 나머지를 멈추고 기다린다.</td><td class="hint">await는 async 함수 안에서만 (모듈 최상단은 예외)</td></tr>
         </tbody>
       </table>
-    </div>
-    <div class="grid">
-      <article class="item" data-id="fe-as-q-all">
-        <div class="item-h"><span class="lang">Promise</span><h3>Promise 조합</h3><label class="chk"><input type="checkbox" id="k-fe-as-q-all">외움</label></div>
-        <ul class="quiz-opts" hidden data-q="Promise.all([p1, p2, p3]) 중 하나가 실패하면?"><li class="ok">바로 실패(reject)하고 그 에러를 돌려준다</li><li>전부 끝날 때까지 기다린 뒤 성공한 것만 돌려준다</li><li>실패한 것만 빼고 성공으로 끝난다</li><li>실패한 것을 한 번 더 시도한다</li></ul>
-        <ul class="quiz-opts" hidden data-q="성공·실패와 상관없이 모든 Promise의 결과를 한꺼번에 받고 싶을 때 쓰는 것은?"><li class="ok">Promise.allSettled</li><li>Promise.all</li><li>Promise.race</li><li>Promise.any</li></ul>
-        <p class="q">Promise.all([p1, p2, p3]) 중 하나가 실패하면?</p>
-        <div class="ans"><p><b>all</b>: 전부 성공해야 성공, 하나라도 실패하면 바로 실패. <b>allSettled</b>: 성공·실패 결과를 모두 모아 줌. <b>race</b>: 가장 먼저 끝난 것(성공이든 실패든). <b>any</b>: 가장 먼저 성공한 것.</p></div>
-      </article>
-      <article class="item" data-id="fe-as-q-timeout">
-        <div class="item-h"><span class="lang">이벤트루프</span><h3>setTimeout(fn, 0)</h3><label class="chk"><input type="checkbox" id="k-fe-as-q-timeout">외움</label></div>
-        <ul class="quiz-opts" hidden data-q="setTimeout(fn, 0)의 fn은 언제 실행될까?"><li class="ok">지금 코드와 마이크로태스크가 모두 끝난 뒤</li><li>바로 다음 줄보다 먼저</li><li>0ms 뒤 지금 코드를 멈추고 즉시</li><li>Promise.then보다 먼저</li></ul>
-        <p class="q">setTimeout(fn, 0)의 fn은 언제 실행될까?</p>
-        <div class="ans"><p>0ms라도 <b>매크로태스크</b>라서 콜 스택이 비고 마이크로태스크가 다 끝나야 실행된다. 실제로는 브라우저가 최소 지연을 둘 수도 있다.</p></div>
-      </article>
     </div>
   </section>
 
@@ -375,34 +509,11 @@ console.log(&#x27;end&#x27;);</pre>
         <p class="q">HTML을 받아 화면에 그리기까지의 순서대로 놓으세요.</p>
         <div class="ans"><ol class="steps build-answer"><li>HTML 파싱 → DOM</li><li>CSS 파싱 → CSSOM</li><li>렌더 트리</li><li>레이아웃</li><li>페인트</li><li>합성</li></ol><p class="why">DOM과 CSSOM을 합쳐 <b>렌더 트리</b>를 만들고 → 위치·크기 계산(<b>레이아웃</b>, 리플로우) → 픽셀 칠하기(<b>페인트</b>) → 레이어 합치기(<b>합성</b>). transform·opacity는 합성 단계만 다시 해서 가장 싸다.</p></div>
       </article>
-      <article class="item" data-id="fe-br-b-event" data-build="order" data-join=" → " data-decoys="">
-        <div class="item-h"><span class="lang">순서</span><h3>이벤트 전파 순서</h3><label class="chk"><input type="checkbox" id="k-fe-br-b-event">외움</label></div>
-        <p class="q">버튼을 클릭했을 때 이벤트가 전파되는 순서대로 놓으세요.</p>
-        <div class="ans"><ol class="steps build-answer"><li>캡처링 (위 → 아래)</li><li>타깃</li><li>버블링 (아래 → 위)</li></ol><p class="why">window에서 버튼까지 내려가며 <b>캡처링</b> → 버튼에서 <b>타깃</b> 단계 → 다시 window까지 올라가며 <b>버블링</b>. addEventListener는 기본으로 버블링 단계에서 실행되고, <code>{ capture: true }</code>를 주면 캡처링 단계.</p></div>
-      </article>
-    </div>
-    <p class="group-title">브라우저 용어</p>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th class="c"></th><th>용어</th><th>뜻</th><th>예시 · 외우는 법</th></tr></thead>
-        <tbody>
-          <tr data-id="fe-br-t-reflow"><td class="c"><input type="checkbox" id="k-fe-br-t-reflow" aria-label="외움"></td><td class="term">리플로우 / 리페인트</td><td class="ans"><b>리플로우</b>: 크기나 위치가 바뀌어 레이아웃을 다시 계산하는 것. <b>리페인트</b>: 색이나 그림자처럼 모양만 다시 칠하는 것.</td><td class="hint">리플로우: width, top, margin 변경. 리페인트: color, background 변경. 리플로우가 더 비싸다</td></tr>
-          <tr data-id="fe-br-t-script"><td class="c"><input type="checkbox" id="k-fe-br-t-script" aria-label="외움"></td><td class="term">async / defer<small>script 속성</small></td><td class="ans"><b>async</b>: 다운로드가 끝나는 즉시 HTML 파싱을 멈추고 실행하며, 실행 순서는 보장되지 않는다. <b>defer</b>: HTML 파싱이 끝난 뒤 문서에 적힌 순서대로 실행한다.</td><td class="hint">서로 의존하는 스크립트는 defer, 분석 스크립트처럼 독립된 건 async</td></tr>
-          <tr data-id="fe-br-t-deleg"><td class="c"><input type="checkbox" id="k-fe-br-t-deleg" aria-label="외움"></td><td class="term">이벤트 위임<small>Event Delegation</small></td><td class="ans">자식마다 리스너를 달지 않고 부모 하나에 달아서 event.target으로 누가 눌렸는지 구분하는 방식.</td><td class="hint">버블링 덕분에 가능. 목록 항목이 늘어나도 리스너는 하나</td></tr>
-          <tr data-id="fe-br-t-storage"><td class="c"><input type="checkbox" id="k-fe-br-t-storage" aria-label="외움"></td><td class="term">localStorage / sessionStorage / 쿠키</td><td class="ans"><b>localStorage</b>: 직접 지우기 전까지 남고, 서버로 보내지 않는다. <b>sessionStorage</b>: 탭을 닫으면 사라진다. <b>쿠키</b>: 요청할 때마다 서버로 같이 전송되고, 만료일을 정할 수 있다.</td><td class="hint">용량: 로컬·세션 스토리지 약 5MB, 쿠키 약 4KB</td></tr>
-          <tr data-id="fe-br-t-origin"><td class="c"><input type="checkbox" id="k-fe-br-t-origin" aria-label="외움"></td><td class="term">동일 출처<small>Same-Origin</small></td><td class="ans">프로토콜, 호스트, 포트가 모두 같은 것. 하나라도 다르면 다른 출처로 본다.</td><td class="hint">https://a.com 과 http://a.com 은 프로토콜이 달라서 다른 출처</td></tr>
-          <tr data-id="fe-br-t-cors"><td class="c"><input type="checkbox" id="k-fe-br-t-cors" aria-label="외움"></td><td class="term">CORS<small>Cross-Origin Resource Sharing</small></td><td class="ans">다른 출처의 리소스를 요청할 때, 서버가 응답 헤더로 허락해야 브라우저가 결과를 넘겨주는 규칙.</td><td class="hint">서버가 Access-Control-Allow-Origin 헤더를 보내야 함. 막는 건 서버가 아니라 브라우저</td></tr>
-          <tr data-id="fe-br-t-prevent"><td class="c"><input type="checkbox" id="k-fe-br-t-prevent" aria-label="외움"></td><td class="term">preventDefault</td><td class="ans">링크 이동, 폼 제출 같은 브라우저 기본 동작을 막는다.</td><td class="hint">폼 제출 막기는 preventDefault</td></tr>
-          <tr data-id="fe-br-t-stop"><td class="c"><input type="checkbox" id="k-fe-br-t-stop" aria-label="외움"></td><td class="term">stopPropagation</td><td class="ans">이벤트가 부모로 더 전파되지 않게 막는다.</td><td class="hint">부모 클릭 핸들러까지 가는 걸 막기는 stopPropagation</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="grid">
-      <article class="item" data-id="fe-br-q-origin">
-        <div class="item-h"><span class="lang">출처</span><h3>동일 출처 판단</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-origin">외움</label></div>
-        <ul class="quiz-opts" hidden data-q="https://a.com 페이지에서 다음 중 같은 출처(Same-Origin)인 것은?"><li class="ok">https://a.com/other/page</li><li>http://a.com</li><li>https://api.a.com</li><li>https://a.com:8080</li></ul>
-        <p class="q">https://a.com 페이지에서 다음 중 같은 출처(Same-Origin)인 것은?</p>
-        <div class="ans"><p>경로(/other/page)는 출처에 들어가지 않는다. <b>프로토콜</b>(http), <b>호스트</b>(api.a.com), <b>포트</b>(8080) 중 하나라도 다르면 다른 출처.</p></div>
+      <article class="item" data-id="fe-br-q-reflow">
+        <div class="item-h"><span class="lang">렌더링</span><h3>리플로우가 안 일어나는 변경</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-reflow">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="다음 중 리플로우(레이아웃 다시 계산) 없이 다시 칠하기만 하는 변경은?"><li class="ok">color를 바꾼다</li><li>width를 바꾼다</li><li>padding을 바꾼다</li><li>font-size를 바꾼다</li></ul>
+        <p class="q">다음 중 리플로우(레이아웃 다시 계산) 없이 다시 칠하기만 하는 변경은?</p>
+        <div class="ans"><p>크기나 위치에 영향을 주는 속성(width, padding, font-size, margin, top…)은 <b>리플로우</b>를 일으킨다. color, background-color처럼 모양만 바꾸는 속성은 <b>리페인트</b>만 한다. transform·opacity는 합성 단계만 다시 해서 더 싸다.</p></div>
       </article>
       <article class="item" data-id="fe-br-q-anim">
         <div class="item-h"><span class="lang">성능</span><h3>애니메이션 속성</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-anim">외움</label></div>
@@ -410,12 +521,89 @@ console.log(&#x27;end&#x27;);</pre>
         <p class="q">다음 중 리플로우 없이 처리돼 애니메이션에 가장 좋은 속성은?</p>
         <div class="ans"><p>transform과 opacity는 레이아웃·페인트를 건너뛰고 <b>합성</b> 단계만 다시 해서 부드럽다. width·top·margin은 바꿀 때마다 리플로우가 일어난다.</p></div>
       </article>
-      <article class="item" data-id="fe-br-q-load">
-        <div class="item-h"><span class="lang">이벤트</span><h3>DOMContentLoaded vs load</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-load">외움</label></div>
-        <ul class="quiz-opts" hidden data-q="DOMContentLoaded와 load에 대한 설명으로 맞는 것은?"><li class="ok">DOMContentLoaded는 HTML 파싱이 끝나면, load는 이미지·CSS까지 다 받으면 발생한다</li><li>load는 HTML 파싱이 끝나면, DOMContentLoaded는 이미지까지 다 받으면 발생한다</li><li>둘은 항상 같은 시점에 발생한다</li><li>DOMContentLoaded는 이미지가 다 떠야 발생한다</li></ul>
-        <p class="q">DOMContentLoaded와 load에 대한 설명으로 맞는 것은?</p>
-        <div class="ans"><p><b>DOMContentLoaded</b>: DOM이 다 만들어진 시점 (defer 스크립트 실행 뒤). <b>load</b>: 이미지, 스타일시트 같은 모든 리소스까지 받은 시점. 보통 DOMContentLoaded가 먼저.</p></div>
+      <article class="item" data-id="fe-br-q-script">
+        <div class="item-h"><span class="lang">script</span><h3>스크립트 불러오기</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-script">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="lib.js와 그걸 쓰는 app.js를 순서대로 실행하면서, HTML 파싱은 막지 않으려면?"><li class="ok">둘 다 defer</li><li>둘 다 async</li><li>속성 없이 head에 둔다</li><li>app.js에만 async</li></ul>
+        <ul class="quiz-opts" hidden data-q="다른 코드와 상관없는 분석 스크립트를 다운로드되는 대로 바로 실행해도 된다. 가장 알맞은 것은?"><li class="ok">async</li><li>defer</li><li>속성 없이 head에 둔다</li><li>body 맨 위에 둔다</li></ul>
+        <p class="q">lib.js와 그걸 쓰는 app.js를 순서대로 실행하면서, HTML 파싱은 막지 않으려면?</p>
+        <div class="ans"><p><b>defer</b>: 파싱을 막지 않고 받아 두었다가 <b>파싱이 끝난 뒤 적힌 순서대로</b> 실행. <b>async</b>: 파싱을 막지 않고 받지만 <b>다 받는 즉시</b> 실행하므로 순서가 보장되지 않는다. 속성 없는 script는 받고 실행하는 동안 파싱을 멈춘다.</p></div>
       </article>
+      <article class="item" data-id="fe-br-q-load">
+        <div class="item-h"><span class="lang">이벤트</span><h3>페이지 로딩 이벤트</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-load">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="이미지가 다 뜨기 전이라도 DOM이 준비되면 바로 버튼에 이벤트를 달고 싶다. 어떤 이벤트를 기다릴까?"><li class="ok">DOMContentLoaded</li><li>load</li><li>pageshow</li><li>readystatechange의 complete</li></ul>
+        <p class="q">이미지가 다 뜨기 전이라도 DOM이 준비되면 바로 버튼에 이벤트를 달고 싶다. 어떤 이벤트를 기다릴까?</p>
+        <div class="ans"><p><b>DOMContentLoaded</b>: HTML을 다 읽어 DOM이 만들어진 시점 (defer 스크립트 실행 뒤). <b>load</b>: 이미지, 스타일시트 같은 리소스까지 모두 받은 시점이라 더 늦다. readyState가 complete가 되는 것도 load와 같은 때다.</p></div>
+      </article>
+      <article class="item" data-id="fe-br-b-event" data-build="order" data-join=" → " data-decoys="">
+        <div class="item-h"><span class="lang">순서</span><h3>이벤트 전파 순서</h3><label class="chk"><input type="checkbox" id="k-fe-br-b-event">외움</label></div>
+        <p class="q">버튼을 클릭했을 때 이벤트가 전파되는 순서대로 놓으세요.</p>
+        <div class="ans"><ol class="steps build-answer"><li>캡처링 (위 → 아래)</li><li>타깃</li><li>버블링 (아래 → 위)</li></ol><p class="why">window에서 버튼까지 내려가며 <b>캡처링</b> → 버튼에서 <b>타깃</b> 단계 → 다시 window까지 올라가며 <b>버블링</b>. addEventListener는 기본으로 버블링 단계에서 실행되고, <code>{ capture: true }</code>를 주면 캡처링 단계.</p></div>
+      </article>
+      <article class="item" data-id="fe-br-q-target">
+        <div class="item-h"><span class="lang">이벤트</span><h3>target과 currentTarget</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-target">외움</label></div>
+<pre>&lt;ul id=&quot;list&quot;&gt;
+  &lt;li&gt;&lt;span&gt;사과&lt;/span&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+list.addEventListener(&#x27;click&#x27;, (e) =&gt; {
+  console.log(
+    e.target.tagName,
+    e.currentTarget.tagName
+  );
+});</pre>
+        <ul class="quiz-opts" hidden data-q="span을 클릭하면 출력은?"><li class="ok">SPAN UL</li><li>UL SPAN</li><li>LI UL</li><li>SPAN LI</li></ul>
+        <p class="q">span을 클릭하면 출력은?</p>
+        <div class="ans"><p><b>target</b>은 실제로 클릭된 가장 안쪽 요소(span), <b>currentTarget</b>은 지금 실행 중인 리스너가 달린 요소(ul). 이벤트 위임에서 누가 눌렸는지는 target으로, 보통 <code>e.target.closest('li')</code>로 항목을 찾는다.</p></div>
+      </article>
+      <article class="item" data-id="fe-br-q-prevent">
+        <div class="item-h"><span class="lang">이벤트</span><h3>폼 제출과 새로고침</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-prevent">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="addEventListener로 단 폼 submit 핸들러에서 페이지 새로고침을 막으려면?"><li class="ok">e.preventDefault()</li><li>e.stopPropagation()</li><li>return false</li><li>e.stopImmediatePropagation()</li></ul>
+        <p class="q">addEventListener로 단 폼 submit 핸들러에서 페이지 새로고침을 막으려면?</p>
+        <div class="ans"><p><b>preventDefault</b>는 브라우저 기본 동작(폼 제출, 링크 이동)을 막는다. stopPropagation 계열은 <b>전파</b>만 막고 기본 동작은 그대로 일어난다. <code>return false</code>는 onsubmit 같은 속성 핸들러에서만 통하고 addEventListener에서는 아무 효과가 없다.</p></div>
+      </article>
+      <article class="item" data-id="fe-br-q-stop">
+        <div class="item-h"><span class="lang">이벤트</span><h3>모달 바깥 클릭</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-stop">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="모달 안을 클릭해도 바깥 배경에 달린 &quot;닫기&quot; 클릭 핸들러가 실행되지 않게 하려면?"><li class="ok">모달 안 클릭에서 e.stopPropagation()</li><li>모달 안 클릭에서 e.preventDefault()</li><li>배경 리스너를 capture: true로 단다</li><li>모달에 pointer-events: none을 준다</li></ul>
+        <p class="q">모달 안을 클릭해도 바깥 배경에 달린 &quot;닫기&quot; 클릭 핸들러가 실행되지 않게 하려면?</p>
+        <div class="ans"><p>모달은 배경 안에 있어서 클릭이 <b>버블링</b>으로 배경까지 올라간다. 모달에서 <b>stopPropagation</b>하면 배경 핸들러까지 가지 않는다. capture로 달면 배경 핸들러가 오히려 먼저 실행되고, pointer-events: none이면 모달 안을 아예 클릭할 수 없다. (배경 핸들러에서 <code>e.target === e.currentTarget</code>일 때만 닫는 방법도 있다.)</p></div>
+      </article>
+      <article class="item" data-id="fe-br-q-origin">
+        <div class="item-h"><span class="lang">출처</span><h3>동일 출처 판단</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-origin">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="https://a.com 페이지에서 다음 중 같은 출처(Same-Origin)인 것은?"><li class="ok">https://a.com/other/page</li><li>http://a.com</li><li>https://api.a.com</li><li>https://a.com:8080</li></ul>
+        <p class="q">https://a.com 페이지에서 다음 중 같은 출처(Same-Origin)인 것은?</p>
+        <div class="ans"><p>경로(/other/page)는 출처에 들어가지 않는다. <b>프로토콜</b>(http), <b>호스트</b>(api.a.com), <b>포트</b>(8080) 중 하나라도 다르면 다른 출처.</p></div>
+      </article>
+      <article class="item" data-id="fe-br-q-cors">
+        <div class="item-h"><span class="lang">CORS</span><h3>CORS 에러 고치기</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-cors">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="localhost:3000에서 api.shop.com으로 fetch했더니 CORS 에러가 났다. 고쳐야 할 곳은?"><li class="ok">API 서버의 응답 헤더 (Access-Control-Allow-Origin)</li><li>fetch 옵션에 mode: &quot;no-cors&quot;를 넣는다</li><li>요청 헤더에 Origin을 직접 넣는다</li><li>브라우저의 보안 설정</li></ul>
+        <ul class="quiz-opts" hidden data-q="fetch로 Content-Type: application/json인 POST를 보내면, 본 요청 전에 브라우저가 먼저 보내는 요청은?"><li class="ok">OPTIONS</li><li>HEAD</li><li>GET</li><li>없다. 바로 POST를 보낸다</li></ul>
+        <p class="q">localhost:3000에서 api.shop.com으로 fetch했더니 CORS 에러가 났다. 고쳐야 할 곳은?</p>
+        <div class="ans"><p>CORS는 <b>서버가 허락한 출처인지 브라우저가 확인</b>하는 규칙이라, 서버가 <code>Access-Control-Allow-Origin</code>으로 허락해야 풀린다. no-cors는 에러만 숨기고 응답 내용을 읽을 수 없게 만든다. JSON POST처럼 "단순 요청"이 아니면 브라우저가 <b>OPTIONS</b>로 먼저 물어보는 <b>preflight</b>를 보낸다.</p></div>
+      </article>
+      <article class="item" data-id="fe-br-q-storage">
+        <div class="item-h"><span class="lang">저장소</span><h3>어디에 저장할까</h3><label class="chk"><input type="checkbox" id="k-fe-br-q-storage">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="로그인 세션 id처럼 서버가 요청마다 받아야 하는 값은?"><li class="ok">쿠키</li><li>localStorage</li><li>sessionStorage</li><li>자바스크립트 변수</li></ul>
+        <ul class="quiz-opts" hidden data-q="작성 중인 글을 임시로 저장하되, 탭을 닫으면 버려도 된다."><li class="ok">sessionStorage</li><li>localStorage</li><li>쿠키</li><li>자바스크립트 변수</li></ul>
+        <ul class="quiz-opts" hidden data-q="다크 모드 설정처럼 브라우저를 껐다 켜도 남아야 하고, 서버는 몰라도 되는 값은?"><li class="ok">localStorage</li><li>sessionStorage</li><li>쿠키</li><li>자바스크립트 변수</li></ul>
+        <p class="q">로그인 세션 id처럼 서버가 요청마다 받아야 하는 값은?</p>
+        <div class="ans"><p><b>쿠키</b>: 요청마다 서버로 자동 전송 (약 4KB). <b>localStorage</b>: 지우기 전까지 남고 서버로 안 감. <b>sessionStorage</b>: 탭을 닫으면 사라짐. 자바스크립트 변수는 새로고침만 해도 사라진다.</p></div>
+      </article>
+    </div>
+    <p class="group-title">브라우저 용어</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="c"></th><th>용어</th><th>뜻</th><th>예시 · 외우는 법</th></tr></thead>
+        <tbody>
+          <tr data-id="fe-br-t-reflow" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-br-t-reflow" aria-label="외움"></td><td class="term">리플로우 / 리페인트</td><td class="ans"><b>리플로우</b>: 크기나 위치가 바뀌어 레이아웃을 다시 계산하는 것. <b>리페인트</b>: 색이나 그림자처럼 모양만 다시 칠하는 것.</td><td class="hint">리플로우: width, top, margin 변경. 리페인트: color, background 변경. 리플로우가 더 비싸다</td></tr>
+          <tr data-id="fe-br-t-script" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-br-t-script" aria-label="외움"></td><td class="term">async / defer<small>script 속성</small></td><td class="ans"><b>async</b>: 다운로드가 끝나는 즉시 HTML 파싱을 멈추고 실행하며, 실행 순서는 보장되지 않는다. <b>defer</b>: HTML 파싱이 끝난 뒤 문서에 적힌 순서대로 실행한다.</td><td class="hint">서로 의존하는 스크립트는 defer, 분석 스크립트처럼 독립된 건 async</td></tr>
+          <tr data-id="fe-br-t-deleg" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-br-t-deleg" aria-label="외움"></td><td class="term">이벤트 위임<small>Event Delegation</small></td><td class="ans">자식마다 리스너를 달지 않고 부모 하나에 달아서 event.target으로 누가 눌렸는지 구분하는 방식.</td><td class="hint">버블링 덕분에 가능. 목록 항목이 늘어나도 리스너는 하나</td></tr>
+          <tr data-id="fe-br-t-storage" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-br-t-storage" aria-label="외움"></td><td class="term">localStorage / sessionStorage / 쿠키</td><td class="ans"><b>localStorage</b>: 직접 지우기 전까지 남고, 서버로 보내지 않는다. <b>sessionStorage</b>: 탭을 닫으면 사라진다. <b>쿠키</b>: 요청할 때마다 서버로 같이 전송되고, 만료일을 정할 수 있다.</td><td class="hint">용량: 로컬·세션 스토리지 약 5MB, 쿠키 약 4KB</td></tr>
+          <tr data-id="fe-br-t-origin" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-br-t-origin" aria-label="외움"></td><td class="term">동일 출처<small>Same-Origin</small></td><td class="ans">프로토콜, 호스트, 포트가 모두 같은 것. 하나라도 다르면 다른 출처로 본다.</td><td class="hint">https://a.com 과 http://a.com 은 프로토콜이 달라서 다른 출처</td></tr>
+          <tr data-id="fe-br-t-cors" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-br-t-cors" aria-label="외움"></td><td class="term">CORS<small>Cross-Origin Resource Sharing</small></td><td class="ans">다른 출처의 리소스를 요청할 때, 서버가 응답 헤더로 허락해야 브라우저가 결과를 넘겨주는 규칙.</td><td class="hint">서버가 Access-Control-Allow-Origin 헤더를 보내야 함. 막는 건 서버가 아니라 브라우저</td></tr>
+          <tr data-id="fe-br-t-prevent" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-br-t-prevent" aria-label="외움"></td><td class="term">preventDefault</td><td class="ans">링크 이동, 폼 제출 같은 브라우저 기본 동작을 막는다.</td><td class="hint">폼 제출 막기는 preventDefault</td></tr>
+          <tr data-id="fe-br-t-stop" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-br-t-stop" aria-label="외움"></td><td class="term">stopPropagation</td><td class="ans">이벤트가 부모로 더 전파되지 않게 막는다.</td><td class="hint">부모 클릭 핸들러까지 가는 걸 막기는 stopPropagation</td></tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
@@ -425,22 +613,30 @@ console.log(&#x27;end&#x27;);</pre>
       <h2>CSS</h2>
       <p>박스 모델, 명시도, position, 단위처럼 레이아웃이 깨질 때 원인이 되는 것들입니다.</p>
     </div>
-    <p class="group-title">CSS 용어</p>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th class="c"></th><th>용어</th><th>뜻</th><th>예시 · 외우는 법</th></tr></thead>
-        <tbody>
-          <tr data-id="fe-css-t-box"><td class="c"><input type="checkbox" id="k-fe-css-t-box" aria-label="외움"></td><td class="term">content-box / border-box<small>box-sizing</small></td><td class="ans"><b>content-box</b>: width가 내용 영역만 뜻하고, padding과 border는 바깥에 더해진다 (기본값). <b>border-box</b>: width 안에 padding과 border까지 포함된다.</td><td class="hint">width: 100px, padding: 10px이면 content-box는 실제 120px, border-box는 100px</td></tr>
-          <tr data-id="fe-css-t-pos"><td class="c"><input type="checkbox" id="k-fe-css-t-pos" aria-label="외움"></td><td class="term">static / relative / absolute / fixed / sticky<small>position</small></td><td class="ans"><b>static</b>: 기본값, 문서 흐름대로 놓이고 top 같은 값은 무시한다. <b>relative</b>: 원래 자리를 기준으로 옮기고, 원래 자리는 그대로 차지한다. <b>absolute</b>: position이 있는 가장 가까운 조상을 기준으로 놓이고, 흐름에서 빠진다. <b>fixed</b>: 화면(뷰포트)을 기준으로 고정된다. <b>sticky</b>: 스크롤하다 정한 위치에 닿으면 그 자리에 붙는다.</td><td class="hint">absolute의 기준을 잡으려고 부모에 position: relative를 준다</td></tr>
-          <tr data-id="fe-css-t-unit"><td class="c"><input type="checkbox" id="k-fe-css-t-unit" aria-label="외움"></td><td class="term">em / rem<small>단위</small></td><td class="ans"><b>em</b>: font-size에 쓰면 부모 글자 크기, 다른 속성에 쓰면 자기 글자 크기를 기준으로 한다. <b>rem</b>: 루트(html) 글자 크기를 기준으로 한다.</td><td class="hint">중첩될수록 em은 곱해져서 커지고, rem은 항상 같다</td></tr>
-          <tr data-id="fe-css-t-justify"><td class="c"><input type="checkbox" id="k-fe-css-t-justify" aria-label="외움"></td><td class="term">justify-content<small>Flexbox</small></td><td class="ans">주축(flex-direction 방향)을 따라 정렬한다.</td><td class="hint">flex-direction: row면 가로 정렬</td></tr>
-          <tr data-id="fe-css-t-align"><td class="c"><input type="checkbox" id="k-fe-css-t-align" aria-label="외움"></td><td class="term">align-items<small>Flexbox</small></td><td class="ans">주축과 직각인 교차축을 따라 정렬한다.</td><td class="hint">flex-direction: row면 세로 정렬. column이면 반대</td></tr>
-          <tr data-id="fe-css-t-z"><td class="c"><input type="checkbox" id="k-fe-css-t-z" aria-label="외움"></td><td class="term">쌓임 맥락<small>Stacking Context</small></td><td class="ans">안에 든 요소끼리만 z-index를 비교하는 독립된 층. z-index는 같은 쌓임 맥락 안에서만 비교되고, opacity가 1보다 작거나 transform이 있으면 새 쌓임 맥락이 생긴다.</td><td class="hint">z-index를 9999로 줘도 안 올라오면 부모의 쌓임 맥락을 의심</td></tr>
-          <tr data-id="fe-css-t-spec"><td class="c"><input type="checkbox" id="k-fe-css-t-spec" aria-label="외움"></td><td class="term">명시도<small>Specificity</small></td><td class="ans">같은 요소에 규칙이 겹칠 때 어느 것이 이길지 정하는 점수. (ID 개수, 클래스·속성·가상 클래스 개수, 태그 개수) 순서로 비교한다.</td><td class="hint">인라인 스타일이 더 세고, !important는 그보다도 세다</td></tr>
-        </tbody>
-      </table>
-    </div>
     <div class="grid">
+      <article class="item" data-id="fe-css-q-box">
+        <div class="item-h"><span class="lang">박스 모델</span><h3>박스 너비 계산</h3><label class="chk"><input type="checkbox" id="k-fe-css-q-box">외움</label></div>
+<pre>.box {
+  width: 200px;
+  padding: 20px;
+  border: 5px solid;
+}</pre>
+        <ul class="quiz-opts" hidden data-q="box-sizing이 기본값(content-box)일 때, 이 요소가 차지하는 가로 너비는?"><li class="ok">250px</li><li>200px</li><li>240px</li><li>210px</li></ul>
+        <ul class="quiz-opts" hidden data-q="이 요소에 box-sizing: border-box를 더하면 차지하는 가로 너비는?"><li class="ok">200px</li><li>250px</li><li>150px</li><li>240px</li></ul>
+        <p class="q">box-sizing이 기본값(content-box)일 때, 이 요소가 차지하는 가로 너비는?</p>
+        <div class="ans"><p><b>content-box</b>: width는 내용 영역만 → 200 + 패딩 20×2 + 테두리 5×2 = <b>250px</b>. <b>border-box</b>: width 안에 패딩과 테두리가 들어가서 차지하는 너비는 <b>200px</b> (내용 영역이 150px로 줄어든다).</p></div>
+      </article>
+      <article class="item" data-id="fe-css-q-collapse">
+        <div class="item-h"><span class="lang">마진</span><h3>블록 사이 간격</h3><label class="chk"><input type="checkbox" id="k-fe-css-q-collapse">외움</label></div>
+<pre>.a { margin-bottom: 20px; }
+.b { margin-top: 30px; }
+
+&lt;div class=&quot;a&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;b&quot;&gt;&lt;/div&gt;</pre>
+        <ul class="quiz-opts" hidden data-q="위아래로 붙은 두 블록 사이의 간격은?"><li class="ok">30px</li><li>50px</li><li>20px</li><li>10px</li></ul>
+        <p class="q">위아래로 붙은 두 블록 사이의 간격은?</p>
+        <div class="ans"><p>세로로 맞닿은 블록의 위아래 마진은 더해지지 않고 <b>큰 쪽 하나만 남는다</b>(마진 상쇄). 그래서 30px. flex나 grid 안의 자식끼리는 상쇄가 일어나지 않는다.</p></div>
+      </article>
       <article class="item" data-id="fe-css-q-spec">
         <div class="item-h"><span class="lang">명시도</span><h3>명시도 계산</h3><label class="chk"><input type="checkbox" id="k-fe-css-q-spec">외움</label></div>
         <ul class="quiz-opts" hidden data-q="#main .card p 의 명시도(ID, 클래스, 태그)는?"><li class="ok">(1, 1, 1)</li><li>(1, 0, 2)</li><li>(0, 2, 1)</li><li>(1, 1, 0)</li></ul>
@@ -448,19 +644,87 @@ console.log(&#x27;end&#x27;);</pre>
         <p class="q">#main .card p 의 명시도(ID, 클래스, 태그)는?</p>
         <div class="ans"><p>#main(ID 1) + .card(클래스 1) + p(태그 1) = <b>(1, 1, 1)</b>. 비교는 앞자리부터: ID가 하나라도 있으면 클래스가 몇 개든 이긴다. #nav .item = (1, 1, 0)이 가장 높다.</p></div>
       </article>
+      <article class="item" data-id="fe-css-q-important">
+        <div class="item-h"><span class="lang">명시도</span><h3>!important와 ID</h3><label class="chk"><input type="checkbox" id="k-fe-css-q-important">외움</label></div>
+<pre>#title { color: red; }
+.title { color: blue !important; }
+
+&lt;h1 id=&quot;title&quot; class=&quot;title&quot;&gt;안녕&lt;/h1&gt;</pre>
+        <ul class="quiz-opts" hidden data-q="두 규칙이 같은 h1에 걸리면 글자색은?"><li class="ok">blue</li><li>red</li><li>나중에 적힌 규칙의 색</li><li>기본 글자색 (둘 다 무시)</li></ul>
+        <p class="q">두 규칙이 같은 h1에 걸리면 글자색은?</p>
+        <div class="ans"><p><b>!important</b>가 붙은 선언은 명시도와 상관없이 일반 선언보다 먼저 이긴다. ID 선택자(1,0,0)가 클래스(0,1,0)보다 세도 !important 앞에서는 진다. 그래서 !important는 되도록 쓰지 않는다.</p></div>
+      </article>
       <article class="item" data-id="fe-css-q-unit">
         <div class="item-h"><span class="lang">단위</span><h3>em과 rem 계산</h3><label class="chk"><input type="checkbox" id="k-fe-css-q-unit">외움</label></div>
         <ul class="quiz-opts" hidden data-q="html은 16px, 부모는 20px일 때 자식의 font-size: 1.5em은 몇 px일까?"><li class="ok">30px</li><li>24px</li><li>20px</li><li>36px</li></ul>
-        <ul class="quiz-opts" hidden data-q="같은 상황에서 자식의 font-size: 1.5rem은 몇 px일까?"><li class="ok">24px</li><li>30px</li><li>20px</li><li>16px</li></ul>
+        <ul class="quiz-opts" hidden data-q="html은 16px, 부모는 20px일 때 자식의 font-size: 1.5rem은 몇 px일까?"><li class="ok">24px</li><li>30px</li><li>20px</li><li>16px</li></ul>
         <p class="q">html은 16px, 부모는 20px일 때 자식의 font-size: 1.5em은 몇 px일까?</p>
         <div class="ans"><p>font-size의 em은 <b>부모 글자 크기</b> 기준: 20 × 1.5 = <b>30px</b>. rem은 <b>html 글자 크기</b> 기준: 16 × 1.5 = <b>24px</b>.</p></div>
       </article>
-      <article class="item" data-id="fe-css-q-hide">
-        <div class="item-h"><span class="lang">CSS</span><h3>숨기기 방법</h3><label class="chk"><input type="checkbox" id="k-fe-css-q-hide">외움</label></div>
-        <ul class="quiz-opts" hidden data-q="요소를 안 보이게 하면서 자리는 그대로 차지하게 하려면?"><li class="ok">visibility: hidden</li><li>display: none</li><li>position: absolute</li><li>content: none</li></ul>
-        <p class="q">요소를 안 보이게 하면서 자리는 그대로 차지하게 하려면?</p>
-        <div class="ans"><p><b>visibility: hidden</b>은 보이지만 않고 자리를 차지한다. <b>display: none</b>은 자리까지 없어져서 주변 요소가 당겨진다(리플로우). opacity: 0은 자리도 차지하고 클릭도 받는다.</p></div>
+      <article class="item" data-id="fe-css-q-absolute">
+        <div class="item-h"><span class="lang">position</span><h3>absolute의 기준</h3><label class="chk"><input type="checkbox" id="k-fe-css-q-absolute">외움</label></div>
+<pre>.page  { position: relative; }
+.badge { position: absolute;
+         top: 0; right: 0; }
+
+&lt;div class=&quot;page&quot;&gt;
+  &lt;div class=&quot;card&quot;&gt;
+    &lt;span class=&quot;badge&quot;&gt;&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre>
+        <ul class="quiz-opts" hidden data-q=".badge는 어느 요소의 오른쪽 위에 붙을까?"><li class="ok">.page</li><li>.card</li><li>화면(뷰포트)</li><li>원래 자리 그대로</li></ul>
+        <p class="q">.badge는 어느 요소의 오른쪽 위에 붙을까?</p>
+        <div class="ans"><p>absolute는 <b>position이 static이 아닌 가장 가까운 조상</b>을 기준으로 놓인다. .card는 position이 없어서(static) 건너뛰고 .page가 기준. .card에 붙이려면 .card에 <code>position: relative</code>를 준다.</p></div>
       </article>
+      <article class="item" data-id="fe-css-q-sticky">
+        <div class="item-h"><span class="lang">position</span><h3>sticky가 안 붙을 때</h3><label class="chk"><input type="checkbox" id="k-fe-css-q-sticky">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="position: sticky를 줬는데 스크롤해도 붙지 않는다. 가장 흔한 원인은?"><li class="ok">top 같은 붙을 위치 값을 안 줬다</li><li>z-index를 안 줬다</li><li>display: block이 아니다</li><li>width를 안 줬다</li></ul>
+        <p class="q">position: sticky를 줬는데 스크롤해도 붙지 않는다. 가장 흔한 원인은?</p>
+        <div class="ans"><p>sticky는 <code>top: 0</code>처럼 <b>어디에 붙을지</b>를 줘야 동작한다. 그다음으로 흔한 원인은 조상에 <code>overflow: hidden</code>이 있거나, 부모 높이가 sticky 요소만큼밖에 안 돼서 움직일 공간이 없는 경우다.</p></div>
+      </article>
+      <article class="item" data-id="fe-css-q-flexcol">
+        <div class="item-h"><span class="lang">Flexbox</span><h3>column일 때 가운데 정렬</h3><label class="chk"><input type="checkbox" id="k-fe-css-q-flexcol">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="flex-direction: column인 컨테이너에서 자식들을 가로 가운데로 모으려면?"><li class="ok">align-items: center</li><li>justify-content: center</li><li>text-align: center</li><li>align-content: center</li></ul>
+        <p class="q">flex-direction: column인 컨테이너에서 자식들을 가로 가운데로 모으려면?</p>
+        <div class="ans"><p>justify-content는 <b>주축</b>, align-items는 <b>교차축</b>을 정렬한다. column이면 주축이 세로라서 가로 정렬은 교차축, 즉 <b>align-items</b>. justify-content: center는 세로 가운데가 된다.</p></div>
+      </article>
+      <article class="item" data-id="fe-css-q-stack">
+        <div class="item-h"><span class="lang">쌓임 맥락</span><h3>z-index 9999가 안 먹을 때</h3><label class="chk"><input type="checkbox" id="k-fe-css-q-stack">외움</label></div>
+<pre>/* .modal은 .wrap 안, .header는 밖 */
+.wrap {
+  position: relative; z-index: 1;
+}
+.modal {
+  position: fixed; z-index: 9999;
+}
+.header {
+  position: sticky; z-index: 10;
+}</pre>
+        <ul class="quiz-opts" hidden data-q="모달(z-index 9999)이 헤더(z-index 10) 밑에 깔린다. 원인은?"><li class="ok">.wrap이 z-index 1로 쌓임 맥락을 만들어서</li><li>fixed 요소에는 z-index가 적용되지 않아서</li><li>z-index는 999까지만 적용돼서</li><li>sticky 요소는 항상 맨 위에 그려져서</li></ul>
+        <p class="q">모달(z-index 9999)이 헤더(z-index 10) 밑에 깔린다. 원인은?</p>
+        <div class="ans"><p>.wrap이 <code>position + z-index</code>로 <b>새 쌓임 맥락</b>을 만들었다. 모달의 9999는 .wrap <b>안에서만</b> 비교되고, 바깥에서는 .wrap 전체가 z-index 1로 헤더(10)와 비교된다. 모달을 .wrap 밖(body 끝, React의 portal)으로 빼면 해결된다.</p></div>
+      </article>
+      <article class="item" data-id="fe-css-q-hide2">
+        <div class="item-h"><span class="lang">CSS</span><h3>숨기기 방법</h3><label class="chk"><input type="checkbox" id="k-fe-css-q-hide2">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="요소를 안 보이게 하되 자리는 그대로 차지하고, 클릭도 받지 않게 하려면?"><li class="ok">visibility: hidden</li><li>opacity: 0</li><li>display: none</li><li>height: 0</li></ul>
+        <p class="q">요소를 안 보이게 하되 자리는 그대로 차지하고, 클릭도 받지 않게 하려면?</p>
+        <div class="ans"><p><b>visibility: hidden</b>: 자리를 차지하고 클릭도 안 받는다. <b>opacity: 0</b>: 자리를 차지하지만 <b>클릭은 받는다</b>(보이지 않는 버튼이 눌리는 버그의 원인). <b>display: none</b>: 자리까지 사라진다.</p></div>
+      </article>
+    </div>
+    <p class="group-title">CSS 용어</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="c"></th><th>용어</th><th>뜻</th><th>예시 · 외우는 법</th></tr></thead>
+        <tbody>
+          <tr data-id="fe-css-t-box" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-css-t-box" aria-label="외움"></td><td class="term">content-box / border-box<small>box-sizing</small></td><td class="ans"><b>content-box</b>: width가 내용 영역만 뜻하고, padding과 border는 바깥에 더해진다 (기본값). <b>border-box</b>: width 안에 padding과 border까지 포함된다.</td><td class="hint">width: 100px, padding: 10px이면 content-box는 실제 120px, border-box는 100px</td></tr>
+          <tr data-id="fe-css-t-pos" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-css-t-pos" aria-label="외움"></td><td class="term">static / relative / absolute / fixed / sticky<small>position</small></td><td class="ans"><b>static</b>: 기본값, 문서 흐름대로 놓이고 top 같은 값은 무시한다. <b>relative</b>: 원래 자리를 기준으로 옮기고, 원래 자리는 그대로 차지한다. <b>absolute</b>: position이 있는 가장 가까운 조상을 기준으로 놓이고, 흐름에서 빠진다. <b>fixed</b>: 화면(뷰포트)을 기준으로 고정된다. <b>sticky</b>: 스크롤하다 정한 위치에 닿으면 그 자리에 붙는다.</td><td class="hint">absolute의 기준을 잡으려고 부모에 position: relative를 준다</td></tr>
+          <tr data-id="fe-css-t-unit" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-css-t-unit" aria-label="외움"></td><td class="term">em / rem<small>단위</small></td><td class="ans"><b>em</b>: font-size에 쓰면 부모 글자 크기, 다른 속성에 쓰면 자기 글자 크기를 기준으로 한다. <b>rem</b>: 루트(html) 글자 크기를 기준으로 한다.</td><td class="hint">중첩될수록 em은 곱해져서 커지고, rem은 항상 같다</td></tr>
+          <tr data-id="fe-css-t-justify" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-css-t-justify" aria-label="외움"></td><td class="term">justify-content<small>Flexbox</small></td><td class="ans">주축(flex-direction 방향)을 따라 정렬한다.</td><td class="hint">flex-direction: row면 가로 정렬</td></tr>
+          <tr data-id="fe-css-t-align" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-css-t-align" aria-label="외움"></td><td class="term">align-items<small>Flexbox</small></td><td class="ans">주축과 직각인 교차축을 따라 정렬한다.</td><td class="hint">flex-direction: row면 세로 정렬. column이면 반대</td></tr>
+          <tr data-id="fe-css-t-z" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-css-t-z" aria-label="외움"></td><td class="term">쌓임 맥락<small>Stacking Context</small></td><td class="ans">안에 든 요소끼리만 z-index를 비교하는 독립된 층. z-index는 같은 쌓임 맥락 안에서만 비교되고, opacity가 1보다 작거나 transform이 있으면 새 쌓임 맥락이 생긴다.</td><td class="hint">z-index를 9999로 줘도 안 올라오면 부모의 쌓임 맥락을 의심</td></tr>
+          <tr data-id="fe-css-t-spec" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-css-t-spec" aria-label="외움"></td><td class="term">명시도<small>Specificity</small></td><td class="ans">같은 요소에 규칙이 겹칠 때 어느 것이 이길지 정하는 점수. (ID 개수, 클래스·속성·가상 클래스 개수, 태그 개수) 순서로 비교한다.</td><td class="hint">인라인 스타일이 더 세고, !important는 그보다도 세다</td></tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
@@ -469,20 +733,6 @@ console.log(&#x27;end&#x27;);</pre>
       <span class="sub">PART 5</span>
       <h2>React</h2>
       <p>상태 업데이트, 렌더링, useEffect, key처럼 React에서 실수가 가장 잦은 부분입니다. React 18 기준입니다.</p>
-    </div>
-    <p class="group-title">React 용어</p>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th class="c"></th><th>용어</th><th>뜻</th><th>예시 · 외우는 법</th></tr></thead>
-        <tbody>
-          <tr data-id="fe-re-t-vdom"><td class="c"><input type="checkbox" id="k-fe-re-t-vdom" aria-label="외움"></td><td class="term">가상 DOM / 재조정</td><td class="ans"><b>가상 DOM</b>: 실제 DOM을 흉내 낸 가벼운 JS 객체 트리. <b>재조정</b>: 새 렌더링 결과를 이전 결과와 비교(diff)해서 바뀐 부분만 실제 DOM에 반영하는 과정.</td><td class="hint">재조정은 Reconciliation. 같은 자리의 같은 타입이면 재사용, 타입이 다르면 새로 만든다</td></tr>
-          <tr data-id="fe-re-t-key"><td class="c"><input type="checkbox" id="k-fe-re-t-key" aria-label="외움"></td><td class="term">key</td><td class="ans">목록에서 각 항목을 구별하는 값. 바뀌지 않는 고유한 값(id)을 써야 React가 항목을 제대로 재사용한다.</td><td class="hint">index를 key로 쓰면 순서가 바뀔 때 입력값 같은 상태가 엉뚱한 항목에 붙는다</td></tr>
-          <tr data-id="fe-re-t-props"><td class="c"><input type="checkbox" id="k-fe-re-t-props" aria-label="외움"></td><td class="term">props / state</td><td class="ans"><b>props</b>: 부모가 내려주는 값으로, 자식은 바꿀 수 없다. <b>state</b>: 컴포넌트가 스스로 가지는 값으로, 바꾸면 다시 렌더링된다.</td><td class="hint">props가 바뀌거나 state가 바뀌면 다시 렌더링</td></tr>
-          <tr data-id="fe-re-t-memo"><td class="c"><input type="checkbox" id="k-fe-re-t-memo" aria-label="외움"></td><td class="term">useMemo / useCallback</td><td class="ans"><b>useMemo</b>: 계산한 결과 값을 기억해 두고, 의존성이 바뀔 때만 다시 계산한다. <b>useCallback</b>: 함수 자체를 기억해 두고, 의존성이 바뀔 때만 새로 만든다.</td><td class="hint">React.memo로 감싼 자식에 함수를 넘길 때 useCallback이 쓸모 있다</td></tr>
-          <tr data-id="fe-re-t-control"><td class="c"><input type="checkbox" id="k-fe-re-t-control" aria-label="외움"></td><td class="term">제어 컴포넌트 / 비제어 컴포넌트</td><td class="ans"><b>제어 컴포넌트</b>: input 값을 state로 관리한다 (value + onChange). <b>비제어 컴포넌트</b>: 값은 DOM이 가지고 있고, 필요할 때 ref로 읽는다.</td><td class="hint">입력할 때마다 검사해야 하면 제어, 제출할 때만 읽으면 비제어</td></tr>
-          <tr data-id="fe-re-t-ref"><td class="c"><input type="checkbox" id="k-fe-re-t-ref" aria-label="외움"></td><td class="term">useRef</td><td class="ans">렌더링과 상관없이 값을 계속 들고 있는 상자. 값을 바꿔도 다시 렌더링되지 않고, DOM 요소를 잡을 때도 쓴다.</td><td class="hint">타이머 id, 이전 값 저장, input 포커스 주기</td></tr>
-        </tbody>
-      </table>
     </div>
     <div class="grid">
       <article class="item" data-id="fe-re-q-batch">
@@ -511,18 +761,17 @@ function onClick() {
         <p class="q">n이 0일 때 버튼을 한 번 누르면 n은 몇이 될까?</p>
         <div class="ans"><p><code>setN(p =&gt; p + 1)</code>은 <b>바로 앞 업데이트 결과(p)</b>를 받아서 계산한다. 0 → 1 → 2 → 3. 이전 값에 기대는 업데이트는 함수형으로 쓴다.</p></div>
       </article>
-      <article class="item" data-id="fe-re-q-effect">
-        <div class="item-h"><span class="lang">useEffect</span><h3>useEffect 실행 시점</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-effect">외움</label></div>
-        <ul class="quiz-opts" hidden data-q="useEffect(fn, [])의 fn은 언제 실행될까?"><li class="ok">처음 화면에 나타난(마운트된) 뒤 한 번</li><li>렌더링할 때마다</li><li>렌더링 전에 한 번</li><li>화면에서 사라질 때만</li></ul>
-        <ul class="quiz-opts" hidden data-q="useEffect에서 돌려준 cleanup 함수는 언제 실행될까?"><li class="ok">다음 effect가 실행되기 직전, 그리고 화면에서 사라질 때</li><li>처음 마운트될 때 한 번</li><li>렌더링이 시작되기 직전마다</li><li>직접 부르기 전에는 실행되지 않는다</li></ul>
-        <p class="q">useEffect(fn, [])의 fn은 언제 실행될까?</p>
-        <div class="ans"><p>effect는 <b>화면에 반영(커밋)된 뒤</b> 실행된다. 의존성 배열이 []면 마운트 뒤 한 번. cleanup은 <b>의존성이 바뀌어 effect가 다시 실행되기 직전</b>과 <b>언마운트될 때</b> 실행된다.</p></div>
-      </article>
-      <article class="item" data-id="fe-re-q-key">
-        <div class="item-h"><span class="lang">key</span><h3>key로 index 쓰기</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-key">외움</label></div>
-        <ul class="quiz-opts" hidden data-q="목록의 key로 배열 index를 쓰면 생길 수 있는 문제는?"><li class="ok">항목 순서가 바뀔 때 입력값 같은 상태가 다른 항목에 붙는다</li><li>목록이 화면에 나오지 않는다</li><li>항목을 추가할 수 없다</li><li>React가 에러를 던지고 멈춘다</li></ul>
-        <p class="q">목록의 key로 배열 index를 쓰면 생길 수 있는 문제는?</p>
-        <div class="ans"><p>index는 순서가 바뀌면 같은 항목이 다른 key를 받는다. React는 key로 항목을 짝지어서 <b>상태를 엉뚱한 항목에 붙인다</b>. 추가·삭제·정렬이 있는 목록은 고유 id를 쓴다.</p></div>
+      <article class="item" data-id="fe-re-q-log">
+        <div class="item-h"><span class="lang">상태</span><h3>set 직후 state 읽기</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-log">외움</label></div>
+<pre>const [n, setN] = useState(0);
+
+function onClick() {
+  setN(n + 1);
+  console.log(n);
+}</pre>
+        <ul class="quiz-opts" hidden data-q="n이 0일 때 버튼을 누르면 콘솔에 찍히는 값은?"><li class="ok">0</li><li>1</li><li>undefined</li><li>에러가 난다</li></ul>
+        <p class="q">n이 0일 때 버튼을 누르면 콘솔에 찍히는 값은?</p>
+        <div class="ans"><p>setN은 state를 바로 바꾸지 않고 <b>다음 렌더링을 예약</b>한다. 지금 실행 중인 함수 안의 n은 이번 렌더링의 값(0) 그대로다. 바뀐 값은 다음 렌더링에서 보인다.</p></div>
       </article>
       <article class="item" data-id="fe-re-q-immut">
         <div class="item-h"><span class="lang">상태</span><h3>배열 state 바꾸기</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-immut">외움</label></div>
@@ -535,6 +784,122 @@ function onClick() {
         <p class="q">state를 바꾼 뒤 일어나는 일을 순서대로 놓으세요.</p>
         <div class="ans"><ol class="steps build-answer"><li>state 변경</li><li>컴포넌트 함수 다시 실행</li><li>가상 DOM 비교</li><li>실제 DOM 반영</li><li>useEffect 실행</li></ol><p class="why">state가 바뀌면 컴포넌트를 다시 불러 새 가상 DOM을 만들고(<b>렌더</b>), 이전 것과 비교해서 바뀐 부분만 실제 DOM에 반영(<b>커밋</b>)한 뒤, 마지막에 <b>useEffect</b>가 실행된다.</p></div>
       </article>
+      <article class="item" data-id="fe-re-q-ref">
+        <div class="item-h"><span class="lang">useRef</span><h3>ref를 바꾸면</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-ref">외움</label></div>
+<pre>const clicks = useRef(0);
+
+return (
+  &lt;button onClick={() =&gt; clicks.current++}&gt;
+    {clicks.current}
+  &lt;/button&gt;
+);</pre>
+        <ul class="quiz-opts" hidden data-q="버튼을 세 번 누르면 화면에 보이는 숫자는?"><li class="ok">0</li><li>3</li><li>1</li><li>에러가 난다</li></ul>
+        <p class="q">버튼을 세 번 누르면 화면에 보이는 숫자는?</p>
+        <div class="ans"><p><b>ref.current를 바꿔도 다시 렌더링되지 않는다</b>. 값은 3으로 올라가 있지만 화면은 처음 렌더링한 0 그대로다. 화면에 보여야 하는 값은 state로, 렌더링과 상관없는 값(타이머 id, 이전 값)은 ref로.</p></div>
+      </article>
+      <article class="item" data-id="fe-re-q-effect">
+        <div class="item-h"><span class="lang">useEffect</span><h3>useEffect 실행 시점</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-effect">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="useEffect(fn, [])의 fn은 언제 실행될까?"><li class="ok">처음 화면에 그려진 뒤 한 번</li><li>렌더링할 때마다</li><li>처음 렌더링 직전에 한 번</li><li>state가 바뀔 때마다</li></ul>
+        <ul class="quiz-opts" hidden data-q="useEffect(fn, [id])에서 fn이 돌려준 cleanup은 언제 실행될까?"><li class="ok">id가 바뀌어 fn이 다시 실행되기 직전과 언마운트될 때</li><li>언마운트될 때만</li><li>fn이 실행된 직후</li><li>렌더링할 때마다 fn보다 먼저</li></ul>
+        <p class="q">useEffect(fn, [])의 fn은 언제 실행될까?</p>
+        <div class="ans"><p>effect는 <b>화면에 반영(커밋)된 뒤</b> 실행된다. 의존성 배열이 []면 마운트 뒤 한 번. cleanup은 <b>의존성이 바뀌어 effect가 다시 실행되기 직전</b>과 <b>언마운트될 때</b> 실행된다.</p></div>
+      </article>
+      <article class="item" data-id="fe-re-q-loop">
+        <div class="item-h"><span class="lang">useEffect</span><h3>effect 안의 fetch</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-loop">외움</label></div>
+<pre>const [user, setUser] = useState(null);
+
+useEffect(() =&gt; {
+  fetch(&#x27;/api/me&#x27;)
+    .then((r) =&gt; r.json())
+    .then(setUser);
+});</pre>
+        <ul class="quiz-opts" hidden data-q="이 컴포넌트의 문제는?"><li class="ok">렌더링마다 요청해서 끝없이 반복된다</li><li>처음 한 번만 요청해서 갱신이 안 된다</li><li>user가 null이라 바로 에러가 난다</li><li>문제없다</li></ul>
+        <p class="q">이 컴포넌트의 문제는?</p>
+        <div class="ans"><p>의존성 배열이 없으면 effect는 <b>렌더링할 때마다</b> 실행된다. 요청 → setUser → 다시 렌더링 → 다시 요청… 무한 반복. 처음 한 번만 부르려면 <code>[]</code>를 준다.</p></div>
+      </article>
+      <article class="item" data-id="fe-re-q-objdep">
+        <div class="item-h"><span class="lang">useEffect</span><h3>effect의 의존성</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-objdep">외움</label></div>
+<pre>function List({ page }) {
+  const query = { page, size: 20 };
+
+  useEffect(() =&gt; {
+    fetchList(query);
+  }, [query]);
+  // ...
+}</pre>
+        <ul class="quiz-opts" hidden data-q="이 effect는 언제 실행될까?"><li class="ok">렌더링할 때마다</li><li>page가 바뀔 때만</li><li>처음 한 번만</li><li>실행되지 않는다</li></ul>
+        <p class="q">이 effect는 언제 실행될까?</p>
+        <div class="ans"><p>query는 렌더링할 때마다 <b>새로 만든 객체</b>라 이전 것과 주소가 다르다. React는 의존성을 <code>Object.is</code>로 비교하므로 매번 바뀐 것으로 본다. 원시값 <code>[page]</code>를 의존성으로 쓰거나 useMemo로 객체를 고정한다.</p></div>
+      </article>
+      <article class="item" data-id="fe-re-q-stale">
+        <div class="item-h"><span class="lang">useEffect</span><h3>interval 안의 state</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-stale">외움</label></div>
+<pre>const [count, setCount] = useState(0);
+
+useEffect(() =&gt; {
+  const id = setInterval(() =&gt; {
+    setCount(count + 1);
+  }, 1000);
+  return () =&gt; clearInterval(id);
+}, []);</pre>
+        <ul class="quiz-opts" hidden data-q="시간이 지나면 화면의 count는 어떻게 될까?"><li class="ok">1이 된 뒤 더 오르지 않는다</li><li>1초마다 1씩 계속 오른다</li><li>0에서 바뀌지 않는다</li><li>1초마다 2씩 오른다</li></ul>
+        <p class="q">시간이 지나면 화면의 count는 어떻게 될까?</p>
+        <div class="ans"><p>의존성이 []라 effect는 한 번만 실행되고, 그 안의 콜백은 <b>처음 렌더링의 count(0)</b>를 계속 기억한다(오래된 클로저). 매번 <code>setCount(0 + 1)</code>이라 1에서 멈춘다. <code>setCount((c) =&gt; c + 1)</code>로 바꾸면 계속 오른다.</p></div>
+      </article>
+      <article class="item" data-id="fe-re-q-strict">
+        <div class="item-h"><span class="lang">useEffect</span><h3>effect가 두 번 실행될 때</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-strict">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="개발 모드에서만 useEffect(fn, [])의 fn이 두 번 실행된다. 이유는?"><li class="ok">StrictMode가 cleanup을 확인하려고 한 번 더 마운트해서</li><li>의존성 배열이 비어 있어서</li><li>state를 두 번 바꿔서</li><li>React 18의 알려진 버그라서</li></ul>
+        <p class="q">개발 모드에서만 useEffect(fn, [])의 fn이 두 번 실행된다. 이유는?</p>
+        <div class="ans"><p>React 18의 <b>StrictMode</b>는 개발 모드에서 마운트 → 언마운트 → 다시 마운트를 해서 <b>cleanup을 제대로 썼는지</b> 드러낸다. 배포(프로덕션) 빌드에서는 한 번만 실행된다. 두 번 실행돼서 문제가 생기면 cleanup이 빠진 것이다.</p></div>
+      </article>
+      <article class="item" data-id="fe-re-q-hook">
+        <div class="item-h"><span class="lang">훅 규칙</span><h3>조건문 안의 훅</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-hook">외움</label></div>
+<pre>function Profile({ isLoggedIn }) {
+  if (isLoggedIn) {
+    const [name, setName] = useState(&#x27;&#x27;);
+  }
+  const [tab, setTab] = useState(&#x27;home&#x27;);
+  // ...
+}</pre>
+        <ul class="quiz-opts" hidden data-q="이 코드의 문제는?"><li class="ok">렌더링마다 훅 호출 순서가 달라져 state가 꼬인다</li><li>name을 if 밖에서 못 쓸 뿐 동작은 괜찮다</li><li>isLoggedIn이 false면 name이 빈 문자열이 된다</li><li>문제없다</li></ul>
+        <p class="q">이 코드의 문제는?</p>
+        <div class="ans"><p>React는 훅을 <b>호출 순서</b>로 구별한다. 조건에 따라 useState를 건너뛰면 그 뒤의 훅들이 엉뚱한 state를 받는다. 훅은 항상 컴포넌트 최상단에서, 조건문·반복문 밖에서 부른다.</p></div>
+      </article>
+      <article class="item" data-id="fe-re-q-key">
+        <div class="item-h"><span class="lang">key</span><h3>key로 index 쓰기</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-key">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="할 일 목록(각 항목에 체크박스 입력 상태가 있음)의 key로 배열 index를 쓰고, 맨 앞에 새 항목을 추가하면?"><li class="ok">체크 상태가 한 칸씩 밀려 엉뚱한 항목에 붙는다</li><li>문제없이 잘 동작하고 조금 느려질 뿐이다</li><li>콘솔 경고만 뜨고 동작은 같다</li><li>key가 겹쳐서 새 항목이 안 보인다</li></ul>
+        <p class="q">할 일 목록(각 항목에 체크박스 입력 상태가 있음)의 key로 배열 index를 쓰고, 맨 앞에 새 항목을 추가하면?</p>
+        <div class="ans"><p>index는 순서가 바뀌면 같은 항목이 다른 key를 받는다. React는 key로 항목을 짝지어서 <b>상태를 엉뚱한 항목에 붙인다</b>. 추가·삭제·정렬이 있는 목록은 고유 id를 쓴다.</p></div>
+      </article>
+      <article class="item" data-id="fe-re-q-memo">
+        <div class="item-h"><span class="lang">성능</span><h3>React.memo와 함수 props</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-memo">외움</label></div>
+<pre>function Parent({ id }) {
+  return &lt;Child onSave={() =&gt; save(id)} /&gt;;
+}
+
+const Child = React.memo(
+  function Child({ onSave }) {
+    // ...
+  }
+);</pre>
+        <ul class="quiz-opts" hidden data-q="Child는 React.memo로 감싸져 있다. Parent가 다시 렌더링되면 Child는?"><li class="ok">매번 같이 다시 렌더링된다</li><li>다시 렌더링되지 않는다</li><li>id가 바뀔 때만 다시 렌더링된다</li><li>처음 한 번만 렌더링된다</li></ul>
+        <ul class="quiz-opts" hidden data-q="Child가 불필요하게 다시 렌더링되지 않게 하려면?"><li class="ok">onSave를 useCallback으로 감싼다</li><li>Child를 useMemo로 감싼다</li><li>save를 state에 넣는다</li><li>Child에 key를 준다</li></ul>
+        <p class="q">Child는 React.memo로 감싸져 있다. Parent가 다시 렌더링되면 Child는?</p>
+        <div class="ans"><p>화살표 함수는 렌더링할 때마다 <b>새 함수</b>라서, memo가 props를 비교하면 onSave가 매번 바뀐 것으로 보인다. <code>useCallback(() =&gt; save(id), [id])</code>로 같은 함수를 넘기면 id가 바뀔 때만 다시 렌더링된다.</p></div>
+      </article>
+    </div>
+    <p class="group-title">React 용어</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="c"></th><th>용어</th><th>뜻</th><th>예시 · 외우는 법</th></tr></thead>
+        <tbody>
+          <tr data-id="fe-re-t-vdom" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-re-t-vdom" aria-label="외움"></td><td class="term">가상 DOM / 재조정</td><td class="ans"><b>가상 DOM</b>: 실제 DOM을 흉내 낸 가벼운 JS 객체 트리. <b>재조정</b>: 새 렌더링 결과를 이전 결과와 비교(diff)해서 바뀐 부분만 실제 DOM에 반영하는 과정.</td><td class="hint">재조정은 Reconciliation. 같은 자리의 같은 타입이면 재사용, 타입이 다르면 새로 만든다</td></tr>
+          <tr data-id="fe-re-t-key" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-re-t-key" aria-label="외움"></td><td class="term">key</td><td class="ans">목록에서 각 항목을 구별하는 값. 바뀌지 않는 고유한 값(id)을 써야 React가 항목을 제대로 재사용한다.</td><td class="hint">index를 key로 쓰면 순서가 바뀔 때 입력값 같은 상태가 엉뚱한 항목에 붙는다</td></tr>
+          <tr data-id="fe-re-t-props" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-re-t-props" aria-label="외움"></td><td class="term">props / state</td><td class="ans"><b>props</b>: 부모가 내려주는 값으로, 자식은 바꿀 수 없다. <b>state</b>: 컴포넌트가 스스로 가지는 값으로, 바꾸면 다시 렌더링된다.</td><td class="hint">props가 바뀌거나 state가 바뀌면 다시 렌더링</td></tr>
+          <tr data-id="fe-re-t-memo" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-re-t-memo" aria-label="외움"></td><td class="term">useMemo / useCallback</td><td class="ans"><b>useMemo</b>: 계산한 결과 값을 기억해 두고, 의존성이 바뀔 때만 다시 계산한다. <b>useCallback</b>: 함수 자체를 기억해 두고, 의존성이 바뀔 때만 새로 만든다.</td><td class="hint">React.memo로 감싼 자식에 함수를 넘길 때 useCallback이 쓸모 있다</td></tr>
+          <tr data-id="fe-re-t-control" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-re-t-control" aria-label="외움"></td><td class="term">제어 컴포넌트 / 비제어 컴포넌트</td><td class="ans"><b>제어 컴포넌트</b>: input 값을 state로 관리한다 (value + onChange). <b>비제어 컴포넌트</b>: 값은 DOM이 가지고 있고, 필요할 때 ref로 읽는다.</td><td class="hint">입력할 때마다 검사해야 하면 제어, 제출할 때만 읽으면 비제어</td></tr>
+          <tr data-id="fe-re-t-ref" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-re-t-ref" aria-label="외움"></td><td class="term">useRef</td><td class="ans">렌더링과 상관없이 값을 계속 들고 있는 상자. 값을 바꿔도 다시 렌더링되지 않고, DOM 요소를 잡을 때도 쓴다.</td><td class="hint">타이머 id, 이전 값 저장, input 포커스 주기</td></tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
@@ -544,23 +909,78 @@ function onClick() {
       <h2>웹 · 성능 · 보안</h2>
       <p>HTTP 상태 코드와 메서드, Core Web Vitals, 캐시처럼 프론트엔드 개발자가 매일 보는 웹 기본기입니다.</p>
     </div>
+    <div class="grid">
+      <article class="item" data-id="fe-web-q-status">
+        <div class="item-h"><span class="lang">상태 코드</span><h3>상태 코드 고르기</h3><label class="chk"><input type="checkbox" id="k-fe-web-q-status">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="로그인은 했지만 관리자 페이지에 들어갈 권한이 없다."><li class="ok">403 Forbidden</li><li>401 Unauthorized</li><li>404 Not Found</li><li>400 Bad Request</li></ul>
+        <ul class="quiz-opts" hidden data-q="토큰이 만료돼서 서버가 누군지 확인할 수 없다."><li class="ok">401 Unauthorized</li><li>403 Forbidden</li><li>400 Bad Request</li><li>500 Internal Server Error</li></ul>
+        <ul class="quiz-opts" hidden data-q="POST로 새 글을 만드는 데 성공했다."><li class="ok">201 Created</li><li>200 OK</li><li>204 No Content</li><li>202 Accepted</li></ul>
+        <ul class="quiz-opts" hidden data-q="브라우저가 캐시한 파일이 바뀌었는지 물었더니 그대로라서, 본문 없이 온 응답은?"><li class="ok">304 Not Modified</li><li>204 No Content</li><li>200 OK</li><li>302 Found</li></ul>
+        <p class="q">로그인은 했지만 관리자 페이지에 들어갈 권한이 없다.</p>
+        <div class="ans"><p><b>401</b>: 누군지 모름 → 로그인 필요. <b>403</b>: 누군지는 알지만 권한 없음. <b>201</b>: 새로 만들어짐 (200은 일반 성공, 204는 성공인데 본문 없음). <b>304</b>: If-None-Match(ETag) 같은 조건부 요청에 "안 바뀌었으니 캐시 써"라는 답.</p></div>
+      </article>
+      <article class="item" data-id="fe-web-q-redirect">
+        <div class="item-h"><span class="lang">상태 코드</span><h3>주소 옮기기</h3><label class="chk"><input type="checkbox" id="k-fe-web-q-redirect">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="http:// 주소를 https://로 영구히 옮겼다. 검색 엔진도 새 주소를 기억하게 하려면?"><li class="ok">301 Moved Permanently</li><li>302 Found</li><li>307 Temporary Redirect</li><li>304 Not Modified</li></ul>
+        <p class="q">http:// 주소를 https://로 영구히 옮겼다. 검색 엔진도 새 주소를 기억하게 하려면?</p>
+        <div class="ans"><p><b>301</b>은 영구 이동이라 브라우저와 검색 엔진이 새 주소를 기억한다. <b>302·307</b>은 잠깐 다른 곳으로 보내는 것이라 원래 주소를 계속 쓴다 (로그인 후 원래 페이지로 보내기).</p></div>
+      </article>
+      <article class="item" data-id="fe-web-q-idem">
+        <div class="item-h"><span class="lang">HTTP</span><h3>멱등성</h3><label class="chk"><input type="checkbox" id="k-fe-web-q-idem">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="같은 요청을 여러 번 보내면 결과가 달라질 수 있는(멱등하지 않은) 메서드는?"><li class="ok">POST</li><li>GET</li><li>PUT</li><li>DELETE</li></ul>
+        <p class="q">같은 요청을 여러 번 보내면 결과가 달라질 수 있는(멱등하지 않은) 메서드는?</p>
+        <div class="ans"><p><b>멱등</b>: 여러 번 보내도 한 번 보낸 것과 결과가 같음. GET·PUT·DELETE는 멱등하고, <b>POST</b>는 보낼 때마다 새 리소스가 생길 수 있다. 결제 버튼을 두 번 누르지 못하게 막는 이유.</p></div>
+      </article>
+      <article class="item" data-id="fe-web-q-cache">
+        <div class="item-h"><span class="lang">캐시</span><h3>Cache-Control 고르기</h3><label class="chk"><input type="checkbox" id="k-fe-web-q-cache">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="app.3f9a2c.js처럼 파일 이름에 내용 해시가 붙은 파일에 가장 알맞은 것은?"><li class="ok">max-age=31536000, immutable</li><li>no-store</li><li>no-cache</li><li>max-age=0</li></ul>
+        <ul class="quiz-opts" hidden data-q="Cache-Control: no-cache의 뜻은?"><li class="ok">저장은 하되, 쓸 때마다 서버에 바뀌었는지 묻는다</li><li>아예 저장하지 않는다</li><li>정한 시간 동안 서버에 묻지 않고 쓴다</li><li>브라우저만 저장하고 CDN은 저장하지 않는다</li></ul>
+        <p class="q">app.3f9a2c.js처럼 파일 이름에 내용 해시가 붙은 파일에 가장 알맞은 것은?</p>
+        <div class="ans"><p>내용이 바뀌면 파일 이름(해시)도 바뀌므로 같은 이름의 파일은 영원히 같다 → <b>1년 캐시</b>. 반대로 index.html은 이름이 그대로라 <b>no-cache</b>로 매번 확인한다. 이름과 달리 no-cache도 저장은 한다. 아예 저장하지 않는 건 <b>no-store</b>.</p></div>
+      </article>
+      <article class="item" data-id="fe-web-q-vitals">
+        <div class="item-h"><span class="lang">성능</span><h3>어느 지표가 나빠질까</h3><label class="chk"><input type="checkbox" id="k-fe-web-q-vitals">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="첫 화면의 가장 큰 히어로 이미지에 loading=&quot;lazy&quot;를 주면?"><li class="ok">LCP가 나빠진다</li><li>LCP가 좋아진다</li><li>CLS가 좋아진다</li><li>아무 영향이 없다</li></ul>
+        <ul class="quiz-opts" hidden data-q="버튼 클릭 핸들러가 400ms 동안 무거운 계산을 하면 가장 나빠지는 지표는?"><li class="ok">INP</li><li>LCP</li><li>CLS</li><li>TTFB</li></ul>
+        <ul class="quiz-opts" hidden data-q="img에 width·height를 주지 않아 이미지가 뜰 때 아래 글이 밀려 내려간다. 나빠지는 지표는?"><li class="ok">CLS</li><li>LCP</li><li>INP</li><li>TTFB</li></ul>
+        <p class="q">첫 화면의 가장 큰 히어로 이미지에 loading=&quot;lazy&quot;를 주면?</p>
+        <div class="ans"><p><b>LCP</b>(가장 큰 콘텐츠가 그려지는 시간): 첫 화면 이미지를 lazy로 미루면 늦게 받아서 나빠진다. 첫 화면 밖 이미지만 lazy. <b>INP</b>(입력에 반응하는 시간): 핸들러가 메인 스레드를 오래 붙잡으면 나빠진다. <b>CLS</b>(레이아웃이 밀리는 정도): 크기를 모르는 이미지·광고가 원인.</p></div>
+      </article>
+      <article class="item" data-id="fe-web-q-xss">
+        <div class="item-h"><span class="lang">보안</span><h3>사용자 입력 넣기</h3><label class="chk"><input type="checkbox" id="k-fe-web-q-xss">외움</label></div>
+<pre>const comment = getUserInput();
+el.innerHTML = comment;</pre>
+        <ul class="quiz-opts" hidden data-q="comment에 &lt;img src=x onerror=&quot;alert(1)&quot;&gt;가 들어오면?"><li class="ok">onerror의 스크립트가 실행된다 (XSS)</li><li>태그가 글자 그대로 보인다</li><li>이미지만 깨지고 안전하다</li><li>브라우저가 알아서 막는다</li></ul>
+        <ul class="quiz-opts" hidden data-q="사용자가 쓴 글을 안전하게 화면에 넣으려면?"><li class="ok">el.textContent = comment</li><li>el.innerHTML = comment.trim()</li><li>el.outerHTML = comment</li><li>el.insertAdjacentHTML(&#x27;beforeend&#x27;, comment)</li></ul>
+        <p class="q">comment에 &lt;img src=x onerror=&quot;alert(1)&quot;&gt;가 들어오면?</p>
+        <div class="ans"><p>innerHTML은 문자열을 <b>HTML로 해석</b>하므로 이벤트 속성의 스크립트가 실행된다(XSS). <b>textContent</b>는 글자로만 넣는다. outerHTML, insertAdjacentHTML도 HTML로 해석해서 똑같이 위험하다. React의 <code>{comment}</code>는 자동으로 글자 처리하고, dangerouslySetInnerHTML만 위험하다.</p></div>
+      </article>
+      <article class="item" data-id="fe-web-q-cookie">
+        <div class="item-h"><span class="lang">보안</span><h3>쿠키 속성</h3><label class="chk"><input type="checkbox" id="k-fe-web-q-cookie">외움</label></div>
+        <ul class="quiz-opts" hidden data-q="자바스크립트(document.cookie)가 쿠키를 읽지 못하게 하는 속성은?"><li class="ok">HttpOnly</li><li>Secure</li><li>SameSite</li><li>Domain</li></ul>
+        <ul class="quiz-opts" hidden data-q="다른 사이트에서 보낸 요청에는 쿠키가 붙지 않게 해 CSRF를 막는 속성은?"><li class="ok">SameSite</li><li>HttpOnly</li><li>Secure</li><li>Domain</li></ul>
+        <ul class="quiz-opts" hidden data-q="HTTPS 연결에서만 쿠키를 보내게 하는 속성은?"><li class="ok">Secure</li><li>HttpOnly</li><li>SameSite</li><li>Domain</li></ul>
+        <p class="q">자바스크립트(document.cookie)가 쿠키를 읽지 못하게 하는 속성은?</p>
+        <div class="ans"><p><b>HttpOnly</b>: JS에서 못 읽음 → XSS로 세션 쿠키를 훔치기 어려움. <b>SameSite</b>(Lax·Strict): 다른 사이트발 요청에 쿠키를 안 붙임 → CSRF 방어. <b>Secure</b>: HTTPS에서만 전송. <b>Domain</b>은 어느 도메인에 보낼지 정하는 것.</p></div>
+      </article>
+    </div>
     <p class="group-title">HTTP 상태 코드</p>
     <div class="table-wrap">
       <table>
         <thead><tr><th class="c"></th><th>코드</th><th>뜻</th><th>예시 · 외우는 법</th></tr></thead>
         <tbody>
-          <tr data-id="fe-web-200"><td class="c"><input type="checkbox" id="k-fe-web-200" aria-label="외움"></td><td class="term">200 OK</td><td class="ans">요청이 성공했고, 결과를 응답 본문에 담아 돌려준다.</td><td class="hint">가장 흔한 성공. GET으로 목록 조회</td></tr>
-          <tr data-id="fe-web-201"><td class="c"><input type="checkbox" id="k-fe-web-201" aria-label="외움"></td><td class="term">201 Created</td><td class="ans">요청이 성공해서 새 리소스가 만들어졌다.</td><td class="hint">POST로 회원가입 성공</td></tr>
-          <tr data-id="fe-web-204"><td class="c"><input type="checkbox" id="k-fe-web-204" aria-label="외움"></td><td class="term">204 No Content</td><td class="ans">요청은 성공했지만 돌려줄 본문이 없다.</td><td class="hint">DELETE 성공 뒤 자주 씀</td></tr>
-          <tr data-id="fe-web-301"><td class="c"><input type="checkbox" id="k-fe-web-301" aria-label="외움"></td><td class="term">301 Moved Permanently</td><td class="ans">요청한 주소가 영구히 다른 주소로 바뀌었다.</td><td class="hint">검색 엔진도 새 주소로 바꿔 기억</td></tr>
-          <tr data-id="fe-web-302"><td class="c"><input type="checkbox" id="k-fe-web-302" aria-label="외움"></td><td class="term">302 Found</td><td class="ans">잠시 다른 주소로 가라는 뜻이다.</td><td class="hint">로그인 후 원래 페이지로 보내기</td></tr>
-          <tr data-id="fe-web-304"><td class="c"><input type="checkbox" id="k-fe-web-304" aria-label="외움"></td><td class="term">304 Not Modified</td><td class="ans">바뀐 게 없으니 캐시해 둔 것을 그대로 쓰면 된다.</td><td class="hint">ETag·Last-Modified로 확인한 결과</td></tr>
-          <tr data-id="fe-web-400"><td class="c"><input type="checkbox" id="k-fe-web-400" aria-label="외움"></td><td class="term">400 Bad Request</td><td class="ans">요청 형식이 잘못됐다.</td><td class="hint">필수 값 누락, JSON 형식 오류</td></tr>
-          <tr data-id="fe-web-401"><td class="c"><input type="checkbox" id="k-fe-web-401" aria-label="외움"></td><td class="term">401 Unauthorized</td><td class="ans">인증이 안 됐다. 누군지 모르니 로그인이 필요하다.</td><td class="hint">토큰이 없거나 만료</td></tr>
-          <tr data-id="fe-web-403"><td class="c"><input type="checkbox" id="k-fe-web-403" aria-label="외움"></td><td class="term">403 Forbidden</td><td class="ans">누군지는 알지만 이 리소스에 접근할 권한이 없다.</td><td class="hint">로그인했지만 관리자 페이지</td></tr>
-          <tr data-id="fe-web-404"><td class="c"><input type="checkbox" id="k-fe-web-404" aria-label="외움"></td><td class="term">404 Not Found</td><td class="ans">요청한 리소스를 찾을 수 없다.</td><td class="hint">없는 주소</td></tr>
-          <tr data-id="fe-web-500"><td class="c"><input type="checkbox" id="k-fe-web-500" aria-label="외움"></td><td class="term">500 Internal Server Error</td><td class="ans">서버 안에서 예상하지 못한 오류가 났다.</td><td class="hint">서버 코드의 버그</td></tr>
-          <tr data-id="fe-web-503"><td class="c"><input type="checkbox" id="k-fe-web-503" aria-label="외움"></td><td class="term">503 Service Unavailable</td><td class="ans">서버가 과부하나 점검으로 잠시 요청을 처리할 수 없다.</td><td class="hint">배포 중, 트래픽 폭주</td></tr>
+          <tr data-id="fe-web-200" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-web-200" aria-label="외움"></td><td class="term">200 OK</td><td class="ans">요청이 성공했고, 결과를 응답 본문에 담아 돌려준다.</td><td class="hint">가장 흔한 성공. GET으로 목록 조회</td></tr>
+          <tr data-id="fe-web-201" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-web-201" aria-label="외움"></td><td class="term">201 Created</td><td class="ans">요청이 성공해서 새 리소스가 만들어졌다.</td><td class="hint">POST로 회원가입 성공</td></tr>
+          <tr data-id="fe-web-204" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-web-204" aria-label="외움"></td><td class="term">204 No Content</td><td class="ans">요청은 성공했지만 돌려줄 본문이 없다.</td><td class="hint">DELETE 성공 뒤 자주 씀</td></tr>
+          <tr data-id="fe-web-301" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-web-301" aria-label="외움"></td><td class="term">301 Moved Permanently</td><td class="ans">요청한 주소가 영구히 다른 주소로 바뀌었다.</td><td class="hint">검색 엔진도 새 주소로 바꿔 기억</td></tr>
+          <tr data-id="fe-web-302" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-web-302" aria-label="외움"></td><td class="term">302 Found</td><td class="ans">잠시 다른 주소로 가라는 뜻이다.</td><td class="hint">로그인 후 원래 페이지로 보내기</td></tr>
+          <tr data-id="fe-web-304" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-web-304" aria-label="외움"></td><td class="term">304 Not Modified</td><td class="ans">바뀐 게 없으니 캐시해 둔 것을 그대로 쓰면 된다.</td><td class="hint">ETag·Last-Modified로 확인한 결과</td></tr>
+          <tr data-id="fe-web-400" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-web-400" aria-label="외움"></td><td class="term">400 Bad Request</td><td class="ans">요청 형식이 잘못됐다.</td><td class="hint">필수 값 누락, JSON 형식 오류</td></tr>
+          <tr data-id="fe-web-401" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-web-401" aria-label="외움"></td><td class="term">401 Unauthorized</td><td class="ans">인증이 안 됐다. 누군지 모르니 로그인이 필요하다.</td><td class="hint">토큰이 없거나 만료</td></tr>
+          <tr data-id="fe-web-403" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-web-403" aria-label="외움"></td><td class="term">403 Forbidden</td><td class="ans">누군지는 알지만 이 리소스에 접근할 권한이 없다.</td><td class="hint">로그인했지만 관리자 페이지</td></tr>
+          <tr data-id="fe-web-404" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-web-404" aria-label="외움"></td><td class="term">404 Not Found</td><td class="ans">요청한 리소스를 찾을 수 없다.</td><td class="hint">없는 주소</td></tr>
+          <tr data-id="fe-web-500" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-web-500" aria-label="외움"></td><td class="term">500 Internal Server Error</td><td class="ans">서버 안에서 예상하지 못한 오류가 났다.</td><td class="hint">서버 코드의 버그</td></tr>
+          <tr data-id="fe-web-503" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-web-503" aria-label="외움"></td><td class="term">503 Service Unavailable</td><td class="ans">서버가 과부하나 점검으로 잠시 요청을 처리할 수 없다.</td><td class="hint">배포 중, 트래픽 폭주</td></tr>
         </tbody>
       </table>
     </div>
@@ -569,31 +989,11 @@ function onClick() {
       <table>
         <thead><tr><th class="c"></th><th>용어</th><th>뜻</th><th>예시 · 외우는 법</th></tr></thead>
         <tbody>
-          <tr data-id="fe-web-vitals"><td class="c"><input type="checkbox" id="k-fe-web-vitals" aria-label="외움"></td><td class="term">LCP / INP / CLS / TTFB<small>웹 성능 지표</small></td><td class="ans"><b>LCP</b>: 화면에서 가장 큰 콘텐츠가 그려지기까지의 시간(로딩 속도). <b>INP</b>: 클릭이나 입력에 화면이 반응하기까지의 시간(반응 속도). <b>CLS</b>: 로딩 중에 화면 요소가 갑자기 밀리는 정도(시각 안정성). <b>TTFB</b>: 요청을 보낸 뒤 서버에서 첫 바이트가 도착하기까지의 시간(서버 응답 속도).</td><td class="hint">Core Web Vitals는 LCP·INP·CLS 세 개. 좋음 기준: LCP 2.5초 이하, INP 200ms 이하, CLS 0.1 이하</td></tr>
-          <tr data-id="fe-web-cache"><td class="c"><input type="checkbox" id="k-fe-web-cache" aria-label="외움"></td><td class="term">no-cache / no-store / max-age<small>Cache-Control</small></td><td class="ans"><b>no-cache</b>: 저장은 해 두되, 쓰기 전에 서버에 바뀌었는지 매번 확인한다. <b>no-store</b>: 아예 저장하지 않는다. <b>max-age</b>: 정한 초 동안은 서버에 묻지 않고 저장해 둔 것을 그대로 쓴다.</td><td class="hint">이름과 반대로 no-cache도 저장은 한다. 민감한 정보는 no-store. 파일 이름에 해시가 붙은 JS·CSS는 max-age를 길게</td></tr>
-          <tr data-id="fe-web-method"><td class="c"><input type="checkbox" id="k-fe-web-method" aria-label="외움"></td><td class="term">GET / POST / PUT / PATCH / DELETE<small>HTTP 메서드</small></td><td class="ans"><b>GET</b>: 리소스를 조회한다. <b>POST</b>: 새 리소스를 만든다. <b>PUT</b>: 리소스 전체를 새 값으로 바꾼다. <b>PATCH</b>: 리소스의 일부만 고친다. <b>DELETE</b>: 리소스를 지운다.</td><td class="hint">PUT은 통째로 교체, PATCH는 일부 수정</td></tr>
+          <tr data-id="fe-web-vitals" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-web-vitals" aria-label="외움"></td><td class="term">LCP / INP / CLS / TTFB<small>웹 성능 지표</small></td><td class="ans"><b>LCP</b>: 화면에서 가장 큰 콘텐츠가 그려지기까지의 시간(로딩 속도). <b>INP</b>: 클릭이나 입력에 화면이 반응하기까지의 시간(반응 속도). <b>CLS</b>: 로딩 중에 화면 요소가 갑자기 밀리는 정도(시각 안정성). <b>TTFB</b>: 요청을 보낸 뒤 서버에서 첫 바이트가 도착하기까지의 시간(서버 응답 속도).</td><td class="hint">Core Web Vitals는 LCP·INP·CLS 세 개. 좋음 기준: LCP 2.5초 이하, INP 200ms 이하, CLS 0.1 이하</td></tr>
+          <tr data-id="fe-web-cache" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-web-cache" aria-label="외움"></td><td class="term">no-cache / no-store / max-age<small>Cache-Control</small></td><td class="ans"><b>no-cache</b>: 저장은 해 두되, 쓰기 전에 서버에 바뀌었는지 매번 확인한다. <b>no-store</b>: 아예 저장하지 않는다. <b>max-age</b>: 정한 초 동안은 서버에 묻지 않고 저장해 둔 것을 그대로 쓴다.</td><td class="hint">이름과 반대로 no-cache도 저장은 한다. 민감한 정보는 no-store. 파일 이름에 해시가 붙은 JS·CSS는 max-age를 길게</td></tr>
+          <tr data-id="fe-web-method" data-quiz="off"><td class="c"><input type="checkbox" id="k-fe-web-method" aria-label="외움"></td><td class="term">GET / POST / PUT / PATCH / DELETE<small>HTTP 메서드</small></td><td class="ans"><b>GET</b>: 리소스를 조회한다. <b>POST</b>: 새 리소스를 만든다. <b>PUT</b>: 리소스 전체를 새 값으로 바꾼다. <b>PATCH</b>: 리소스의 일부만 고친다. <b>DELETE</b>: 리소스를 지운다.</td><td class="hint">PUT은 통째로 교체, PATCH는 일부 수정</td></tr>
         </tbody>
       </table>
-    </div>
-    <div class="grid">
-      <article class="item" data-id="fe-web-q-auth">
-        <div class="item-h"><span class="lang">상태 코드</span><h3>401 vs 403</h3><label class="chk"><input type="checkbox" id="k-fe-web-q-auth">외움</label></div>
-        <ul class="quiz-opts" hidden data-q="로그인은 했지만 관리자 페이지에 들어갈 권한이 없을 때 서버가 돌려줄 상태 코드는?"><li class="ok">403</li><li>401</li><li>404</li><li>400</li></ul>
-        <p class="q">로그인은 했지만 관리자 페이지에 들어갈 권한이 없을 때 서버가 돌려줄 상태 코드는?</p>
-        <div class="ans"><p><b>401</b>은 "누군지 모름"(인증 필요), <b>403</b>은 "누군지는 알지만 권한 없음". 로그인한 상태에서 권한이 없으면 403.</p></div>
-      </article>
-      <article class="item" data-id="fe-web-q-idem">
-        <div class="item-h"><span class="lang">HTTP</span><h3>멱등성</h3><label class="chk"><input type="checkbox" id="k-fe-web-q-idem">외움</label></div>
-        <ul class="quiz-opts" hidden data-q="같은 요청을 여러 번 보내면 결과가 달라질 수 있는(멱등하지 않은) 메서드는?"><li class="ok">POST</li><li>GET</li><li>PUT</li><li>DELETE</li></ul>
-        <p class="q">같은 요청을 여러 번 보내면 결과가 달라질 수 있는(멱등하지 않은) 메서드는?</p>
-        <div class="ans"><p><b>멱등</b>: 여러 번 보내도 결과가 한 번 보낸 것과 같음. GET·PUT·DELETE는 멱등하고, <b>POST</b>는 보낼 때마다 새 리소스가 생길 수 있어 멱등하지 않다. 결제 버튼 중복 클릭을 조심하는 이유.</p></div>
-      </article>
-      <article class="item" data-id="fe-web-q-cls">
-        <div class="item-h"><span class="lang">성능</span><h3>CLS 줄이기</h3><label class="chk"><input type="checkbox" id="k-fe-web-q-cls">외움</label></div>
-        <ul class="quiz-opts" hidden data-q="img 태그에 width·height를 지정하지 않으면 가장 나빠지는 지표는?"><li class="ok">CLS</li><li>LCP</li><li>INP</li><li>TTFB</li></ul>
-        <p class="q">img 태그에 width·height를 지정하지 않으면 가장 나빠지는 지표는?</p>
-        <div class="ans"><p>이미지 크기를 모르면 이미지가 늦게 도착했을 때 아래 내용이 갑자기 밀린다. 이것이 <b>CLS</b>(레이아웃 이동). width·height나 aspect-ratio로 자리를 미리 잡아 두면 막을 수 있다.</p></div>
-      </article>
     </div>
   </section>
 

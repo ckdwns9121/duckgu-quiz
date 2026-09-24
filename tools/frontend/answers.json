@@ -13,5 +13,11 @@
  "fe-as-micro": "s m t",
  "fe-as-await": "a c b",
  "fe-as-nested": "1 3 4 2",
- "fe-as-executor": "p end then"
+ "fe-as-executor": "p end then",
+ "fe-js-this2": "kim undefined",
+ "fe-js-sort": "1 10 2",
+ "fe-as-mix": "A C F D E B",
+ "fe-as-return": "2 1",
+ "fe-as-foreach": "done 10 30",
+ "fe-as-catch": "2 3"
 }

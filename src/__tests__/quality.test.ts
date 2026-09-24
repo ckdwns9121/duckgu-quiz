@@ -4,7 +4,7 @@
  */
 import { CARDS, courseOfCard } from '../domain/content';
 import { answerTokens, makeQuestion } from '../domain/question';
-import type { Question } from '../domain/types';
+import type { McqCard, Question } from '../domain/types';
 
 const RUNS = 40;
 const MAX_OPTION = 75;
@@ -71,5 +71,16 @@ describe('문제 품질', () => {
         expect(open, `${c.id}: ${t}`).toBe(close);
       });
     });
+  });
+  it('정답 고르기 문제의 제목(화면에 보임)에 정답이 들어 있지 않다', () => {
+    const leaks = CARDS.filter((c): c is McqCard => c.kind === 'mcq')
+      .filter((c) => c.correct.length >= 3 && plain(c.title).toLowerCase().includes(plain(c.correct).toLowerCase()))
+      .map((c) => `${c.id}: ${c.title} ⊃ ${c.correct}`);
+    expect(leaks).toEqual([]);
+  });
+
+  it('정답 고르기 질문은 앞 문제 없이도 읽힌다 ("같은 상황에서"처럼 앞 문제를 가리키지 않음. 레슨 안에서 순서가 섞인다)', () => {
+    const bad = CARDS.filter((c): c is McqCard => c.kind === 'mcq' && /^같은 (상황|조건|요소|결과|코드|문제|경우|\d)/.test(plain(c.q))).map((c) => `${c.id}: ${c.q}`);
+    expect(bad).toEqual([]);
   });
 });

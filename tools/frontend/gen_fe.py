@@ -1,7 +1,18 @@
 import html, sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from fe_content import UNITS
+from fe_content import UNITS as BASE
+from fe_quiz import NEW, ORDER
+
+# 기존 내용 + 새 문제를 합치고, 유닛 안 순서를 ORDER대로 (용어 표는 참고용이라 맨 뒤)
+UNITS = []
+for uid, name, lede, items in BASE:
+    items = items + NEW.get(uid, [])
+    by_id = {x['id']: x for x in items if 'id' in x}
+    order = ORDER[uid]
+    missing = [x['id'] for x in items if 'id' in x and x['id'] not in order]
+    assert not missing, (uid, 'ORDER에 없는 문제', missing)
+    UNITS.append((uid, name, lede, [by_id[i] for i in order] + [x for x in items if x['kind'] == 'table']))
 e = html.escape
 src = open('public/notes.html', encoding='utf-8').read()
 head = src[:src.index('<div class="wrap">')]
@@ -41,7 +52,8 @@ def render(x):
         rows = ''
         for (i, term, sub, meaning, hint) in x['rows']:
             small = f'<small>{e(sub)}</small>' if sub else ''
-            rows += (f'          <tr data-id="{i}"><td class="c"><input type="checkbox" id="k-{i}" aria-label="외움"></td>'
+            # 용어 표는 노트에서 읽는 참고용. 퀴즈는 상황형 문제로 따로 낸다
+            rows += (f'          <tr data-id="{i}" data-quiz="off"><td class="c"><input type="checkbox" id="k-{i}" aria-label="외움"></td>'
                      f'<td class="term">{e(term)}{small}</td><td class="ans">{meaning}</td><td class="hint">{hint}</td></tr>\n')
         return (f'    <p class="group-title">{e(x["title"])}</p>\n    <div class="table-wrap">\n      <table>\n'
                 f'        <thead><tr><th class="c"></th>{heads}</tr></thead>\n        <tbody>\n{rows}        </tbody>\n      </table>\n    </div>\n'), 'block'

@@ -6,7 +6,7 @@
 
 **출근길 5분, 개발 공부를 게임처럼.**
 
-정보처리기사 186문제, 프론트엔드 87문제를<br>
+정보처리기사 186문제, 프론트엔드 100문제를<br>
 듀오링고처럼 짧은 레슨으로 풀어 보세요.
 
 ### [👉 지금 풀어 보기](https://ckdwns9121.github.io/jeongcheogi-quiz/)
@@ -44,20 +44,20 @@
 | UML | 구조·행위 다이어그램, 관계 6가지 선 모양, 접근 제어 기호, 구성요소 | 14 |
 | 소프트웨어 공학 | 결합도·응집도 순서, 테스트 단계, 폭포수 모델, 통합 테스트 | 5 |
 
-### 프론트엔드 (87문제)
+### 프론트엔드 (100문제)
 
 <img src="docs/screenshots/19-frontend-map.png" width="200" align="right" alt="프론트엔드 레슨 지도">
 
 | 유닛 | 내용 | 카드 |
 |---|---|---|
-| JavaScript 핵심 | 호이스팅, TDZ, 클로저, `var`와 `let` 반복문, `this`와 `call`, `==`와 `===`, `typeof`, 얕은 복사, `??`와 `\|\|` | 18 |
-| 비동기 · 이벤트 루프 | 콜 스택, 마이크로태스크와 매크로태스크, `setTimeout`과 `Promise` 출력 순서, `async`/`await`, `Promise.all`·`allSettled` | 13 |
-| 브라우저 · DOM | 렌더링 과정, 리플로우와 리페인트, `defer`와 `async`, 이벤트 전파와 위임, 스토리지, 동일 출처와 CORS | 13 |
-| CSS | 박스 모델, `position`, `em`과 `rem`, Flexbox 정렬, 쌓임 맥락, 명시도 계산 | 12 |
-| React | 가상 DOM과 재조정, `key`, props와 state, 배치 업데이트, `useEffect` 실행 시점, `useMemo`·`useCallback`, 불변성 | 13 |
-| 웹 · 성능 · 보안 | HTTP 상태 코드, 메서드와 멱등성, 캐시 헤더, Core Web Vitals(LCP·INP·CLS) | 18 |
+| JavaScript 핵심 | 호이스팅, TDZ, 클로저, `var`와 `let` 반복문, 메서드·화살표 함수·콜백의 `this`, `==`와 `===`, `sort()` 함정, 얕은 복사와 `structuredClone`, 디바운스·스로틀 | 20 |
+| 비동기 · 이벤트 루프 | 출력 순서(`setTimeout`·`then`·`await` 섞기), `forEach` 안의 `await`, `catch` 뒤의 `then`, try/catch가 못 잡는 에러, 순차 vs 병렬 `await`, `all`·`allSettled`·`any`·`race` 고르기 | 19 |
+| 브라우저 · DOM | 렌더링 과정, 리플로우, `defer`와 `async` 고르기, `target`과 `currentTarget`, `preventDefault`와 `stopPropagation`, 저장소 고르기, CORS를 어디서 고치는지와 preflight | 16 |
+| CSS | 박스 너비 계산, 마진 상쇄, 명시도와 `!important`, `em`·`rem` 계산, `absolute`의 기준, `sticky`, column일 때 정렬, z-index 9999가 안 먹는 이유 | 13 |
+| React | 배치 업데이트, 함수형 업데이트, set 직후의 state, `useRef`, `useEffect` 실행 시점과 무한 루프, 오래된 클로저, `React.memo`와 `useCallback`, StrictMode, 훅 규칙, `key` | 16 |
+| 웹 · 성능 · 보안 | 상황별 상태 코드, 멱등성, `Cache-Control` 고르기, LCP·INP·CLS를 나쁘게 만드는 코드, `innerHTML`과 XSS, 쿠키 속성(HttpOnly·SameSite·Secure) | 16 |
 
-코드 출력값 문제의 정답은 전부 Node로 실제 실행해서 확인했어요.
+용어 뜻 맞히기 대신 **코드나 상황을 보고 결과·해결책을 고르는 문제**로 만들었고, 오답 보기는 실제로 자주 하는 착각으로 채웠어요. 코드 출력값 정답은 전부 Node로 실제 실행해서 확인했어요.
 
 <br clear="right">
 
@@ -203,6 +203,8 @@ pnpm build      # 타입 체크 + 빌드
 pnpm extract    # 학습 노트를 고친 뒤 코스별 카드 데이터 다시 뽑기
 pnpm build:riv  # 캐릭터 duck.riv 다시 만들기 (공식 런타임으로 상태 머신까지 검증)
 ```
+
+문제를 만들거나 고칠 때의 원칙과 검토 순서는 `.claude/skills/quiz-quality/SKILL.md`에 있어요. `DUMP=frontend pnpm test dump`로 모든 문제를 텍스트로 뽑아 읽어 볼 수 있어요.
 
 카드 내용은 코스마다 학습 노트 한 곳(`public/notes.html`, `public/notes-frontend.html`)에서 관리해요. 노트를 고치고 `pnpm extract`를 실행하면 퀴즈에도 반영됩니다.
 
