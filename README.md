@@ -6,7 +6,7 @@
 
 **출근길 5분, 개발 공부를 게임처럼.**
 
-정보처리기사 189문제, 프론트엔드 171문제, AWS 79문제를<br>
+정보처리기사 189문제, 프론트엔드 202문제, AWS 79문제를<br>
 듀오링고처럼 짧은 레슨으로, 러버덕 **덕구**와 같이 풀어 보세요.
 
 ### [👉 지금 풀어 보기](https://ckdwns9121.github.io/duckgu-quiz/)
@@ -45,7 +45,7 @@
 | UML | 구조·행위 다이어그램, 관계 6가지 선 모양, 접근 제어 기호, 구성요소 | 14 |
 | 소프트웨어 공학 | 결합도·응집도 순서, 테스트 단계, 폭포수 모델, 통합 테스트 | 5 |
 
-### 프론트엔드 (171문제)
+### 프론트엔드 (202문제)
 
 <img src="docs/screenshots/19-frontend-map.png" width="200" align="right" alt="프론트엔드 레슨 지도">
 
@@ -56,10 +56,12 @@
 | 브라우저 · DOM | 렌더링 과정, 리플로우와 layout thrashing, `defer`·`async`·`type="module"`·JS로 넣은 script의 실행 순서, 클릭 한 번의 이벤트 순서, 캡처·버블, `stopImmediatePropagation`, `focus`와 `focusin`, passive 리스너, MutationObserver·rAF 시점, storage 이벤트, 쿠키를 실은 CORS와 preflight, SameSite=Lax, preconnect·preload·prefetch, bfcache, 서비스 워커 업데이트 | 42 |
 | CSS | 박스 너비 계산, 마진 상쇄, 명시도와 `!important`, `em`·`rem` 계산, `absolute`의 기준, `sticky`, column일 때 정렬, z-index 9999가 안 먹는 이유 | 13 |
 | React | 배치(setTimeout 포함)와 `flushSync`, 부모·자식 effect 순서, `useLayoutEffect`와 cleanup 순서, 같은 자리의 state 보존, 컴포넌트 안의 컴포넌트, `useState` 초기값 계산, children으로 렌더링 줄이기, Context value, 늦게 온 응답(race), 에러 바운더리가 못 잡는 에러, React 19의 ref prop, `useDeferredValue`, 오래된 클로저, `React.memo`와 `useCallback`, StrictMode, 훅 규칙 | 35 |
+| 렌더링 방식 | CSR의 첫 HTML, CSR·SSR이 화면에 뜨는 순서, SEO, SSG·SSR·ISR 고르기, ISR의 stale-while-revalidate, SSR과 TTFB, hydration 전의 버튼, 스트리밍, 서버 컴포넌트와 SSR의 차이, 아일랜드, 정적 페이지 속 사용자별 값 | 14 |
 | Next.js | 서버·클라이언트 컴포넌트 경계(children, import, 함수 props), Next 16의 `await params`, 정적·동적 렌더링(○·●·ƒ), `dynamicParams`, try 안의 `redirect`, `error`·`loading`·`template`, Suspense 스트리밍, Server Action 권한, `NEXT_PUBLIC_` 빌드 인라인, `server-only`, hydration 에러, `useSearchParams`와 Suspense, fetch 캐시와 cacheComponents, `updateTag`, `proxy.ts` | 26 |
+| 성능 최적화 | ETag와 `If-None-Match`·304, Last-Modified의 한계, Brotli·gzip, 코드 스플리팅과 `React.lazy`, 트리 셰이킹(lodash vs lodash-es), `loading="lazy"`, `fetchpriority`, 이미지 포맷·srcset, `font-display`, 광고 자리 잡기(CLS), 목록 가상화, `content-visibility`, 긴 작업 50ms, INP, memo 남용 | 17 |
 | 웹 · 성능 · 보안 | 상황별 상태 코드, 멱등성, `Cache-Control` 고르기, LCP·INP·CLS를 나쁘게 만드는 코드, `innerHTML`과 XSS, 쿠키 속성(HttpOnly·SameSite·Secure) | 16 |
 
-용어 뜻 맞히기 대신 **코드나 상황을 보고 결과·해결책을 고르는 문제**로 만들었고, 오답 보기는 실제로 자주 하는 착각으로 채웠어요. 정답은 손으로 쓰지 않고 실제로 돌려서 확인했어요: JS는 Node, React는 React 19를 jsdom에서, 브라우저 동작은 실제 Chrome에서, Next.js는 Next 16 공식 문서와 실제 빌드로(`tools/frontend/verify/`).
+용어 뜻 맞히기 대신 **코드나 상황을 보고 결과·해결책을 고르는 문제**로 만들었고, 오답 보기는 실제로 자주 하는 착각으로 채웠어요. 정답은 손으로 쓰지 않고 실제로 돌려서 확인했어요: JS는 Node, React는 React 19를 jsdom에서, 브라우저 동작은 실제 Chrome에서(ETag·304, lazy 이미지 포함), 번들 크기는 esbuild로, Next.js는 Next 16 공식 문서와 실제 빌드로(`tools/frontend/verify/`).
 
 <br clear="right">
 

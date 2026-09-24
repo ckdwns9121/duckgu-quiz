@@ -7,6 +7,8 @@
 | `react-lab.mjs` | React 렌더링·effect 순서, state 보존, 배치, StrictMode, 에러 바운더리 등 (R1~R24) | react@19 · react-dom@19 · jsdom |
 | `browser-lab.mjs` | script 로딩 순서, 이벤트 순서·전파, MutationObserver·rAF 시점, storage 이벤트 등 (B1~B28) | Playwright + 실제 Chrome |
 | `dyn-defer.mjs` | JS로 넣은 script에 defer가 효과 없는지 | Playwright + 실제 Chrome |
+| `perf-lab.mjs` | ETag → If-None-Match → 304 흐름, loading="lazy" 이미지 요청 수 (로컬 HTTP 서버라 브라우저 캐시가 실제로 동작) | Playwright + 실제 Chrome |
+| `bundle-lab.sh` | 트리 셰이킹(lodash / lodash-es / lodash/debounce 번들 크기), 동적 import 코드 스플리팅 | esbuild |
 | `nextapp/` | 빌드 결과의 ○·●·ƒ, dynamicParams=false의 404, try 안의 redirect, NEXT_PUBLIC_ 인라인 | next@16 build · start |
 
 저장소 의존성에는 넣지 않았다. 임시 폴더에서 설치해 돌린다.

@@ -68,7 +68,7 @@
   {
    "id": "frontend",
    "name": "프론트엔드",
-   "desc": "JavaScript, 이벤트 루프, 브라우저, CSS, React, Next.js, 웹 기본기",
+   "desc": "JavaScript, 이벤트 루프, 브라우저, CSS, React, 렌더링 방식, Next.js, 성능 최적화, 웹 기본기",
    "notes": "notes-frontend.html",
    "icon": "FE",
    "units": [
@@ -103,10 +103,22 @@
      "dark": "#00A47D"
     },
     {
+     "id": "fe-render",
+     "name": "렌더링 방식",
+     "color": "#8C4FFF",
+     "dark": "#6A35CC"
+    },
+    {
      "id": "fe-next",
      "name": "Next.js",
      "color": "#4B4B4B",
      "dark": "#2B2B2B"
+    },
+    {
+     "id": "fe-perf",
+     "name": "성능 최적화",
+     "color": "#58CC02",
+     "dark": "#58A700"
     },
     {
      "id": "fe-web",
