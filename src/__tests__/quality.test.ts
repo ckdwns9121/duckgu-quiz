@@ -2,7 +2,7 @@
  * 문제 품질 검사. 카드마다 문제를 여러 번 만들어 보면서
  * 답이 보이는지, 보기가 너무 긴지, 보기끼리 겹치는지, 조각이 너무 많은지를 본다.
  */
-import { CARDS } from '../domain/content';
+import { CARDS, courseOfCard } from '../domain/content';
 import { answerTokens, makeQuestion } from '../domain/question';
 import type { Question } from '../domain/types';
 
@@ -11,7 +11,7 @@ const MAX_OPTION = 75;
 const plain = (h: string) => h.replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
 
 function eachQuestion(fn: (q: Question) => void) {
-  for (const card of CARDS) for (let i = 0; i < RUNS; i++) fn(makeQuestion(card, CARDS));
+  for (const card of CARDS) for (let i = 0; i < RUNS; i++) fn(makeQuestion(card, courseOfCard(card).cards));
 }
 
 describe('문제 품질', () => {

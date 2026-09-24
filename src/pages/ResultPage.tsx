@@ -2,20 +2,20 @@ import { LESSON_BY_ID } from '../domain/content';
 import { afterRender, createVNode } from '../lib';
 import { Mascot } from '../components/Mascot';
 import { router } from '../router';
-import { retryLesson } from '../services/lessonService';
+import { courseHome, retryLesson } from '../services/lessonService';
 import { lessonStore } from '../stores/lessonStore';
-import { resetHomeScroll } from './HomePage';
+import { resetHomeScroll } from './CoursePage';
 
 const goHome = () => {
   resetHomeScroll();
-  router.push('/');
+  router.push(courseHome());
 };
 
 export const ResultPage = () => {
   const session = lessonStore.getState();
   const outcome = session?.outcome;
   if (!session || !outcome) {
-    afterRender(() => router.push('/', { replace: true }));
+    afterRender(() => router.push(courseHome(), { replace: true }));
     return <div />;
   }
   const lesson = session.lessonId ? LESSON_BY_ID.get(session.lessonId) : null;

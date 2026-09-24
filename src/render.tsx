@@ -1,6 +1,7 @@
 import { syncRiveMascots } from './components/riveMascot';
 import { createVNode, flushAfterRender, renderElement, withBatch } from './lib';
-import { HomePage } from './pages/HomePage';
+import { CoursePage } from './pages/CoursePage';
+import { CoursesPage } from './pages/CoursesPage';
 import { IntroPage } from './pages/IntroPage';
 import { LessonPage } from './pages/LessonPage';
 import { NotFoundPage } from './pages/NotFoundPage';
@@ -10,7 +11,8 @@ import { lessonStore } from './stores/lessonStore';
 import { installStore } from './stores/installStore';
 import { progressStore } from './stores/progressStore';
 
-router.addRoute('/', HomePage);
+router.addRoute('/', CoursesPage);
+router.addRoute('/course/:id', CoursePage);
 router.addRoute('/intro', IntroPage);
 router.addRoute('/lesson/:id', LessonPage);
 router.addRoute('/practice', LessonPage);

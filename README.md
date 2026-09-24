@@ -1,17 +1,17 @@
 <div align="center">
 
-<img src="docs/screenshots/app-icon.png" width="96" alt="출근길 정처기 퀴즈 아이콘">
+<img src="docs/screenshots/app-icon.png" width="96" alt="출근길 IT 퀴즈 아이콘">
 
-# 출근길 정처기 퀴즈
+# 출근길 IT 퀴즈
 
-**출근길 5분, 정보처리기사 실기를 게임처럼.**
+**출근길 5분, 개발 공부를 게임처럼.**
 
-헷갈리는 코드 문제부터 DB, 네트워크, 보안, UML까지<br>
-186개의 문제를 듀오링고처럼 짧은 레슨으로 풀어 보세요.
+정보처리기사 실기 186문제, 프론트엔드 87문제를<br>
+듀오링고처럼 짧은 레슨으로 풀어 보세요.
 
 ### [👉 지금 풀어 보기](https://ckdwns9121.github.io/jeongcheogi-quiz/)
 
-<img src="docs/screenshots/01-intro.png" width="240" alt="인트로 화면"> <img src="docs/screenshots/02-home.png" width="240" alt="레슨 지도"> <img src="docs/screenshots/06-result.png" width="240" alt="레슨 완료 화면">
+<img src="docs/screenshots/18-courses.png" width="240" alt="코스 고르기"> <img src="docs/screenshots/02-home.png" width="240" alt="레슨 지도"> <img src="docs/screenshots/06-result.png" width="240" alt="레슨 완료 화면">
 
 </div>
 
@@ -19,13 +19,18 @@
 
 ## 이런 분께 좋아요
 
-- 실기 시험이 코앞인데 **코드 출력값 문제**에서 자꾸 틀리는 분
+- 정처기 실기가 코앞인데 **코드 출력값 문제**에서 자꾸 틀리는 분
 - 보안 공격 이름, 네트워크 용어, UML 다이어그램이 **아무리 봐도 안 외워지는** 분
+- 이벤트 루프 출력 순서, 호이스팅, `==`와 `===`처럼 **프론트엔드 기본기를 다시 다지고 싶은** 분
 - 두꺼운 책 대신 **출퇴근길에 폰으로 5분씩** 공부하고 싶은 분
 
 <br>
 
 ## 무엇을 공부하나요
+
+첫 화면에서 코스를 고르면 그 코스의 레슨 지도가 열려요. 코스마다 진행률이 따로 쌓이고, 마지막에 풀던 코스에는 **이어하기** 표시가 붙어요. 백엔드, AWS, Kubernetes 코스도 준비하고 있어요.
+
+### 정처기 실기 (186문제)
 
 | 유닛 | 내용 | 카드 |
 |---|---|---|
@@ -39,6 +44,23 @@
 | UML | 구조·행위 다이어그램, 관계 6가지 선 모양, 접근 제어 기호, 구성요소 | 14 |
 | 소프트웨어 공학 | 결합도·응집도 순서, 테스트 단계, 폭포수 모델, 통합 테스트 | 5 |
 
+### 프론트엔드 (87문제)
+
+<img src="docs/screenshots/19-frontend-map.png" width="200" align="right" alt="프론트엔드 레슨 지도">
+
+| 유닛 | 내용 | 카드 |
+|---|---|---|
+| JavaScript 핵심 | 호이스팅, TDZ, 클로저, `var`와 `let` 반복문, `this`와 `call`, `==`와 `===`, `typeof`, 얕은 복사, `??`와 `\|\|` | 18 |
+| 비동기 · 이벤트 루프 | 콜 스택, 마이크로태스크와 매크로태스크, `setTimeout`과 `Promise` 출력 순서, `async`/`await`, `Promise.all`·`allSettled` | 13 |
+| 브라우저 · DOM | 렌더링 과정, 리플로우와 리페인트, `defer`와 `async`, 이벤트 전파와 위임, 스토리지, 동일 출처와 CORS | 13 |
+| CSS | 박스 모델, `position`, `em`과 `rem`, Flexbox 정렬, 쌓임 맥락, 명시도 계산 | 12 |
+| React | 가상 DOM과 재조정, `key`, props와 state, 배치 업데이트, `useEffect` 실행 시점, `useMemo`·`useCallback`, 불변성 | 13 |
+| 웹 · 성능 · 보안 | HTTP 상태 코드, 메서드와 멱등성, 캐시 헤더, Core Web Vitals(LCP·INP·CLS) | 18 |
+
+코드 출력값 문제의 정답은 전부 Node로 실제 실행해서 확인했어요.
+
+<br clear="right">
+
 모든 카드에 **한 줄씩 따라가는 풀이**와 **"기억할 것" 한 줄 요약**, 외우는 요령이 들어 있습니다.
 
 <br>
@@ -47,7 +69,7 @@
 
 ### 1. 레슨 지도에서 하나씩
 
-유닛마다 6문제짜리 레슨이 이어져 있어요. 레슨을 끝내면 다음 레슨이 열리고, 러버덕 캐릭터 **덕구**가 지금 할 레슨 옆에서 기다립니다. 유닛끼리는 순서가 없어서 약한 과목부터 골라 시작해도 돼요.
+코스 안의 유닛마다 6문제짜리 레슨이 이어져 있어요. 레슨을 끝내면 다음 레슨이 열리고, 러버덕 캐릭터 **덕구**가 지금 할 레슨 옆에서 기다립니다. 유닛끼리는 순서가 없어서 약한 과목부터 골라 시작해도 돼요.
 
 ### 2. 문제는 다섯 가지 방식으로
 
@@ -61,8 +83,8 @@
 <td align="center"><img src="docs/screenshots/10-mcq.png" width="220" alt="정답 고르기"><br><b>정답 고르기</b><br>키 개수 계산, LIKE 조건, 회복 기법처럼<br>실기에 나오는 형태로 직접 쓴 문제</td>
 </tr>
 <tr>
-<td align="center"><img src="docs/screenshots/17-order.png" width="220" alt="조각으로 만들기"><br><b>조각으로 만들기</b><br>순서 맞추기(OSI, 정규화, 결합도…),<br>영문 풀네임(CSRF, ACID…), SQL 문장 만들기</td>
-<td></td>
+<td align="center"><img src="docs/screenshots/17-order.png" width="220" alt="조각으로 만들기"><br><b>조각으로 만들기</b><br>순서 맞추기(OSI, 정규화, 이벤트 루프…),<br>영문 풀네임(CSRF, ACID…), SQL 문장 만들기</td>
+<td align="center"><img src="docs/screenshots/20-frontend-code.png" width="220" alt="프론트엔드 출력값 문제"><br><b>프론트엔드 출력값</b><br>Promise, setTimeout, 클로저 코드의<br>실행 결과 맞히기</td>
 </tr>
 </table>
 
@@ -97,7 +119,7 @@
 </table>
 
 - 레슨마다 **하트 100개**. 틀려도 끝까지 풀면서 해설을 볼 수 있어요.
-- 틀린 카드는 **약점 복습**에 자동으로 모여요. 지도 오른쪽 아래 버튼으로 틀린 것만 다시 풀 수 있어요.
+- 틀린 카드는 **약점 복습**에 자동으로 모여요. 지도 오른쪽 아래 버튼으로 지금 코스에서 틀린 것만 다시 풀 수 있어요.
 - 문제 순서와 보기 순서는 매번 섞여서, 순서를 외워서 풀 수 없어요.
 - 모든 문제는 앱이 채점해요. 보기는 짧게(첫 문장만) 보여 주고, 전체 설명은 풀고 나서 해설로 봐요.
 
@@ -109,7 +131,7 @@
 
 <img src="docs/screenshots/09-notes.png" width="220" align="right" alt="학습 노트">
 
-유닛 제목 옆 **노트** 버튼을 누르면 카드 전체를 한 페이지로 정리한 노트가 열려요. 퀴즈 모드로 답을 가리고 읽거나, 외운 카드를 체크해서 숨길 수 있어요.
+유닛 제목 옆 **노트** 버튼을 누르면 그 코스의 카드 전체를 한 페이지로 정리한 노트가 열려요. 퀴즈 모드로 답을 가리고 읽거나, 외운 카드를 체크해서 숨길 수 있어요.
 
 <br clear="right">
 
@@ -148,7 +170,7 @@ React 없이 **TypeScript로 만든 SPA**입니다. 가상 DOM, 스토어, 라�
 | 가상 DOM | `createVNode`(JSX 팩토리) → `normalizeVNode` → `createElement` / `updateElement` 비교 렌더링. SVG 네임스페이스, `innerHTML`, `value` prop을 보강 |
 | 이벤트 | WeakMap에 핸들러를 두고 루트에서 한 번에 처리하는 이벤트 위임 |
 | 상태 | Redux 방식 `createStore` + `createStorage`(localStorage), `withBatch`로 같은 틱의 렌더를 한 번으로 |
-| 라우팅 | History API `Router`. `/lesson/db-1`처럼 레슨마다 주소가 있고, GitHub Pages에서는 `404.html`로 새로고침을 받아요 |
+| 라우팅 | History API `Router`. `/course/frontend`, `/lesson/db-1`처럼 코스와 레슨마다 주소가 있고, GitHub Pages에서는 `404.html`로 새로고침을 받아요 |
 | 퀴즈 로직 | 문제 생성, 답 조각과 가짜 조각 만들기, 채점, 레슨 나누기, 스트릭·XP를 `domain/`의 순수 함수로 분리하고 vitest로 테스트 (코드 문제 전부가 조각만으로 풀리는지도 검사). **문제 품질 테스트**: 모든 문제를 여러 번 만들어 보며 답 노출, 보기 길이, 보기 중복, 조각 수를 검사 |
 | 캐릭터 | 러버덕 덕구는 **Rive**(`public/rive/duck.riv`)로 움직여요. idle·happy·sad·cheer 네 동작과 상태 머신(happy·sad 트리거, cheer 불)을 [rive-mcp-server](https://github.com/ODU33104/rive-mcp)로 Rive 에디터 없이 만들었어요(`pnpm build:riv`). 런타임은 첫 화면 뒤에 따로 받고, 불러오기 전이나 실패하면 같은 모양의 SVG + CSS 애니메이션이 대신 보여요 |
 | 효과 | 폭죽은 캔버스 파티클, 하트·글자는 Web Animations API, 효과음은 음원 파일 없이 Web Audio로 합성. 움직임 줄이기 설정을 켜면 효과를 끕니다 |
@@ -165,9 +187,9 @@ src/
   stores/       progressStore(XP·스트릭·푼 기록), lessonStore(진행 중인 레슨)
   services/     레슨 시작·채점·완료 흐름, 효과음
   components/   캐릭터(SVG + Rive 연결), 레슨 지도, 문제, 해설 시트, 효과
-  pages/        Intro · Home(레슨 지도) · Lesson · Result · NotFound
-  data/         cards.json (public/notes.html에서 추출)
-public/         notes.html(학습 노트), rive/duck.riv(캐릭터), manifest, service worker, 아이콘
+  pages/        Intro · Courses(코스 고르기) · Course(레슨 지도) · Lesson · Result · NotFound
+  data/         courses.json(코스·유닛 목록), cards/<코스>.json (학습 노트에서 추출)
+public/         notes.html · notes-frontend.html(코스별 학습 노트), rive/duck.riv(캐릭터), manifest, service worker, 아이콘
 scripts/        카드 추출, 캐릭터 부위 그림(mascot-parts.mjs), Rive 파일 만들기, 아이콘 만들기
 ```
 
@@ -178,8 +200,10 @@ pnpm install
 pnpm dev        # 개발 서버
 pnpm test       # 단위 테스트
 pnpm build      # 타입 체크 + 빌드
-pnpm extract    # public/notes.html을 고친 뒤 카드 데이터 다시 뽑기
+pnpm extract    # 학습 노트를 고친 뒤 코스별 카드 데이터 다시 뽑기
 pnpm build:riv  # 캐릭터 duck.riv 다시 만들기 (공식 런타임으로 상태 머신까지 검증)
 ```
 
-카드 내용은 `public/notes.html` 한 곳에서 관리해요. 노트를 고치고 `pnpm extract`를 실행하면 퀴즈에도 반영됩니다.
+카드 내용은 코스마다 학습 노트 한 곳(`public/notes.html`, `public/notes-frontend.html`)에서 관리해요. 노트를 고치고 `pnpm extract`를 실행하면 퀴즈에도 반영됩니다.
+
+새 코스는 `src/data/courses.json`에 코스와 유닛을 적고, 같은 형식의 노트를 만든 뒤 `pnpm extract`로 뽑은 카드를 `src/domain/content.ts`에 이어 주면 돼요.

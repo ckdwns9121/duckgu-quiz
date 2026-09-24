@@ -1,15 +1,24 @@
 import { visibleStreak, dayKey } from '../domain/streak';
+import type { Course } from '../domain/types';
+import { router } from '../router';
 import { createVNode } from '../lib';
 import { progressStore } from '../stores/progressStore';
 import { BoltIcon, FireIcon, SoundIcon } from './Icons';
 
-export const TopBar = () => {
+/** course를 주면 코스 이름과 코스 목록으로 돌아가는 버튼을 보여 준다 */
+export const TopBar = ({ course }: { course?: Course } = {}) => {
   const { streak, lastDay, xp, sound } = progressStore.getState();
   const doneToday = lastDay === dayKey();
   return (
     <header className="topbar">
       <div className="col">
-        <span className="brandmini">출근길 정처기 퀴즈</span>
+        {course
+          ? (
+            <button className="brand-back" type="button" aria-label="코스 목록으로" onClick={() => router.push('/')}>
+              <span className="chev">‹</span><span className="brandmini" style={`color:${course.dark}`}>{course.name}</span>
+            </button>
+          )
+          : <span className="brandmini">출근길 IT 퀴즈</span>}
         <div style="display:flex;gap:4px;align-items:center">
           <span className={`stat fire${doneToday ? '' : ' off'}`} title={doneToday ? '오늘 학습 완료' : '오늘 레슨을 하나 끝내면 불이 켜져요'}>
             <FireIcon /><span>{visibleStreak(streak, lastDay)}</span>

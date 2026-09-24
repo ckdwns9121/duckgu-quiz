@@ -49,16 +49,16 @@ export const QuestionView = ({ q, session }: { q: Question; session: LessonSessi
 };
 
 const Prompt = ({ q }: { q: Question }) => {
-  if (q.type === 'choice' && q.promptHtml) return <div style="display:grid" innerHTML={q.promptHtml} />;
+  if (q.type === 'choice' && q.promptHtml) return <div style="display:grid;grid-template-columns:minmax(0,1fr)" innerHTML={q.promptHtml} />;
   if (q.type === 'choice' && q.prompt) return <p className="q-text">{q.prompt}</p>;
   const card = q.card;
   if (card.kind === 'term' || card.kind === 'rel') return null;
   if (card.kind === 'build') return <p className="q-term">{card.title}</p>;
   return (
-    <div style="display:grid;gap:14px">
+    <div style="display:grid;grid-template-columns:minmax(0,1fr);gap:14px">
       <p className="q-term">{card.title}</p>
       {card.kind === 'recall' && card.mnemo && <span className="mnemo">{card.mnemo}</span>}
-      {card.pre && <div innerHTML={card.pre} />}
+      {card.pre && <div style="min-width:0" innerHTML={card.pre} />}
       {card.kind === 'recall' && card.q && <p className="q-text" innerHTML={card.q} />}
     </div>
   );

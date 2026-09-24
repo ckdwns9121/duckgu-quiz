@@ -1,4 +1,5 @@
-export type UnitId = 'code-c' | 'code-java' | 'code-py' | 'code-sql' | 'db' | 'net' | 'sec' | 'uml' | 'swe';
+/** 유닛 id는 코스 설정(src/data/courses.json)에서 온다 */
+export type UnitId = string;
 
 interface BaseCard {
   id: string;
@@ -101,4 +102,19 @@ export interface Lesson {
   unit: Unit;
   n: number;
   cardIds: string[];
+}
+
+export interface Course {
+  id: string;
+  name: string;
+  desc: string;
+  /** 코스 배지에 쓰는 짧은 글자 */
+  icon: string;
+  color: string;
+  dark: string;
+  /** public/ 아래 학습 노트 파일 */
+  notes: string;
+  units: Unit[];
+  cards: Card[];
+  lessons: Lesson[];
 }

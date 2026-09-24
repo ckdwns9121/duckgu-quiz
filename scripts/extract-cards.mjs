@@ -1,10 +1,10 @@
-// public/notes.html(학습 노트)에서 퀴즈 카드를 뽑아 src/data/cards.json으로 저장한다.
-// 노트를 고친 뒤 `pnpm extract`를 다시 실행하면 퀴즈에도 반영된다.
+// 코스마다 학습 노트(public/<notes>.html)에서 퀴즈 카드를 뽑아 src/data/cards/<코스>.json으로 저장한다.
+// 코스와 유닛 목록은 src/data/courses.json. 노트를 고친 뒤 `pnpm extract`를 다시 실행하면 퀴즈에도 반영된다.
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { JSDOM } from 'jsdom';
 
-const UNITS = ['code-c', 'code-java', 'code-py', 'code-sql', 'db', 'net', 'sec', 'uml', 'swe'];
-const { document } = new JSDOM(readFileSync('public/notes.html', 'utf8')).window;
+const { courses } = JSON.parse(readFileSync('src/data/courses.json', 'utf8'));
+let document;
 const text = (html) => {
   const d = document.createElement('div');
   d.innerHTML = html;
@@ -85,9 +85,13 @@ function segmentsOf(term, meaningText) {
   });
 }
 
+mkdirSync('src/data/cards', { recursive: true });
+for (const course of courses) {
+document = new JSDOM(readFileSync(`public/${course.notes}`, 'utf8')).window.document;
 const cards = [];
-for (const unit of UNITS) {
+for (const unit of course.units.map((u) => u.id)) {
   const sec = document.getElementById(unit);
+  if (!sec) throw new Error(`${course.id}: 노트에 섹션 #${unit}이 없음`);
   let table = 0;
   for (const el of sec.querySelectorAll('table, [data-id]')) {
     if (el.tagName === 'TABLE') { table++; continue; }
@@ -163,6 +167,6 @@ for (const unit of UNITS) {
     }
   }
 }
-mkdirSync('src/data', { recursive: true });
-writeFileSync('src/data/cards.json', JSON.stringify(cards, null, 1) + '\n');
-console.log(`카드 ${cards.length}장 추출 → src/data/cards.json`);
+writeFileSync(`src/data/cards/${course.id}.json`, JSON.stringify(cards, null, 1) + '\n');
+console.log(`${course.name}: 카드 ${cards.length}장 → src/data/cards/${course.id}.json`);
+}

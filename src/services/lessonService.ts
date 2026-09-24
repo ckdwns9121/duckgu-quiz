@@ -1,4 +1,4 @@
-import { CARD_BY_ID, CARDS, LESSON_BY_ID } from '../domain/content';
+import { CARD_BY_ID, COURSE_BY_ID, courseOfCard, courseOfLesson, DEFAULT_COURSE, LESSON_BY_ID } from '../domain/content';
 import { isBuildCorrect, isTypedAnswerCorrect, makeQuestion, shuffle } from '../domain/question';
 import { dayKey, lessonXp, nextStreak, visibleStreak } from '../domain/streak';
 import type { Card } from '../domain/types';
@@ -14,24 +14,33 @@ const PRACTICE_SIZE = 8;
 
 function begin(lessonId: string | null, cards: Card[]) {
   // 레슨마다 문제 순서를 섞는다 (같은 레슨을 다시 해도 순서를 외워서 풀지 않게)
-  lessonStore.dispatch({ type: 'START', lessonId, queue: shuffle(cards).map((card) => makeQuestion(card, CARDS)) });
+  lessonStore.dispatch({ type: 'START', lessonId, queue: shuffle(cards).map((card) => makeQuestion(card, courseOfCard(card).cards)) });
 }
 
 /** 레슨 지도에서 누른 레슨 시작 */
 export function startLesson(lessonId: string) {
   const lesson = LESSON_BY_ID.get(lessonId);
   if (!lesson) return router.push('/', { replace: true });
+  const course = courseOfLesson(lesson).id;
+  progressStore.dispatch({ type: 'SET_COURSE', course });
   begin(lessonId, lesson.cardIds.map((id) => CARD_BY_ID.get(id)!));
-  track('lesson_start', { lesson_id: lessonId, unit: lesson.unit.id });
+  track('lesson_start', { lesson_id: lessonId, unit: lesson.unit.id, course });
   if (router.params.id !== lessonId) router.push(`/lesson/${lessonId}`);
 }
 
-/** 마지막에 틀린 카드만 골라 복습 */
+/** 지금 코스 */
+export const currentCourse = () => COURSE_BY_ID.get(progressStore.getState().course) ?? DEFAULT_COURSE;
+/** 지금 코스의 레슨 지도 주소 */
+export const courseHome = () => `/course/${currentCourse().id}`;
+/** 지금 코스에서 마지막에 틀린 카드 */
+export const courseWeakIds = () => weakCardIds(progressStore.getState(), new Set(currentCourse().cards.map((c) => c.id)));
+
+/** 마지막에 틀린 카드만 골라 복습 (지금 코스 안에서) */
 export function startPractice() {
-  const ids = shuffle(weakCardIds(progressStore.getState())).slice(0, PRACTICE_SIZE);
-  if (!ids.length) return router.push('/', { replace: true });
+  const ids = shuffle(courseWeakIds()).slice(0, PRACTICE_SIZE);
+  if (!ids.length) return router.push(courseHome(), { replace: true });
   begin(null, ids.map((id) => CARD_BY_ID.get(id)!).filter(Boolean));
-  track('practice_start', { cards: ids.length });
+  track('practice_start', { cards: ids.length, course: currentCourse().id });
   if (router.route?.path !== '/practice') router.push('/practice');
 }
 
@@ -86,7 +95,7 @@ export function answer(ok: boolean) {
     loseHeart();
   }
   const withSheet = q.type !== 'recall';
-  lessonStore.dispatch({ type: 'ANSWER', ok, retry: ok ? null : makeQuestion(q.card, CARDS), withSheet });
+  lessonStore.dispatch({ type: 'ANSWER', ok, retry: ok ? null : makeQuestion(q.card, courseOfCard(q.card).cards), withSheet });
   if (!withSheet) proceed();
 }
 
@@ -121,14 +130,14 @@ function finish(passed: boolean) {
   lessonStore.dispatch({ type: 'FINISH', outcome: { passed, xp, accuracy, streak, perfect: passed && s.mistakes === 0 } });
   const lesson = s.lessonId ? LESSON_BY_ID.get(s.lessonId) : null;
   track(passed ? 'lesson_complete' : 'lesson_fail', {
-    lesson_id: s.lessonId ?? 'practice', unit: lesson?.unit.id ?? 'practice',
+    lesson_id: s.lessonId ?? 'practice', unit: lesson?.unit.id ?? 'practice', course: currentCourse().id,
     accuracy, mistakes: s.mistakes, xp, streak, perfect: passed && s.mistakes === 0,
   });
   router.push('/result', { replace: true });
 }
 
 export function quitLesson() {
-  router.push('/');
+  router.push(courseHome());
 }
 
 export function retryLesson() {

@@ -1,7 +1,7 @@
 {
-  "name": "출근길 정처기 퀴즈",
-  "short_name": "출근길 정처기 퀴즈",
-  "description": "정보처리기사 실기 대비 플래시카드: 코드 함정, DB, 네트워크, 보안, UML",
+  "name": "출근길 IT 퀴즈",
+  "short_name": "출근길 IT 퀴즈",
+  "description": "출근길에 한 레슨씩 푸는 IT 퀴즈: 정보처리기사 실기, 프론트엔드",
   "lang": "ko",
   "start_url": "./",
   "scope": "./",

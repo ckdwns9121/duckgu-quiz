@@ -1,12 +1,11 @@
 import { buildLessons, isUnlocked } from '../domain/lessons';
 import { lessonXp, nextStreak, visibleStreak } from '../domain/streak';
-import { CARDS } from '../domain/content';
-import { UNITS } from '../domain/units';
+import { CARDS, COURSES } from '../domain/content';
 import { lessonReducer, MAX_LIVES } from '../stores/lessonStore';
 import { makeQuestion } from '../domain/question';
 
 describe('레슨 나누기', () => {
-  const lessons = buildLessons(UNITS, CARDS);
+  const lessons = COURSES.flatMap((c) => buildLessons(c.units, c.cards));
   it('모든 카드가 정확히 한 레슨에 들어간다', () => {
     const ids = lessons.flatMap((l) => l.cardIds);
     expect(ids).toHaveLength(CARDS.length);
@@ -80,5 +79,18 @@ describe('힌트 열기', () => {
     s = lessonReducer(s, { type: 'ANSWER', ok: true, retry: null, withSheet: true })!;
     s = lessonReducer(s, { type: 'CLOSE_SHEET' })!;
     expect(s.hintsShown).toBe(0);
+  });
+});
+
+describe('코스', () => {
+  it('코스마다 카드가 있고, 카드 id는 코스끼리 겹치지 않는다', () => {
+    COURSES.forEach((c) => expect(c.cards.length).toBeGreaterThan(0));
+    expect(new Set(CARDS.map((c) => c.id)).size).toBe(CARDS.length);
+  });
+  it('모든 카드는 자기 코스의 유닛에 속한다', () => {
+    COURSES.forEach((c) => {
+      const units = new Set(c.units.map((u) => u.id));
+      c.cards.forEach((card) => expect(units.has(card.unit)).toBe(true));
+    });
   });
 });
