@@ -14,7 +14,7 @@ export interface MatchedRoute extends RouteDef {
 
 /**
  * History API 기반 SPA 라우터.
- * GitHub Pages처럼 하위 경로(/jeongcheogi-quiz/)에 올릴 때를 위해 baseUrl을 받는다.
+ * GitHub Pages처럼 하위 경로(/duckgu-quiz/)에 올릴 때를 위해 baseUrl을 받는다.
  * <a data-link href="/lesson/c-1">는 새로고침 없이 이동한다.
  */
 export class Router {
@@ -67,7 +67,7 @@ export class Router {
     this.#routes.set(path, { regex: new RegExp(`^${this.#baseUrl}${pattern}\\/?$`), paramNames, handler });
   }
 
-  /** 앱 안에서 쓰는 경로('/lesson/1')를 실제 주소('/jeongcheogi-quiz/lesson/1')로 바꾼다 */
+  /** 앱 안에서 쓰는 경로('/lesson/1')를 실제 주소('/duckgu-quiz/lesson/1')로 바꾼다 */
   href(path: string) {
     return this.#baseUrl + (path.startsWith('/') ? path : `/${path}`);
   }

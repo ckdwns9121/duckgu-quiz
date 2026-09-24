@@ -7,9 +7,9 @@
 **출근길 5분, 개발 공부를 게임처럼.**
 
 정보처리기사 186문제, 프론트엔드 171문제를<br>
-듀오링고처럼 짧은 레슨으로 풀어 보세요.
+듀오링고처럼 짧은 레슨으로, 러버덕 **덕구**와 같이 풀어 보세요.
 
-### [👉 지금 풀어 보기](https://ckdwns9121.github.io/jeongcheogi-quiz/)
+### [👉 지금 풀어 보기](https://ckdwns9121.github.io/duckgu-quiz/)
 
 <img src="docs/screenshots/18-courses.png" width="240" alt="코스 고르기"> <img src="docs/screenshots/02-home.png" width="240" alt="레슨 지도"> <img src="docs/screenshots/06-result.png" width="240" alt="레슨 완료 화면">
 
@@ -172,7 +172,8 @@ React 없이 **TypeScript로 만든 SPA**입니다. 가상 DOM, 스토어, 라�
 | 이벤트 | WeakMap에 핸들러를 두고 루트에서 한 번에 처리하는 이벤트 위임 |
 | 상태 | Redux 방식 `createStore` + `createStorage`(localStorage), `withBatch`로 같은 틱의 렌더를 한 번으로 |
 | 라우팅 | History API `Router`. `/course/frontend`, `/lesson/db-1`처럼 코스와 레슨마다 주소가 있고, GitHub Pages에서는 `404.html`로 새로고침을 받아요 |
-| 퀴즈 로직 | 문제 생성, 답 조각과 가짜 조각 만들기, 채점, 레슨 나누기, 스트릭·XP를 `domain/`의 순수 함수로 분리하고 vitest로 테스트 (코드 문제 전부가 조각만으로 풀리는지도 검사). **문제 품질 테스트**: 모든 문제를 여러 번 만들어 보며 답 노출, 보기 길이, 보기 중복, 조각 수를 검사 |
+| 퀴즈 로직 | 문제 생성, 답 조각과 가짜 조각 만들기, 채점, 레슨 나누기, 스트릭·XP를 `domain/`의 순수 함수로 분리하고 vitest로 테스트 (코드 문제 전부가 조각만으로 풀리는지도 검사). **문제 품질 테스트**: 모든 문제를 여러 번 만들어 보며 답 노출(질문·제목), 보기 길이·중복, 앞 문제에 기대는 질문, 조각 수를 검사 |
+| 정답 검증 | 정답을 손으로 쓰지 않아요. JS 출력값은 Node로 실행하고, React 동작은 React 19를 jsdom에서, 브라우저 동작은 Playwright로 실제 Chrome에서, Next.js는 그 버전의 공식 문서와 실제 `next build`로 확인해요 (`tools/frontend/verify/`) |
 | 캐릭터 | 러버덕 덕구는 **Rive**(`public/rive/duck.riv`)로 움직여요. idle·happy·sad·cheer 네 동작과 상태 머신(happy·sad 트리거, cheer 불)을 [rive-mcp-server](https://github.com/ODU33104/rive-mcp)로 Rive 에디터 없이 만들었어요(`pnpm build:riv`). 런타임은 첫 화면 뒤에 따로 받고, 불러오기 전이나 실패하면 같은 모양의 SVG + CSS 애니메이션이 대신 보여요 |
 | 효과 | 폭죽은 캔버스 파티클, 하트·글자는 Web Animations API, 효과음은 음원 파일 없이 Web Audio로 합성. 움직임 줄이기 설정을 켜면 효과를 끕니다 |
 | PWA | manifest, service worker(페이지는 네트워크 우선, 나머지는 캐시 우선)로 오프라인 지원. `beforeinstallprompt`를 받아 두었다가 설치 버튼에서 설치 창을 띄우고, 아이폰은 안내 시트로 대신해요 |
@@ -192,6 +193,12 @@ src/
   data/         courses.json(코스·유닛 목록), cards/<코스>.json (학습 노트에서 추출)
 public/         notes.html · notes-frontend.html(코스별 학습 노트), rive/duck.riv(캐릭터), manifest, service worker, 아이콘
 scripts/        카드 추출, 캐릭터 부위 그림(mascot-parts.mjs), Rive 파일 만들기, 아이콘 만들기
+tools/
+  frontend/     프론트엔드 노트 생성기(문제·출력값 코드), verify/(정답 검증 실험)
+docs/
+  backlog/      코스별 보강할 것
+  screenshots/  README 스크린샷
+.claude/skills/quiz-quality/   문제 품질 원칙과 검토 순서 (Claude Code 스킬)
 ```
 
 ### 직접 실행하기
