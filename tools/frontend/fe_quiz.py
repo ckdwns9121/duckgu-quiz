@@ -66,7 +66,7 @@ NEW = {
    '<p><b>all</b>: 전부 성공해야 성공, 하나라도 실패하면 바로 실패. <b>allSettled</b>: 성공·실패를 가리지 않고 결과를 모두 모아 줌. <b>any</b>: 가장 먼저 <b>성공</b>한 것 (실패는 건너뜀). <b>race</b>: 가장 먼저 <b>끝난</b> 것 (실패여도 그걸로 끝) → 타임아웃에 쓴다.</p>'),
  Q('fe-as-q-serial','async','await를 차례로 쓰면',[
    ('a()와 b()는 서로 상관없고 각각 1초 걸린다. 이 코드는 약 몇 초 걸릴까?','약 2초','약 1초','0초 (await가 바로 끝남)','약 3초'),
-   ('이 코드를 약 1초로 줄이려면?','await Promise.all([a(), b()])로 받는다','await를 지우고 then으로 바꾼다','a와 b를 async 함수로 바꾼다','for await...of로 돌린다')],
+   ('이 코드를 약 1초로 줄이려면?','await Promise.all([a(), b()])로 받는다','await를 지우고 a().then(b)로 바꾼다','a와 b를 각각 async 함수로 감싼다','for await...of로 a, b를 차례로 돈다')],
    '<p>await는 앞 요청이 끝날 때까지 다음 줄로 가지 않으므로 <b>1초 + 1초</b>. 서로 기다릴 필요가 없으면 두 요청을 <b>먼저 동시에 시작</b>하고 한꺼번에 기다린다: <code>const [x, y] = await Promise.all([a(), b()])</code>.</p>',
    code="// a(), b()는 각각 1초 걸리는 요청\nconst x = await a();\nconst y = await b();"),
  Q('fe-as-q-trycatch','Promise','then 안의 에러와 try/catch',[
@@ -103,7 +103,7 @@ NEW = {
    ('다크 모드 설정처럼 브라우저를 껐다 켜도 남아야 하고, 서버는 몰라도 되는 값은?','localStorage','sessionStorage','쿠키','자바스크립트 변수')],
    '<p><b>쿠키</b>: 요청마다 서버로 자동 전송 (약 4KB). <b>localStorage</b>: 지우기 전까지 남고 서버로 안 감. <b>sessionStorage</b>: 탭을 닫으면 사라짐. 자바스크립트 변수는 새로고침만 해도 사라진다.</p>'),
  Q('fe-br-q-cors','CORS','CORS 에러 고치기',[
-   ('localhost:3000에서 api.shop.com으로 fetch했더니 CORS 에러가 났다. 고쳐야 할 곳은?','API 서버의 응답 헤더 (Access-Control-Allow-Origin)','fetch 옵션에 mode: "no-cors"를 넣는다','요청 헤더에 Origin을 직접 넣는다','브라우저의 보안 설정'),
+   ('localhost:3000에서 api.shop.com으로 fetch했더니 CORS 에러가 났다. 고쳐야 할 곳은?','API 서버의 응답 헤더 (Allow-Origin)','fetch 옵션에 mode: "no-cors"를 넣는다','요청 헤더에 Origin을 직접 넣는다','브라우저의 보안 설정을 끈다'),
    ('fetch로 Content-Type: application/json인 POST를 보내면, 본 요청 전에 브라우저가 먼저 보내는 요청은?','OPTIONS','HEAD','GET','없다. 바로 POST를 보낸다')],
    '<p>CORS는 <b>서버가 허락한 출처인지 브라우저가 확인</b>하는 규칙이라, 서버가 <code>Access-Control-Allow-Origin</code>으로 허락해야 풀린다. no-cors는 에러만 숨기고 응답 내용을 읽을 수 없게 만든다. JSON POST처럼 "단순 요청"이 아니면 브라우저가 <b>OPTIONS</b>로 먼저 물어보는 <b>preflight</b>를 보낸다.</p>'),
  Q('fe-br-q-reflow','렌더링','리플로우가 안 일어나는 변경',[
@@ -133,7 +133,7 @@ NEW = {
    '<p><b>!important</b>가 붙은 선언은 명시도와 상관없이 일반 선언보다 먼저 이긴다. ID 선택자(1,0,0)가 클래스(0,1,0)보다 세도 !important 앞에서는 진다. 그래서 !important는 되도록 쓰지 않는다.</p>',
    code="#title { color: red; }\n.title { color: blue !important; }\n\n<h1 id=\"title\" class=\"title\">안녕</h1>"),
  Q('fe-css-q-stack','쌓임 맥락','z-index 9999가 안 먹을 때',[
-   ('모달(z-index 9999)이 헤더(z-index 10) 밑에 깔린다. 원인은?','.wrap이 z-index 1로 쌓임 맥락을 만들어서','fixed 요소에는 z-index가 적용되지 않아서','z-index는 999까지만 적용돼서','sticky 요소는 항상 맨 위에 그려져서')],
+   ('모달(z-index 9999)이 헤더(z-index 10) 밑에 깔린다. 원인은?','.wrap이 z-index 1로 쌓임 맥락을 만들어서','fixed 요소에는 z-index가 적용되지 않아서','헤더가 문서에서 모달보다 뒤에 있어서','sticky 요소는 항상 맨 위에 그려져서')],
    '<p>.wrap이 <code>position + z-index</code>로 <b>새 쌓임 맥락</b>을 만들었다. 모달의 9999는 .wrap <b>안에서만</b> 비교되고, 바깥에서는 .wrap 전체가 z-index 1로 헤더(10)와 비교된다. 모달을 .wrap 밖(body 끝, React의 portal)으로 빼면 해결된다.</p>',
    code="/* .modal은 .wrap 안, .header는 밖 */\n.wrap {\n  position: relative; z-index: 1;\n}\n.modal {\n  position: fixed; z-index: 9999;\n}\n.header {\n  position: sticky; z-index: 10;\n}"),
  Q('fe-css-q-sticky','position','sticky가 안 붙을 때',[
@@ -171,7 +171,7 @@ NEW = {
    '<p><b>ref.current를 바꿔도 다시 렌더링되지 않는다</b>. 값은 3으로 올라가 있지만 화면은 처음 렌더링한 0 그대로다. 화면에 보여야 하는 값은 state로, 렌더링과 상관없는 값(타이머 id, 이전 값)은 ref로.</p>',
    code="const clicks = useRef(0);\n\nreturn (\n  <button onClick={() => clicks.current++}>\n    {clicks.current}\n  </button>\n);"),
  Q('fe-re-q-strict','useEffect','effect가 두 번 실행될 때',[
-   ('개발 모드에서만 useEffect(fn, [])의 fn이 두 번 실행된다. 이유는?','StrictMode가 cleanup을 확인하려고 한 번 더 마운트해서','의존성 배열이 비어 있어서','state를 두 번 바꿔서','React 18의 알려진 버그라서')],
+   ('개발 모드에서만 useEffect(fn, [])의 fn이 두 번 실행된다. 이유는?','StrictMode가 cleanup을 검사하려고','의존성 배열이 비어 있으면 원래 두 번이라서','개발 서버가 코드를 두 번 불러와서','React 18의 알려진 버그라서')],
    '<p>React 18의 <b>StrictMode</b>는 개발 모드에서 마운트 → 언마운트 → 다시 마운트를 해서 <b>cleanup을 제대로 썼는지</b> 드러낸다. 배포(프로덕션) 빌드에서는 한 번만 실행된다. 두 번 실행돼서 문제가 생기면 cleanup이 빠진 것이다.</p>'),
  Q('fe-re-q-hook','훅 규칙','조건문 안의 훅',[
    ('이 코드의 문제는?','렌더링마다 훅 호출 순서가 달라져 state가 꼬인다','name을 if 밖에서 못 쓸 뿐 동작은 괜찮다','isLoggedIn이 false면 name이 빈 문자열이 된다','문제없다')],
@@ -193,7 +193,7 @@ NEW = {
    ('같은 요청을 여러 번 보내면 결과가 달라질 수 있는(멱등하지 않은) 메서드는?','POST','GET','PUT','DELETE')],
    '<p><b>멱등</b>: 여러 번 보내도 한 번 보낸 것과 결과가 같음. GET·PUT·DELETE는 멱등하고, <b>POST</b>는 보낼 때마다 새 리소스가 생길 수 있다. 결제 버튼을 두 번 누르지 못하게 막는 이유.</p>'),
  Q('fe-web-q-cache','캐시','Cache-Control 고르기',[
-   ('app.3f9a2c.js처럼 파일 이름에 내용 해시가 붙은 파일에 가장 알맞은 것은?','max-age=31536000, immutable','no-store','no-cache','max-age=0'),
+   ('app.3f9a2c.js처럼 파일 이름에 내용 해시가 붙은 파일에 가장 알맞은 것은?','max-age=31536000, immutable','no-cache, must-revalidate','no-store, max-age=0','max-age=0, s-maxage=60'),
    ('Cache-Control: no-cache의 뜻은?','저장은 하되, 쓸 때마다 서버에 바뀌었는지 묻는다','아예 저장하지 않는다','정한 시간 동안 서버에 묻지 않고 쓴다','브라우저만 저장하고 CDN은 저장하지 않는다')],
    '<p>내용이 바뀌면 파일 이름(해시)도 바뀌므로 같은 이름의 파일은 영원히 같다 → <b>1년 캐시</b>. 반대로 index.html은 이름이 그대로라 <b>no-cache</b>로 매번 확인한다. 이름과 달리 no-cache도 저장은 한다. 아예 저장하지 않는 건 <b>no-store</b>.</p>'),
  Q('fe-web-q-vitals','성능','어느 지표가 나빠질까',[
@@ -202,7 +202,7 @@ NEW = {
    ('img에 width·height를 주지 않아 이미지가 뜰 때 아래 글이 밀려 내려간다. 나빠지는 지표는?','CLS','LCP','INP','TTFB')],
    '<p><b>LCP</b>(가장 큰 콘텐츠가 그려지는 시간): 첫 화면 이미지를 lazy로 미루면 늦게 받아서 나빠진다. 첫 화면 밖 이미지만 lazy. <b>INP</b>(입력에 반응하는 시간): 핸들러가 메인 스레드를 오래 붙잡으면 나빠진다. <b>CLS</b>(레이아웃이 밀리는 정도): 크기를 모르는 이미지·광고가 원인.</p>'),
  Q('fe-web-q-xss','보안','사용자 입력 넣기',[
-   ('comment에 <img src=x onerror="alert(1)">가 들어오면?','onerror의 스크립트가 실행된다 (XSS)','태그가 글자 그대로 보인다','이미지만 깨지고 안전하다','브라우저가 알아서 막는다'),
+   ('comment에 <img src=x onerror="alert(1)">가 들어오면?','onerror의 스크립트가 실행된다 (XSS)','태그가 글자 그대로 화면에 보인다','이미지만 깨질 뿐 스크립트는 안 돈다','브라우저가 XSS를 알아서 막아 준다'),
    ('사용자가 쓴 글을 안전하게 화면에 넣으려면?','el.textContent = comment','el.innerHTML = comment.trim()','el.outerHTML = comment','el.insertAdjacentHTML(\'beforeend\', comment)')],
    '<p>innerHTML은 문자열을 <b>HTML로 해석</b>하므로 이벤트 속성의 스크립트가 실행된다(XSS). <b>textContent</b>는 글자로만 넣는다. outerHTML, insertAdjacentHTML도 HTML로 해석해서 똑같이 위험하다. React의 <code>{comment}</code>는 자동으로 글자 처리하고, dangerouslySetInnerHTML만 위험하다.</p>',
    code="const comment = getUserInput();\nel.innerHTML = comment;"),

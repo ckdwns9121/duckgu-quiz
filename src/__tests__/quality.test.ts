@@ -80,6 +80,18 @@ describe('문제 품질', () => {
     expect(leaks).toEqual([]);
   });
 
+  it('정답 고르기 문제에서 정답만 눈에 띄게 길지 않다 (가장 긴 보기를 찍으면 맞는 문제 방지)', () => {
+    const long = CARDS.filter((c): c is McqCard => c.kind === 'mcq')
+      .filter((c) => {
+        const others = c.options.filter((o) => o !== c.correct).map((o) => o.length);
+        const max = Math.max(...others);
+        // 서비스·용어 이름처럼 짧은 보기끼리의 길이 차이는 힌트가 아니라서 25자 이상인 정답만 본다
+        return c.correct.length >= 25 && c.correct.length > max * 1.35 && c.correct.length - max > 8;
+      })
+      .map((c) => `${c.id}: ${c.correct}`);
+    expect(long).toEqual([]);
+  });
+
   it('정답 고르기 질문은 앞 문제 없이도 읽힌다 ("같은 상황에서"처럼 앞 문제를 가리키지 않음. 레슨 안에서 순서가 섞인다)', () => {
     const bad = CARDS.filter((c): c is McqCard => c.kind === 'mcq' && /^같은 (상황|조건|요소|결과|코드|문제|경우|\d)/.test(plain(c.q))).map((c) => `${c.id}: ${c.q}`);
     expect(bad).toEqual([]);

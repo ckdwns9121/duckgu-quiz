@@ -920,12 +920,12 @@
   "q": "새 버전을 S3에 올렸는데 사용자에게 한동안 옛 화면이 보인다. 가장 가능성 높은 원인은?",
   "pre": "",
   "options": [
-   "CloudFront 엣지에 옛 index.html이 남아서",
+   "CloudFront 엣지에 옛 파일이 남아서",
    "S3가 최종적 일관성이라 옛 파일을 줘서",
    "S3 버전 관리가 옛 버전을 돌려줘서",
    "새 파일이 다른 리전으로 복제되는 중이라서"
   ],
-  "correct": "CloudFront 엣지에 옛 index.html이 남아서",
+  "correct": "CloudFront 엣지에 옛 파일이 남아서",
   "explain": "<p>CloudFront는 TTL 동안 엣지에 캐시한 파일을 준다. 배포 뒤에는 <b>무효화(Invalidation)</b>로 지우거나, 애초에 index.html은 짧게 캐시한다. 무효화는 매달 1,000개 경로까지 무료이고 <code>/*</code> 같은 와일드카드는 <b>경로 1개</b>로 친다. 해시가 붙은 JS·CSS는 이름이 바뀌므로 무효화할 필요가 없다.</p>",
   "hints": []
  },

@@ -162,7 +162,7 @@ UNITS = [
    code="const [n, setN] = useState(0);\n\nfunction onClick() {\n  setN((p) => p + 1);\n  setN((p) => p + 1);\n  setN((p) => p + 1);\n}"),
  Q('fe-re-q-effect','useEffect','useEffect 실행 시점',[
    ('useEffect(fn, [])의 fn은 언제 실행될까?','처음 화면에 그려진 뒤 한 번','렌더링할 때마다','처음 렌더링 직전에 한 번','state가 바뀔 때마다'),
-   ('useEffect(fn, [id])에서 fn이 돌려준 cleanup은 언제 실행될까?','id가 바뀌어 fn이 다시 실행되기 직전과 언마운트될 때','언마운트될 때만','fn이 실행된 직후','렌더링할 때마다 fn보다 먼저')],
+   ('useEffect(fn, [id])에서 fn이 돌려준 cleanup은 언제 실행될까?','다음 fn 실행 직전과 언마운트될 때','컴포넌트가 사라질 때만','fn이 실행된 바로 직후','렌더링할 때마다 fn보다 먼저')],
    '<p>effect는 <b>화면에 반영(커밋)된 뒤</b> 실행된다. 의존성 배열이 []면 마운트 뒤 한 번. cleanup은 <b>의존성이 바뀌어 effect가 다시 실행되기 직전</b>과 <b>언마운트될 때</b> 실행된다.</p>'),
  Q('fe-re-q-key','key','key로 index 쓰기',[
    ('할 일 목록(각 항목에 체크박스 입력 상태가 있음)의 key로 배열 index를 쓰고, 맨 앞에 새 항목을 추가하면?','체크 상태가 한 칸씩 밀려 엉뚱한 항목에 붙는다','문제없이 잘 동작하고 조금 느려질 뿐이다','콘솔 경고만 뜨고 동작은 같다','key가 겹쳐서 새 항목이 안 보인다')],

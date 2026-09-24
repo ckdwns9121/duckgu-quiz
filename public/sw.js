@@ -2,7 +2,7 @@
 // 페이지(HTML)는 네트워크 우선: 온라인이면 항상 최신, 오프라인이면 저장본.
 // SPA라 /lesson/... 같은 주소도 오프라인에서는 저장해 둔 첫 화면(./)을 돌려준다.
 // 아이콘·폰트 같은 나머지는 저장본을 먼저 쓰고 뒤에서 새로 받아 둠.
-const CACHE = 'jcq-v19';
+const CACHE = 'jcq-v20';
 const SHELL = ['./', './notes.html', './notes-frontend.html', './notes-aws.html', './manifest.webmanifest',
   './icons/icon-192.png?v=duck1', './icons/icon-512.png?v=duck1', './icons/maskable-512.png?v=duck1',
   './icons/apple-touch-icon.png?v=duck1', './icons/favicon-32.png?v=duck1'];

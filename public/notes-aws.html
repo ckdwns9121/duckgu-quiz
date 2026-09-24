@@ -446,7 +446,7 @@ export const handler = async (event) =&gt; {
       </article>
       <article class="item" data-id="aws-cdn-q-stale">
         <div class="item-h"><span class="lang">캐시</span><h3>배포했는데 옛 화면</h3><label class="chk"><input type="checkbox" id="k-aws-cdn-q-stale">외움</label></div>
-        <ul class="quiz-opts" hidden data-q="새 버전을 S3에 올렸는데 사용자에게 한동안 옛 화면이 보인다. 가장 가능성 높은 원인은?"><li class="ok">CloudFront 엣지에 옛 index.html이 남아서</li><li>S3가 최종적 일관성이라 옛 파일을 줘서</li><li>S3 버전 관리가 옛 버전을 돌려줘서</li><li>새 파일이 다른 리전으로 복제되는 중이라서</li></ul>
+        <ul class="quiz-opts" hidden data-q="새 버전을 S3에 올렸는데 사용자에게 한동안 옛 화면이 보인다. 가장 가능성 높은 원인은?"><li class="ok">CloudFront 엣지에 옛 파일이 남아서</li><li>S3가 최종적 일관성이라 옛 파일을 줘서</li><li>S3 버전 관리가 옛 버전을 돌려줘서</li><li>새 파일이 다른 리전으로 복제되는 중이라서</li></ul>
         <ul class="quiz-opts" hidden data-q="무효화 경로를 /*로 한 번 넣으면 요금 계산에서 경로는 몇 개로 칠까?"><li class="ok">1개</li><li>파일 수만큼</li><li>폴더 수만큼</li><li>무효화는 항상 무료다</li></ul>
         <p class="q">새 버전을 S3에 올렸는데 사용자에게 한동안 옛 화면이 보인다. 가장 가능성 높은 원인은?</p>
         <div class="ans"><p>CloudFront는 TTL 동안 엣지에 캐시한 파일을 준다. 배포 뒤에는 <b>무효화(Invalidation)</b>로 지우거나, 애초에 index.html은 짧게 캐시한다. 무효화는 매달 1,000개 경로까지 무료이고 <code>/*</code> 같은 와일드카드는 <b>경로 1개</b>로 친다. 해시가 붙은 JS·CSS는 이름이 바뀌므로 무효화할 필요가 없다.</p></div>

@@ -19,7 +19,7 @@ UNIT_NEXT = ('fe-next', 'Next.js', 'Next.js 16 App Router 기준입니다. 서�
    ("'use client' 파일인 Chart.tsx가 import한 formatPrice.ts는?",'클라이언트 번들에 들어간다','서버 번들에만 들어간다','양쪽에 따로 복사돼 서버 것이 먼저 실행된다',"formatPrice.ts에도 'use client'를 따로 붙여야 번들에 들어간다")],
    '<p><code>\'use client\'</code>는 파일 하나가 아니라 <b>경계</b>를 선언한다. 그 파일이 import하는 모듈과 직접 렌더링하는 컴포넌트는 모두 클라이언트 번들에 들어가므로, 거기서 import한 파일에 따로 표시할 필요가 없다. 그래서 무거운 라이브러리를 쓰는 부분만 작은 클라이언트 컴포넌트로 떼어 내는 것이 좋다.</p>'),
  Q('fe-nx-q-fnprop','경계','서버에서 함수 넘기기',[
-   ('이 page를 next build하면?','에러: 이벤트 핸들러(함수)는 클라이언트 컴포넌트 props로 못 넘긴다','잘 동작하고, 클릭하면 서버 터미널에 x가 찍힌다','잘 동작하고, 클릭하면 브라우저 콘솔에 x가 찍힌다','함수가 문자열로 바뀌어 전달된다')],
+   ('이 page를 next build하면?','에러: 함수는 클라이언트 컴포넌트 props로 못 넘긴다','잘 동작하고, 클릭하면 서버 터미널에 x가 찍힌다','잘 동작하고, 클릭하면 브라우저 콘솔에 x가 찍힌다','함수가 문자열로 바뀌어 전달된다')],
    '<p>서버 컴포넌트에서 클라이언트 컴포넌트로 넘기는 props는 <b>직렬화할 수 있어야</b> 한다(문자열, 숫자, 객체, 배열, JSX 등). 일반 함수는 안 되어서 "Event handlers cannot be passed to Client Component props" 에러가 난다. 예외는 <code>\'use server\'</code>로 만든 <b>Server Action</b>이다. 클릭 처리는 Btn 안(클라이언트)에서 정의한다.</p>',
    code="// Btn.tsx\n'use client';\nexport default function Btn({ onPick }) {\n  return <button onClick={onPick}>b</button>;\n}\n\n// page.tsx (서버 컴포넌트)\nexport default function Page() {\n  return <Btn onPick={() => console.log('x')} />;\n}"),
  Q('fe-nx-q-params','라우팅','params 읽기',[
@@ -59,7 +59,7 @@ UNIT_NEXT = ('fe-next', 'Next.js', 'Next.js 16 App Router 기준입니다. 서�
    code="'use server';\n\nexport async function deletePost(id: string) {\n  await db.post.delete({ where: { id } });\n}"),
  Q('fe-nx-q-env','환경 변수','NEXT_PUBLIC_ 값',[
    ('NEXT_PUBLIC_API=hello로 next build를 하고, NEXT_PUBLIC_API=changed로 next start를 했다. 클라이언트 컴포넌트의 process.env.NEXT_PUBLIC_API는?','hello','changed','undefined','빌드 에러가 난다'),
-   ("접두사 없는 SECRET_KEY를 클라이언트 컴포넌트에서 process.env.SECRET_KEY로 읽으면, 브라우저 번들에는?",'값이 들어가지 않는다 (브라우저에서는 undefined)','값이 그대로 들어간다','암호화된 값이 들어간다','빌드 에러가 난다')],
+   ("접두사 없는 SECRET_KEY를 클라이언트 컴포넌트에서 process.env.SECRET_KEY로 읽으면, 브라우저 번들에는?",'들어가지 않는다 (undefined)','값이 그대로 들어간다','암호화된 값이 들어간다','빌드 에러가 난다')],
    '<p><code>NEXT_PUBLIC_</code> 값은 <b>빌드할 때 코드에 문자열로 박힌다</b>. 빌드 뒤에 바꿔도 번들은 그대로 hello다. 접두사가 없는 값은 번들에 들어가지 않는다. 단, 클라이언트 컴포넌트도 서버에서 먼저 렌더링되므로 그때 찍힌 값이 HTML에 들어가고 브라우저와 값이 달라 hydration 에러가 날 수 있다. 비밀 값은 서버 컴포넌트나 Server Action에서만 읽는다.</p>'),
  Q('fe-nx-q-serveronly','경계','서버 전용 모듈 지키기',[
    ('DB 비밀번호를 쓰는 lib/db.ts가 실수로 클라이언트 컴포넌트에 import되는 걸 빌드에서 막으려면?',"lib/db.ts에 import 'server-only'","lib/db.ts 맨 위에 'use server'",'lib/db.ts를 app 폴더 밖으로 옮긴다','환경 변수 이름에서 NEXT_PUBLIC_을 뺀다')],
@@ -140,7 +140,7 @@ REACT_DEEP = [
    ('a가 0일 때 버튼을 누르면 로그에 찍히는 값은?','1','0','undefined','에러가 난다')],
    '<p>보통 set은 다음 렌더링을 예약할 뿐이라 바로 뒤에서 DOM을 읽으면 옛 값이다. <b>flushSync</b>로 감싸면 그 자리에서 <b>렌더링과 DOM 반영을 동기로</b> 끝낸다. 새로 추가한 항목으로 바로 스크롤해야 할 때처럼 드물게 쓴다(성능에 나쁘다).</p>',
    code="const ref = useRef(null);\n\nfunction onClick() {\n  flushSync(() => setA(1));\n  console.log(ref.current.textContent);\n}\n\nreturn (\n  <button ref={ref} onClick={onClick}>\n    {a}\n  </button>\n);"),
- Q('fe-re-q-eb','에러 바운더리','이벤트 핸들러의 에러',[
+ Q('fe-re-q-eb','에러 바운더리','에러 바운더리 안의 버튼',[
    ('ErrorBoundary 안의 버튼을 누르면?','fallback으로 바뀌지 않고 화면은 그대로다','fallback 화면으로 바뀐다','앱 전체가 흰 화면이 된다','버튼만 사라지고 나머지는 그대로다')],
    '<p>에러 바운더리는 <b>렌더링 중·생명주기·effect</b>에서 난 에러만 잡는다. <b>이벤트 핸들러, setTimeout, Promise</b> 안의 에러는 React 렌더링 밖에서 일어나서 잡지 못한다(전역 에러로 간다). 이벤트 핸들러에서는 try/catch로 잡고, 필요하면 state로 에러 화면을 보여 준다.</p>',
    code="<ErrorBoundary fallback={<p>문제가 생겼어요</p>}>\n  <button onClick={() => { throw new Error('boom'); }}>\n    저장\n  </button>\n</ErrorBoundary>"),
@@ -185,7 +185,7 @@ BROWSER_DEEP = [
    '<p>createElement로 넣은 script는 <b>기본이 async</b>라 도착하는 대로 실행된다. <code>s.async = false</code>를 주면 넣은 순서가 지켜진다. 동적으로 넣은 script에는 <b>defer가 효과가 없다</b>(실제 Chrome에서도 two → one 그대로).</p>',
    code="for (const name of ['one', 'two']) {\n  const s = document.createElement('script');\n  s.src = `/${name}.js`;\n  document.head.append(s);\n}"),
  Q('fe-br-q-innerscript','보안','innerHTML로 넣은 script',[
-   ('이 코드를 실행하면?','script는 실행되지 않고, img의 onerror는 실행된다','script와 onerror 모두 실행된다','둘 다 실행되지 않는다','script만 실행된다')],
+   ('이 코드를 실행하면?','script는 안 돌고, img의 onerror는 돈다','script와 img의 onerror가 모두 돈다','script만 돌고, onerror는 무시된다','둘 다 안 돌고 글자로만 보인다')],
    '<p>HTML 표준상 <b>innerHTML로 넣은 &lt;script&gt;는 실행되지 않는다</b>. 그렇다고 안전한 것은 아니다. <code>onerror</code> 같은 이벤트 속성은 실행되므로 innerHTML에 사용자 입력을 넣으면 XSS가 된다. 사용자 입력은 textContent로 넣는다.</p>',
    code="box.innerHTML =\n  '<script>log(\"script\")<\\/script>' +\n  '<img src=\"x\" onerror=\"log(\\'onerror\\')\">';"),
  Q('fe-br-q-clickseq','이벤트','클릭 한 번의 이벤트 순서',[

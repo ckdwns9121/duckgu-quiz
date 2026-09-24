@@ -18,6 +18,17 @@ function distractors(pool: string[], correct: string, n: number, rng: Rng): stri
   return shuffle(uniq(pool.filter((x) => x && x !== correct)), rng).slice(0, n);
 }
 
+/**
+ * 오답을 정답과 길이가 비슷한 것 위주로 고른다.
+ * 무작위로 고르면 설명이 긴 카드는 늘 정답만 길어져서, 가장 긴 보기를 찍어도 맞는다.
+ * 길이가 가까운 후보 몇 개(n의 두 배) 안에서 다시 무작위로 뽑아 매번 같은 보기만 나오지 않게 한다.
+ */
+function similarLength(pool: string[], correct: string, n: number, rng: Rng): string[] {
+  const cand = shuffle(uniq(pool.filter((x) => x && x !== correct)), rng);
+  cand.sort((a, b) => Math.abs(a.length - correct.length) - Math.abs(b.length - correct.length));
+  return shuffle(cand.slice(0, n * 2), rng).slice(0, n);
+}
+
 /** 한글 답인데 비슷한 용어가 없을 때 쓰는 보기 */
 const CUSTOM_OPTIONS: Record<string, string[]> = {
   // sep·end 문제: 한 글자씩 조각으로 쪼개면 퍼즐이 되어 버려서 헷갈리는 출력 보기로 낸다
@@ -172,13 +183,13 @@ function termQuestion(card: TermCard, all: Card[], rng: Rng): Question {
     const target = card.segments[Math.floor(rng() * card.segments.length)];
     const siblings = card.segments.filter((g) => g !== target);
     if (rng() < 0.55) {
-      const wrong = [...siblings.map((g) => g.text), ...distractors(like(target.text, otherTexts), target.text, 3, rng)];
+      const wrong = [...siblings.map((g) => g.text), ...similarLength(like(target.text, otherTexts), target.text, 3, rng)];
       return {
         type: 'choice', card, label: '뜻 고르기', say: `<b>${escapeText(target.label)}</b>의 ${ask}`,
         options: shuffle([target.text, ...uniq(wrong.filter((w) => w !== target.text)).slice(0, 3)], rng), correct: target.text,
       };
     }
-    const wrong = [...siblings.map((g) => g.label), ...distractors(otherNames, target.label, 3, rng)];
+    const wrong = [...siblings.map((g) => g.label), ...similarLength(otherNames, target.label, 3, rng)];
     // 포트처럼 값이 숫자 하나면 "143 → 이 설명에 맞는 건?" 대신 "포트 143번을 쓰는 건?"으로 묻는다
     const numeric = /^\d+$/.test(target.text);
     return {
@@ -193,13 +204,13 @@ function termQuestion(card: TermCard, all: Card[], rng: Rng): Question {
     const name = `<b>${escapeText(card.term)}</b>${card.sub ? ` (${escapeText(card.sub)})` : ''}`;
     return {
       type: 'choice', card, label: '뜻 고르기', say: `${name}의 ${ask}`,
-      options: shuffle([card.short, ...distractors(otherTexts, card.short, 3, rng)], rng), correct: card.short,
+      options: shuffle([card.short, ...similarLength(otherTexts, card.short, 3, rng)], rng), correct: card.short,
     };
   }
   return {
     type: 'choice', card, label: '용어 고르기', say: `이 설명에 맞는 ${card.col === '기호' ? '기호' : '용어'}는?`,
     prompt: card.short,
-    options: shuffle([card.term, ...distractors(otherNames, card.term, 3, rng)], rng),
+    options: shuffle([card.term, ...similarLength(otherNames, card.term, 3, rng)], rng),
     correct: card.term,
   };
 }
