@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build && cp dist/index.html dist/404.html",
+    "build": "node scripts/build-content.mjs --check && tsc --noEmit && vite build && cp dist/index.html dist/404.html",
     "preview": "vite preview",
-    "extract": "node scripts/extract-cards.mjs",
+    "content": "node scripts/build-content.mjs",
+    "verify:answers": "node scripts/verify-answers.mjs",
     "test": "vitest",
     "typecheck": "tsc --noEmit",
     "build:riv": "node scripts/build-mascot-riv.mjs"
@@ -17,7 +18,8 @@
     "rive-mcp-server": "0.6.1",
     "typescript": "^5.9.2",
     "vite": "^7.1.5",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "yaml": "^2.9.1"
   },
   "dependencies": {
     "@rive-app/canvas-lite": "^2.43.0"

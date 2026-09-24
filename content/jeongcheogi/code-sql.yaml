@@ -1,0 +1,292 @@
+id: code-sql
+name: SQL 함정
+color: "#FF9600"
+dark: "#CD7900"
+part: PART 1 · 코드
+lede: ""
+blocks:
+  - items:
+      - id: s1
+        tag: SQL
+        title: COUNT(*) vs COUNT(열)
+        type: answer
+        q: 점수 열이 90, NULL, 80인 3행 테이블에서 COUNT(*)와 COUNT(점수)는?
+        answer: 3, 2
+        steps:
+          - <code>COUNT(*)</code> → 행이 몇 줄인지 셈 → NULL이 있는 줄도 한 줄 → <b>3</b>
+          - <code>COUNT(점수)</code> → 점수 칸에 <b>값이 있는 것만</b> 셈 → 90, 80 → <b>2</b>
+        why: "<b>기억할 것</b>: <mark>*는 줄 수, 열 이름은 NULL 빼고</mark>. SUM, AVG, MAX, MIN도 NULL은 없는 셈 친다. 그래서 AVG(점수) = (90+80)/2 = 85."
+        hints:
+          - <code>COUNT(*)</code> → 행이 몇 줄인지 셈 → NULL이 있는 줄도 한 줄 → <b>3</b>
+          - "<b>기억할 것</b>: <mark>*는 줄 수, 열 이름은 NULL 빼고</mark>. SUM, AVG, MAX, MIN도 NULL은 없는 셈 친다. 그래서 AVG(점수) = (90+80)/2 = 85."
+      - id: s2
+        tag: SQL
+        title: WHERE vs HAVING
+        type: mcq
+        quizzes:
+          - q: WHERE 절에 쓸 수 없는 조건은?
+            answer: COUNT(*) > 10
+            wrong:
+              - 학년 = 3
+              - 이름 LIKE '김%'
+              - 점수 BETWEEN 80 AND 90
+            hints:
+              - "<b>기억할 것</b>: <mark>COUNT, AVG 같은 집계 함수 조건은 HAVING</mark>. WHERE에는 집계 함수를 못 쓴다."
+        note_q: 둘의 차이는?
+        explain: |-
+          <ol class="steps">
+          <li>SQL 실행 순서: <b>FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY</b></li>
+          <li><code>WHERE</code>는 GROUP BY <b>전</b>: 한 줄 한 줄을 거름 (예: 학년 = 3인 학생만)</li>
+          <li><code>HAVING</code>은 GROUP BY <b>후</b>: 묶인 그룹을 거름 (예: 학생 수가 10명 넘는 학과만)</li>
+          </ol>
+          <pre>SELECT 학과, COUNT(*) FROM 학생
+          WHERE 학년 = 3          -- 3학년만 남기고
+          GROUP BY 학과            -- 학과별로 묶고
+          HAVING COUNT(*) &gt; 10;   -- 10명 넘는 학과만</pre>
+          <p class="why"><b>기억할 것</b>: <mark>COUNT, AVG 같은 집계 함수 조건은 HAVING</mark>. WHERE에는 집계 함수를 못 쓴다.</p>
+      - id: s3
+        tag: SQL
+        title: LIKE 기호
+        type: mcq
+        quizzes:
+          - q: 이름 LIKE '김_' 조건에 맞는 이름은?
+            answer: 김철
+            wrong:
+              - 김철수
+              - 김
+              - 박김철
+            hints:
+              - "<b>기억할 것</b>: <mark>% 는 몇 개든, _ 는 한 개</mark>. 밑줄 하나 = 빈칸 하나."
+          - q: 이름 LIKE '%수' 조건에 맞는 이름은?
+            answer: 박민수
+            wrong:
+              - 수민
+              - 민수진
+              - 김수현
+            hints:
+              - "<b>기억할 것</b>: <mark>% 는 몇 개든, _ 는 한 개</mark>. 밑줄 하나 = 빈칸 하나."
+        note_q: <code>'김%'</code>, <code>'김_'</code>, <code>'%김%'</code>의 뜻은?
+        explain: |-
+          <ol class="steps">
+          <li><code>%</code> = 글자 <b>0개 이상 아무거나</b></li>
+          <li><code>_</code> = 글자 <b>딱 1개</b></li>
+          <li><code>'김%'</code> → 김으로 시작 (김, 김철수, 김수한무 모두 OK)</li>
+          <li><code>'김_'</code> → 김 + 한 글자 = <b>두 글자</b>만 (김철 OK, 김철수 X)</li>
+          <li><code>'%김%'</code> → 어디든 김이 들어감 (박김수도 OK)</li>
+          </ol>
+          <p class="why"><b>기억할 것</b>: <mark>% 는 몇 개든, _ 는 한 개</mark>. 밑줄 하나 = 빈칸 하나.</p>
+      - id: s4
+        tag: SQL
+        title: 지우는 명령 세 가지
+        type: mcq
+        quizzes:
+          - q: 테이블 구조는 남기고 모든 행을 한 번에 지우는 DDL 명령은?
+            answer: TRUNCATE
+            wrong:
+              - DELETE
+              - DROP
+              - ALTER
+        note_q: 셋의 차이는?
+        explain: |-
+          <ol class="steps">
+          <li><code>DELETE FROM 학생 WHERE ...</code> → <b>원하는 행만</b> 지움. 조건 없으면 전부. 테이블 틀은 남음. 롤백 가능 (DML)</li>
+          <li><code>TRUNCATE TABLE 학생</code> → <b>모든 행</b>을 한 번에 비움. 틀은 남음. 되돌릴 수 없음 (DDL)</li>
+          <li><code>DROP TABLE 학생</code> → <b>테이블 자체</b>를 없앰. 틀도 사라짐 (DDL)</li>
+          </ol>
+          <p class="why"><b>비유</b>: 서랍장에서 DELETE = 물건 골라서 버리기, TRUNCATE = 서랍 싹 비우기, DROP = <mark>서랍장을 통째로 버리기</mark>.</p>
+      - id: s5
+        tag: SQL
+        title: DDL · DML · DCL
+        type: mcq
+        quizzes:
+          - q: 다음 중 DDL(데이터 정의어)이 아닌 것은?
+            answer: DELETE
+            wrong:
+              - CREATE
+              - ALTER
+              - TRUNCATE
+          - q: GRANT와 REVOKE는 어느 종류의 SQL일까?
+            answer: DCL (데이터 제어어)
+            wrong:
+              - DDL (데이터 정의어)
+              - DML (데이터 조작어)
+              - SQL이 아니라 DBMS 설정
+            hints:
+              - "<b>기억할 것</b>: <mark>틀 = DDL, 내용 = DML, 권한 = DCL</mark>. 헷갈리는 것: DELETE는 DML, DROP과 TRUNCATE는 DDL."
+        note_q: 각각 어떤 명령어?
+        explain: |-
+          <ol class="steps">
+          <li><b>DDL</b> (Definition, 정의): 테이블 <b>틀</b>을 만들고 고치고 없앰 → <code>CREATE, ALTER, DROP, TRUNCATE</code></li>
+          <li><b>DML</b> (Manipulation, 조작): 틀 안의 <b>데이터</b>를 다룸 → <code>SELECT, INSERT, UPDATE, DELETE</code></li>
+          <li><b>DCL</b> (Control, 제어): <b>권한</b>과 확정·취소 → <code>GRANT, REVOKE, COMMIT, ROLLBACK</code></li>
+          </ol>
+          <p class="why"><b>기억할 것</b>: <mark>틀 = DDL, 내용 = DML, 권한 = DCL</mark>. 헷갈리는 것: DELETE는 DML, DROP과 TRUNCATE는 DDL.</p>
+      - id: s6
+        tag: SQL
+        title: GRANT / REVOKE 문법
+        type: mcq
+        code: |-
+          GRANT SELECT ON 학생 TO 홍길동 WITH GRANT OPTION;
+          REVOKE SELECT ON 학생 FROM 홍길동 CASCADE;
+        quizzes:
+          - q: 권한을 받은 사람이 그 권한을 다시 남에게 줄 수 있게 하려면 GRANT 문 끝에 무엇을 붙일까?
+            answer: WITH GRANT OPTION
+            wrong:
+              - CASCADE
+              - ON DELETE
+              - RESTRICT
+            hints:
+              - "<b>기억할 것</b>: <mark>주는 건 TO, 뺏는 건 FROM</mark>. 선물은 친구에게(to) 주고, 친구로부터(from) 돌려받는다."
+          - q: REVOKE할 때, 그 사람이 남에게 나눠 준 권한까지 줄줄이 회수하는 옵션은?
+            answer: CASCADE
+            wrong:
+              - WITH GRANT OPTION
+              - RESTRICT
+              - DISTINCT
+            hints:
+              - "<b>기억할 것</b>: <mark>주는 건 TO, 뺏는 건 FROM</mark>. 선물은 친구에게(to) 주고, 친구로부터(from) 돌려받는다."
+        note_q: 빈칸으로 자주 나오는 단어는?
+        explain: |-
+          <ol class="steps">
+          <li><code>GRANT 권한 ON 테이블 TO 사용자</code> → 권한을 <b>준다</b> (~에게 = TO)</li>
+          <li><code>REVOKE 권한 ON 테이블 FROM 사용자</code> → 권한을 <b>뺏는다</b> (~에게서 = FROM)</li>
+          <li><code>WITH GRANT OPTION</code> → 받은 사람도 <b>다른 사람에게 권한을 줄 수 있음</b></li>
+          <li><code>CASCADE</code> → 뺏을 때, 그 사람이 남에게 나눠 준 권한까지 <b>줄줄이 같이</b> 회수</li>
+          </ol>
+          <p class="why"><b>기억할 것</b>: <mark>주는 건 TO, 뺏는 건 FROM</mark>. 선물은 친구에게(to) 주고, 친구로부터(from) 돌려받는다.</p>
+      - id: s7
+        tag: SQL
+        title: BETWEEN, IN
+        type: answer
+        q: <code>점수 BETWEEN 80 AND 90</code>에 80과 90이 포함되나?
+        answer: 둘 다 포함
+        steps:
+          - <code>점수 BETWEEN 80 AND 90</code> = <code>점수 &gt;= 80 AND 점수 &lt;= 90</code>
+          - 80점, 90점인 사람도 결과에 나옴
+          - <code>학년 IN (1, 3)</code> = <code>학년 = 1 OR 학년 = 3</code>
+        why: "<b>기억할 것</b>: <mark>BETWEEN은 양 끝을 포함</mark>. Python range와 반대라 헷갈리기 쉽다."
+        hints:
+          - <code>점수 BETWEEN 80 AND 90</code> = <code>점수 &gt;= 80 AND 점수 &lt;= 90</code>
+          - "<b>기억할 것</b>: <mark>BETWEEN은 양 끝을 포함</mark>. Python range와 반대라 헷갈리기 쉽다."
+      - id: s8
+        tag: SQL
+        title: ORDER BY 기본값
+        type: answer
+        q: ASC, DESC를 안 쓰면?
+        answer: ASC (오름차순)
+        steps:
+          - <code>ORDER BY 점수</code> → 아무것도 안 쓰면 ASC → 작은 수부터 (60, 70, 80…)
+          - <code>ORDER BY 점수 DESC</code> → 큰 수부터 (100, 90, 80…)
+          - "여러 개: <code>ORDER BY 학년 ASC, 점수 DESC</code> → 학년 순으로 먼저, 같은 학년 안에서는 점수 높은 순"
+        why: "<b>기억할 것</b>: <mark>ASC = Ascending(올라감), DESC = Descending(내려감)</mark>. 기본은 올라가는 쪽."
+        hints:
+          - <code>ORDER BY 점수</code> → 아무것도 안 쓰면 ASC → 작은 수부터 (60, 70, 80…)
+          - "<b>기억할 것</b>: <mark>ASC = Ascending(올라감), DESC = Descending(내려감)</mark>. 기본은 올라가는 쪽."
+  - group: 조각으로 만들기
+  - items:
+      - id: b-sqlorder
+        tag: 순서
+        title: SQL 실행 순서
+        type: build
+        mode: order
+        join: " → "
+        q: SELECT 문이 실제로 처리되는 순서대로 놓으세요.
+        tokens:
+          - FROM
+          - WHERE
+          - GROUP BY
+          - HAVING
+          - SELECT
+          - ORDER BY
+        why: <p class="why">쓰는 순서(SELECT가 맨 앞)와 <mark>실행 순서</mark>는 다르다. 테이블을 먼저 고르고(FROM) → 행을 거르고(WHERE) → 묶고(GROUP BY) → 묶음을 거르고(HAVING) → 열을 고르고(SELECT) → 정렬(ORDER BY). 그래서 WHERE에서는 SELECT의 별칭을 못 쓴다.</p>
+        hints:
+          - 첫 번째 조각은 <b>FROM</b>
+          - 쓰는 순서(SELECT가 맨 앞)와 <mark>실행 순서</mark>는 다르다. 테이블을 먼저 고르고(FROM) → 행을 거르고(WHERE) → 묶고(GROUP BY) → 묶음을 거르고(HAVING) → 열을 고르고(SELECT) → 정렬(ORDER BY). 그래서 WHERE에서는 SELECT의 별칭을 못 쓴다.
+      - id: b-grant
+        tag: SQL
+        title: 권한 주기 문장 만들기
+        type: build
+        mode: sql
+        join: " "
+        decoys:
+          - FROM
+          - CASCADE
+        q: 학생 테이블의 SELECT 권한을 홍길동에게 주고, 홍길동도 남에게 줄 수 있게 하세요.
+        tokens:
+          - GRANT
+          - SELECT
+          - ON
+          - 학생
+          - TO
+          - 홍길동
+          - WITH GRANT OPTION
+        why: <p class="why">주는 건 <mark>TO</mark>(~에게). 받은 사람도 남에게 줄 수 있게 하려면 끝에 <b>WITH GRANT OPTION</b>.</p>
+        hints:
+          - 첫 번째 조각은 <b>GRANT</b>
+          - 주는 건 <mark>TO</mark>(~에게). 받은 사람도 남에게 줄 수 있게 하려면 끝에 <b>WITH GRANT OPTION</b>.
+      - id: b-revoke
+        tag: SQL
+        title: 권한 뺏기 문장 만들기
+        type: build
+        mode: sql
+        join: " "
+        decoys:
+          - TO
+          - WITH GRANT OPTION
+        q: 홍길동의 학생 테이블 SELECT 권한을 뺏고, 홍길동이 남에게 준 권한까지 같이 뺏으세요.
+        tokens:
+          - REVOKE
+          - SELECT
+          - ON
+          - 학생
+          - FROM
+          - 홍길동
+          - CASCADE
+        why: <p class="why">뺏는 건 <mark>FROM</mark>(~에게서). 그 사람이 나눠 준 권한까지 줄줄이 뺏는 건 <b>CASCADE</b>.</p>
+        hints:
+          - 첫 번째 조각은 <b>REVOKE</b>
+          - 뺏는 건 <mark>FROM</mark>(~에게서). 그 사람이 나눠 준 권한까지 줄줄이 뺏는 건 <b>CASCADE</b>.
+      - id: b-having
+        tag: SQL
+        title: 그룹 조건 문장 만들기
+        type: build
+        mode: sql
+        join: " "
+        decoys:
+          - WHERE
+          - ORDER BY
+        q: 학생이 10명 넘는 학과만, 학과와 학생 수를 조회하세요.
+        tokens:
+          - SELECT
+          - 학과, COUNT(*)
+          - FROM
+          - 학생
+          - GROUP BY
+          - 학과
+          - HAVING
+          - COUNT(*) > 10
+        why: <p class="why">COUNT 같은 집계 조건은 묶은 뒤에 거르므로 WHERE가 아니라 <mark>HAVING</mark>. GROUP BY 바로 뒤에 온다.</p>
+        hints:
+          - 첫 번째 조각은 <b>SELECT</b>
+          - COUNT 같은 집계 조건은 묶은 뒤에 거르므로 WHERE가 아니라 <mark>HAVING</mark>. GROUP BY 바로 뒤에 온다.
+      - id: b-update
+        tag: SQL
+        title: 값 바꾸기 문장 만들기
+        type: build
+        mode: sql
+        join: " "
+        decoys:
+          - INTO
+          - VALUES
+        q: 학번이 1001인 학생의 학년을 4로 바꾸세요.
+        tokens:
+          - UPDATE
+          - 학생
+          - SET
+          - 학년 = 4
+          - WHERE
+          - 학번 = 1001
+        why: <p class="why">UPDATE 테이블 <b>SET</b> 열 = 값 <b>WHERE</b> 조건. INTO와 VALUES는 INSERT에서 쓴다. WHERE를 빼면 모든 학생의 학년이 바뀐다.</p>
+        hints:
+          - 첫 번째 조각은 <b>UPDATE</b>
+          - UPDATE 테이블 <b>SET</b> 열 = 값 <b>WHERE</b> 조건. INTO와 VALUES는 INSERT에서 쓴다. WHERE를 빼면 모든 학생의 학년이 바뀐다.

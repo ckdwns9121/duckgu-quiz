@@ -1,0 +1,98 @@
+id: aws-ops
+name: 운영 · 비용
+color: "#E5A800"
+dark: "#B88700"
+part: PART 7
+lede: 누가 무엇을 바꿨는지 추적하고, 알림을 걸고, 요금 폭탄을 피하고, 장애에 대비하는 기준입니다. 무엇이 AWS 책임이고 무엇이 내 책임인지도 여기서 정리합니다.
+blocks:
+  - items:
+      - id: aws-ops-q-shared
+        tag: 공동 책임
+        title: 누가 패치할까
+        type: mcq
+        quizzes:
+          - q: EC2 인스턴스의 운영체제 보안 패치는 누구 책임일까?
+            answer: 고객
+            wrong:
+              - AWS
+              - Systems Manager를 켜면 AWS
+              - AMI를 만든 회사
+          - q: RDS의 DB 엔진과 OS 패치는 누가 할까?
+            answer: AWS가 한다 (고객은 유지 관리 시간대를 정한다)
+            wrong:
+              - 고객이 DB 서버에 SSH로 접속해 한다
+              - 고객이 새 인스턴스로 옮겨 가며 한다
+              - AWS Support에 요청할 때만 된다
+        explain: "<p><b>공동 책임 모델</b>: AWS는 클라우드 <b>자체</b>(데이터 센터, 하드웨어, 가상화)를, 고객은 클라우드 <b>안에서</b> 만든 것(데이터, IAM, 보안 그룹, EC2의 OS·앱)을 책임진다. 관리형 서비스일수록 AWS 몫이 커진다. Systems Manager 패치 관리자는 고객이 쓰는 도구라 켜도 책임은 고객에게 있다. RDS는 AWS가 엔진·OS를 패치하지만 DB 사용자 권한과 데이터 보호는 여전히 고객 몫이다.</p>"
+      - id: aws-ops-q-trail
+        tag: 감사
+        title: 누가 바꿨는지 찾기
+        type: mcq
+        quizzes:
+          - q: 어제 누군가 보안 그룹에서 22번 포트를 전체 공개로 열었다. 누가 언제 했는지 알려면?
+            answer: CloudTrail 이벤트 기록
+            wrong:
+              - CloudWatch CPU 지표
+              - VPC 흐름 로그
+              - Trusted Advisor
+        explain: <p><b>CloudTrail</b>은 계정에서 일어난 <b>API 호출</b>(AuthorizeSecurityGroupIngress 같은)을 누가, 언제, 어디서 했는지 기록한다. CloudWatch는 지표·로그·경보, VPC 흐름 로그는 오간 네트워크 트래픽이라 "누가 설정을 바꿨나"는 알 수 없다.</p>
+      - id: aws-ops-q-alarm
+        tag: 모니터링
+        title: CPU가 높으면 알림
+        type: mcq
+        quizzes:
+          - q: EC2 CPU 사용률이 5분 동안 80%를 넘으면 메일을 받고 싶다.
+            answer: CloudWatch 경보 + SNS 메일
+            wrong:
+              - EC2 상태 검사 알림
+              - AWS Health Dashboard 알림
+              - CloudTrail 이벤트 알림
+        explain: <p><b>CloudWatch 경보</b>는 지표가 임계값을 정한 기간 동안 넘으면 상태가 바뀌고, SNS로 메일·문자를 보내거나 오토 스케일링을 움직인다. EC2 상태 검사는 인스턴스가 살아 있는지만, Health Dashboard는 AWS 쪽 장애만 알린다. 메모리·디스크 사용률은 기본 지표에 없어서 CloudWatch 에이전트를 설치해야 한다.</p>
+      - id: aws-ops-q-budget
+        tag: 비용
+        title: 요금 폭탄 막기
+        type: mcq
+        quizzes:
+          - q: 이번 달 예상 요금이 100달러를 넘을 것 같으면 미리 메일을 받고 싶다.
+            answer: AWS Budgets의 예측 비용 알림
+            wrong:
+              - CloudWatch 결제 경보(누적 청구액)
+              - Cost Explorer 비용 그래프
+              - CloudTrail 결제 API 기록
+        explain: <p><b>AWS Budgets</b>는 실제 비용뿐 아니라 <b>예측 비용</b>이 기준을 넘을 때도 알린다. CloudWatch 결제 경보는 이미 쌓인 청구액 기준이라 "넘을 것 같으면"은 못 잡고, Cost Explorer는 비용을 분석해 보는 도구다. 연습 계정이라도 처음에 예산 알림부터 걸어 두는 게 좋다.</p>
+      - id: aws-ops-q-egress
+        tag: 비용
+        title: 요금이 붙는 트래픽
+        type: mcq
+        quizzes:
+          - q: 다음 중 보통 요금이 붙지 않는 트래픽은?
+            answer: 인터넷에서 S3로 올리는 트래픽
+            wrong:
+              - S3에서 인터넷으로 내려주는 트래픽
+              - EC2에서 인터넷으로 나가는 트래픽
+              - NAT 게이트웨이가 처리하는 트래픽
+        explain: <p>인터넷에서 AWS로 <b>들어오는</b> 트래픽은 보통 무료이고, AWS에서 인터넷으로 <b>나가는</b> 트래픽에 요금이 붙는다. NAT 게이트웨이는 켜 둔 시간과 <b>처리한 데이터 양</b>에 요금이 붙어서, 프라이빗 서버가 S3와 대량으로 주고받으면 S3 게이트웨이 엔드포인트로 돌리는 것만으로 비용이 크게 준다.</p>
+      - id: aws-ops-q-az
+        tag: 가용성
+        title: AZ 하나가 멈춰도
+        type: mcq
+        quizzes:
+          - q: 가용 영역(AZ) 하나에 장애가 나도 웹 서비스를 유지하려면?
+            answer: 여러 AZ에 인스턴스를 두고 로드 밸런서로 나눈다
+            wrong:
+              - 한 AZ에 더 큰 인스턴스 하나를 둔다
+              - 매일 EBS 스냅샷을 찍어 둔다
+              - 다른 리전에 백업 파일만 둔다
+        explain: <p>AZ는 전원·네트워크가 분리된 데이터 센터 묶음이라 동시에 멈추는 일이 드물다. 서버를 <b>여러 AZ</b>에 나눠 두고 ALB와 오토 스케일링으로 묶으면 한 AZ가 멈춰도 나머지가 받는다. 스냅샷·백업은 복구 수단이지 멈추지 않게 해 주는 수단이 아니다.</p>
+      - id: aws-ops-q-rpo
+        tag: 재해 복구
+        title: RPO와 RTO
+        type: mcq
+        quizzes:
+          - q: '"RPO 1시간"의 뜻은?'
+            answer: 최대 1시간 치 데이터까지는 잃어도 된다
+            wrong:
+              - 1시간 안에 서비스를 되살려야 한다
+              - 백업을 1시간 동안 보관한다
+              - 복제가 1시간 넘게 밀리면 경보를 낸다
+        explain: "<p><b>RPO</b>(복구 시점 목표): 얼마만큼의 <b>데이터</b>를 잃어도 되나 → 백업·복제 주기를 정한다. <b>RTO</b>(복구 시간 목표): 얼마 만에 <b>서비스</b>를 되살려야 하나 → 대기 환경을 얼마나 준비해 둘지 정한다. 둘 다 짧을수록 비싸다.</p>"

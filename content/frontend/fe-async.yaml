@@ -1,0 +1,354 @@
+id: fe-async
+name: 비동기 · 이벤트 루프
+color: "#CE82FF"
+dark: "#A568CC"
+part: PART 2
+lede: console.log 출력 순서 문제는 면접 단골입니다. 동기 코드 → 마이크로태스크 → 매크로태스크 순서만 확실히 잡으면 됩니다.
+blocks:
+  - items:
+      - id: fe-as-order
+        tag: 이벤트루프
+        title: setTimeout vs Promise
+        type: answer
+        run: node
+        code: |-
+          console.log(1);
+          setTimeout(() => console.log(2), 0);
+          Promise.resolve().then(() => console.log(3));
+          console.log(4);
+        q: 출력은? (여러 줄이면 띄어쓰기로 이어서)
+        answer: 1 4 3 2
+        steps:
+          - "동기 코드 먼저: <b>1</b>, <b>4</b>"
+          - "동기 코드가 끝나면 마이크로태스크(Promise.then) 전부: <b>3</b>"
+          - "그다음 매크로태스크(setTimeout): <b>2</b>"
+        why: "<b>기억할 것</b>: <mark>동기 → 마이크로태스크 → 매크로태스크</mark>. setTimeout 0초여도 Promise.then보다 늦다."
+        hints:
+          - "동기 코드 먼저: <b>1</b>, <b>4</b>"
+          - "<b>기억할 것</b>: <mark>동기 → 마이크로태스크 → 매크로태스크</mark>. setTimeout 0초여도 Promise.then보다 늦다."
+      - id: fe-as-q-first
+        tag: 이벤트루프
+        title: setTimeout 0과 then
+        type: mcq
+        code: |-
+          setTimeout(fn, 0);
+          Promise.resolve().then(g);
+        quizzes:
+          - q: fn과 g 중 먼저 실행되는 것은?
+            answer: g
+            wrong:
+              - fn
+              - 둘이 동시에 실행된다
+              - 브라우저마다 다르다
+        explain: <p>setTimeout은 0ms여도 <b>매크로태스크</b>, then은 <b>마이크로태스크</b>. 지금 코드가 끝나면 마이크로태스크를 전부 먼저 실행하므로 <b>g</b>가 먼저다. 이 순서는 표준으로 정해져 있다.</p>
+      - id: fe-as-micro
+        tag: 이벤트루프
+        title: queueMicrotask
+        type: answer
+        run: node
+        code: |-
+          setTimeout(() => console.log('t'), 0);
+          queueMicrotask(() => console.log('m'));
+          console.log('s');
+        q: 출력은? (여러 줄이면 띄어쓰기로 이어서)
+        answer: s m t
+        steps:
+          - "동기 코드: <b>s</b>"
+          - queueMicrotask는 마이크로태스크 → <b>m</b>
+          - setTimeout은 매크로태스크 → <b>t</b>
+        why: "<b>기억할 것</b>: queueMicrotask는 <mark>Promise.then과 같은 줄</mark>(마이크로태스크 큐)에 선다."
+        hints:
+          - "동기 코드: <b>s</b>"
+          - "<b>기억할 것</b>: queueMicrotask는 <mark>Promise.then과 같은 줄</mark>(마이크로태스크 큐)에 선다."
+      - id: fe-as-executor
+        tag: Promise
+        title: Promise 생성자 안의 코드
+        type: answer
+        run: node
+        code: |-
+          new Promise((resolve) => {
+            console.log('p');
+            resolve();
+          }).then(() => console.log('then'));
+          console.log('end');
+        q: 출력은? (여러 줄이면 띄어쓰기로 이어서)
+        answer: p end then
+        steps:
+          - <code>new Promise(콜백)</code>의 콜백은 <b>즉시 동기로</b> 실행 → <b>p</b>
+          - then은 마이크로태스크로 미뤄짐
+          - 동기 코드 → <b>end</b>
+          - 마이크로태스크 → <b>then</b>
+        why: "<b>기억할 것</b>: <mark>Promise 생성자 콜백(executor)은 동기</mark>, then·catch·finally만 비동기."
+        hints:
+          - <code>new Promise(콜백)</code>의 콜백은 <b>즉시 동기로</b> 실행 → <b>p</b>
+          - "<b>기억할 것</b>: <mark>Promise 생성자 콜백(executor)은 동기</mark>, then·catch·finally만 비동기."
+      - id: fe-as-return
+        tag: async
+        title: async 함수의 반환값
+        type: answer
+        run: node
+        code: |-
+          async function getN() {
+            return 1;
+          }
+          getN().then((n) => console.log(n));
+          console.log(2);
+        q: 출력은? (여러 줄이면 띄어쓰기로 이어서)
+        answer: 2 1
+        steps:
+          - async 함수는 값을 return해도 <b>Promise로 감싸서</b> 돌려줌
+          - then 콜백은 마이크로태스크 → 동기 코드 <b>2</b>가 먼저
+          - 그다음 <b>1</b>
+        why: "<b>기억할 것</b>: <mark>async 함수의 결과는 항상 Promise</mark>. 값을 바로 쓰려면 await나 then."
+        hints:
+          - async 함수는 값을 return해도 <b>Promise로 감싸서</b> 돌려줌
+          - "<b>기억할 것</b>: <mark>async 함수의 결과는 항상 Promise</mark>. 값을 바로 쓰려면 await나 then."
+      - id: fe-as-b-loop
+        tag: 순서
+        title: 이벤트 루프 한 바퀴
+        type: build
+        mode: order
+        join: " → "
+        q: 이벤트 루프가 한 바퀴 도는 순서대로 놓으세요.
+        tokens:
+          - 콜 스택의 동기 코드
+          - 마이크로태스크 전부
+          - 화면 렌더링 (필요할 때)
+          - 매크로태스크 하나
+        why: <p class="why">지금 실행 중인 코드(콜 스택)가 끝나면 <mark>마이크로태스크를 큐가 빌 때까지 전부</mark> 실행하고, 필요하면 화면을 그린 뒤, 매크로태스크를 <b>하나</b> 꺼낸다. 이것을 반복한다.</p>
+        hints:
+          - 첫 번째 조각은 <b>콜 스택의 동기 코드</b>
+          - 지금 실행 중인 코드(콜 스택)가 끝나면 <mark>마이크로태스크를 큐가 빌 때까지 전부</mark> 실행하고, 필요하면 화면을 그린 뒤, 매크로태스크를 <b>하나</b> 꺼낸다. 이것을 반복한다.
+      - id: fe-as-await
+        tag: async
+        title: await 뒤의 코드
+        type: answer
+        run: node
+        code: |-
+          async function f() {
+            console.log('a');
+            await null;
+            console.log('b');
+          }
+          f();
+          console.log('c');
+        q: 출력은? (여러 줄이면 띄어쓰기로 이어서)
+        answer: a c b
+        steps:
+          - <code>f()</code> 안의 <code>console.log('a')</code>는 바로 실행 → <b>a</b>
+          - <code>await</code>를 만나면 f의 나머지는 마이크로태스크로 미뤄짐
+          - 바깥 동기 코드 → <b>c</b>
+          - 마이크로태스크로 f 재개 → <b>b</b>
+        why: "<b>기억할 것</b>: <mark>await 앞은 동기, await 뒤는 마이크로태스크</mark>. async 함수도 처음 await 전까지는 그냥 동기 코드."
+        hints:
+          - <code>f()</code> 안의 <code>console.log('a')</code>는 바로 실행 → <b>a</b>
+          - "<b>기억할 것</b>: <mark>await 앞은 동기, await 뒤는 마이크로태스크</mark>. async 함수도 처음 await 전까지는 그냥 동기 코드."
+      - id: fe-as-mix
+        tag: 이벤트루프
+        title: async 함수와 Promise 섞기
+        type: answer
+        run: node
+        code: |-
+          console.log('A');
+          setTimeout(() => console.log('B'));
+          (async () => {
+            console.log('C');
+            await null;
+            console.log('D');
+          })();
+          Promise.resolve().then(() => console.log('E'));
+          console.log('F');
+        q: 출력은? (여러 줄이면 띄어쓰기로 이어서)
+        answer: A C F D E B
+        steps:
+          - "동기 코드: <b>A</b> → async 함수 안의 await 앞까지 <b>C</b> → <b>F</b>"
+          - "마이크로태스크는 등록된 순서대로: await 뒤의 <b>D</b>가 먼저 줄 섬, 그다음 then의 <b>E</b>"
+          - "마지막으로 매크로태스크 setTimeout: <b>B</b>"
+        why: "<b>기억할 것</b>: <mark>async 함수는 await를 만나기 전까지 동기</mark>로 돈다. 마이크로태스크끼리는 줄 선 순서대로."
+        hints:
+          - "동기 코드: <b>A</b> → async 함수 안의 await 앞까지 <b>C</b> → <b>F</b>"
+          - "<b>기억할 것</b>: <mark>async 함수는 await를 만나기 전까지 동기</mark>로 돈다. 마이크로태스크끼리는 줄 선 순서대로."
+      - id: fe-as-nested
+        tag: 이벤트루프
+        title: then 안에서 setTimeout
+        type: answer
+        run: node
+        code: |-
+          Promise.resolve()
+            .then(() => {
+              console.log(1);
+              setTimeout(() => console.log(2));
+            })
+            .then(() => console.log(3));
+          setTimeout(() => console.log(4));
+        q: 출력은? (여러 줄이면 띄어쓰기로 이어서)
+        answer: 1 3 4 2
+        steps:
+          - "처음에 등록: 첫 then(마이크로), setTimeout 4(매크로)"
+          - "마이크로태스크: 첫 then → <b>1</b>, 이때 setTimeout 2를 등록 (4 뒤에 줄 섬)"
+          - 이어서 두 번째 then → <b>3</b>
+          - "매크로태스크는 줄 선 순서대로: <b>4</b>, <b>2</b>"
+        why: "<b>기억할 것</b>: <mark>마이크로태스크는 큐가 빌 때까지 이어서</mark> 실행되고, 매크로태스크는 등록된 순서대로 하나씩."
+        hints:
+          - "처음에 등록: 첫 then(마이크로), setTimeout 4(매크로)"
+          - "<b>기억할 것</b>: <mark>마이크로태스크는 큐가 빌 때까지 이어서</mark> 실행되고, 매크로태스크는 등록된 순서대로 하나씩."
+      - id: fe-as-q-block
+        tag: 이벤트루프
+        title: 무거운 동기 코드
+        type: mcq
+        quizzes:
+          - q: 클릭 핸들러에서 3초 걸리는 동기 반복문을 돌리면 어떻게 될까?
+            answer: 3초 동안 화면이 멈추고 다른 클릭도 처리되지 않는다
+            wrong:
+              - 반복문은 뒤에서 돌고 화면은 계속 반응한다
+              - 브라우저가 알아서 잘게 나눠 실행한다
+              - setTimeout 콜백이 반복문 중간에 끼어든다
+        explain: <p>JS는 메인 스레드 하나에서 돈다. 콜 스택이 비지 않으면 이벤트 루프가 다음 작업(클릭, 렌더링, 타이머)을 꺼내지 못해 <b>화면 전체가 멈춘다</b>. 오래 걸리는 계산은 Web Worker로 보내거나 잘게 나눠 실행한다.</p>
+      - id: fe-as-catch
+        tag: Promise
+        title: catch 뒤의 then
+        type: answer
+        run: node
+        code: |-
+          Promise.reject(new Error('x'))
+            .then(() => console.log(1))
+            .catch(() => console.log(2))
+            .then(() => console.log(3));
+        q: 출력은? (여러 줄이면 띄어쓰기로 이어서)
+        answer: 2 3
+        steps:
+          - reject된 Promise라 첫 then은 <b>건너뜀</b> → 1은 안 찍힘
+          - <code>.catch</code>가 에러를 받아 <b>2</b>
+          - catch가 에러 없이 끝나면 체인은 <b>다시 성공 상태</b> → 다음 then이 실행되어 <b>3</b>
+        why: '<b>기억할 것</b>: <mark>catch 뒤의 then은 실행된다</mark>. catch가 에러를 "처리"한 것으로 보기 때문. 계속 실패로 두려면 catch 안에서 다시 throw.'
+        hints:
+          - reject된 Promise라 첫 then은 <b>건너뜀</b> → 1은 안 찍힘
+          - '<b>기억할 것</b>: <mark>catch 뒤의 then은 실행된다</mark>. catch가 에러를 "처리"한 것으로 보기 때문. 계속 실패로 두려면 catch 안에서 다시 throw.'
+      - id: fe-as-q-trycatch
+        tag: Promise
+        title: then 안의 에러와 try/catch
+        type: mcq
+        code: |-
+          try {
+            fetch('/api').then(() => {
+              throw new Error('bad');
+            });
+          } catch (e) {
+            console.log('잡힘');
+          }
+        quizzes:
+          - q: "'잡힘'은 출력될까?"
+            answer: 안 된다. 처리 안 된 Promise 에러가 된다
+            wrong:
+              - 된다. try/catch가 잡는다
+              - fetch가 끝나기 전에 바로 출력된다
+              - SyntaxError가 나서 실행이 안 된다
+        explain: <p>try 블록은 fetch를 <b>시작만</b> 하고 바로 끝난다. then 콜백은 나중에 마이크로태스크로 실행되므로 그때는 이미 try 밖이다. 잡으려면 <code>.catch()</code>를 붙이거나, async 함수 안에서 <code>await fetch(...)</code>로 기다린다.</p>
+      - id: fe-as-foreach
+        tag: async
+        title: forEach 안의 await
+        type: answer
+        run: node
+        code: |-
+          const wait = (ms) =>
+            new Promise((r) => setTimeout(r, ms));
+
+          async function main() {
+            [30, 10].forEach(async (ms) => {
+              await wait(ms);
+              console.log(ms);
+            });
+            console.log('done');
+          }
+          main();
+        q: 출력은? (여러 줄이면 띄어쓰기로 이어서)
+        answer: done 10 30
+        steps:
+          - forEach는 콜백이 돌려준 Promise를 <b>기다리지 않음</b> → 곧바로 <b>done</b>
+          - 두 콜백의 wait는 동시에 시작 → 10ms짜리가 먼저 끝나 <b>10</b>
+          - 그다음 <b>30</b>
+        why: "<b>기억할 것</b>: <mark>forEach는 await를 기다려 주지 않는다</mark>. 차례로 하려면 for...of + await, 동시에 하려면 Promise.all(arr.map(...))."
+        hints:
+          - forEach는 콜백이 돌려준 Promise를 <b>기다리지 않음</b> → 곧바로 <b>done</b>
+          - "<b>기억할 것</b>: <mark>forEach는 await를 기다려 주지 않는다</mark>. 차례로 하려면 for...of + await, 동시에 하려면 Promise.all(arr.map(...))."
+      - id: fe-as-q-serial
+        tag: async
+        title: await를 차례로 쓰면
+        type: mcq
+        code: |-
+          // a(), b()는 각각 1초 걸리는 요청
+          const x = await a();
+          const y = await b();
+        quizzes:
+          - q: a()와 b()는 서로 상관없고 각각 1초 걸린다. 이 코드는 약 몇 초 걸릴까?
+            answer: 약 2초
+            wrong:
+              - 약 1초
+              - 0초 (await가 바로 끝남)
+              - 약 3초
+          - q: 이 코드를 약 1초로 줄이려면?
+            answer: await Promise.all([a(), b()])로 받는다
+            wrong:
+              - await를 지우고 a().then(b)로 바꾼다
+              - a와 b를 각각 async 함수로 감싼다
+              - for await...of로 a, b를 차례로 돈다
+        explain: "<p>await는 앞 요청이 끝날 때까지 다음 줄로 가지 않으므로 <b>1초 + 1초</b>. 서로 기다릴 필요가 없으면 두 요청을 <b>먼저 동시에 시작</b>하고 한꺼번에 기다린다: <code>const [x, y] = await Promise.all([a(), b()])</code>.</p>"
+      - id: fe-as-q-combo
+        tag: Promise
+        title: Promise 조합 고르기
+        type: mcq
+        quizzes:
+          - q: 상품·리뷰·추천 API를 동시에 부르고, 하나라도 실패하면 바로 에러 화면을 띄우고 싶다.
+            answer: Promise.all
+            wrong:
+              - Promise.allSettled
+              - Promise.race
+              - Promise.any
+          - q: 상품·리뷰·추천 API 중 실패한 게 있어도, 성공한 것만이라도 보여 주고 싶다.
+            answer: Promise.allSettled
+            wrong:
+              - Promise.all
+              - Promise.race
+              - Promise.any
+          - q: 같은 데이터를 주는 서버 세 곳 중 가장 먼저 성공한 응답만 쓰고 싶다.
+            answer: Promise.any
+            wrong:
+              - Promise.race
+              - Promise.all
+              - Promise.allSettled
+          - q: fetch가 3초 안에 안 끝나면 실패로 처리하고 싶다 (3초 뒤 reject되는 Promise와 겨루기).
+            answer: Promise.race
+            wrong:
+              - Promise.any
+              - Promise.all
+              - Promise.allSettled
+        explain: "<p><b>all</b>: 전부 성공해야 성공, 하나라도 실패하면 바로 실패. <b>allSettled</b>: 성공·실패를 가리지 않고 결과를 모두 모아 줌. <b>any</b>: 가장 먼저 <b>성공</b>한 것 (실패는 건너뜀). <b>race</b>: 가장 먼저 <b>끝난</b> 것 (실패여도 그걸로 끝) → 타임아웃에 쓴다.</p>"
+  - group: 비동기 용어
+  - table:
+      heads:
+        - 용어
+        - 뜻
+        - 예시 · 외우는 법
+      rows:
+        - id: fe-as-t-queue
+          term: 마이크로태스크 / 매크로태스크
+          desc: "<b>마이크로태스크</b>: 지금 작업이 끝나면 큐가 빌 때까지 전부 먼저 실행하는 작업. <b>매크로태스크</b>: 이벤트 루프가 한 바퀴에 하나씩 꺼내는 작업."
+          hint: "마이크로: Promise.then, await 뒤, queueMicrotask. 매크로: setTimeout, setInterval, 클릭 이벤트"
+          quiz: false
+        - id: fe-as-t-stack
+          term: 콜 스택
+          sub: Call Stack
+          desc: 지금 실행 중인 함수들이 쌓이는 곳. 콜 스택이 비어야 큐에서 다음 작업을 꺼낸다.
+          hint: 무거운 동기 코드가 콜 스택을 오래 붙잡으면 화면이 멈춘다
+          quiz: false
+        - id: fe-as-t-state
+          term: pending / fulfilled / rejected
+          sub: Promise 상태
+          desc: "<b>pending</b>: 아직 결과가 없는 대기 상태. <b>fulfilled</b>: 성공해서 값이 정해진 상태 (then 실행). <b>rejected</b>: 실패한 상태 (catch 실행)."
+          hint: 한 번 fulfilled나 rejected가 되면 다시 바뀌지 않는다
+          quiz: false
+        - id: fe-as-t-async
+          term: async / await
+          desc: "<b>async</b>: 항상 Promise를 돌려주는 함수로 만든다. <b>await</b>: Promise가 끝날 때까지 그 함수의 나머지를 멈추고 기다린다."
+          hint: await는 async 함수 안에서만 (모듈 최상단은 예외)
+          quiz: false

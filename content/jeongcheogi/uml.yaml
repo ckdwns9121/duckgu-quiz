@@ -1,0 +1,176 @@
+id: uml
+name: UML
+color: "#E5A800"
+dark: "#B88700"
+part: PART 4
+lede: "UML은 <mark>소프트웨어 설계도를 그리는 공통 규칙</mark>입니다. 외울 건 딱 세 덩어리: 다이어그램 종류(구조 vs 행위), 관계 6가지(선 모양), 기호 몇 개."
+blocks:
+  - tip: '<b>1단계: 다이어그램은 두 편으로 나뉜다</b><span><b>구조(정적)</b> = 사진. 무엇이 있는지. <b>행위(동적)</b> = 동영상. 무엇이 일어나는지.</span><span>문제에서 "시간", "순서", "상태 변화", "흐름"이 보이면 행위, "구성", "관계", "배치"가 보이면 구조입니다.</span>'
+  - items:
+      - id: u-struct
+        title: 구조 다이어그램 (사진)
+        mnemo: 클 · 객 · 컴 · 배 · 복 · 패
+        type: mcq
+        quizzes:
+          - q: 다음 중 구조(정적) 다이어그램이 아닌 것은?
+            answer: 시퀀스 다이어그램
+            wrong:
+              - 클래스 다이어그램
+              - 컴포넌트 다이어그램
+              - 배치 다이어그램
+            hints:
+              - '<b>외우는 법</b>: "클래스 객체가 컴퓨터에 배치돼서 복잡해서 패스"'
+          - q: 서버, PC 같은 물리적 장비에 무엇이 설치되는지 보여 주는 다이어그램은?
+            answer: 배치 다이어그램
+            wrong:
+              - 컴포넌트 다이어그램
+              - 패키지 다이어그램
+              - 객체 다이어그램
+            hints:
+              - '<b>외우는 법</b>: "클래스 객체가 컴퓨터에 배치돼서 복잡해서 패스"'
+        explain: |-
+          <p class="why">시스템이 <b>무엇으로 이루어져 있는지</b>를 보여 주는 그림. 시간이 흘러도 안 변하는 모습 = 사진.</p>
+          <ol class="steps">
+          <li><b>클래스</b>: 클래스들과 그 속성·메서드, 서로의 관계. 프로그램의 설계도. <mark>가장 많이 나옴</mark></li>
+          <li><b>객체</b>: 클래스로 실제 만든 객체들이 <b>어느 한 순간</b>에 어떤 값을 갖고 연결돼 있는지. 설계도로 지은 집의 사진</li>
+          <li><b>컴포넌트</b>: 프로그램을 이루는 <b>부품(모듈)</b>과 그 연결</li>
+          <li><b>배치</b>: 서버, PC 같은 <b>물리적 장비</b>에 무엇이 설치되는지. 서버실 배치도</li>
+          <li><b>복합체 구조</b>: 클래스 <b>내부</b>가 어떻게 생겼는지</li>
+          <li><b>패키지</b>: 관련 요소를 <b>폴더처럼 묶은</b> 것과 그 관계</li>
+          </ol>
+          <p class="why"><b>외우는 법</b>: "클래스 객체가 컴퓨터에 배치돼서 복잡해서 패스"</p>
+      - id: u-behav
+        title: 행위 다이어그램 (동영상)
+        mnemo: 유 · 시 · 커 · 상 · 활 · 타 · 상호
+        type: mcq
+        quizzes:
+          - q: 객체끼리 주고받는 메시지를 시간 순서대로 보여 주는 다이어그램은?
+            answer: 시퀀스 다이어그램
+            wrong:
+              - 커뮤니케이션 다이어그램
+              - 상태 다이어그램
+              - 활동 다이어그램
+            hints:
+              - '<b>외우는 법</b>: "유시커 상활 타상". 문제에 "시간 순서, 메시지"가 보이면 시퀀스, "상태 변화"면 상태, "흐름, 분기"면 활동.'
+          - q: 주문이 '접수 → 결제완료 → 배송중'처럼 한 객체의 상태가 바뀌는 과정을 그리는 다이어그램은?
+            answer: 상태 다이어그램
+            wrong:
+              - 활동 다이어그램
+              - 시퀀스 다이어그램
+              - 유스케이스 다이어그램
+            hints:
+              - '<b>외우는 법</b>: "유시커 상활 타상". 문제에 "시간 순서, 메시지"가 보이면 시퀀스, "상태 변화"면 상태, "흐름, 분기"면 활동.'
+        explain: |-
+          <p class="why">시스템이 <b>어떻게 움직이는지</b>를 보여 주는 그림. 시간에 따라 일어나는 일 = 동영상.</p>
+          <ol class="steps">
+          <li><b>유스케이스</b>: 사용자(액터)가 시스템으로 <b>할 수 있는 기능</b> 목록. 식당 메뉴판</li>
+          <li><b>시퀀스</b>: 객체끼리 <mark>시간 순서대로</mark> 메시지를 주고받는 모습. 위에서 아래로 시간이 흐름. 카톡 대화창</li>
+          <li><b>커뮤니케이션</b>: 시퀀스와 같은 내용을 객체 간 <b>연결 관계</b> 중심으로 그림</li>
+          <li><b>상태</b>: 객체 하나의 <b>상태가 어떻게 바뀌는지</b>. 주문: 접수 → 결제완료 → 배송중 → 완료. 신호등</li>
+          <li><b>활동</b>: 일이 처리되는 <b>흐름과 조건 분기</b>. 순서도(flowchart)</li>
+          <li><b>타이밍</b>: 시간에 따라 상태가 <b>언제</b> 바뀌는지 시간축으로</li>
+          <li><b>상호작용 개요</b>: 여러 상호작용 다이어그램을 묶어 <b>큰 흐름</b>으로</li>
+          </ol>
+          <p class="why"><b>외우는 법</b>: "유시커 상활 타상". 문제에 "시간 순서, 메시지"가 보이면 시퀀스, "상태 변화"면 상태, "흐름, 분기"면 활동.</p>
+  - tip: '<b>2단계: 관계 6가지는 선 모양으로 구분</b><span>실선이면 진짜 붙어 있는 관계, 점선이면 약한 관계. 빈 삼각형은 "상속 계열", 마름모는 "전체-부분".</span>'
+  - rel:
+      - id: u-assoc
+        title: 연관 (Association)
+        type: rel
+        svg: <svg viewBox="0 0 200 40" role="img" aria-label="실선"><line x1="10" y1="20" x2="190" y2="20" stroke="currentColor" stroke-width="2"></line></svg>
+        explain: "두 클래스가 <b>서로 알고 연결</b>돼 있는 가장 기본 관계. 실선으로 잇는다(방향이 있으면 화살표). 예) 학생 — 강의: 학생은 강의를 수강한다"
+        hints:
+          - 두 클래스가 서로 알고 연결돼 있는 가장 기본 관계.
+      - id: u-dep
+        title: 의존 (Dependency)
+        type: rel
+        svg: <svg viewBox="0 0 200 40" role="img" aria-label="점선 화살표"><line x1="10" y1="20" x2="186" y2="20" stroke="currentColor" stroke-width="2" stroke-dasharray="7 5"></line><polyline points="176,12 190,20 176,28" fill="none" stroke="currentColor" stroke-width="2"></polyline></svg>
+        explain: 한 클래스가 다른 클래스를 <b>잠깐 빌려 쓰는</b> 약한 관계. 메서드 매개변수나 지역변수로만 쓰고 끝남. 점선 + 열린 화살표. 예) 주문.결제하기(카드) → 카드를 잠깐 씀
+        hints:
+          - 한 클래스가 다른 클래스를 잠깐 빌려 쓰는 약한 관계.
+      - id: u-gen
+        title: 일반화 (Generalization)
+        type: rel
+        svg: <svg viewBox="0 0 200 40" role="img" aria-label="실선 빈 삼각형"><line x1="10" y1="20" x2="172" y2="20" stroke="currentColor" stroke-width="2"></line><polygon class="hollow" points="172,10 190,20 172,30" stroke="currentColor" stroke-width="2"></polygon></svg>
+        explain: "<mark>상속</mark>(is-a). 자식이 부모의 특징을 물려받음. 실선 + <b>빈 삼각형</b>이 <b>부모 쪽</b>을 가리킴. 예) 강아지 ▷ 동물: 강아지는 동물이다. Java의 extends"
+        hints:
+          - 상속(is-a).
+      - id: u-real
+        title: 실체화 (Realization)
+        type: rel
+        svg: <svg viewBox="0 0 200 40" role="img" aria-label="점선 빈 삼각형"><line x1="10" y1="20" x2="172" y2="20" stroke="currentColor" stroke-width="2" stroke-dasharray="7 5"></line><polygon class="hollow" points="172,10 190,20 172,30" stroke="currentColor" stroke-width="2"></polygon></svg>
+        explain: <b>인터페이스를 구현</b>하는 관계. 약속(인터페이스)을 실제로 만든 것. <mark>점선</mark> + 빈 삼각형. 예) 카드결제 ⇢▷ 결제가능. Java의 implements. 일반화와 삼각형은 같고 <b>선만 점선</b>
+        hints:
+          - 인터페이스를 구현하는 관계.
+      - id: u-agg
+        title: 집합 (Aggregation)
+        type: rel
+        svg: <svg viewBox="0 0 200 40" role="img" aria-label="실선 빈 마름모"><polygon class="hollow" points="10,20 26,11 42,20 26,29" stroke="currentColor" stroke-width="2"></polygon><line x1="42" y1="20" x2="190" y2="20" stroke="currentColor" stroke-width="2"></line></svg>
+        explain: "전체와 부분 관계인데, 부분이 <mark>따로 살 수 있음</mark>. <b>빈 마름모</b>가 <b>전체 쪽</b>에 붙음. 예) 컴퓨터 ◇— 마우스: 컴퓨터를 버려도 마우스는 다른 컴퓨터에 씀"
+        hints:
+          - 전체와 부분 관계인데, 부분이 따로 살 수 있음.
+      - id: u-comp
+        title: 포함·합성 (Composition)
+        type: rel
+        svg: <svg viewBox="0 0 200 40" role="img" aria-label="실선 채운 마름모"><polygon class="solid" points="10,20 26,11 42,20 26,29" stroke="currentColor" stroke-width="2"></polygon><line x1="42" y1="20" x2="190" y2="20" stroke="currentColor" stroke-width="2"></line></svg>
+        explain: "전체와 부분 관계인데, 전체가 없어지면 <mark>부분도 같이 없어짐</mark>. <b>채운 마름모</b>가 전체 쪽. 예) 집 ◆— 방: 집을 허물면 방도 사라짐. 집합보다 강한 관계"
+        hints:
+          - 전체와 부분 관계인데, 전체가 없어지면 부분도 같이 없어짐.
+  - tip: <b>마름모 헷갈릴 때</b><span>속이 <b>꽉 찬</b> 마름모 = 관계도 <b>꽉 묶임</b>(같이 죽음). 속이 <b>빈</b> 마름모 = <b>느슨함</b>(따로 삶).</span>
+  - group: "3단계: 기호 몇 개"
+  - table:
+      heads:
+        - 기호
+        - 뜻
+        - 예시 · 외우는 법
+      rows:
+        - id: u-vis
+          term: "+ / − / # / ~"
+          sub: 접근 제어자
+          desc: "<b>+</b>: public, 누구나 접근. <b>−</b>: private, 자기 클래스 안에서만. <b>#</b>: protected, 자기와 자식 클래스만. <b>~</b>: package, 같은 패키지 안에서만."
+          hint: "+ 는 열려 있음, − 는 빼서 숨김, # 은 울타리 쳐서 가족(자식)만, ~ 는 동네(패키지)만"
+          short: "+: public, 누구나 접근"
+          segments:
+            - label: +
+              text: public, 누구나 접근
+            - label: −
+              text: private, 자기 클래스 안에서만
+            - label: "#"
+              text: protected, 자기와 자식 클래스만
+            - label: "~"
+              text: package, 같은 패키지 안에서만
+        - id: u-inc
+          term: "&lt;&lt;include&gt;&gt; / &lt;&lt;extend&gt;&gt;"
+          desc: "유스케이스 사이 관계. <b>&lt;&lt;include&gt;&gt;</b>: 실행하면 <b>반드시 같이</b> 실행되는 기능(필수). <b>&lt;&lt;extend&gt;&gt;</b>: <b>조건에 따라 가끔</b> 추가되는 기능(선택)."
+          hint: '"결제하기"는 항상 "로그인"을 포함(include). "결제하기"에 "쿠폰 적용"은 원할 때만(extend). include = 포함, extend = 확장(덤)'
+          short: 유스케이스 사이 관계
+          segments:
+            - label: <<include>>
+              text: 실행하면 반드시 같이 실행되는 기능(필수)
+            - label: <<extend>>
+              text: 조건에 따라 가끔 추가되는 기능(선택)
+        - id: u-parts
+          term: UML 구성요소
+          desc: "UML을 이루는 3가지: <b>사물</b>(Things, 클래스·객체 같은 대상), <b>관계</b>(Relationships, 대상끼리 연결), <b>다이어그램</b>(Diagram, 이것들을 그린 그림)."
+          hint: '"무엇이(사물), 어떻게 연결돼서(관계), 그림으로(다이어그램)"'
+          quiz: false
+        - id: u-actor
+          term: 액터 (Actor)
+          desc: 시스템 <b>바깥</b>에서 시스템을 쓰는 사람이나 시스템. 유스케이스 다이어그램에 졸라맨 모양으로 그린다.
+          hint: 쇼핑몰 시스템에서 고객, 관리자, 외부 결제 시스템이 액터. 시스템 안에 있는 건 액터가 아님
+          short: 시스템 바깥에서 시스템을 쓰는 사람이나 시스템
+  - group: 개념 확인 문제
+  - items:
+      - id: q-uml-parts
+        tag: 개념
+        title: UML 구성요소
+        type: mcq
+        quizzes:
+          - q: UML의 3가지 구성요소가 아닌 것은?
+            answer: 속성 (Attribute)
+            wrong:
+              - 사물 (Things)
+              - 관계 (Relationships)
+              - 다이어그램 (Diagram)
+        explain: <p>UML = <b>사물</b>(클래스·객체 같은 대상) + <b>관계</b>(대상끼리 연결) + <b>다이어그램</b>(이것들을 그린 그림). 속성은 클래스 안의 항목이다.</p>
+heading: UML, 그림으로 외우기

@@ -1,0 +1,10 @@
+# 코스 순서와 "준비 중" 코스. 코스 내용은 content/<코스>/course.yaml
+courses:
+  - jeongcheogi
+  - frontend
+  - aws
+soon:
+  - name: 백엔드
+    icon: BE
+  - name: Kubernetes
+    icon: K8s

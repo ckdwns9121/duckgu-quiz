@@ -1,0 +1,380 @@
+id: fe-next
+name: Next.js
+color: "#4B4B4B"
+dark: "#2B2B2B"
+part: PART 7
+lede: Next.js 16 App Router 기준입니다. 서버·클라이언트 컴포넌트 경계, 정적·동적 렌더링, 캐시, Server Action처럼 실무에서 사고가 나는 지점을 코드로 확인합니다. 캐시 문제는 설정(cacheComponents)에 따라 답이 달라서 질문에 조건을 적었습니다.
+blocks:
+  - items:
+      - id: fe-nx-q-usestate
+        tag: 서버 컴포넌트
+        title: page에서 state 쓰기
+        type: mcq
+        code: |-
+          import { useState } from 'react';
+
+          export default function Page() {
+            const [n, setN] = useState(0);
+            return <p>{n}</p>;
+          }
+        quizzes:
+          - q: app/page.tsx가 이렇게 생겼다. next build를 하면?
+            answer: "빌드 에러: 서버 컴포넌트에서는 useState를 못 쓴다"
+            wrong:
+              - 잘 빌드되고, state는 브라우저에서만 동작한다
+              - 경고만 뜨고 서버에서는 useState를 무시한다
+              - 자동으로 클라이언트 컴포넌트로 바뀐다
+        explain: <p>App Router의 page와 layout은 기본이 <b>서버 컴포넌트</b>다. useState·useEffect·onClick처럼 브라우저에서 돌아야 하는 것은 파일 맨 위에 <code>'use client'</code>가 있어야 한다. 없으면 Next가 빌드할 때 "This API is only available in Client Components" 에러를 낸다. 자동으로 바꿔 주지 않는다.</p>
+      - id: fe-nx-q-children
+        tag: 경계
+        title: 클라이언트 안의 서버 컴포넌트
+        type: mcq
+        code: |-
+          // Shell.tsx
+          'use client';
+          export function Shell({ children }) {
+            const [open, setOpen] = useState(true);
+            return open ? <div>{children}</div> : null;
+          }
+
+          // page.tsx (서버 컴포넌트)
+          <Shell>
+            <ServerList />
+          </Shell>
+        quizzes:
+          - q: ServerList는 어디서 렌더링될까?
+            answer: 서버에서. children으로 받은 건 서버 컴포넌트 그대로다
+            wrong:
+              - 브라우저에서. Shell 안에 있으니 클라이언트 컴포넌트가 된다
+              - 에러가 난다. 클라이언트 안에 서버 컴포넌트를 둘 수 없다
+              - 서버와 브라우저에서 한 번씩 렌더링된다
+        explain: <p>서버 컴포넌트를 클라이언트 컴포넌트의 <b>props(children)로 넘기면</b> 서버에서 렌더링된 결과가 그 자리에 끼워질 뿐, 클라이언트 번들에 들어가지 않는다. 반대로 Shell 파일이 ServerList를 <b>직접 import</b>하면 그때는 클라이언트 번들에 들어간다. 경계는 "어디서 import했는가"로 정해진다.</p>
+      - id: fe-nx-q-import
+        tag: 경계
+        title: 클라이언트 파일이 import하면
+        type: mcq
+        quizzes:
+          - q: "'use client' 파일인 Chart.tsx가 import한 formatPrice.ts는?"
+            answer: 클라이언트 번들에 들어간다
+            wrong:
+              - 서버 번들에만 들어간다
+              - 양쪽에 따로 복사돼 서버 것이 먼저 실행된다
+              - formatPrice.ts에도 'use client'를 따로 붙여야 번들에 들어간다
+        explain: <p><code>'use client'</code>는 파일 하나가 아니라 <b>경계</b>를 선언한다. 그 파일이 import하는 모듈과 직접 렌더링하는 컴포넌트는 모두 클라이언트 번들에 들어가므로, 거기서 import한 파일에 따로 표시할 필요가 없다. 그래서 무거운 라이브러리를 쓰는 부분만 작은 클라이언트 컴포넌트로 떼어 내는 것이 좋다.</p>
+      - id: fe-nx-q-fnprop
+        tag: 경계
+        title: 서버에서 함수 넘기기
+        type: mcq
+        code: |-
+          // Btn.tsx
+          'use client';
+          export default function Btn({ onPick }) {
+            return <button onClick={onPick}>b</button>;
+          }
+
+          // page.tsx (서버 컴포넌트)
+          export default function Page() {
+            return <Btn onPick={() => console.log('x')} />;
+          }
+        quizzes:
+          - q: 이 page를 next build하면?
+            answer: "에러: 함수는 클라이언트 컴포넌트 props로 못 넘긴다"
+            wrong:
+              - 잘 동작하고, 클릭하면 서버 터미널에 x가 찍힌다
+              - 잘 동작하고, 클릭하면 브라우저 콘솔에 x가 찍힌다
+              - 함수가 문자열로 바뀌어 전달된다
+        explain: <p>서버 컴포넌트에서 클라이언트 컴포넌트로 넘기는 props는 <b>직렬화할 수 있어야</b> 한다(문자열, 숫자, 객체, 배열, JSX 등). 일반 함수는 안 되어서 "Event handlers cannot be passed to Client Component props" 에러가 난다. 예외는 <code>'use server'</code>로 만든 <b>Server Action</b>이다. 클릭 처리는 Btn 안(클라이언트)에서 정의한다.</p>
+      - id: fe-nx-q-params
+        tag: 라우팅
+        title: params 읽기
+        type: mcq
+        code: |-
+          export default async function Page({ params }: {
+            params: Promise<{ id: string }>;
+          }) {
+            // ?
+          }
+        quizzes:
+          - q: Next 16의 app/post/[id]/page.tsx에서 id를 읽는 올바른 코드는?
+            answer: const { id } = await params
+            wrong:
+              - const { id } = params
+              - const id = params.get('id')
+              - const { id } = useParams()
+        explain: <p>Next 15부터 <code>params</code>와 <code>searchParams</code>는 <b>Promise</b>가 됐고, Next 16에서는 동기로 읽는 방식이 완전히 사라졌다. <code>useParams()</code>는 클라이언트 컴포넌트용 훅이라 서버 컴포넌트인 page에서는 쓸 수 없다. cookies(), headers()도 똑같이 await해야 한다.</p>
+      - id: fe-nx-q-serveronly
+        tag: 경계
+        title: 서버 전용 모듈 지키기
+        type: mcq
+        quizzes:
+          - q: DB 비밀번호를 쓰는 lib/db.ts가 실수로 클라이언트 컴포넌트에 import되는 걸 빌드에서 막으려면?
+            answer: lib/db.ts에 import 'server-only'
+            wrong:
+              - lib/db.ts 맨 위에 'use server'
+              - lib/db.ts를 app 폴더 밖으로 옮긴다
+              - 환경 변수 이름에서 NEXT_PUBLIC_을 뺀다
+        explain: <p><code>import 'server-only'</code>를 넣은 모듈을 클라이언트 컴포넌트가 import하면 <b>빌드 에러</b>가 난다. <code>'use server'</code>는 파일의 함수들을 브라우저에서 부를 수 있는 Server Action으로 만드는 것이라, 오히려 엉뚱하게 외부에 공개될 수 있다.</p>
+      - id: fe-nx-q-dynamic
+        tag: 렌더링
+        title: 정적과 동적 렌더링
+        type: mcq
+        code: |-
+          // app/dashboard/page.tsx
+          import { cookies } from 'next/headers';
+
+          export default async function Page() {
+            const theme = (await cookies()).get('theme');
+            return <p>{theme?.value}</p>;
+          }
+        quizzes:
+          - q: 기본 설정(cacheComponents 끔)에서 next build를 하면 /dashboard가 ƒ(Dynamic)로 표시된다. 이유는?
+            answer: 요청마다 달라지는 쿠키를 읽어서
+            wrong:
+              - page가 async 함수라서
+              - 서버 컴포넌트라서
+              - use client가 없어서
+        explain: <p>빌드 결과의 <b>○</b>는 빌드할 때 미리 만든 정적 페이지, <b>ƒ</b>는 요청이 올 때마다 서버에서 렌더링하는 동적 페이지다. <code>cookies()</code>, <code>headers()</code>, <code>searchParams</code>처럼 <b>요청마다 달라지는 값</b>을 읽으면 동적이 된다. async 함수인 것만으로는 동적이 되지 않는다(빌드 때 기다렸다가 정적으로 만든다).</p>
+      - id: fe-nx-q-ssg
+        tag: 렌더링
+        title: 미리 만들지 않은 경로
+        type: mcq
+        code: |-
+          // app/post/[id]/page.tsx
+          export const dynamicParams = false;
+
+          export function generateStaticParams() {
+            return [{ id: '1' }, { id: '2' }];
+          }
+        quizzes:
+          - q: 기본 설정에서 /post/3으로 들어가면?
+            answer: "404"
+            wrong:
+              - 요청할 때 새로 렌더링해서 보여 준다
+              - /post/1로 리다이렉트된다
+              - 빈 페이지가 200으로 온다
+        explain: <p><code>generateStaticParams</code>가 돌려준 1, 2만 빌드 때 만들어지고(●), <code>dynamicParams = false</code>면 목록에 없는 경로는 <b>404</b>다. true(기본값)면 요청할 때 렌더링한다. cacheComponents를 켜면 dynamicParams 설정 자체를 쓸 수 없고 notFound()로 처리한다.</p>
+      - id: fe-nx-q-redirect
+        tag: 내비게이션
+        title: try 안의 redirect
+        type: mcq
+        code: |-
+          import { redirect } from 'next/navigation';
+
+          export default async function Page() {
+            try {
+              redirect('/');
+            } catch (e) {
+              return <p>caught {e.message}</p>;
+            }
+          }
+        quizzes:
+          - q: 이 페이지에 들어가면?
+            answer: 이동하지 않고 "caught NEXT_REDIRECT"가 보인다
+            wrong:
+              - /로 이동한다
+              - 빌드 에러가 난다
+              - /로 이동한 뒤 catch 안의 화면이 잠깐 보인다
+        explain: <p><code>redirect()</code>는 내부적으로 <b>특별한 에러를 던져서</b> 동작한다. try 안에서 부르면 catch가 그 에러를 잡아 버려 이동이 일어나지 않는다. 공식 문서도 redirect는 try 블록 <b>밖에서</b> 부르라고 한다. notFound()도 같은 방식이다.</p>
+      - id: fe-nx-q-error
+        tag: 에러 처리
+        title: error.tsx
+        type: mcq
+        quizzes:
+          - q: app/dashboard/error.tsx 맨 위에 꼭 있어야 하는 것은?
+            answer: "'use client'"
+            wrong:
+              - "'use server'"
+              - export const dynamic = 'force-dynamic'
+              - 아무것도 필요 없다
+        explain: <p>error.tsx는 React 에러 바운더리로 동작하고, 에러 바운더리는 <b>클라이언트 컴포넌트</b>여야 한다. 그래서 <code>'use client'</code>가 필요하다. 다시 시도 버튼(reset)을 누르는 것처럼 브라우저에서 동작해야 하는 기능도 여기에 있다.</p>
+      - id: fe-nx-q-loading
+        tag: 스트리밍
+        title: loading.tsx
+        type: mcq
+        quizzes:
+          - q: app/dashboard/loading.tsx를 두면?
+            answer: dashboard의 page를 Suspense로 감싸 로딩 UI를 바로 보여 준다
+            wrong:
+              - page의 데이터가 다 올 때까지 기다렸다가 한꺼번에 보여 준다
+              - 서버 렌더링을 끄고 브라우저에서 로딩 화면을 그린다
+              - 같은 폴더의 layout.tsx까지 로딩 화면으로 바뀐다
+        explain: <p>loading.tsx는 같은 폴더의 page(와 그 아래)를 <b>Suspense 경계</b>로 감싼다. 서버가 page를 준비하는 동안 로딩 UI를 먼저 보내고, 준비되면 스트리밍으로 채운다. <b>같은 폴더의 layout은 감싸지 않아서</b> 사이드바 같은 레이아웃은 그대로 보이고 조작도 된다.</p>
+      - id: fe-nx-q-stream
+        tag: 스트리밍
+        title: 느린 컴포넌트
+        type: mcq
+        code: |-
+          export default function Page() {
+            return (
+              <>
+                <Header />
+                <Suspense fallback={<Skeleton />}>
+                  <Reviews /> {/* 3초 걸림 */}
+                </Suspense>
+              </>
+            );
+          }
+        quizzes:
+          - q: Reviews가 3초 걸린다. 사용자에게는 어떻게 보일까?
+            answer: 헤더가 먼저 보이고, 리뷰 자리는 3초 뒤 채워진다
+            wrong:
+              - 3초 동안 흰 화면이다가 한꺼번에 보인다
+              - 리뷰만 브라우저에서 따로 fetch해서 채운다
+              - 헤더도 리뷰도 3초 뒤에 스켈레톤 없이 보인다
+          - q: Suspense를 빼면(loading.tsx도 없음) 이 페이지는 어떻게 보일까?
+            answer: 3초 뒤에 한꺼번에 보인다
+            wrong:
+              - 헤더가 먼저 보이고 리뷰만 늦게 보인다
+              - Reviews가 자동으로 스트리밍된다
+              - 빌드 에러가 난다
+        explain: <p><b>Suspense 밖</b>의 내용은 바로 보내고, 안쪽은 준비되는 대로 <b>스트리밍</b>으로 끼워 넣는다. Suspense도 loading.tsx도 없으면 페이지 전체가 가장 느린 부분을 기다린다. 서버에서 렌더링한 뒤 HTML을 흘려보내는 것이지 브라우저가 따로 fetch하는 것이 아니다.</p>
+      - id: fe-nx-q-layout
+        tag: 레이아웃
+        title: 페이지를 옮겨도 남는 것
+        type: mcq
+        quizzes:
+          - q: /settings/profile에서 /settings/account로 이동하면 settings/layout.tsx 안 검색창의 입력값은?
+            answer: 그대로 남는다. layout은 다시 마운트되지 않는다
+            wrong:
+              - 지워진다. 페이지를 옮기면 layout도 새로 만든다
+              - 새로고침되며 지워진다
+              - layout이 서버 컴포넌트라 원래 입력값을 가질 수 없다
+          - q: settings 아래에서 페이지를 옮길 때마다 입력값을 초기화하고 싶다. 무엇을 쓸까?
+            answer: layout.tsx 대신 template.tsx
+            wrong:
+              - layout.tsx에 loading.tsx를 추가한다
+              - layout.tsx의 'use client'를 뺀다
+              - export const dynamic = 'force-dynamic'
+        explain: <p>layout은 같은 layout을 쓰는 페이지끼리 이동할 때 <b>상태를 유지하고 다시 렌더링되지 않는다</b>. 검색창 같은 클라이언트 컴포넌트의 state도 남는다. <b>template.tsx</b>는 이동할 때마다 새 key를 받아 안의 클라이언트 컴포넌트 state가 초기화된다.</p>
+      - id: fe-nx-q-action
+        tag: Server Action
+        title: Server Action과 권한
+        type: mcq
+        code: |-
+          'use server';
+
+          export async function deletePost(id: string) {
+            await db.post.delete({ where: { id } });
+          }
+        quizzes:
+          - q: 이 액션은 관리자 페이지 버튼에서만 부른다. 문제는?
+            answer: 누구나 POST로 직접 부를 수 있어 액션 안에서 권한을 확인해야 한다
+            wrong:
+              - 문제없다. 관리자 페이지에서만 import하므로 다른 곳에서 못 부른다
+              - Server Action은 GET이라 결과가 캐시된다
+              - DB 코드가 브라우저 번들에 노출된다
+        explain: <p>Server Action은 화면 버튼뿐 아니라 <b>직접 보낸 POST 요청으로도 호출</b>된다. 공식 문서도 "모든 Server Function 안에서 인증과 권한을 확인하라"고 한다. 코드 자체는 서버에만 있어서 번들에 노출되지는 않는다. 페이지 접근 제한(proxy, layout)만 믿으면 안 된다.</p>
+      - id: fe-nx-q-env
+        tag: 환경 변수
+        title: NEXT_PUBLIC_ 값
+        type: mcq
+        quizzes:
+          - q: NEXT_PUBLIC_API=hello로 next build를 하고, NEXT_PUBLIC_API=changed로 next start를 했다. 클라이언트 컴포넌트의 process.env.NEXT_PUBLIC_API는?
+            answer: hello
+            wrong:
+              - changed
+              - undefined
+              - 빌드 에러가 난다
+          - q: 접두사 없는 SECRET_KEY를 클라이언트 컴포넌트에서 process.env.SECRET_KEY로 읽으면, 브라우저 번들에는?
+            answer: 들어가지 않는다 (undefined)
+            wrong:
+              - 값이 그대로 들어간다
+              - 암호화된 값이 들어간다
+              - 빌드 에러가 난다
+        explain: <p><code>NEXT_PUBLIC_</code> 값은 <b>빌드할 때 코드에 문자열로 박힌다</b>. 빌드 뒤에 바꿔도 번들은 그대로 hello다. 접두사가 없는 값은 번들에 들어가지 않는다. 단, 클라이언트 컴포넌트도 서버에서 먼저 렌더링되므로 그때 찍힌 값이 HTML에 들어가고 브라우저와 값이 달라 hydration 에러가 날 수 있다. 비밀 값은 서버 컴포넌트나 Server Action에서만 읽는다.</p>
+      - id: fe-nx-q-hydration
+        tag: hydration
+        title: 서버와 브라우저의 값
+        type: mcq
+        quizzes:
+          - q: "'use client' 컴포넌트가 <p>{new Date().toLocaleTimeString()}</p>를 그린다. 페이지를 열면?"
+            answer: 서버와 브라우저가 그린 시간이 달라 hydration 에러가 난다
+            wrong:
+              - 서버에서 찍은 시간이 그대로 보이고 아무 일 없다
+              - 클라이언트 컴포넌트라 서버에서는 렌더링되지 않는다
+              - 빌드 에러가 난다
+        explain: <p>클라이언트 컴포넌트도 <b>처음에는 서버에서 HTML로 렌더링</b>되고, 브라우저가 같은 결과를 다시 그려 연결한다(hydration). 시간, 난수, <code>typeof window</code> 분기처럼 양쪽 결과가 다르면 hydration 에러가 난다. 브라우저 값은 useEffect 안에서 넣거나, 시간처럼 달라도 되는 곳은 suppressHydrationWarning을 쓴다.</p>
+      - id: fe-nx-q-searchparams
+        tag: 렌더링
+        title: useSearchParams와 Suspense
+        type: mcq
+        quizzes:
+          - q: 정적 페이지의 클라이언트 컴포넌트가 Suspense 없이 useSearchParams()를 쓰면 next build는?
+            answer: 실패한다. Suspense로 감싸라는 에러가 난다
+            wrong:
+              - 성공하고, 페이지 전체가 동적이 된다
+              - 성공하고, searchParams는 늘 비어 있다
+              - 성공하고, 경고도 없다
+        explain: <p>정적 페이지는 빌드할 때 쿼리 문자열을 알 수 없다. 그래서 useSearchParams를 쓰는 부분은 <b>가장 가까운 Suspense까지 브라우저에서 렌더링</b>되고, 프로덕션 빌드에서는 Suspense가 없으면 "Missing Suspense boundary with useSearchParams" 에러가 난다. 개발 서버에서는 문제없어 보여서 배포할 때 처음 알게 된다.</p>
+      - id: fe-nx-q-prefetch
+        tag: 내비게이션
+        title: Link 미리 받기
+        type: mcq
+        quizzes:
+          - q: <Link>가 화면(뷰포트)에 들어오면 링크된 페이지를 미리 받아 둔다. 이 동작은 언제 일어날까?
+            answer: 프로덕션에서만. 개발 서버에서는 하지 않는다
+            wrong:
+              - 개발 서버와 프로덕션 모두
+              - 마우스를 올렸을 때만
+              - prefetch prop을 직접 줄 때만
+        explain: <p>Link의 prefetch는 <b>프로덕션에서만</b> 동작한다. 개발 서버에서 "페이지 이동이 느리다"고 느껴도 배포하면 다를 수 있다. 기본값(auto)에서 정적 경로는 통째로, 동적 경로는 가장 가까운 loading.tsx까지만 미리 받는다.</p>
+      - id: fe-nx-q-fetch
+        tag: 캐시
+        title: fetch 결과 캐시하기
+        type: mcq
+        quizzes:
+          - q: 기본 설정(cacheComponents 끔)의 Next 16에서, 서버 컴포넌트의 fetch 결과를 1시간 동안 캐시하려면?
+            answer: "fetch(url, { next: { revalidate: 3600 } })"
+            wrong:
+              - 아무것도 안 해도 기본으로 캐시된다
+              - "fetch(url, { cache: 'no-store' })"
+              - export const runtime = 'edge'
+        explain: "<p>Next 14까지는 fetch가 기본으로 캐시됐지만, <b>Next 15부터는 기본이 캐시하지 않음</b>이다. 캐시하려면 <code>cache: 'force-cache'</code>나 <code>next: { revalidate: 초 }</code>로 직접 켠다. cacheComponents를 켠 프로젝트에서는 <code>'use cache'</code>와 <code>cacheLife</code>를 쓴다.</p>"
+      - id: fe-nx-q-cachecomp
+        tag: 캐시
+        title: cacheComponents와 Suspense
+        type: mcq
+        quizzes:
+          - q: cacheComponents를 켠 프로젝트에서 page가 Suspense 없이 await cookies()를 하면 next build는?
+            answer: "빌드 에러: Suspense로 감싸거나 캐시하라고 한다"
+            wrong:
+              - 조용히 페이지 전체가 동적 렌더링이 된다
+              - 쿠키 없이 정적 페이지로 만든다
+              - 경고만 뜨고 빌드된다
+        explain: "<p>cacheComponents에서는 요청마다 달라지는 데이터(cookies, headers, 캐시하지 않은 fetch)를 <b>Suspense 밖에서</b> 읽으면 빌드가 실패한다(\"uncached or runtime data during prerendering\"). 나머지는 정적으로 미리 만들고 그 부분만 스트리밍하기 위해서다. 해결: Suspense로 감싸거나, <code>'use cache'</code>로 캐시한다. 조용히 전체를 동적으로 바꾸는 건 예전(끈 상태) 동작이다.</p>"
+      - id: fe-nx-q-updatetag
+        tag: 캐시
+        title: 저장 직후 내 화면
+        type: mcq
+        quizzes:
+          - q: Next 16의 Server Action에서 글을 저장한 직후, 저장한 사람의 다음 화면에 새 글이 바로 보여야 한다.
+            answer: updateTag('posts')
+            wrong:
+              - revalidateTag('posts', 'max')
+              - cacheLife('seconds')
+              - connection()
+        explain: <p><b>updateTag</b>는 태그를 즉시 만료시켜 다음 요청이 새 데이터를 기다리게 한다(내가 쓴 걸 바로 보기, Server Action 안에서만). <b>revalidateTag(tag, 'max')</b>는 stale-while-revalidate라 다음 방문자에게 옛 데이터를 한 번 보여 주고 뒤에서 새로 만든다. Next 16에서 인자 하나짜리 revalidateTag는 deprecated.</p>
+      - id: fe-nx-q-proxy
+        tag: Next 16
+        title: 요청 가로채기 파일
+        type: mcq
+        quizzes:
+          - q: Next 16에서 모든 요청 앞에서 로그인 여부를 보고 리다이렉트하는 파일(예전 middleware.ts)의 새 이름은?
+            answer: proxy.ts
+            wrong:
+              - interceptor.ts
+              - edge.ts
+              - route.ts
+        explain: <p>Next 16에서 middleware 파일 규칙은 deprecated되고 <b>proxy</b>로 이름이 바뀌었다(함수 이름도 proxy). 기본 런타임은 Node.js다. 다만 proxy에서의 인증 확인은 빠른 1차 차단일 뿐이고, 데이터를 읽는 곳과 Server Action 안에서 다시 확인해야 한다.</p>
+      - id: fe-nx-q-image
+        tag: 이미지
+        title: next/image 크기
+        type: mcq
+        quizzes:
+          - q: next/image로 크기를 모르는 원격 이미지를 넣을 때 반드시 줘야 하는 것은?
+            answer: width와 height (또는 fill)
+            wrong:
+              - priority
+              - loading="lazy"
+              - placeholder="blur"
+        explain: <p>next/image는 이미지가 오기 전에 <b>자리를 먼저 잡아 레이아웃이 밀리지 않게(CLS)</b> 하려고 크기를 요구한다. 정적으로 import한 이미지는 크기를 알아서 채운다. Next 16에서 priority는 deprecated됐고, 첫 화면 큰 이미지에는 보통 loading="eager"나 fetchPriority="high"를 쓴다.</p>

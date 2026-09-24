@@ -1,0 +1,233 @@
+id: fe-css
+name: CSS
+color: "#FF6FAE"
+dark: "#D9508E"
+part: PART 4
+lede: 박스 모델, 명시도, position, 단위처럼 레이아웃이 깨질 때 원인이 되는 것들입니다.
+blocks:
+  - items:
+      - id: fe-css-q-box
+        tag: 박스 모델
+        title: 박스 너비 계산
+        type: mcq
+        code: |-
+          .box {
+            width: 200px;
+            padding: 20px;
+            border: 5px solid;
+          }
+        quizzes:
+          - q: box-sizing이 기본값(content-box)일 때, 이 요소가 차지하는 가로 너비는?
+            answer: 250px
+            wrong:
+              - 200px
+              - 240px
+              - 210px
+          - q: "이 요소에 box-sizing: border-box를 더하면 차지하는 가로 너비는?"
+            answer: 200px
+            wrong:
+              - 250px
+              - 150px
+              - 240px
+        explain: "<p><b>content-box</b>: width는 내용 영역만 → 200 + 패딩 20×2 + 테두리 5×2 = <b>250px</b>. <b>border-box</b>: width 안에 패딩과 테두리가 들어가서 차지하는 너비는 <b>200px</b> (내용 영역이 150px로 줄어든다).</p>"
+      - id: fe-css-q-collapse
+        tag: 마진
+        title: 블록 사이 간격
+        type: mcq
+        code: |-
+          .a { margin-bottom: 20px; }
+          .b { margin-top: 30px; }
+
+          <div class="a"></div>
+          <div class="b"></div>
+        quizzes:
+          - q: 위아래로 붙은 두 블록 사이의 간격은?
+            answer: 30px
+            wrong:
+              - 50px
+              - 20px
+              - 10px
+        explain: <p>세로로 맞닿은 블록의 위아래 마진은 더해지지 않고 <b>큰 쪽 하나만 남는다</b>(마진 상쇄). 그래서 30px. flex나 grid 안의 자식끼리는 상쇄가 일어나지 않는다.</p>
+      - id: fe-css-q-spec
+        tag: 명시도
+        title: 명시도 계산
+        type: mcq
+        quizzes:
+          - q: "#main .card p 의 명시도(ID, 클래스, 태그)는?"
+            answer: (1, 1, 1)
+            wrong:
+              - (1, 0, 2)
+              - (0, 2, 1)
+              - (1, 1, 0)
+          - q: 다음 중 명시도가 가장 높은 선택자는?
+            answer: "#nav .item"
+            wrong:
+              - .nav .item a
+              - div.item.active
+              - nav ul li a
+        explain: "<p>#main(ID 1) + .card(클래스 1) + p(태그 1) = <b>(1, 1, 1)</b>. 비교는 앞자리부터: ID가 하나라도 있으면 클래스가 몇 개든 이긴다. #nav .item = (1, 1, 0)이 가장 높다.</p>"
+      - id: fe-css-q-important
+        tag: 명시도
+        title: "!important와 ID"
+        type: mcq
+        code: |-
+          #title { color: red; }
+          .title { color: blue !important; }
+
+          <h1 id="title" class="title">안녕</h1>
+        quizzes:
+          - q: 두 규칙이 같은 h1에 걸리면 글자색은?
+            answer: blue
+            wrong:
+              - red
+              - 나중에 적힌 규칙의 색
+              - 기본 글자색 (둘 다 무시)
+        explain: <p><b>!important</b>가 붙은 선언은 명시도와 상관없이 일반 선언보다 먼저 이긴다. ID 선택자(1,0,0)가 클래스(0,1,0)보다 세도 !important 앞에서는 진다. 그래서 !important는 되도록 쓰지 않는다.</p>
+      - id: fe-css-q-unit
+        tag: 단위
+        title: em과 rem 계산
+        type: mcq
+        quizzes:
+          - q: "html은 16px, 부모는 20px일 때 자식의 font-size: 1.5em은 몇 px일까?"
+            answer: 30px
+            wrong:
+              - 24px
+              - 20px
+              - 36px
+          - q: "html은 16px, 부모는 20px일 때 자식의 font-size: 1.5rem은 몇 px일까?"
+            answer: 24px
+            wrong:
+              - 30px
+              - 20px
+              - 16px
+        explain: "<p>font-size의 em은 <b>부모 글자 크기</b> 기준: 20 × 1.5 = <b>30px</b>. rem은 <b>html 글자 크기</b> 기준: 16 × 1.5 = <b>24px</b>.</p>"
+      - id: fe-css-q-absolute
+        tag: position
+        title: absolute의 기준
+        type: mcq
+        code: |-
+          .page  { position: relative; }
+          .badge { position: absolute;
+                   top: 0; right: 0; }
+
+          <div class="page">
+            <div class="card">
+              <span class="badge"></span>
+            </div>
+          </div>
+        quizzes:
+          - q: .badge는 어느 요소의 오른쪽 위에 붙을까?
+            answer: .page
+            wrong:
+              - .card
+              - 화면(뷰포트)
+              - 원래 자리 그대로
+        explain: "<p>absolute는 <b>position이 static이 아닌 가장 가까운 조상</b>을 기준으로 놓인다. .card는 position이 없어서(static) 건너뛰고 .page가 기준. .card에 붙이려면 .card에 <code>position: relative</code>를 준다.</p>"
+      - id: fe-css-q-sticky
+        tag: position
+        title: sticky가 안 붙을 때
+        type: mcq
+        quizzes:
+          - q: "position: sticky를 줬는데 스크롤해도 붙지 않는다. 가장 흔한 원인은?"
+            answer: top 같은 붙을 위치 값을 안 줬다
+            wrong:
+              - z-index를 안 줬다
+              - "display: block이 아니다"
+              - width를 안 줬다
+        explain: "<p>sticky는 <code>top: 0</code>처럼 <b>어디에 붙을지</b>를 줘야 동작한다. 그다음으로 흔한 원인은 조상에 <code>overflow: hidden</code>이 있거나, 부모 높이가 sticky 요소만큼밖에 안 돼서 움직일 공간이 없는 경우다.</p>"
+      - id: fe-css-q-flexcol
+        tag: Flexbox
+        title: column일 때 가운데 정렬
+        type: mcq
+        quizzes:
+          - q: "flex-direction: column인 컨테이너에서 자식들을 가로 가운데로 모으려면?"
+            answer: "align-items: center"
+            wrong:
+              - "justify-content: center"
+              - "text-align: center"
+              - "align-content: center"
+        explain: "<p>justify-content는 <b>주축</b>, align-items는 <b>교차축</b>을 정렬한다. column이면 주축이 세로라서 가로 정렬은 교차축, 즉 <b>align-items</b>. justify-content: center는 세로 가운데가 된다.</p>"
+      - id: fe-css-q-stack
+        tag: 쌓임 맥락
+        title: z-index 9999가 안 먹을 때
+        type: mcq
+        code: |-
+          /* .modal은 .wrap 안, .header는 밖 */
+          .wrap {
+            position: relative; z-index: 1;
+          }
+          .modal {
+            position: fixed; z-index: 9999;
+          }
+          .header {
+            position: sticky; z-index: 10;
+          }
+        quizzes:
+          - q: 모달(z-index 9999)이 헤더(z-index 10) 밑에 깔린다. 원인은?
+            answer: .wrap이 z-index 1로 쌓임 맥락을 만들어서
+            wrong:
+              - fixed 요소에는 z-index가 적용되지 않아서
+              - 헤더가 문서에서 모달보다 뒤에 있어서
+              - sticky 요소는 항상 맨 위에 그려져서
+        explain: <p>.wrap이 <code>position + z-index</code>로 <b>새 쌓임 맥락</b>을 만들었다. 모달의 9999는 .wrap <b>안에서만</b> 비교되고, 바깥에서는 .wrap 전체가 z-index 1로 헤더(10)와 비교된다. 모달을 .wrap 밖(body 끝, React의 portal)으로 빼면 해결된다.</p>
+      - id: fe-css-q-hide2
+        tag: CSS
+        title: 숨기기 방법
+        type: mcq
+        quizzes:
+          - q: 요소를 안 보이게 하되 자리는 그대로 차지하고, 클릭도 받지 않게 하려면?
+            answer: "visibility: hidden"
+            wrong:
+              - "opacity: 0"
+              - "display: none"
+              - "height: 0"
+        explain: "<p><b>visibility: hidden</b>: 자리를 차지하고 클릭도 안 받는다. <b>opacity: 0</b>: 자리를 차지하지만 <b>클릭은 받는다</b>(보이지 않는 버튼이 눌리는 버그의 원인). <b>display: none</b>: 자리까지 사라진다.</p>"
+  - group: CSS 용어
+  - table:
+      heads:
+        - 용어
+        - 뜻
+        - 예시 · 외우는 법
+      rows:
+        - id: fe-css-t-box
+          term: content-box / border-box
+          sub: box-sizing
+          desc: "<b>content-box</b>: width가 내용 영역만 뜻하고, padding과 border는 바깥에 더해진다 (기본값). <b>border-box</b>: width 안에 padding과 border까지 포함된다."
+          hint: "width: 100px, padding: 10px이면 content-box는 실제 120px, border-box는 100px"
+          quiz: false
+        - id: fe-css-t-pos
+          term: static / relative / absolute / fixed / sticky
+          sub: position
+          desc: "<b>static</b>: 기본값, 문서 흐름대로 놓이고 top 같은 값은 무시한다. <b>relative</b>: 원래 자리를 기준으로 옮기고, 원래 자리는 그대로 차지한다. <b>absolute</b>: position이 있는 가장 가까운 조상을 기준으로 놓이고, 흐름에서 빠진다. <b>fixed</b>: 화면(뷰포트)을 기준으로 고정된다. <b>sticky</b>: 스크롤하다 정한 위치에 닿으면 그 자리에 붙는다."
+          hint: "absolute의 기준을 잡으려고 부모에 position: relative를 준다"
+          quiz: false
+        - id: fe-css-t-unit
+          term: em / rem
+          sub: 단위
+          desc: "<b>em</b>: font-size에 쓰면 부모 글자 크기, 다른 속성에 쓰면 자기 글자 크기를 기준으로 한다. <b>rem</b>: 루트(html) 글자 크기를 기준으로 한다."
+          hint: 중첩될수록 em은 곱해져서 커지고, rem은 항상 같다
+          quiz: false
+        - id: fe-css-t-justify
+          term: justify-content
+          sub: Flexbox
+          desc: 주축(flex-direction 방향)을 따라 정렬한다.
+          hint: "flex-direction: row면 가로 정렬"
+          quiz: false
+        - id: fe-css-t-align
+          term: align-items
+          sub: Flexbox
+          desc: 주축과 직각인 교차축을 따라 정렬한다.
+          hint: "flex-direction: row면 세로 정렬. column이면 반대"
+          quiz: false
+        - id: fe-css-t-z
+          term: 쌓임 맥락
+          sub: Stacking Context
+          desc: 안에 든 요소끼리만 z-index를 비교하는 독립된 층. z-index는 같은 쌓임 맥락 안에서만 비교되고, opacity가 1보다 작거나 transform이 있으면 새 쌓임 맥락이 생긴다.
+          hint: z-index를 9999로 줘도 안 올라오면 부모의 쌓임 맥락을 의심
+          quiz: false
+        - id: fe-css-t-spec
+          term: 명시도
+          sub: Specificity
+          desc: 같은 요소에 규칙이 겹칠 때 어느 것이 이길지 정하는 점수. (ID 개수, 클래스·속성·가상 클래스 개수, 태그 개수) 순서로 비교한다.
+          hint: 인라인 스타일이 더 세고, !important는 그보다도 세다
+          quiz: false

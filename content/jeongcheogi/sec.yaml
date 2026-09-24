@@ -1,0 +1,367 @@
+id: sec
+name: 보안
+color: "#2B70C9"
+dark: "#1F57A0"
+part: PART 3
+lede: 공격 이름은 <mark>이름 안에 힌트가 있는 경우</mark>가 많습니다. 영어 뜻을 같이 보면 훨씬 덜 외워도 됩니다.
+blocks:
+  - tip: "<b>보안의 3요소 (CIA)</b><span><b>기밀성</b>(Confidentiality): 허락된 사람만 봄 · <b>무결성</b>(Integrity): 함부로 못 바꿈 · <b>가용성</b>(Availability): 필요할 때 쓸 수 있음. DoS 공격은 가용성을 깨는 공격.</span>"
+  - group: 서비스 거부 공격 (서버를 마비시킴)
+  - table:
+      heads:
+        - 용어
+        - 뜻
+        - 예시 · 외우는 법
+      rows:
+        - id: x-dos
+          term: DoS / DDoS
+          sub: (Distributed) Denial of Service
+          desc: "<b>DoS</b>: 요청을 한꺼번에 엄청 보내 <b>진짜 사용자가 못 쓰게</b> 만드는 공격. <b>DDoS</b>: <b>감염된 수많은 PC</b>(좀비 PC, 봇넷)로 <b>동시에</b> 하는 서비스 거부 공격."
+          hint: 가게 앞에 가짜 손님 수천 명을 줄 세워 진짜 손님이 못 들어오게 함. 보안 3요소 중 <b>가용성</b>을 깨는 공격
+          short: "DoS: 요청을 한꺼번에 엄청 보내 진짜 사용자가 못 쓰게 만드는 공격"
+          segments:
+            - label: DoS
+              text: 요청을 한꺼번에 엄청 보내 진짜 사용자가 못 쓰게 만드는 공격
+            - label: DDoS
+              text: 감염된 수많은 PC(좀비 PC, 봇넷)로 동시에 하는 서비스 거부 공격
+        - id: x-syn
+          term: SYN Flooding
+          desc: TCP 연결 3단계 중 <b>SYN만 계속 보내고 마지막 ACK를 안 보낸다</b>. 서버는 답을 기다리며 연결 자리를 잡아 두다가 자리가 꽉 차서 진짜 연결을 못 받는다.
+          hint: '전화를 걸어 "여보세요?"만 하고 대답 없이 끊기를 수천 번. 키워드: <b>SYN, 3-way handshake, 반쯤 열린 연결</b>'
+          short: TCP 연결 3단계 중 SYN만 계속 보내고 마지막 ACK를 안 보낸다
+        - id: x-smurf
+          term: Smurf (스머핑)
+          desc: <b>피해자 IP로 속여</b> ICMP(ping)를 네트워크 전체에 뿌린다. 보내는 사람 주소를 피해자로 바꿔 <b>브로드캐스트</b>로 보내면, 모든 컴퓨터가 피해자에게 한꺼번에 답장을 보낸다.
+          hint: '내 이름으로 전교생에게 "답장 주세요" 쪽지를 돌려서 답장 폭탄 맞게 하기. 키워드: <b>ICMP + 브로드캐스트 + IP 위조</b>'
+          short: 피해자 IP로 속여 ICMP(ping)를 네트워크 전체에 뿌린다
+        - id: x-pod
+          term: Ping of Death
+          desc: ping 패킷을 최대 크기(<b>65,535바이트</b>)보다 <b>크게</b> 만들어 보낸다. 받는 쪽이 처리하다 멈추거나 다운된다(ICMP).
+          hint: 이름 그대로 "죽음의 핑". 너무 큰 핑 하나로 쓰러뜨림
+          short: ping 패킷을 최대 크기(65,535바이트)보다 크게 만들어 보낸다
+        - id: x-land
+          term: Land Attack
+          desc: 패킷의 <b>보내는 IP와 받는 IP를 똑같이</b>(피해자 IP로) 만들어 보낸다. 피해자는 자기 자신에게 계속 응답하다 멈춘다.
+          hint: "Land = 자기 땅. 자기가 자기한테 편지 보내고 답장하는 무한 반복. 키워드: <b>출발지 = 목적지</b>"
+          short: 패킷의 보내는 IP와 받는 IP를 똑같이(피해자 IP로) 만들어 보낸다
+        - id: x-tear
+          term: Teardrop
+          desc: 조각의 순서 번호(<b>Offset</b>)를 <b>일부러 겹치게</b> 보내 조립 오류를 낸다. 원래 큰 데이터는 조각으로 나눠 보내고 받는 쪽이 Offset으로 다시 맞춘다.
+          hint: "번호가 뒤죽박죽인 퍼즐 조각을 보내기. 눈물방울처럼 조각조각. 키워드: <b>Fragment Offset</b>"
+          short: 조각의 순서 번호(Offset)를 일부러 겹치게 보내 조립 오류를 낸다
+  - group: 웹 공격
+  - table:
+      heads:
+        - 용어
+        - 뜻
+        - 예시 · 외우는 법
+      rows:
+        - id: x-sqli
+          term: SQL Injection
+          desc: <b>입력칸에 SQL 문을 몰래 넣어</b> DB를 마음대로 조회·수정한다. 로그인 칸, 검색창 같은 곳이 노린다.
+          hint: "아이디 칸에 <code>' OR 1=1 --</code>를 넣으면 조건이 항상 참이 되어 비밀번호 없이 로그인. 막는 법: 입력값 검증, Prepared Statement"
+          short: 입력칸에 SQL 문을 몰래 넣어 DB를 마음대로 조회·수정한다
+        - id: x-xss
+          term: XSS
+          sub: Cross-Site Scripting
+          desc: 게시판 글 등에 <b>악성 스크립트</b>를 심어, 글을 연 사람의 <b>브라우저에서 실행</b>시킨다. 그렇게 쿠키·정보를 빼 간다(JavaScript).
+          hint: "Cross-Site Scripting. 게시글에 <code>&lt;script&gt;</code>를 넣는 것. 막는 법: 입력값의 <code>&lt;</code> <code>&gt;</code>를 이스케이프"
+          short: 게시판 글 등에 악성 스크립트를 심어, 글을 연 사람의 브라우저에서 실행시킨다
+        - id: x-csrf
+          term: CSRF
+          sub: Cross-Site Request Forgery
+          desc: 사용자 몰래 <b>그 사람 권한으로</b> 서버에 요청을 보내게 한다. 로그인한 사용자가 악성 링크를 누르면 송금, 비밀번호 변경 같은 원치 않는 요청이 날아간다.
+          hint: "Forgery = 위조. XSS는 <b>사용자 브라우저</b>에서 스크립트가 도는 것, CSRF는 사용자 몰래 <b>서버에 요청</b>을 보내는 것. 막는 법: CSRF 토큰"
+          short: 사용자 몰래 그 사람 권한으로 서버에 요청을 보내게 한다
+  - group: 속이기 · 가로채기
+  - table:
+      heads:
+        - 용어
+        - 뜻
+        - 예시 · 외우는 법
+      rows:
+        - id: x-phish
+          term: 피싱 / 스미싱 / 스피어 피싱
+          desc: "<b>피싱</b>: 은행·기관인 척 가짜 메일·사이트로 개인정보를 빼 감. <b>스미싱</b>: 문자(SMS) 속 링크로 속여 정보를 빼 감. <b>스피어 피싱</b>: 특정 한 사람을 조사해서 맞춤으로 속임."
+          hint: 피싱 = Private data + Fishing(낚시). 스미싱 = SMS + 피싱. 스피어 = 작살로 한 마리만 노림
+          short: "피싱: 은행·기관인 척 가짜 메일·사이트로 개인정보를 빼 감"
+          segments:
+            - label: 피싱
+              text: 은행·기관인 척 가짜 메일·사이트로 개인정보를 빼 감
+            - label: 스미싱
+              text: 문자(SMS) 속 링크로 속여 정보를 빼 감
+            - label: 스피어 피싱
+              text: 특정 한 사람을 조사해서 맞춤으로 속임
+        - id: x-pharm
+          term: 파밍
+          sub: Pharming
+          desc: DNS나 hosts 파일을 조작해 <b>주소를 정확히 쳐도</b> 가짜 사이트로 보낸다. 사용자는 주소창만 봐서는 속은 걸 알기 어렵다.
+          hint: 피싱은 가짜 링크를 누르게 속이는 것, 파밍은 <b>진짜 주소를 쳐도</b> 가짜로 감. 한 단계 더 교묘함
+          short: DNS나 hosts 파일을 조작해 주소를 정확히 쳐도 가짜 사이트로 보낸다
+        - id: x-sniff
+          term: 스니핑
+          sub: Sniffing
+          desc: 네트워크에 흐르는 데이터를 <b>몰래 엿보거나 엿듣는</b> 공격. 데이터를 바꾸지는 않는다.
+          hint: "sniff = 킁킁 냄새 맡기. 도청. 막는 법: 암호화"
+          short: 네트워크에 흐르는 데이터를 몰래 엿보거나 엿듣는 공격
+        - id: x-spoof
+          term: 스푸핑
+          sub: Spoofing
+          desc: "IP 주소, MAC 주소, DNS 등을 <b>위조해서 다른 사람인 척</b> 속이는 공격. 예) ARP 스푸핑: 내 MAC을 게이트웨이 것처럼 속여 남의 데이터를 나한테 오게 함."
+          hint: spoof = 속이다, 사칭. 스니핑은 엿듣기만, 스푸핑은 <b>신분을 위장</b>
+          short: IP 주소, MAC 주소, DNS 등을 위조해서 다른 사람인 척 속이는 공격
+        - id: x-hijack
+          term: 세션 하이재킹
+          desc: 이미 로그인되어 열려 있는 <b>세션(연결)을 가로채서</b> 그 사용자인 척한다. 비밀번호 없이도 들어갈 수 있다.
+          hint: hijack = 납치. 운전 중인 차를 뺏는 것. 세션 ID를 훔치는 게 핵심
+          short: 이미 로그인되어 열려 있는 세션(연결)을 가로채서 그 사용자인 척한다
+        - id: x-social
+          term: 사회공학
+          sub: Social Engineering
+          desc: 기술 대신 <b>사람의 심리를 속여서</b> 비밀번호나 정보를 얻는 방법.
+          hint: '"IT팀인데요, 점검 때문에 비밀번호 좀 알려 주세요" 전화. 어깨 너머로 비밀번호 훔쳐보기'
+          short: 기술 대신 사람의 심리를 속여서 비밀번호나 정보를 얻는 방법
+        - id: x-apt
+          term: APT
+          sub: Advanced Persistent Threat
+          desc: 특정 조직을 노려 <b>오랫동안 몰래, 끈질기게</b> 공격한다. 여러 방법을 섞어 쓴다.
+          hint: Advanced Persistent Threat. Persistent = 끈질긴. 몇 달씩 숨어서 정보를 빼 감
+          short: 특정 조직을 노려 오랫동안 몰래, 끈질기게 공격한다
+        - id: x-zero
+          term: 제로데이 공격
+          desc: 취약점이 알려진 뒤 <b>보안 패치가 나오기 전</b>에 그 틈을 노리는 공격.
+          hint: 막을 방법이 나오기까지 대응할 시간이 0일(Zero-day)
+          short: 취약점이 알려진 뒤 보안 패치가 나오기 전에 그 틈을 노리는 공격
+        - id: x-water
+          term: 워터링 홀
+          sub: Watering Hole
+          desc: 대상이 <b>자주 가는 웹사이트</b>를 먼저 감염시켜 두고 기다린다. 대상이 그 사이트에 들어오면 감염된다.
+          hint: 사자가 동물들이 물 마시러 오는 물웅덩이(Watering Hole)에서 기다리는 것
+          short: 대상이 자주 가는 웹사이트를 먼저 감염시켜 두고 기다린다
+  - group: 악성코드
+  - table:
+      heads:
+        - 용어
+        - 뜻
+        - 예시 · 외우는 법
+      rows:
+        - id: x-virus
+          term: 바이러스
+          desc: 다른 정상 파일에 <b>붙어서(숙주 필요)</b> 그 파일이 실행될 때 퍼진다. 혼자서는 못 퍼진다.
+          hint: 감기 바이러스처럼 숙주가 있어야 함. 웜과 구별이 자주 나옴
+          short: 다른 정상 파일에 붙어서(숙주 필요) 그 파일이 실행될 때 퍼진다
+        - id: x-worm
+          term: 웜
+          sub: Worm
+          desc: 다른 파일 없이 <mark>혼자서</mark> 자기를 복제해 네트워크를 타고 퍼진다.
+          hint: 벌레(worm)가 스스로 기어다님. 숙주가 필요 없다는 게 바이러스와 차이
+          short: 다른 파일 없이 혼자서 자기를 복제해 네트워크를 타고 퍼진다
+        - id: x-trojan
+          term: 트로이 목마
+          desc: 게임, 유틸리티 같은 <b>정상 프로그램인 척</b> 숨어 있다가 몰래 나쁜 짓을 한다. <mark>스스로 복제해 퍼지지는 않는다</mark>.
+          hint: "트로이 전쟁의 목마: 선물(목마) 안에 병사가 숨어 있음"
+          short: 게임, 유틸리티 같은 정상 프로그램인 척 숨어 있다가 몰래 나쁜 짓을 한다
+        - id: x-ransom
+          term: 랜섬웨어
+          desc: 파일을 <b>암호화해 못 열게</b> 하고 풀어 주는 대가로 돈을 요구한다. 주로 암호화폐를 요구한다.
+          hint: ransom = 몸값. 파일을 인질로 잡는 것
+          short: 파일을 암호화해 못 열게 하고 풀어 주는 대가로 돈을 요구한다
+        - id: x-root
+          term: 루트킷 / 백도어 / 키로거
+          desc: "<b>루트킷</b>: 관리자(root) 권한을 얻고 자기 흔적을 숨기는 도구 모음. <b>백도어</b>: 정상 인증을 거치지 않고 몰래 들어오는 뒷문. <b>키로거</b>: 키보드로 친 내용을 몰래 기록."
+          hint: root = 관리자, back door = 뒷문, key + logger(기록기)
+          short: "루트킷: 관리자(root) 권한을 얻고 자기 흔적을 숨기는 도구 모음"
+          segments:
+            - label: 루트킷
+              text: 관리자(root) 권한을 얻고 자기 흔적을 숨기는 도구 모음
+            - label: 백도어
+              text: 정상 인증을 거치지 않고 몰래 들어오는 뒷문
+            - label: 키로거
+              text: 키보드로 친 내용을 몰래 기록
+  - group: 암호 · 접근통제 · 방어
+  - table:
+      heads:
+        - 용어
+        - 뜻
+        - 예시 · 외우는 법
+      rows:
+        - id: x-sym
+          term: 대칭키 암호
+          desc: "암호화할 때와 풀 때 <b>같은 키 하나</b>를 쓴다. 빠르지만 키를 안전하게 나눠 주기가 어렵다. 종류: <mark>DES, AES, SEED, ARIA</mark>."
+          hint: 집 열쇠 하나를 복사해 나눠 갖기. SEED와 ARIA는 한국에서 만든 것
+          short: 암호화할 때와 풀 때 같은 키 하나를 쓴다
+        - id: x-asym
+          term: 비대칭키(공개키) 암호
+          desc: "<b>공개키</b>(누구나 가짐)로 잠그고 <b>개인키</b>(나만 가짐)로 연다. 키 나눠 주기 문제가 없지만 느리다. 종류: <mark>RSA, ECC, ElGamal</mark>."
+          hint: "우체통: 편지는 누구나 넣을 수 있지만(공개키) 꺼내는 건 열쇠 가진 주인만(개인키)"
+          short: 공개키(누구나 가짐)로 잠그고 개인키(나만 가짐)로 연다
+        - id: x-keys
+          term: 필요한 키 개수 (n명)
+          desc: n명이 서로 암호 통신할 때 필요한 키 개수. 대칭키 = <mark>n(n−1)/2</mark> (두 명마다 하나씩), 비대칭키 = <mark>2n</mark> (한 명당 공개키·개인키 2개).
+          hint: 10명이면 대칭키 10×9/2 = 45개, 비대칭키 10×2 = 20개
+          quiz: false
+        - id: x-hash
+          term: 해시
+          sub: MD5, SHA
+          desc: "어떤 데이터든 <b>정해진 길이의 값</b>으로 바꾼다. 거꾸로 원래 값을 알아낼 수 없다. 데이터가 바뀌었는지(무결성) 확인할 때 쓴다. 종류: MD5, SHA."
+          hint: 사람의 지문. 지문으로 사람을 되살릴 순 없지만 같은 사람인지는 알 수 있음. 비밀번호도 해시로 저장
+          short: 어떤 데이터든 정해진 길이의 값으로 바꾼다
+        - id: x-mac
+          term: MAC / DAC / RBAC
+          desc: "<b>MAC</b>(강제적): 관리자가 정한 <b>보안 등급</b>으로 접근을 강제로 통제. <b>DAC</b>(임의적): 데이터 <b>주인</b>이 누구에게 줄지 마음대로 정함. <b>RBAC</b>(역할 기반): <b>직급·역할</b>에 따라 권한을 줌."
+          hint: MAC = 군대 비밀 등급(Mandatory 강제). DAC = 내 구글 드라이브 공유 설정(Discretionary 재량). RBAC = 팀장이면 결재 권한(Role)
+          short: "MAC(강제적): 관리자가 정한 보안 등급으로 접근을 강제로 통제"
+          segments:
+            - label: MAC(강제적)
+              text: 관리자가 정한 보안 등급으로 접근을 강제로 통제
+            - label: DAC(임의적)
+              text: 데이터 주인이 누구에게 줄지 마음대로 정함
+            - label: RBAC(역할 기반)
+              text: 직급·역할에 따라 권한을 줌
+        - id: x-ids
+          term: 방화벽 / IDS / IPS
+          desc: "<b>방화벽</b>: 정해 둔 규칙대로 통과·차단. <b>IDS</b>: 침입을 <mark>탐지</mark>하고 알리기만 함. <b>IPS</b>: 침입을 탐지해서 <mark>차단</mark>까지 함."
+          hint: IDS = Detection = CCTV(보고 알림만), IPS = Prevention = 경비원(보고 막음)
+          short: "방화벽: 정해 둔 규칙대로 통과·차단"
+          segments:
+            - label: 방화벽
+              text: 정해 둔 규칙대로 통과·차단
+            - label: IDS
+              text: 침입을 탐지하고 알리기만 함
+            - label: IPS
+              text: 침입을 탐지해서 차단까지 함
+        - id: x-honey
+          term: 허니팟
+          sub: Honeypot
+          desc: 일부러 <b>허술한 가짜 시스템</b>으로 공격자를 끌어들여 관찰한다. 공격 방법을 기록해 방어에 쓴다.
+          hint: 꿀단지(Honey pot)로 벌레를 모으는 함정
+          short: 일부러 허술한 가짜 시스템으로 공격자를 끌어들여 관찰한다
+        - id: x-vpn
+          term: VPN / SSO
+          desc: "<b>VPN</b>: 공용망 위에 <b>암호화된 전용 통로</b>를 만들어 사설망처럼 쓴다. <b>SSO</b>: <b>한 번 로그인</b>으로 여러 서비스를 이어서 쓴다."
+          hint: VPN = 공용 도로 위의 전용 터널. SSO = Single Sign-On, 구글 로그인 한 번으로 유튜브·지메일 다 쓰기
+          short: "VPN: 공용망 위에 암호화된 전용 통로를 만들어 사설망처럼 쓴다"
+          segments:
+            - label: VPN
+              text: 공용망 위에 암호화된 전용 통로를 만들어 사설망처럼 쓴다
+            - label: SSO
+              text: 한 번 로그인으로 여러 서비스를 이어서 쓴다
+        - id: x-proto
+          term: SSL/TLS · IPSec
+          desc: "<b>SSL/TLS</b>: 웹 브라우저와 서버 사이 통신을 암호화 (HTTPS). <b>IPSec</b>: IP 계층(3계층)에서 암호화. AH(인증·무결성)와 ESP(암호화까지)로 구성."
+          hint: "IPSec 모드 두 가지: 전송 모드(데이터만 보호), 터널 모드(패킷 전체를 보호, VPN에 사용)"
+          short: "SSL/TLS: 웹 브라우저와 서버 사이 통신을 암호화 (HTTPS)"
+          segments:
+            - label: SSL/TLS
+              text: 웹 브라우저와 서버 사이 통신을 암호화 (HTTPS)
+            - label: IPSec
+              text: IP 계층(3계층)에서 암호화
+        - id: x-auth
+          term: 지식 / 소유 / 존재 / 행위
+          sub: 인증 유형
+          desc: "<b>지식</b>: 아는 것으로 확인 (비밀번호, PIN). <b>소유</b>: 가진 것으로 확인 (OTP, 스마트카드). <b>존재</b>: 내 몸 자체로 확인 (지문, 홍채, 얼굴). <b>행위</b>: 내 행동으로 확인 (서명, 걸음걸이, 목소리)."
+          hint: 두 가지 이상을 섞으면 다중 인증(MFA). 예) 비밀번호(지식) + 문자 인증번호(소유)
+          short: "지식: 아는 것으로 확인 (비밀번호, PIN)"
+          segments:
+            - label: 지식
+              text: 아는 것으로 확인 (비밀번호, PIN)
+            - label: 소유
+              text: 가진 것으로 확인 (OTP, 스마트카드)
+            - label: 존재
+              text: 내 몸 자체로 확인 (지문, 홍채, 얼굴)
+            - label: 행위
+              text: 내 행동으로 확인 (서명, 걸음걸이, 목소리)
+  - group: 조각으로 만들기
+  - items:
+      - id: b-cia
+        tag: 영문
+        title: 보안 3요소 CIA
+        type: build
+        mode: fullname
+        join: ", "
+        decoys:
+          - Authentication
+          - Durability
+        q: C, I, A가 각각 무엇인지 순서대로 놓으세요.
+        tokens:
+          - Confidentiality
+          - Integrity
+          - Availability
+        why: <p class="why"><b>기밀성</b>(허락된 사람만 봄), <b>무결성</b>(함부로 못 바꿈), <b>가용성</b>(필요할 때 쓸 수 있음). Authentication(인증)은 A지만 3요소가 아니고, Durability는 DB의 ACID.</p>
+        hints:
+          - 첫 번째 조각은 <b>Confidentiality</b>
+          - <b>기밀성</b>(허락된 사람만 봄), <b>무결성</b>(함부로 못 바꿈), <b>가용성</b>(필요할 때 쓸 수 있음). Authentication(인증)은 A지만 3요소가 아니고, Durability는 DB의 ACID.
+      - id: b-csrf
+        tag: 영문
+        title: CSRF 풀네임
+        type: build
+        mode: fullname
+        join: " "
+        decoys:
+          - Scripting
+          - Server
+        q: CSRF의 영문 풀네임을 만드세요.
+        tokens:
+          - Cross-Site
+          - Request
+          - Forgery
+        why: <p class="why">사용자 권한으로 <b>요청(Request)을 위조(Forgery)</b>하는 공격. Scripting이 들어가는 건 XSS.</p>
+        hints:
+          - 첫 번째 조각은 <b>Cross-Site</b>
+          - 사용자 권한으로 <b>요청(Request)을 위조(Forgery)</b>하는 공격. Scripting이 들어가는 건 XSS.
+      - id: b-xss
+        tag: 영문
+        title: XSS 풀네임
+        type: build
+        mode: fullname
+        join: " "
+        decoys:
+          - Request
+          - Forgery
+        q: XSS의 영문 풀네임을 만드세요.
+        tokens:
+          - Cross-Site
+          - Scripting
+        why: <p class="why">게시글 등에 <b>스크립트(Scripting)</b>를 심어 보는 사람 브라우저에서 실행하게 하는 공격. CSS와 헷갈리지 않게 X를 쓴다.</p>
+        hints:
+          - 첫 번째 조각은 <b>Cross-Site</b>
+          - 게시글 등에 <b>스크립트(Scripting)</b>를 심어 보는 사람 브라우저에서 실행하게 하는 공격. CSS와 헷갈리지 않게 X를 쓴다.
+      - id: b-apt
+        tag: 영문
+        title: APT 풀네임
+        type: build
+        mode: fullname
+        join: " "
+        decoys:
+          - Attack
+          - Protocol
+        q: APT의 영문 풀네임을 만드세요.
+        tokens:
+          - Advanced
+          - Persistent
+          - Threat
+        why: <p class="why">특정 조직을 <b>오랫동안 끈질기게(Persistent)</b> 노리는 지능형 <b>위협(Threat)</b>. Attack이 아니라 Threat.</p>
+        hints:
+          - 첫 번째 조각은 <b>Advanced</b>
+          - 특정 조직을 <b>오랫동안 끈질기게(Persistent)</b> 노리는 지능형 <b>위협(Threat)</b>. Attack이 아니라 Threat.
+  - group: 개념 확인 문제
+  - items:
+      - id: q-keys
+        tag: 계산
+        title: 필요한 키 개수
+        type: mcq
+        quizzes:
+          - q: 10명이 대칭키 방식으로 서로 1:1 암호 통신을 하려면 키가 몇 개 필요할까?
+            answer: 45개
+            wrong:
+              - 20개
+              - 10개
+              - 90개
+          - q: 10명이 비대칭키(공개키) 방식으로 서로 통신하면 키가 몇 개 필요할까?
+            answer: 20개
+            wrong:
+              - 45개
+              - 10개
+              - 100개
+        explain: <p>대칭키 = <mark>n(n−1)/2</mark> (두 명마다 하나씩) → 10×9/2 = 45개. 비대칭키 = <mark>2n</mark> (한 명당 공개키·개인키 2개) → 20개.</p>
+heading: 보안 용어, 처음부터

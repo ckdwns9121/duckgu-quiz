@@ -1,0 +1,200 @@
+id: fe-perf
+name: 성능 최적화
+color: "#58CC02"
+dark: "#58A700"
+part: PART 8
+lede: 번들을 줄이고, 필요한 것만 먼저 받고, 받은 것은 다시 받지 않고, 메인 스레드를 비워 두는 방법입니다. ETag와 304, 코드 스플리팅, 트리 셰이킹, 이미지·폰트, 긴 목록, 긴 작업을 다룹니다.
+blocks:
+  - items:
+      - id: fe-pf-q-etag
+        tag: HTTP 캐시
+        title: 캐시가 최신인지 확인하기
+        type: mcq
+        quizzes:
+          - q: '서버가 파일과 함께 ETag: "v1"을 보냈다. 다음에 같은 파일을 요청할 때 브라우저가 붙이는 헤더는?'
+            answer: 'If-None-Match: "v1"'
+            wrong:
+              - 'If-Modified-Since: "v1"'
+              - 'ETag: "v1"'
+              - 'Cache-Control: "v1"'
+          - q: 서버가 비교해 보니 파일이 그대로라 304 Not Modified(본문 없음)를 보냈다. 브라우저는 무엇을 쓸까?
+            answer: 캐시에 저장해 둔 파일
+            wrong:
+              - 본문이 없으니 빈 화면을 그린다
+              - 서버가 다시 보낸 파일
+              - 캐시를 지우고 다시 요청한 파일
+        explain: '<p><b>ETag</b>는 서버가 파일 버전마다 붙이는 꼬리표다. 브라우저는 다음 요청에 <code>If-None-Match: "v1"</code>으로 "이 버전 가지고 있어"라고 묻고, 서버는 같으면 <b>본문 없는 304</b>, 다르면 새 파일과 새 ETag를 준다. 304를 받은 브라우저는 저장해 둔 파일을 쓴다. 실제 Chrome에서도 두 번째 요청에 If-None-Match가 붙고 304 뒤에 캐시된 스크립트가 실행됐다.</p>'
+      - id: fe-pf-q-lastmod
+        tag: HTTP 캐시
+        title: 수정 시각으로만 비교하면
+        type: mcq
+        quizzes:
+          - q: Last-Modified(수정 시각)만으로 캐시를 확인한다. 파일이 1초 안에 두 번 바뀌면?
+            answer: 두 번째 변경을 놓칠 수 있다 (시각이 초 단위라서)
+            wrong:
+              - 항상 두 번 다 알아챈다
+              - 브라우저가 자동으로 ETag를 만들어 비교한다
+              - 304 대신 항상 200이 온다
+        explain: <p>HTTP 날짜는 <b>초 단위</b>라, 같은 초 안의 변경은 같은 시각으로 보인다. 또 내용은 그대로인데 시각만 바뀌어도(다시 배포) 새로 받게 된다. 그래서 내용으로 만든 <b>ETag</b>가 더 정확하다. 브라우저는 If-Modified-Since로 묻고, 둘 다 있으면 서버는 보통 ETag를 우선한다.</p>
+      - id: fe-pf-q-compress
+        tag: 전송
+        title: 텍스트 파일 전송 크기
+        type: mcq
+        quizzes:
+          - q: JS·CSS·HTML의 전송 크기를 코드 수정 없이 크게 줄이는 서버·CDN 설정은?
+            answer: Brotli 또는 gzip 압축을 켠다
+            wrong:
+              - "Cache-Control: no-store를 준다"
+              - HTTP/1.1로 바꾼다
+              - 파일마다 ETag를 끈다
+        explain: <p>텍스트는 반복이 많아서 <b>Brotli·gzip</b>으로 보통 크게 줄어든다(브라우저가 Accept-Encoding으로 알리면 서버가 Content-Encoding으로 답한다). no-store는 캐시만 끈다. 이미 압축된 이미지·동영상은 다시 압축해도 거의 줄지 않는다.</p>
+      - id: fe-pf-q-split
+        tag: 코드 스플리팅
+        title: 무거운 라이브러리 첫 번들에서 빼기
+        type: mcq
+        quizzes:
+          - q: 관리자 화면에서만 쓰는 무거운 차트 라이브러리가 모든 사용자의 첫 번들에 들어간다. 어떻게 뺄까?
+            answer: import('./chart')로 필요할 때 불러온다
+            wrong:
+              - 번들을 minify해 전체 크기를 줄인다
+              - script 태그에 defer를 붙여 늦게 받는다
+              - 차트 라이브러리를 CDN 주소에서 받는다
+          - q: React에서 const Chart = React.lazy(() => import('./Chart'))로 만든 컴포넌트를 쓸 때 함께 있어야 하는 것은?
+            answer: Suspense로 감싸 로딩 화면을 정한다
+            wrong:
+              - useEffect 안에서만 렌더링한다
+              - useMemo로 Chart를 감싼다
+              - ErrorBoundary만 있으면 된다
+        explain: "<p><b>동적 import()</b>는 번들러가 그 모듈을 <b>따로 파일(청크)</b>로 떼어 내고, 호출할 때 받는다(esbuild로 확인: 차트 코드는 main.js에 없고 별도 청크로 나뉨). React.lazy 컴포넌트는 받는 동안 보여 줄 화면이 필요해서 <b>Suspense</b> 안에 둔다. minify는 크기를 줄일 뿐 첫 번들에서 빼지 못한다.</p>"
+      - id: fe-pf-q-treeshake
+        tag: 트리 셰이킹
+        title: 라이브러리 함수 하나만 쓸 때
+        type: mcq
+        quizzes:
+          - q: lodash의 debounce 하나만 쓴다. 번들이 가장 크게 나오는 import는?
+            answer: import _ from 'lodash' 후 _.debounce
+            wrong:
+              - import { debounce } from 'lodash-es'
+              - import debounce from 'lodash/debounce'
+              - 셋 다 크기가 같다
+        explain: "<p><b>트리 셰이킹</b>은 ESM의 정적 import를 보고 안 쓰는 코드를 뺀다. CommonJS인 <code>lodash</code>를 통째로 가져오면 뺄 수 없어 전부 들어간다. esbuild로 번들한 실제 크기(minify): <code>lodash</code> 전체 <b>약 74KB</b>, <code>lodash-es</code>에서 이름 import <b>약 2.9KB</b>, <code>lodash/debounce</code> 약 3.5KB.</p>"
+      - id: fe-pf-q-lazyimg
+        tag: 이미지
+        title: 첫 화면 아래 이미지들
+        type: mcq
+        quizzes:
+          - q: 첫 화면 아래에 있는 이미지 30장에 loading="lazy"를 주면, 페이지를 처음 열 때 받는 이미지는?
+            answer: 거의 없다. 화면 가까이 스크롤하면 그때 받는다
+            wrong:
+              - 30장 모두 받되 낮은 우선순위로 받는다
+              - 30장 모두 받고, 표시만 나중에 한다
+              - 첫 장만 받고 나머지는 클릭해야 받는다
+        explain: "<p>lazy 이미지는 <b>화면(뷰포트) 근처에 올 때</b> 요청한다. 실제 Chrome 실험: 첫 화면 아래 30장 중 처음에 받은 것은 <b>0장</b>, 그 위치로 스크롤하자 근처의 14장을 받았다. 첫 화면 안의 이미지(특히 LCP 이미지)에 lazy를 주면 오히려 늦어진다.</p>"
+      - id: fe-pf-q-lcpimg
+        tag: 이미지
+        title: 첫 화면 큰 이미지 빨리 받기
+        type: mcq
+        quizzes:
+          - q: 첫 화면의 가장 큰 히어로 이미지(LCP)를 다른 리소스보다 먼저 받게 하려면 img에 무엇을 줄까?
+            answer: fetchpriority="high"
+            wrong:
+              - loading="lazy"
+              - decoding="async"
+              - crossorigin="anonymous"
+        explain: <p><b>fetchpriority="high"</b>는 브라우저에 이 이미지를 높은 우선순위로 받으라고 알려 LCP를 앞당긴다. loading="lazy"는 반대로 늦춘다. decoding="async"는 이미지 해독을 메인 작업과 분리할 뿐 다운로드 순서와는 관계없다. CSS 배경 이미지처럼 HTML에서 늦게 발견되는 LCP 이미지는 preload로 먼저 알린다.</p>
+      - id: fe-pf-q-imgsize
+        tag: 이미지
+        title: 사진 용량 줄이기
+        type: mcq
+        quizzes:
+          - q: 폰에서 3000px짜리 사진이 그대로 내려온다. 용량을 줄이는 가장 효과적인 방법은?
+            answer: WebP·AVIF + srcset으로 화면에 맞는 크기
+            wrong:
+              - PNG로 바꿔 화질을 그대로 지킨다
+              - base64로 바꿔 HTML에 직접 넣는다
+              - 서버에서 gzip으로 한 번 더 압축한다
+        explain: <p>사진은 <b>화면에 필요한 크기</b>로 주는 것(srcset·sizes)과 <b>최신 포맷</b>(WebP·AVIF)이 가장 크게 효과가 있다. PNG는 사진에 오히려 크다. base64는 33% 커지고 캐시도 따로 안 된다. JPEG·WebP는 이미 압축된 형식이라 gzip을 해도 거의 줄지 않는다.</p>
+      - id: fe-pf-q-font
+        tag: 폰트
+        title: 웹폰트를 받는 동안
+        type: mcq
+        quizzes:
+          - q: 웹폰트를 받는 동안 글자가 아예 안 보이는 시간(FOIT)을 없애고, 기본 글꼴로 먼저 보여 주려면?
+            answer: "@font-face에 font-display: swap"
+            wrong:
+              - "@font-face에 font-display: block"
+              - font-weight를 400으로 고정한다
+              - 폰트를 CSS @import로 불러온다
+        explain: "<p><b>font-display: swap</b>은 폰트를 받는 동안 시스템 글꼴로 먼저 그리고, 도착하면 바꾼다(글자는 바로 보이지만 바뀔 때 살짝 흔들릴 수 있음). block은 받는 동안 글자를 숨겨 FOIT가 생긴다. @import는 CSS를 받은 뒤에야 폰트 CSS를 발견해 더 늦다. 중요한 폰트는 preload와 함께 쓴다.</p>"
+      - id: fe-pf-q-cls
+        tag: 레이아웃 이동
+        title: 늦게 들어오는 광고
+        type: mcq
+        quizzes:
+          - q: 글 중간의 광고가 1초 뒤에 들어오면서 아래 글이 밀려 내려간다. 가장 알맞은 해결은?
+            answer: 광고 자리에 min-height로 공간을 미리 잡는다
+            wrong:
+              - 광고 스크립트에 async를 붙여 늦게 받는다
+              - 광고 영역을 loading=lazy로 늦게 받는다
+              - 광고가 올 때까지 글 전체를 숨겨 둔다
+        explain: <p>CLS는 <b>자리를 미리 잡지 않은 채 늦게 들어오는 요소</b> 때문에 생긴다. 광고·임베드·이미지 자리에 크기(min-height, aspect-ratio, width·height)를 먼저 잡아 두면 들어와도 밀리지 않는다. async·lazy는 받는 시점을 바꿀 뿐 들어올 때 미는 것은 그대로다.</p>
+      - id: fe-pf-q-virtual
+        tag: 긴 목록
+        title: 1만 줄 목록이 버벅일 때
+        type: mcq
+        quizzes:
+          - q: 1만 줄짜리 목록을 한 번에 렌더링했더니 처음 뜰 때 느리고 스크롤도 버벅인다. 가장 효과적인 방법은?
+            answer: 화면에 보이는 줄만 렌더링한다 (가상화)
+            wrong:
+              - 각 줄을 React.memo로 감싼다
+              - key를 index로 바꾼다
+              - "목록 전체에 will-change: transform을 준다"
+        explain: <p><b>가상화(virtualization)</b>는 스크롤 위치를 보고 보이는 수십 줄만 DOM에 두고 나머지는 빈 공간으로 둔다(react-window, TanStack Virtual). DOM 노드 1만 개를 만들고 레이아웃하는 비용 자체를 없앤다. memo는 다시 렌더링할 때만 도움이 되고 처음 1만 개를 만드는 비용은 그대로다.</p>
+      - id: fe-pf-q-cvis
+        tag: 렌더링 비용
+        title: 화면 밖 긴 섹션 건너뛰기
+        type: mcq
+        quizzes:
+          - q: 아주 긴 문서에서 화면 밖에 있는 섹션의 레이아웃·페인트를 필요할 때까지 건너뛰게 하는 CSS는?
+            answer: "content-visibility: auto"
+            wrong:
+              - "visibility: hidden"
+              - "display: none"
+              - "will-change: contents"
+        explain: "<p><b>content-visibility: auto</b>는 화면 밖 요소의 렌더링 작업을 건너뛰었다가 가까워지면 그린다. 크기를 모르면 스크롤바가 튈 수 있어 <code>contain-intrinsic-size</code>로 예상 크기를 함께 준다. display: none은 아예 없애 검색·접근성에서도 빠지고, visibility: hidden은 레이아웃은 그대로 계산한다.</p>"
+      - id: fe-pf-q-longtask
+        tag: 메인 스레드
+        title: 긴 작업의 기준
+        type: mcq
+        quizzes:
+          - q: 브라우저 성능 도구에서 "긴 작업(Long Task)"으로 표시되는 기준은 메인 스레드를 얼마나 넘게 붙잡는 작업일까?
+            answer: 50ms
+            wrong:
+              - 16ms
+              - 100ms
+              - 1초
+        explain: <p>메인 스레드를 <b>50ms 넘게</b> 붙잡는 작업을 긴 작업이라 한다. 그동안 클릭·입력에 반응하지 못해 INP가 나빠진다. 16ms는 60fps에서 한 프레임의 시간이라 헷갈리기 쉽다.</p>
+      - id: fe-pf-q-inp
+        tag: 메인 스레드
+        title: 클릭 뒤 무거운 계산
+        type: mcq
+        quizzes:
+          - q: 필터 버튼을 누르면 300ms 걸리는 계산을 한 뒤 목록을 바꾼다. 클릭 반응(INP)을 좋게 하려면?
+            answer: 계산을 잘게 나눠 양보하거나 Worker로 옮긴다
+            wrong:
+              - 계산 결과를 useMemo로 감싸 둔다
+              - 버튼에 transition CSS를 걸어 둔다
+              - 결과를 localStorage에 저장해 둔다
+        explain: <p>INP는 클릭부터 <b>다음 화면이 그려질 때</b>까지의 시간이다. 한 덩어리 계산이 메인 스레드를 붙잡으면 그동안 그릴 수 없다. 계산을 쪼개 사이사이 <code>await</code>로 양보하거나(setTimeout, scheduler.yield), 계산 자체를 <b>Web Worker</b>로 옮긴다. 버튼 눌림 표시 같은 가벼운 업데이트를 먼저 그리는 것도 방법이다. useMemo는 같은 입력을 다시 계산할 때만 줄여 준다.</p>
+      - id: fe-pf-q-memoall
+        tag: React 성능
+        title: 모든 컴포넌트에 memo
+        type: mcq
+        quizzes:
+          - q: 성능을 위해 프로젝트의 모든 컴포넌트를 React.memo로 감쌌다. 어떻게 될까?
+            answer: 비교 비용만 늘고 효과가 없는 곳이 많다
+            wrong:
+              - 모든 리렌더링이 사라져 항상 빨라진다
+              - memo가 겹쳐서 에러가 난다
+              - Context를 쓰는 컴포넌트만 더 빨라진다
+        explain: <p>memo는 렌더링 전에 <b>props를 비교</b>한다. props가 매번 바뀌는 컴포넌트(새 객체·함수를 받는 곳)는 비교만 하고 결국 다시 렌더링하니 손해다. 먼저 프로파일러로 느린 곳을 찾고, 비싼 컴포넌트에만 memo와 useCallback·useMemo를 짝지어 쓴다.</p>

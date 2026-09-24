@@ -14,7 +14,7 @@ description: 출근길 IT 퀴즈의 문제를 새로 만들거나 고치거나 �
 2. **"용어 → 뜻" 대신 "코드·상황 → 결과·해결책".** 실무나 면접에서 실제로 틀리는 장면을 문제로 만든다.
    - 좋은 예: "span을 클릭하면 `e.target.tagName, e.currentTarget.tagName` 출력은?"
    - 좋은 예: "모달(z-index 9999)이 헤더(10) 밑에 깔린다. 원인은?"
-   - 용어 표는 노트에 참고용으로만 두고 퀴즈에서는 뺀다(`data-quiz="off"`).
+   - 용어 표는 노트에 참고용으로만 두고 퀴즈에서는 뺀다(`quiz: false`).
 3. **오답 보기는 전부 "그럴듯한 착각"이어야 한다.** 보기마다 어떤 착각을 한 사람이 고르는지 말할 수 있어야 한다.
    - 좋은 예: reduce 문제의 오답 100(filter를 빼먹음), 6(map을 빼먹음), [20, 40](reduce를 빼먹음)
    - 나쁜 예: "React가 에러를 던지고 멈춘다", "실패한 것을 한 번 더 시도한다". 아무도 안 고른다.
@@ -22,35 +22,32 @@ description: 출근길 IT 퀴즈의 문제를 새로 만들거나 고치거나 �
 4. **보기는 짧고, 형식과 길이가 서로 비슷하게.** 한 보기만 길거나 자세하면 그게 답으로 보인다. 75자를 넘지 않는다(테스트가 검사). 가능하면 40자 안쪽.
    - 직접 쓴 객관식은 테스트가 "정답만 눈에 띄게 긴" 문제를 막는다(정답 25자 이상, 가장 긴 오답의 1.35배·8자 넘게 길면 실패).
    - 용어 표 카드는 **설명의 첫 문장이 보기**가 된다. 첫 문장은 핵심 한 문장(40자 안쪽)으로 쓰고, 예시·덧붙임은 둘째 문장으로 뺀다. 오답은 길이가 비슷한 다른 카드의 설명에서 고른다(`similarLength`).
-   - 한 표에는 같은 종류만 둔다. 기호 표에 개념(관계대수 vs 관계해석)을, 용어 표에 "장비와 계층" 같은 정리 행을 섞으면 서로의 오답으로 끼어 티가 난다. 그런 행은 `data-quiz="off"`로 두고 상황형 객관식으로 따로 낸다.
-5. **질문과 제목에 답이 보이면 안 된다.** 정답 고르기 문제는 **제목(h3)도 화면에 나온다**. "영구 이동"(→ 301 Moved Permanently), "전파 막기"(→ stopPropagation), "DOMContentLoaded vs load"처럼 답이나 보기를 흘리는 제목은 안 된다. 제목은 "주소 옮기기", "모달 바깥 클릭"처럼 상황만 말한다. 묻는 용어 이름이 정답 보기에 들어 있거나, 질문 문장이 정답을 풀어 쓰고 있어도 안 된다. 용어 표 칸 안에 `이름: 설명`을 쓰면 추출 과정에서 답이 새므로 한 행에 용어 하나만 쓴다.
+   - 한 표에는 같은 종류만 둔다. 기호 표에 개념(관계대수 vs 관계해석)을, 용어 표에 "장비와 계층" 같은 정리 행을 섞으면 서로의 오답으로 끼어 티가 난다. 그런 행은 `quiz: false`로 두고 상황형 객관식으로 따로 낸다.
+5. **질문과 제목에 답이 보이면 안 된다.** 정답 고르기 문제는 **제목(h3)도 화면에 나온다**. "영구 이동"(→ 301 Moved Permanently), "전파 막기"(→ stopPropagation), "DOMContentLoaded vs load"처럼 답이나 보기를 흘리는 제목은 안 된다. 제목은 "주소 옮기기", "모달 바깥 클릭"처럼 상황만 말한다. 묻는 용어 이름이 정답 보기에 들어 있거나, 질문 문장이 정답을 풀어 쓰고 있어도 안 된다. 용어 표의 한 행에는 용어 하나만 쓴다(`이름: 설명`을 여러 개 넣으면 보기에서 답이 샌다).
 6. **문제 하나만 봐도 풀려야 한다.** 한 항목의 여러 질문(`id-2`, `id-3`)은 레슨 안에서 따로 섞여 나온다. "같은 상황에서", "같은 10명이"처럼 앞 질문을 가리키면 안 되고, 조건을 매번 다시 적는다. 코드가 붙은 항목은 코드가 질문마다 같이 보인다.
 7. **정답은 하나만.** 다른 보기도 조건에 따라 맞을 수 있으면 조건을 질문에 넣어 좁힌다 (예: "addEventListener로 단 핸들러에서" → `return false`는 오답이 확실해짐).
 8. **정답은 손으로 쓰지 않는다.** 출력값뿐 아니라 "이 코드는 어떻게 동작할까"를 묻는 객관식도 실제로 돌려서 확인한다.
-   - JS 출력값: `tools/frontend/cases.mjs` → `node tools/frontend/run.mjs` → `answers.json`
-   - React 동작: 실제 React를 jsdom에서 실행 (`tools/frontend/verify/react-lab.mjs`)
-   - 브라우저 동작: Playwright로 실제 Chrome에서 실행 (`tools/frontend/verify/browser-lab.mjs`). jsdom은 렌더링·로딩 순서를 흉내 내지 못한다.
+   - JS 출력값: 항목에 `run: node`를 달면 `pnpm verify:answers`가 `code`를 Node로 실행해 `answer`와 비교한다.
+   - React 동작: 실제 React를 jsdom에서 실행 (`tools/verify/react-lab.mjs`)
+   - 브라우저 동작: Playwright로 실제 Chrome에서 실행 (`tools/verify/browser-lab.mjs`). jsdom은 렌더링·로딩 순서를 흉내 내지 못한다.
    - 프레임워크(Next.js 등): 설치한 패키지에 든 그 버전의 공식 문서(`next/dist/docs`)와 실제 build·start 결과. 버전·설정(예: cacheComponents)에 따라 답이 다르면 조건을 질문에 적는다.
    - 클라우드(AWS 등)처럼 직접 돌려 볼 수 없는 것: 문제로 낼 주장을 목록으로 뽑아 **공식 문서(docs.aws.amazon.com 등)와 대조**한다(원문 인용·URL). 요금·한도처럼 자주 바뀌는 숫자는 문제로 내지 않는다(예: S3 최대 객체 크기 5TB → 2025년 12월 50TB).
    - 문서에 명시가 없고 실험으로도 확인 못 한 내용은 문제로 내지 않는다. 문서상 "그럴 수도 있다"인 동작(예: 같은 값 set 뒤 한 번 더 렌더링될 수 있음)도 피한다.
 9. **답 조각(타일) 문제는 조각을 확인한다.** 한 단어 답은 글자 단위로 쪼개지므로 피한다. 숫자·true/false·한 글자 출력이 좋다. 그러면 ±1, 반대값 같은 가짜 조각이 착각을 잘 담는다.
 10. **순서 맞추기(order)에는 가짜 조각을 넣지 않는다.** 사용자가 헷갈려했다.
 11. **해설은 오답이 왜 틀렸는지까지.** 정답 설명만 하지 말고 대표 오답의 착각을 짚는다.
-12. **유닛 안 순서를 섞는다.** 레슨은 6장씩 순서대로 나뉘므로, 출력값·객관식·조각 문제가 한 레슨에 섞이게 늘어놓는다(`tools/frontend/fe_quiz.py`의 `ORDER`).
+12. **유닛 안 순서를 섞는다.** 레슨은 6장씩 순서대로 나뉘므로, 출력값·객관식·조각 문제가 한 레슨에 섞이게 늘어놓는다(유닛 YAML의 `blocks` 순서가 곧 출제 순서다).
 
 ## 작업 순서
 
-1. 내용을 고친다.
-   - 정보처리기사: `public/notes.html` (필요하면 `tools/content_*.py`)
-   - 프론트엔드: `tools/frontend/cases.mjs`(출력값 코드), `fe_quiz.py`·`fe_quiz_deep.py`(문제), `fe_content.py`(풀이·용어 표)
-   - AWS: `tools/aws/aws_quiz.py`
+1. 내용을 고친다. 모든 코스의 원본은 `content/<코스>/<유닛>.yaml` 하나다(`src/data/cards/`, `public/notes*.html`은 만든 결과물이라 직접 고치지 않는다).
+   - 블록: `group`(소제목), `tip`, `table`(용어 표: 행마다 `id·term·desc·short`, 필요하면 `segments·hints·quiz: false`), `items`/`rel`(문제 묶음)
+   - 문제 `type`: `mcq`(`quizzes`마다 `q·answer·wrong·hints`, 공통 `code·explain`), `answer`(`code·q·answer·steps·why·hints`, 출력값이면 `run: node`), `build`(`mode·join·q·tokens·decoys·why·hints`), `rel`(`svg·explain·hints`)
 2. 다시 만든다.
    ```bash
-   node tools/frontend/run.mjs        # 프론트엔드 출력값 정답 (코드를 고쳤을 때)
-   python3 tools/frontend/gen_fe.py   # 프론트엔드 노트
-   python3 tools/aws/gen_aws.py       # AWS 노트
-   pnpm extract                       # 노트 → src/data/cards/<코스>.json
-   pnpm test                          # 품질 테스트 (답 노출, 보기 길이·중복, 조각 수 등)
+   pnpm content          # content/ → 카드 JSON + 노트 HTML
+   pnpm verify:answers   # run: node 문제의 코드를 실제로 돌려 정답 확인
+   pnpm test             # 품질 테스트 (답 노출, 보기 길이·중복, 조각 수 등)
    ```
 3. **덤프를 뽑아 전부 읽는다.** 레슨별로 실제 나오는 모양(보기 순서, 조각)이 찍힌다.
    ```bash
@@ -69,6 +66,6 @@ description: 출근길 IT 퀴즈의 문제를 새로 만들거나 고치거나 �
 
 ## 새 코스를 만들 때
 
-- `src/data/courses.json`에 코스와 유닛을 적고, `tools/<코스>/`에 문제 파일과 생성 스크립트(공통 `tools/notes_gen.py`의 `write_notes`)를 만들고, `src/domain/content.ts`의 `CARDS_BY_COURSE`와 `public/sw.js`의 SHELL에 잇는다. `tools/aws/`가 가장 단순한 예다.
+- `content/index.yaml`에 코스 id를 넣고, `content/<코스>/course.yaml`(코스 정보·노트 설정·유닛 순서)과 유닛 YAML을 쓴 뒤 `pnpm content`. 만든 카드를 `src/domain/content.ts`의 `CARDS_BY_COURSE`와 `public/sw.js`의 SHELL에 잇는다. `content/aws/`가 가장 단순한 예다.
 - 한 코스는 유닛 5~7개, 유닛당 12~20문제 정도로 시작한다. 절반 이상을 코드·상황형 문제로 채운다.
 - 주제는 "면접에 나오고, 실무에서 실제로 사고가 나는 것" 위주로 고른다. 사전식 정의 암기는 노트로 보낸다.

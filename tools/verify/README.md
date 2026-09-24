@@ -16,8 +16,8 @@
 ```bash
 mkdir /tmp/quiz-lab && cd /tmp/quiz-lab && npm init -y
 npm i react@19 react-dom@19 jsdom next@16 playwright
-cp <repo>/tools/frontend/verify/*.mjs . && node react-lab.mjs && node browser-lab.mjs
-cp -R <repo>/tools/frontend/verify/nextapp . && cd nextapp && npx next build && npx next start -p 4311
+cp <repo>/tools/verify/*.mjs . && node react-lab.mjs && node browser-lab.mjs
+cp -R <repo>/tools/verify/nextapp . && cd nextapp && npx next build && npx next start -p 4311
 ```
 
 Next.js 문서는 설치한 패키지 안의 `node_modules/next/dist/docs`가 그 버전의 공식 문서다. 캐시 관련 동작은 `cacheComponents` 설정에 따라 달라서, 문제에는 설정 조건을 적는다.

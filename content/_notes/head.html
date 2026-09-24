@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#EEF1F5">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png?v=duck1">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=duck1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="출근길 IT 퀴즈">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>{{title}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root,:root[data-theme="dark"]{
+  color-scheme:light;
+  --bg:#EEF1F5; --card:#FFFFFF; --ink:#18202B; --muted:#5A6576; --line:#D5DBE4;
+  --accent:#2B56C9; --accent-soft:#E3EAFB; --mark:#FFE58A; --mark-ink:#18202B;
+  --code-bg:#F4F6F9; --ok:#1F8A5B; --warn:#B8472A;
+  --display:"Do Hyeon","Noto Sans KR",system-ui,sans-serif;
+  --body:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.65;margin:0}
+.wrap{max-width:980px;margin:0 auto;padding-inline:20px;padding-block:28px 80px}
+h1,h2,h3{text-wrap:balance;margin:0}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(30px,5vw,42px);letter-spacing:-.01em;line-height:1.15}
+h2{font-family:var(--display);font-weight:400;font-size:28px;line-height:1.2}
+h3{font-size:16px;font-weight:700}
+p{margin:0}
+code,pre{font-family:var(--mono)}
+mark{background:var(--mark);color:var(--mark-ink);padding:0 3px;border-radius:2px}
+.lede{color:var(--muted);max-width:62ch;margin-top:10px}
+.top{display:grid;gap:18px;margin-bottom:22px}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.toggle{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer;font-weight:500;font-size:14px}
+.toggle input{accent-color:var(--accent);width:16px;height:16px}
+.progress{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.progress b{color:var(--ok)}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);margin-inline:-20px;padding:10px 20px;display:flex;gap:6px;overflow-x:auto}
+nav a{flex:none;text-decoration:none;color:var(--ink);font-weight:500;font-size:14px;padding:6px 12px;border-radius:8px}
+nav a:hover,nav a:focus-visible{background:var(--accent-soft);color:var(--accent);outline:none}
+section{padding-top:40px;display:grid;gap:18px}
+.sec-head{display:grid;gap:6px}
+.sec-head p{color:var(--muted);max-width:66ch}
+.sub{font-size:13px;letter-spacing:.06em;color:var(--accent);font-weight:700}
+.tip{background:var(--accent-soft);border-radius:10px;padding:14px 16px;display:grid;gap:4px}
+.tip b{color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.item{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;gap:10px;align-content:start}
+.item-h{display:flex;align-items:center;gap:8px}
+.item-h h3{flex:1}
+.lang{font-family:var(--mono);font-size:11px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--code-bg);border:1px solid var(--line);color:var(--muted)}
+.chk{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--muted);cursor:pointer;white-space:nowrap}
+.chk input{accent-color:var(--ok)}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin:0;font-size:13px;line-height:1.55;overflow-x:auto}
+.q{font-size:14px;font-weight:500}
+.ans{border-top:1px dashed var(--line);padding-top:10px;display:grid;gap:4px;font-size:14px}
+.ans .a{font-family:var(--mono);font-weight:600;color:var(--ok)}
+.ans .why{color:var(--muted)}
+.ans .why code,.why code{background:var(--code-bg);padding:0 4px;border-radius:3px;font-size:.92em}
+body.quiz .ans{filter:blur(6px);cursor:pointer;user-select:none;transition:filter .15s}
+body.quiz .ans.shown{filter:none;user-select:auto}
+body.hide-known .known{display:none}
+.table-wrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:620px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;letter-spacing:.05em;color:var(--muted);font-weight:700;background:var(--code-bg)}
+tr:last-child td{border-bottom:none}
+td.term{font-weight:700;white-space:nowrap}
+td.term small{display:block;font-weight:400;color:var(--muted);font-family:var(--mono);font-size:11.5px;white-space:normal}
+td.hint{color:var(--muted)}
+td.c{width:34px}
+.group-title{font-size:17px;font-weight:700;margin-top:10px}
+.mnemo{font-family:var(--display);font-size:22px;color:var(--accent);letter-spacing:.02em}
+.rel{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.rel .item{gap:6px}
+.rel svg{width:100%;height:44px;color:var(--ink)}
+.rel svg .hollow{fill:var(--card)}
+.rel svg .solid{fill:currentColor}
+.rel .name{font-weight:700}
+.rel .ex{font-size:13px;color:var(--muted)}
+.steps{margin:0;padding-left:1.3em;display:grid;gap:4px}
+.steps li{padding-left:2px}
+.ans p + .steps,.ans .steps + p{margin-top:2px}
+.build-answer li{font-weight:700}
+.build-answer li::marker{color:var(--accent)}
+footer{margin-top:48px;color:var(--muted);font-size:13px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:480px){.wrap{padding-inline:16px}nav{margin-inline:-16px;padding-inline:16px}}
+</style>
+</head>
+<body>
+<a href="./course/{{course_id}}" style="display:inline-block;margin:16px 20px 0;font:500 14px var(--body);color:var(--accent)">← 레슨 지도로 돌아가기</a>
+

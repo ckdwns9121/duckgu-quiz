@@ -1,0 +1,26 @@
+# 코스 정보와 유닛 순서. 유닛 내용은 같은 폴더의 <유닛>.yaml
+id: jeongcheogi
+name: 정보처리기사
+desc: "정보처리기사 실기: 코드 함정, DB, 네트워크, 보안, UML, 소프트웨어 공학"
+icon: |-
+  정보처리
+  기사
+color: "#58CC02"
+dark: "#58A700"
+notes:
+  file: notes.html
+  title: 정보처리기사 노트 · 출근길 IT 퀴즈
+  h1: 정보처리기사 노트
+  lede: 2026년 3회 실기(10월 24일~) 대비. 기출에서 자주 헷갈리는 코드, DB 이론, 네트워크·보안 용어, UML만 모았습니다. <b>퀴즈 모드</b>를 켜면 답이 가려지고, 누르면 보입니다. 외운 건 체크해서 숨기세요.
+  footer: 체크한 항목은 이 브라우저에만 저장됩니다. 공식 일정과 규정은 큐넷에서 확인하세요.
+  storage_key: jck-known-v1
+units:
+  - code-c
+  - code-java
+  - code-py
+  - code-sql
+  - db
+  - net
+  - sec
+  - uml
+  - swe

@@ -1,0 +1,122 @@
+id: aws-s3
+name: S3
+color: "#58CC02"
+dark: "#58A700"
+part: PART 4
+lede: 버킷을 비공개로 지키면서 필요한 사람에게만 파일을 주는 법, 저장 클래스와 요금의 함정, 브라우저에서 바로 올리기를 다룹니다.
+blocks:
+  - items:
+      - id: aws-s3-q-bpa
+        tag: 공개 설정
+        title: 버킷 정책을 넣어도 403
+        type: mcq
+        quizzes:
+          - q: Principal "*"에 s3:GetObject를 허용하는 버킷 정책을 저장하려는데 거부되거나, 저장돼도 여전히 403이다. 가장 흔한 원인은?
+            answer: 퍼블릭 액세스 차단이 켜져 있어서
+            wrong:
+              - 객체 ACL을 public-read로 안 바꿔서
+              - 버킷에 CORS 설정이 없어서
+              - 버킷과 요청의 리전이 달라서
+        explain: "<p>새 버킷은 기본으로 <b>퍼블릭 액세스 차단</b>이 켜져 있어서 공개 정책을 막거나 무시한다. 또 새 버킷은 <b>ACL이 꺼져 있어</b>(객체 소유권: 버킷 소유자 적용) 객체 ACL로 공개할 수도 없다. 정말 공개가 필요하면 차단을 풀어야 하지만, 웹사이트라면 보통 버킷은 비공개로 두고 CloudFront(OAC)로 연다.</p>"
+      - id: aws-s3-q-consistency
+        tag: 일관성
+        title: 덮어쓴 직후 읽기
+        type: mcq
+        quizzes:
+          - q: 같은 키로 새 파일을 PUT한 직후 GET하면?
+            answer: 항상 새 파일을 받는다
+            wrong:
+              - 몇 초 동안은 옛 파일을 받을 수 있다
+              - 잠깐 404가 난다
+              - 리전마다 다르다
+        explain: <p>S3는 2020년 12월부터 모든 리전에서 객체 PUT·DELETE에 <b>강한 읽기 후 쓰기 일관성</b>을 자동으로 제공한다. 쓰기가 성공하면 바로 뒤의 읽기·목록 조회에 반영된다. "S3는 최종적 일관성이라 잠깐 옛 값이 보인다"는 예전 이야기다. (CloudFront 같은 캐시 앞단은 별개다.)</p>
+      - id: aws-s3-q-ia
+        tag: 저장 클래스
+        title: 저장 클래스와 요금
+        type: mcq
+        quizzes:
+          - q: S3 Standard-IA에 파일을 올리고 10일 뒤 지웠다. 저장 요금은?
+            answer: 30일 치가 청구된다
+            wrong:
+              - 10일 치만 청구된다
+              - 지웠으니 청구되지 않는다
+              - 90일 치가 청구된다
+          - q: 1년에 한두 번 꺼내 보는 감사 로그다. 꺼낼 때 몇 시간 걸려도 되고, 가장 싸게 보관하고 싶다.
+            answer: S3 Glacier Deep Archive
+            wrong:
+              - S3 Standard-IA
+              - S3 Intelligent-Tiering
+              - S3 Standard
+        explain: <p>IA와 Glacier 계열은 저장 단가가 싼 대신 <b>최소 저장 기간</b>이 있다(Standard-IA 30일, Glacier Instant·Flexible 90일, Deep Archive 180일). 그보다 일찍 지우거나 옮기면 남은 기간이 청구된다. 또 꺼낼 때 검색 요금이 붙는다. 자주 바뀌거나 금방 지울 파일은 Standard가 오히려 싸다.</p>
+      - id: aws-s3-q-presign
+        tag: 접근 제어
+        title: 비공개 파일을 잠깐 주기
+        type: mcq
+        quizzes:
+          - q: 버킷은 비공개로 두고, 로그인한 사용자만 특정 파일을 10분 동안 내려받게 하고 싶다.
+            answer: 만료 10분짜리 presigned URL을 만들어 준다
+            wrong:
+              - 버킷을 공개하고 파일 이름을 어렵게 짓는다
+              - 파일을 10분만 공개로 바꿨다가 되돌린다
+              - 사용자마다 IAM 사용자를 만들어 준다
+          - q: EC2 역할의 자격 증명으로 만료 7일짜리 presigned URL을 만들었는데 몇 시간 뒤 쓸 수 없게 됐다. 이유는?
+            answer: 역할의 임시 자격 증명이 만료돼서
+            wrong:
+              - presigned URL은 최대 1시간이라서
+              - EC2를 재부팅해서 URL이 취소돼서
+              - 다른 사용자가 URL을 먼저 써서
+        explain: <p>presigned URL은 <b>만든 사람의 권한으로 서명한</b> 링크라, 받은 사람은 AWS 계정 없이도 정해진 시간 동안 그 작업(GET·PUT)을 할 수 있다. 최대 유효 기간은 7일이지만, <b>임시 자격 증명(역할)으로 만들면 그 자격 증명이 끝날 때 URL도 끝난다</b>. 오래 가는 링크가 필요하면 CloudFront 서명 URL 같은 방법을 쓴다.</p>
+      - id: aws-s3-q-cors
+        tag: 브라우저 업로드
+        title: 브라우저에서 바로 올릴 때
+        type: mcq
+        quizzes:
+          - q: 웹 페이지(https://app.example.com)에서 presigned URL로 S3에 PUT하는데 브라우저에 CORS 에러가 난다. 고칠 곳은?
+            answer: 버킷의 CORS 설정에 사이트 출처와 PUT을 허용한다
+            wrong:
+              - IAM 정책에 s3:PutCors 권한을 준다
+              - presigned URL을 다시 만든다
+              - CloudFront 캐시를 무효화한다
+        explain: <p>브라우저가 다른 출처(버킷 도메인)로 PUT하면 CORS 규칙이 적용되고, 응답 헤더를 주는 쪽은 <b>S3 버킷</b>이다. 버킷의 CORS 설정에 AllowedOrigins(사이트 주소), AllowedMethods(PUT), 필요한 AllowedHeaders를 넣는다. 서버를 거치지 않고 큰 파일을 올릴 때 흔히 쓰는 구조다.</p>
+      - id: aws-s3-q-version
+        tag: 버전 관리
+        title: 버전 관리 버킷에서 지우기
+        type: mcq
+        quizzes:
+          - q: 버전 관리를 켠 버킷에서 버전 ID 없이 객체를 DELETE하면?
+            answer: 삭제 마커가 생기고 이전 버전은 남는다
+            wrong:
+              - 모든 버전이 영구 삭제된다
+              - 버전 관리가 자동으로 꺼진다
+              - 휴지통으로 가서 30일 뒤 지워진다
+          - q: 한 번 켠 버전 관리를 끄고 싶다. 어떻게 될까?
+            answer: 끌 수는 없고 일시 중지만 할 수 있다
+            wrong:
+              - 언제든 끌 수 있다
+              - 버킷을 비워야 끌 수 있다
+              - 지원 센터에 요청해야 끌 수 있다
+        explain: <p>버전 관리 버킷에서 그냥 지우면 객체 위에 <b>삭제 마커</b>가 덮일 뿐이라, 마커를 지우면 되살릴 수 있다(실수 복구). 대신 옛 버전도 저장 요금이 계속 나가니 수명 주기 규칙으로 정리한다. 버전 관리는 한 번 켜면 <b>일시 중지</b>만 가능하다.</p>
+      - id: aws-s3-q-upload
+        tag: 업로드
+        title: 큰 파일 올리기
+        type: mcq
+        quizzes:
+          - q: 3GB 영상을 S3에 올린다. AWS가 권장하는 방법은?
+            answer: 멀티파트 업로드
+            wrong:
+              - 5GB 이하이니 단일 PUT 한 번
+              - 압축해서 단일 PUT
+              - Base64로 바꿔 JSON 본문에 담아 올린다
+        explain: <p>단일 PUT은 5GB까지 되지만, AWS는 <b>100MB 이상이면 멀티파트 업로드</b>를 권장한다. 여러 조각을 동시에 올려 빠르고, 한 조각이 실패하면 그 조각만 다시 올린다. 끝나지 않은 멀티파트 조각도 요금이 나가니 수명 주기 규칙으로 정리한다.</p>
+      - id: aws-s3-q-lifecycle
+        tag: 수명 주기
+        title: 로그 자동 정리
+        type: mcq
+        quizzes:
+          - q: 코드를 짜지 않고, 30일 지난 로그는 Standard-IA로 옮기고 1년 지나면 자동으로 지우고 싶다.
+            answer: S3 수명 주기(Lifecycle) 규칙
+            wrong:
+              - 매일 도는 Lambda 크론
+              - S3 Intelligent-Tiering
+              - 버킷 버전 관리
+        explain: <p><b>수명 주기 규칙</b>으로 접두사·태그별로 "며칠 뒤 다른 클래스로 전환", "며칠 뒤 삭제", "옛 버전·미완료 멀티파트 정리"를 코드 없이 걸 수 있다. Intelligent-Tiering은 접근 빈도에 따라 클래스를 알아서 옮기지만 지워 주지는 않는다.</p>

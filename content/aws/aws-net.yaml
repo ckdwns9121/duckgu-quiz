@@ -1,0 +1,175 @@
+id: aws-net
+name: VPC · 네트워크
+color: "#8C4FFF"
+dark: "#6A35CC"
+part: PART 2
+lede: 서브넷, 라우팅, 보안 그룹과 NACL을 헷갈리면 "왜 접속이 안 되지?"로 하루가 갑니다. 패킷이 실제로 어디를 지나가는지로 익힙니다.
+blocks:
+  - items:
+      - id: aws-net-q-public
+        tag: 서브넷
+        title: 퍼블릭 서브넷의 조건
+        type: mcq
+        quizzes:
+          - q: 서브넷을 퍼블릭 서브넷으로 만드는 것은?
+            answer: 라우팅 테이블에 인터넷 게이트웨이로 가는 경로
+            wrong:
+              - 서브넷 이름에 public을 붙이는 것
+              - 보안 그룹에서 0.0.0.0/0을 허용하는 것
+              - 서브넷에 NAT 게이트웨이를 두는 것
+        explain: <p>서브넷의 성격은 <b>라우팅 테이블</b>이 정한다. <code>0.0.0.0/0 → igw-...</code> 경로가 있으면 퍼블릭, 없으면 프라이빗. 인스턴스가 실제로 인터넷과 통신하려면 퍼블릭 IP(또는 탄력적 IP)도 있어야 한다. 보안 그룹은 허용 규칙일 뿐 길을 만들지 않는다.</p>
+      - id: aws-net-q-nat
+        tag: NAT
+        title: 프라이빗 서버의 바깥 연결
+        type: mcq
+        quizzes:
+          - q: 프라이빗 서브넷의 서버가 외부 패키지 저장소에는 나가야 하지만, 인터넷에서 들어오는 연결은 막고 싶다.
+            answer: 퍼블릭 서브넷의 NAT 게이트웨이로 나가게 한다
+            wrong:
+              - 프라이빗 라우팅에 인터넷 게이트웨이를 잇는다
+              - 서버에 퍼블릭 IP를 붙여 직접 나간다
+              - 서버 보안 그룹의 인바운드를 모두 연다
+          - q: NAT 게이트웨이를 프라이빗 서브넷에 만들었더니 서버가 여전히 밖으로 못 나간다. 원인은?
+            answer: NAT 게이트웨이가 퍼블릭 서브넷에 있어야 해서
+            wrong:
+              - NAT 게이트웨이에 보안 그룹을 붙이지 않아서
+              - 서버 보안 그룹의 아웃바운드가 기본값이라서
+              - 프라이빗 서브넷에는 라우팅 테이블이 없어서
+        explain: <p>NAT 게이트웨이에는 보안 그룹이 없다. NAT 게이트웨이는 안에서 시작한 연결만 밖으로 내보내고, 밖에서 먼저 들어오는 연결은 받지 않는다. 자신은 인터넷 게이트웨이로 나가야 하므로 <b>퍼블릭 서브넷</b>에 있어야 하고, 프라이빗 서브넷의 라우팅 테이블이 <code>0.0.0.0/0 → nat-...</code>을 가리켜야 한다.</p>
+      - id: aws-net-b-path
+        tag: 라우팅
+        title: 프라이빗 서버가 인터넷에 나가는 길
+        type: build
+        mode: order
+        join: " → "
+        q: 프라이빗 서브넷의 서버가 외부 API를 부를 때 패킷이 지나가는 순서대로 놓으세요.
+        tokens:
+          - 프라이빗 서브넷의 서버
+          - 프라이빗 라우팅 테이블 (0.0.0.0/0 → NAT)
+          - 퍼블릭 서브넷의 NAT 게이트웨이
+          - 인터넷 게이트웨이
+          - 인터넷
+        why: <p class="why">NAT 게이트웨이가 출발지 주소를 자기 주소로 바꿔 내보내고, 돌아온 응답을 다시 서버에 전달한다. 그래서 바깥에서는 서버 주소가 보이지 않는다.</p>
+        hints:
+          - 첫 번째 조각은 <b>프라이빗 서브넷의 서버</b>
+          - NAT 게이트웨이가 출발지 주소를 자기 주소로 바꿔 내보내고, 돌아온 응답을 다시 서버에 전달한다. 그래서 바깥에서는 서버 주소가 보이지 않는다.
+      - id: aws-net-q-ips
+        tag: 서브넷
+        title: 서브넷에서 쓸 수 있는 IP
+        type: mcq
+        quizzes:
+          - q: 10.0.1.0/24 서브넷에서 인스턴스에 줄 수 있는 IP는 몇 개일까?
+            answer: 251개
+            wrong:
+              - 256개
+              - 254개
+              - 255개
+        explain: "<p>/24는 256개지만 AWS는 서브넷마다 <b>5개를 예약</b>한다: 네트워크 주소(.0), VPC 라우터(.1), DNS(.2), 예비(.3), 브로드캐스트(.255). 그래서 251개. 작은 서브넷(/28 = 16개)에서는 11개만 남아서 금방 모자란다.</p>"
+      - id: aws-net-q-sg
+        tag: 보안 그룹
+        title: 보안 그룹과 응답 트래픽
+        type: mcq
+        quizzes:
+          - q: 보안 그룹에 인바운드 443만 허용하고 아웃바운드 규칙은 모두 지웠다. 클라이언트의 HTTPS 요청에 대한 응답은?
+            answer: 나간다. 보안 그룹은 상태를 기억해 응답을 자동으로 허용한다
+            wrong:
+              - 막힌다. 아웃바운드 규칙이 없어서
+              - 응답 포트(1024~65535)를 아웃바운드로 열어야 나간다
+              - NACL이 허용할 때만 나간다
+        explain: "<p>보안 그룹은 <b>상태 저장(stateful)</b>이라 허용해서 들어온 연결의 응답은 규칙과 상관없이 나간다. 아웃바운드 규칙은 인스턴스가 <b>먼저 시작하는</b> 연결(예: 외부 API 호출)에만 적용된다.</p>"
+      - id: aws-net-q-nacl
+        tag: NACL
+        title: NACL과 응답 트래픽
+        type: mcq
+        quizzes:
+          - q: 서브넷의 NACL에 인바운드 443만 허용하고 아웃바운드는 기본 Deny뿐이다. HTTPS 응답은?
+            answer: 막힌다. 응답용 임시 포트를 아웃바운드로 열어야 한다
+            wrong:
+              - 나간다. 응답은 항상 자동으로 허용된다
+              - 보안 그룹이 허용하면 나간다
+              - 443 응답은 443 포트로 나가므로 나간다
+        explain: <p>NACL은 <b>상태 비저장(stateless)</b>이라 들어온 요청과 나가는 응답을 따로 검사한다. 응답은 클라이언트의 <b>임시 포트(보통 1024~65535)</b>로 가므로 아웃바운드에 그 범위를 허용해야 한다. 보안 그룹과 NACL을 둘 다 통과해야 한다.</p>
+      - id: aws-net-q-block
+        tag: NACL
+        title: IP 하나만 막기
+        type: mcq
+        quizzes:
+          - q: 공격하는 IP 하나만 서브넷 단위로 막고 싶다. 무엇을 쓸까?
+            answer: NACL에 그 IP의 Deny 규칙
+            wrong:
+              - 보안 그룹에 그 IP의 Deny 규칙
+              - 라우팅 테이블에서 그 IP를 지운다
+              - 인터넷 게이트웨이를 분리한다
+          - q: NACL 규칙이 100번 "모두 허용", 200번 "1.2.3.4 거부"다. 1.2.3.4에서 온 요청은?
+            answer: 허용된다. 작은 번호의 규칙이 먼저 적용된다
+            wrong:
+              - 거부된다. NACL에서도 Deny가 항상 이긴다
+              - 거부된다. IP를 콕 집은 규칙이 이긴다
+              - 두 규칙이 충돌해 트래픽이 모두 막힌다
+        explain: <p><b>보안 그룹은 Allow 규칙만</b> 있어서 특정 IP를 막을 수 없다. <b>NACL</b>은 Allow와 Deny가 있고, 규칙을 <b>번호가 작은 것부터</b> 보다가 처음 맞는 규칙을 적용한다. 그래서 막을 규칙은 "모두 허용"보다 작은 번호로 넣는다. (IAM의 "Deny가 이긴다"와 헷갈리기 쉽다.)</p>
+      - id: aws-net-q-sgref
+        tag: 보안 그룹
+        title: DB 접근을 웹 서버로만
+        type: mcq
+        quizzes:
+          - q: 웹 서버들만 DB의 3306 포트에 접속하게 하는 가장 좋은 방법은?
+            answer: DB 보안 그룹 인바운드 소스로 웹 서버의 보안 그룹을 지정한다
+            wrong:
+              - 웹 서버의 IP를 하나씩 인바운드에 적는다
+              - 인바운드 소스를 0.0.0.0/0으로 두고 DB 비밀번호로 막는다
+              - NACL에 웹 서버 IP를 적는다
+        explain: <p>보안 그룹 규칙의 소스로 <b>다른 보안 그룹</b>을 지정하면 그 그룹이 붙은 인스턴스만 허용된다. 웹 서버가 오토 스케일링으로 늘거나 IP가 바뀌어도 규칙을 고칠 필요가 없다.</p>
+      - id: aws-net-q-peer
+        tag: VPC 연결
+        title: 세 VPC 잇기
+        type: mcq
+        quizzes:
+          - q: VPC A–B, B–C가 각각 피어링돼 있다. A의 서버가 C의 서버에 접속하면?
+            answer: 안 된다. A–C를 따로 피어링해야 한다
+            wrong:
+              - 된다. B를 거쳐 자동으로 전달된다
+              - 된다. 세 VPC가 같은 리전이면
+              - 된다. A 라우팅에 C를 B 경유로 적으면
+        explain: <p>VPC 피어링은 <b>두 VPC 사이의 직접 연결</b>일 뿐이고, B를 지나 C로 가는 경로를 만들 수 없다(전이 불가). VPC가 많아지면 모두 서로 잇는 대신 <b>Transit Gateway</b> 같은 허브를 쓴다.</p>
+      - id: aws-net-q-endpoint
+        tag: VPC 엔드포인트
+        title: NAT 없이 S3 쓰기
+        type: mcq
+        quizzes:
+          - q: 프라이빗 서브넷의 서버가 NAT 게이트웨이를 거치지 않고, 추가 요금 없이 S3에 접근하게 하려면?
+            answer: S3 게이트웨이 VPC 엔드포인트
+            wrong:
+              - S3 인터페이스 VPC 엔드포인트
+              - 서버에 퍼블릭 IP를 붙인다
+              - S3 버킷과 VPC를 피어링한다
+        explain: <p><b>게이트웨이 엔드포인트</b>는 S3와 DynamoDB에만 있고 추가 요금이 없다. 라우팅 테이블에 경로가 추가되어 트래픽이 AWS 내부로 간다. <b>인터페이스 엔드포인트</b>(PrivateLink)는 대부분의 서비스를 지원하지만 시간·데이터 요금이 있다. S3와 대량으로 주고받으면 NAT 처리 요금이 크게 줄어든다.</p>
+      - id: aws-net-q-apex
+        tag: Route 53
+        title: 루트 도메인 연결
+        type: mcq
+        quizzes:
+          - q: example.com(서브도메인 없는 루트 도메인)을 CloudFront 배포로 연결하려면 Route 53에서 무엇을 만들까?
+            answer: 별칭(Alias) A 레코드
+            wrong:
+              - CNAME 레코드
+              - MX 레코드
+              - TXT 레코드
+        explain: <p>DNS 규칙상 <b>루트 도메인(zone apex)에는 CNAME을 만들 수 없다</b>. Route 53의 <b>별칭 레코드</b>는 A 레코드처럼 동작하면서 CloudFront, ALB, S3 웹사이트 같은 AWS 리소스를 가리킬 수 있고, AWS 리소스로 가는 별칭 조회는 요금도 받지 않는다. www 같은 서브도메인은 CNAME도 된다.</p>
+      - id: aws-net-q-lb
+        tag: 로드 밸런서
+        title: 로드 밸런서 고르기
+        type: mcq
+        quizzes:
+          - q: /api는 API 서버로, /images는 이미지 서버로 경로에 따라 나눠 보내고 싶다.
+            answer: Application Load Balancer
+            wrong:
+              - Network Load Balancer
+              - Gateway Load Balancer
+              - Route 53 가중치 레코드
+          - q: TCP로 통신하는 게임 서버 앞에, 고정 IP가 필요한 로드 밸런서를 두고 싶다.
+            answer: Network Load Balancer
+            wrong:
+              - Application Load Balancer
+              - Gateway Load Balancer
+              - CloudFront
+        explain: <p><b>ALB</b>는 7계층(HTTP·HTTPS)이라 경로, 호스트, 헤더를 보고 나눠 보낸다. <b>NLB</b>는 4계층(TCP·UDP·TLS)이라 내용은 보지 않고 매우 빠르며, AZ마다 <b>고정 IP(탄력적 IP)</b>를 줄 수 있다. Gateway LB는 방화벽 같은 네트워크 장비를 끼워 넣을 때 쓴다.</p>

@@ -61,7 +61,7 @@
 | 성능 최적화 | ETag와 `If-None-Match`·304, Last-Modified의 한계, Brotli·gzip, 코드 스플리팅과 `React.lazy`, 트리 셰이킹(lodash vs lodash-es), `loading="lazy"`, `fetchpriority`, 이미지 포맷·srcset, `font-display`, 광고 자리 잡기(CLS), 목록 가상화, `content-visibility`, 긴 작업 50ms, INP, memo 남용 | 17 |
 | 웹 · 성능 · 보안 | 상황별 상태 코드, 멱등성, `Cache-Control` 고르기, LCP·INP·CLS를 나쁘게 만드는 코드, `innerHTML`과 XSS, 쿠키 속성(HttpOnly·SameSite·Secure) | 16 |
 
-용어 뜻 맞히기 대신 **코드나 상황을 보고 결과·해결책을 고르는 문제**로 만들었고, 오답 보기는 실제로 자주 하는 착각으로 채웠어요. 정답은 손으로 쓰지 않고 실제로 돌려서 확인했어요: JS는 Node, React는 React 19를 jsdom에서, 브라우저 동작은 실제 Chrome에서(ETag·304, lazy 이미지 포함), 번들 크기는 esbuild로, Next.js는 Next 16 공식 문서와 실제 빌드로(`tools/frontend/verify/`).
+용어 뜻 맞히기 대신 **코드나 상황을 보고 결과·해결책을 고르는 문제**로 만들었고, 오답 보기는 실제로 자주 하는 착각으로 채웠어요. 정답은 손으로 쓰지 않고 실제로 돌려서 확인했어요: JS는 Node, React는 React 19를 jsdom에서, 브라우저 동작은 실제 Chrome에서(ETag·304, lazy 이미지 포함), 번들 크기는 esbuild로, Next.js는 Next 16 공식 문서와 실제 빌드로(`tools/verify/`).
 
 <br clear="right">
 
@@ -192,7 +192,7 @@ React 없이 **TypeScript로 만든 SPA**입니다. 가상 DOM, 스토어, 라�
 | 상태 | Redux 방식 `createStore` + `createStorage`(localStorage), `withBatch`로 같은 틱의 렌더를 한 번으로 |
 | 라우팅 | History API `Router`. `/course/frontend`, `/lesson/db-1`처럼 코스와 레슨마다 주소가 있고, GitHub Pages에서는 `404.html`로 새로고침을 받아요 |
 | 퀴즈 로직 | 문제 생성, 답 조각과 가짜 조각 만들기, 채점, 레슨 나누기, 스트릭·XP를 `domain/`의 순수 함수로 분리하고 vitest로 테스트 (코드 문제 전부가 조각만으로 풀리는지도 검사). **문제 품질 테스트**: 모든 문제를 여러 번 만들어 보며 답 노출(질문·제목), 보기 길이·중복, 앞 문제에 기대는 질문, 조각 수를 검사 |
-| 정답 검증 | 정답을 손으로 쓰지 않아요. JS 출력값은 Node로 실행하고, React 동작은 React 19를 jsdom에서, 브라우저 동작은 Playwright로 실제 Chrome에서, Next.js는 그 버전의 공식 문서와 실제 `next build`로 확인해요 (`tools/frontend/verify/`) |
+| 정답 검증 | 정답을 손으로 쓰지 않아요. JS 출력값은 Node로 실행하고, React 동작은 React 19를 jsdom에서, 브라우저 동작은 Playwright로 실제 Chrome에서, Next.js는 그 버전의 공식 문서와 실제 `next build`로 확인해요 (`tools/verify/`) |
 | 캐릭터 | 러버덕 덕구는 **Rive**(`public/rive/duck.riv`)로 움직여요. idle·happy·sad·cheer 네 동작과 상태 머신(happy·sad 트리거, cheer 불)을 [rive-mcp-server](https://github.com/ODU33104/rive-mcp)로 Rive 에디터 없이 만들었어요(`pnpm build:riv`). 런타임은 첫 화면 뒤에 따로 받고, 불러오기 전이나 실패하면 같은 모양의 SVG + CSS 애니메이션이 대신 보여요 |
 | 효과 | 폭죽은 캔버스 파티클, 하트·글자는 Web Animations API, 효과음은 음원 파일 없이 Web Audio로 합성. 움직임 줄이기 설정을 켜면 효과를 끕니다 |
 | PWA | manifest, service worker(페이지는 네트워크 우선, 나머지는 캐시 우선)로 오프라인 지원. `beforeinstallprompt`를 받아 두었다가 설치 버튼에서 설치 창을 띄우고, 아이폰은 안내 시트로 대신해요 |
@@ -209,13 +209,11 @@ src/
   services/     레슨 시작·채점·완료 흐름, 효과음
   components/   캐릭터(SVG + Rive 연결), 레슨 지도, 문제, 해설 시트, 효과
   pages/        Intro · Courses(코스 고르기) · Course(레슨 지도) · Lesson · Result · NotFound
-  data/         courses.json(코스·유닛 목록), cards/<코스>.json (학습 노트에서 추출)
-public/         notes.html · notes-frontend.html · notes-aws.html(코스별 학습 노트), rive/duck.riv(캐릭터), manifest, service worker, 아이콘
-scripts/        카드 추출, 캐릭터 부위 그림(mascot-parts.mjs), Rive 파일 만들기, 아이콘 만들기
-tools/
-  notes_gen.py  코스 노트 HTML 생성기 (공통)
-  frontend/     프론트엔드 문제·출력값 코드, verify/(정답 검증 실험)
-  aws/          AWS 문제
+  data/         courses.json(코스·유닛 목록), cards/<코스>.json (content/에서 만든 결과물)
+public/         notes.html · notes-frontend.html · notes-aws.html(코스별 학습 노트, content/에서 만든 결과물), rive/duck.riv(캐릭터), manifest, service worker, 아이콘
+scripts/        문제 원본 → 카드·노트 만들기(build-content.mjs), 출력값 정답 확인(verify-answers.mjs), 캐릭터 부위 그림(mascot-parts.mjs), Rive 파일 만들기, 아이콘 만들기
+content/        문제 원본 (YAML). index.yaml(코스 순서), <코스>/course.yaml(코스 정보), <코스>/<유닛>.yaml(문제), _notes/(노트 공통 틀)
+tools/verify/   정답 검증 실험 (React·브라우저·번들·Next.js)
 docs/
   backlog/      코스별 보강할 것
   screenshots/  README 스크린샷
@@ -229,12 +227,13 @@ pnpm install
 pnpm dev        # 개발 서버
 pnpm test       # 단위 테스트
 pnpm build      # 타입 체크 + 빌드
-pnpm extract    # 학습 노트를 고친 뒤 코스별 카드 데이터 다시 뽑기
+pnpm content          # content/의 문제 원본으로 카드 데이터와 학습 노트 다시 만들기
+pnpm verify:answers   # JS 출력값 문제의 코드를 실제로 돌려 적힌 정답과 비교
 pnpm build:riv  # 캐릭터 duck.riv 다시 만들기 (공식 런타임으로 상태 머신까지 검증)
 ```
 
 문제를 만들거나 고칠 때의 원칙과 검토 순서는 `.claude/skills/quiz-quality/SKILL.md`에 있어요. `DUMP=frontend pnpm test dump`로 모든 문제를 텍스트로 뽑아 읽어 볼 수 있어요.
 
-카드 내용은 코스마다 학습 노트 한 곳(`public/notes.html`, `public/notes-frontend.html`, `public/notes-aws.html`)에서 관리해요. 프론트엔드·AWS 노트는 `tools/`의 파이썬 파일로 만들어요(`python3 tools/frontend/gen_fe.py`, `python3 tools/aws/gen_aws.py`). 노트를 고치고 `pnpm extract`를 실행하면 퀴즈에도 반영됩니다.
+문제 원본은 세 코스 모두 `content/<코스>/<유닛>.yaml` 한 형식이에요. 질문·정답·오답·힌트·해설을 모두 필드로 적고, `pnpm content`가 여기서 앱 카드(`src/data/cards/`)와 학습 노트(`public/notes*.html`)를 한 방향으로 만들어요. 만든 파일은 직접 고치지 않아요. `pnpm build`는 원본과 결과물이 어긋나면 실패해요.
 
-새 코스는 `src/data/courses.json`에 코스와 유닛을 적고, 같은 형식의 노트를 만든 뒤 `pnpm extract`로 뽑은 카드를 `src/domain/content.ts`에 이어 주면 돼요.
+새 코스는 `content/index.yaml`에 코스 id를 넣고, `content/<코스>/course.yaml`과 유닛 YAML을 쓴 뒤 `pnpm content`로 만든 카드를 `src/domain/content.ts`에 이어 주면 돼요.

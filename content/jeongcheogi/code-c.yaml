@@ -1,0 +1,208 @@
+id: code-c
+name: C 언어 함정
+color: "#58CC02"
+dark: "#58A700"
+part: PART 1 · 코드
+lede: 코드는 외우는 게 아니라 따라가는 겁니다. 변수 값을 종이에 표로 적으면서 한 줄씩 보세요.
+nav: C 함정
+blocks:
+  - items:
+      - id: c1
+        tag: C
+        title: a++ 와 ++a
+        type: answer
+        code: |-
+          int a = 5, b, c;
+          b = a++;
+          c = ++a;
+          printf("%d %d %d", a, b, c);
+        q: 출력은?
+        answer: 7 5 7
+        steps:
+          - "처음: a = 5"
+          - <code>b = a++;</code> → <b>먼저 b에 a를 넣고</b>(b = 5), 그다음 a를 1 올림(a = 6)
+          - <code>c = ++a;</code> → <b>먼저 a를 1 올리고</b>(a = 7), 그다음 c에 넣음(c = 7)
+          - "출력: a=7, b=5, c=7"
+        why: "<b>기억할 것</b>: ++가 <mark>뒤에 있으면 나중에</mark> 올리고, <mark>앞에 있으면 먼저</mark> 올린다. 기호 위치 = 올리는 시점."
+        hints:
+          - "처음: a = 5"
+          - "<b>기억할 것</b>: ++가 <mark>뒤에 있으면 나중에</mark> 올리고, <mark>앞에 있으면 먼저</mark> 올린다. 기호 위치 = 올리는 시점."
+      - id: c2
+        tag: C
+        title: "*(p+2) 와 *p+2"
+        type: answer
+        code: |-
+          int arr[] = {10, 20, 30, 40};
+          int *p = arr;
+          printf("%d ", *(p+2));
+          printf("%d", *p+2);
+        q: 출력은?
+        answer: 30 12
+        steps:
+          - <code>p = arr</code> → p는 배열 맨 앞(10이 있는 칸)을 가리킴
+          - "<code>*(p+2)</code> → 괄호 먼저: 주소를 <b>2칸 뒤로 이동</b> → 30이 있는 칸 → 그 값 = <b>30</b>"
+          - "<code>*p+2</code> → <code>*</code>가 먼저: 지금 칸의 값 10을 꺼냄 → 10 + 2 = <b>12</b>"
+        why: "<b>기억할 것</b>: <mark>괄호 안에 +가 있으면 칸 이동</mark>, 괄호가 없으면 값에 더하기. <code>*(p+i)</code>는 <code>arr[i]</code>와 같다."
+        hints:
+          - <code>p = arr</code> → p는 배열 맨 앞(10이 있는 칸)을 가리킴
+          - "<b>기억할 것</b>: <mark>괄호 안에 +가 있으면 칸 이동</mark>, 괄호가 없으면 값에 더하기. <code>*(p+i)</code>는 <code>arr[i]</code>와 같다."
+      - id: c3
+        tag: C
+        title: 이중 포인터
+        type: answer
+        code: |-
+          int a = 10;
+          int *p = &a;
+          int **pp = &p;
+          **pp = 20;
+          printf("%d", a);
+        q: 출력은?
+        answer: "20"
+        steps:
+          - <code>p = &amp;a</code> → p에는 <b>a의 주소</b>가 들어 있음 (p → a)
+          - <code>pp = &amp;p</code> → pp에는 <b>p의 주소</b>가 들어 있음 (pp → p → a)
+          - <code>*pp</code> = p, <code>**pp</code> = p가 가리키는 것 = <b>a</b>
+          - <code>**pp = 20</code> → 결국 <b>a = 20</b>
+        why: '<b>기억할 것</b>: <code>&amp;</code>는 "주소 줘", <code>*</code>는 "그 주소로 한 번 가". <mark>*가 두 개면 두 번 따라간다</mark>. 화살표를 그려서 풀면 안 틀린다.'
+        hints:
+          - <code>p = &amp;a</code> → p에는 <b>a의 주소</b>가 들어 있음 (p → a)
+          - '<b>기억할 것</b>: <code>&amp;</code>는 "주소 줘", <code>*</code>는 "그 주소로 한 번 가". <mark>*가 두 개면 두 번 따라간다</mark>. 화살표를 그려서 풀면 안 틀린다.'
+      - id: c4
+        tag: C
+        title: 2차원 배열 포인터
+        type: answer
+        code: |-
+          int a[2][3] = {{1,2,3},{4,5,6}};
+          printf("%d", *(*(a+1)+2));
+        q: 출력은?
+        answer: "6"
+        steps:
+          - "배열 모양: 0행 = {1, 2, 3}, 1행 = {4, 5, 6}"
+          - <code>a+1</code> → <b>1행</b>으로 이동
+          - <code>*(a+1)</code> → 1행의 맨 앞 칸 (4가 있는 곳)
+          - <code>*(a+1)+2</code> → 그 행에서 <b>2칸 오른쪽</b> (6이 있는 곳)
+          - 바깥 <code>*</code> → 값 꺼내기 = <b>6</b>
+        why: "<b>기억할 것</b>: <code>*(*(a+i)+j)</code> = <mark>a[i][j]</mark>. 안쪽 숫자는 행(몇 번째 줄), 바깥 숫자는 열(몇 번째 칸)."
+        hints:
+          - "<b>기억할 것</b>: <code>*(*(a+i)+j)</code> = <mark>a[i][j]</mark>. 안쪽 숫자는 행(몇 번째 줄), 바깥 숫자는 열(몇 번째 칸)."
+      - id: c5
+        tag: C
+        title: sizeof 와 strlen
+        type: answer
+        code: |-
+          char s[] = "hello";
+          printf("%d %d", sizeof(s), strlen(s));
+        q: 출력은?
+        answer: 6 5
+        steps:
+          - <code>"hello"</code>는 실제로 메모리에 <b>h e l l o \0</b> 로 저장됨. 끝의 <code>\0</code>은 "문자열 끝" 표시
+          - <code>sizeof(s)</code> → 배열이 차지하는 칸 수. \0까지 셈 → <b>6</b>
+          - <code>strlen(s)</code> → 글자 수. \0 앞까지만 셈 → <b>5</b>
+        why: "<b>기억할 것</b>: <mark>sizeof = 칸 수(끝 표시 포함), strlen = 글자 수</mark>. 차이는 항상 1."
+        hints:
+          - <code>"hello"</code>는 실제로 메모리에 <b>h e l l o \0</b> 로 저장됨. 끝의 <code>\0</code>은 "문자열 끝" 표시
+          - "<b>기억할 것</b>: <mark>sizeof = 칸 수(끝 표시 포함), strlen = 글자 수</mark>. 차이는 항상 1."
+      - id: c6
+        tag: C
+        title: static 지역변수
+        type: answer
+        code: |-
+          int f() {
+            static int n = 0;
+            n++;
+            return n;
+          }
+          // main
+          for (int i = 0; i < 3; i++)
+            printf("%d", f());
+        q: 출력은?
+        answer: "123"
+        steps:
+          - "1번째 호출: n은 처음 한 번만 0으로 시작 → n++ → <b>1</b> 반환"
+          - "2번째 호출: <code>static</code>이라 n = 1이 <b>그대로 남아 있음</b> → n++ → <b>2</b>"
+          - "3번째 호출: n = 2 → n++ → <b>3</b>"
+        why: "<b>기억할 것</b>: 보통 지역변수는 함수가 끝나면 사라져서 매번 새로 시작한다(그러면 111). <mark>static은 함수가 끝나도 값을 기억</mark>하고, <code>= 0</code> 초기화는 맨 처음 한 번만 한다."
+        hints:
+          - "1번째 호출: n은 처음 한 번만 0으로 시작 → n++ → <b>1</b> 반환"
+          - "<b>기억할 것</b>: 보통 지역변수는 함수가 끝나면 사라져서 매번 새로 시작한다(그러면 111). <mark>static은 함수가 끝나도 값을 기억</mark>하고, <code>= 0</code> 초기화는 맨 처음 한 번만 한다."
+      - id: c7
+        tag: C
+        title: switch 에 break 없음
+        type: answer
+        code: |-
+          int n = 2;
+          switch (n) {
+            case 1: printf("A");
+            case 2: printf("B");
+            case 3: printf("C"); break;
+            default: printf("D");
+          }
+        q: 출력은?
+        answer: BC
+        steps:
+          - n = 2 → <code>case 2</code>로 들어감 → "B" 출력
+          - case 2에 <code>break</code>가 없음 → 멈추지 않고 <b>바로 아래 case 3도 실행</b> → "C" 출력
+          - case 3에 <code>break</code> 있음 → 여기서 switch 끝. default는 실행 안 됨
+        why: "<b>기억할 것</b>: switch는 맞는 case에서 <mark>시작만</mark> 한다. 끝나는 건 break를 만났을 때뿐. break가 없으면 아래로 줄줄이 흘러내린다(fall-through)."
+        hints:
+          - n = 2 → <code>case 2</code>로 들어감 → "B" 출력
+          - "<b>기억할 것</b>: switch는 맞는 case에서 <mark>시작만</mark> 한다. 끝나는 건 break를 만났을 때뿐. break가 없으면 아래로 줄줄이 흘러내린다(fall-through)."
+      - id: c8
+        tag: C
+        title: 음수 나눗셈·나머지
+        type: answer
+        code: |-
+          printf("%d %d ", 7/2, 7%3);
+          printf("%d %d", -7/2, -7%3);
+        q: 출력은?
+        answer: 3 1 -3 -1
+        steps:
+          - <code>7/2</code> = 3.5 → 정수끼리 나누면 소수점 버림 → <b>3</b>
+          - <code>7%3</code> = 7을 3으로 나눈 나머지 → 7 = 3×2 + <b>1</b>
+          - <code>-7/2</code> = -3.5 → C는 <b>0 쪽으로 버림</b> → <b>-3</b> (-4 아님)
+          - <code>-7%3</code> → -7 = 3×(-2) + <b>-1</b>. 나머지 부호는 <b>앞 숫자(-7)를 따라감</b>
+        why: "<b>기억할 것</b>: <mark>C·Java는 소수점을 그냥 잘라낸다</mark>. Python은 더 작은 쪽으로 내려서 -7//2 = -4가 된다. 언어마다 다르니 문제의 언어부터 확인."
+        hints:
+          - <code>7/2</code> = 3.5 → 정수끼리 나누면 소수점 버림 → <b>3</b>
+          - "<b>기억할 것</b>: <mark>C·Java는 소수점을 그냥 잘라낸다</mark>. Python은 더 작은 쪽으로 내려서 -7//2 = -4가 된다. 언어마다 다르니 문제의 언어부터 확인."
+      - id: c9
+        tag: C
+        title: 비트 연산
+        type: answer
+        code: |-
+          printf("%d %d %d ", 5&3, 5|3, 5^3);
+          printf("%d %d", 1<<3, ~5);
+        q: 출력은?
+        answer: 1 7 6 8 -6
+        steps:
+          - "먼저 2진수로 바꿈: 5 = <b>101</b>, 3 = <b>011</b>"
+          - "<code>&amp;</code> (AND, 둘 다 1이면 1): 101 &amp; 011 = 001 = <b>1</b>"
+          - "<code>|</code> (OR, 하나라도 1이면 1): 101 | 011 = 111 = <b>7</b>"
+          - "<code>^</code> (XOR, 서로 다르면 1): 101 ^ 011 = 110 = <b>6</b>"
+          - "<code>1&lt;&lt;3</code> (왼쪽으로 3칸 밀기 = ×2를 3번): 1 → 1000 = <b>8</b>"
+          - "<code>~5</code> (모든 비트 뒤집기): 공식 <b>-(x+1)</b> → -(5+1) = <b>-6</b>"
+        why: "<b>기억할 것</b>: <mark>&lt;&lt; n은 ×2ⁿ, &gt;&gt; n은 ÷2ⁿ, ~x는 -(x+1)</mark>. 나머지는 2진수로 세로로 맞춰 놓고 한 자리씩 비교."
+        hints:
+          - "먼저 2진수로 바꿈: 5 = <b>101</b>, 3 = <b>011</b>"
+          - "<b>기억할 것</b>: <mark>&lt;&lt; n은 ×2ⁿ, &gt;&gt; n은 ÷2ⁿ, ~x는 -(x+1)</mark>. 나머지는 2진수로 세로로 맞춰 놓고 한 자리씩 비교."
+      - id: c10
+        tag: C
+        title: 구조체 포인터 -&gt;
+        type: answer
+        code: |-
+          struct P { int x; int y; };
+          struct P s = {3, 4};
+          struct P *p = &s;
+          p->x = p->x + p->y;
+          printf("%d", s.x);
+        q: 출력은?
+        answer: "7"
+        steps:
+          - "s = {x: 3, y: 4}, p는 s를 가리킴"
+          - <code>p-&gt;x</code>는 "p가 가리키는 구조체의 x" = s.x = 3
+          - <code>p-&gt;x = p-&gt;x + p-&gt;y</code> → s.x = 3 + 4 = <b>7</b>
+          - p를 통해 바꿨지만 결국 <b>s 자체</b>가 바뀐 것 → s.x = 7
+        why: "<b>기억할 것</b>: 구조체 <b>변수</b>는 점(<code>s.x</code>), 구조체 <b>포인터</b>는 화살표(<code>p-&gt;x</code>). <mark>p-&gt;x = (*p).x</mark>."
+        hints:
+          - "s = {x: 3, y: 4}, p는 s를 가리킴"
+          - "<b>기억할 것</b>: 구조체 <b>변수</b>는 점(<code>s.x</code>), 구조체 <b>포인터</b>는 화살표(<code>p-&gt;x</code>). <mark>p-&gt;x = (*p).x</mark>."

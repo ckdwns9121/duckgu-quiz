@@ -123,7 +123,6 @@ footer{margin-top:48px;color:var(--muted);font-size:13px}
     <a href="#swe">소프트웨어 공학</a>
   </nav>
 
-  <!-- ================= C ================= -->
   <section id="code-c">
     <div class="sec-head">
       <span class="sub">PART 1 · 코드</span>
@@ -138,16 +137,8 @@ b = a++;
 c = ++a;
 printf("%d %d %d", a, b, c);</pre>
         <p class="q">출력은?</p>
-        <div class="ans"><span class="a">7 5 7</span>
-<ol class="steps">
-<li>처음: a = 5</li>
-<li><code>b = a++;</code> → <b>먼저 b에 a를 넣고</b>(b = 5), 그다음 a를 1 올림(a = 6)</li>
-<li><code>c = ++a;</code> → <b>먼저 a를 1 올리고</b>(a = 7), 그다음 c에 넣음(c = 7)</li>
-<li>출력: a=7, b=5, c=7</li>
-</ol>
-<p class="why"><b>기억할 것</b>: ++가 <mark>뒤에 있으면 나중에</mark> 올리고, <mark>앞에 있으면 먼저</mark> 올린다. 기호 위치 = 올리는 시점.</p></div>
+        <div class="ans"><span class="a">7 5 7</span><ol class="steps"><li>처음: a = 5</li><li><code>b = a++;</code> → <b>먼저 b에 a를 넣고</b>(b = 5), 그다음 a를 1 올림(a = 6)</li><li><code>c = ++a;</code> → <b>먼저 a를 1 올리고</b>(a = 7), 그다음 c에 넣음(c = 7)</li><li>출력: a=7, b=5, c=7</li></ol><p class="why"><b>기억할 것</b>: ++가 <mark>뒤에 있으면 나중에</mark> 올리고, <mark>앞에 있으면 먼저</mark> 올린다. 기호 위치 = 올리는 시점.</p></div>
       </article>
-
       <article class="item" data-id="c2">
         <div class="item-h"><span class="lang">C</span><h3>*(p+2) 와 *p+2</h3><label class="chk"><input type="checkbox" id="k-c2">외움</label></div>
 <pre>int arr[] = {10, 20, 30, 40};
@@ -155,15 +146,8 @@ int *p = arr;
 printf("%d ", *(p+2));
 printf("%d", *p+2);</pre>
         <p class="q">출력은?</p>
-        <div class="ans"><span class="a">30 12</span>
-<ol class="steps">
-<li><code>p = arr</code> → p는 배열 맨 앞(10이 있는 칸)을 가리킴</li>
-<li><code>*(p+2)</code> → 괄호 먼저: 주소를 <b>2칸 뒤로 이동</b> → 30이 있는 칸 → 그 값 = <b>30</b></li>
-<li><code>*p+2</code> → <code>*</code>가 먼저: 지금 칸의 값 10을 꺼냄 → 10 + 2 = <b>12</b></li>
-</ol>
-<p class="why"><b>기억할 것</b>: <mark>괄호 안에 +가 있으면 칸 이동</mark>, 괄호가 없으면 값에 더하기. <code>*(p+i)</code>는 <code>arr[i]</code>와 같다.</p></div>
+        <div class="ans"><span class="a">30 12</span><ol class="steps"><li><code>p = arr</code> → p는 배열 맨 앞(10이 있는 칸)을 가리킴</li><li><code>*(p+2)</code> → 괄호 먼저: 주소를 <b>2칸 뒤로 이동</b> → 30이 있는 칸 → 그 값 = <b>30</b></li><li><code>*p+2</code> → <code>*</code>가 먼저: 지금 칸의 값 10을 꺼냄 → 10 + 2 = <b>12</b></li></ol><p class="why"><b>기억할 것</b>: <mark>괄호 안에 +가 있으면 칸 이동</mark>, 괄호가 없으면 값에 더하기. <code>*(p+i)</code>는 <code>arr[i]</code>와 같다.</p></div>
       </article>
-
       <article class="item" data-id="c3">
         <div class="item-h"><span class="lang">C</span><h3>이중 포인터</h3><label class="chk"><input type="checkbox" id="k-c3">외움</label></div>
 <pre>int a = 10;
@@ -172,46 +156,22 @@ int **pp = &amp;p;
 **pp = 20;
 printf("%d", a);</pre>
         <p class="q">출력은?</p>
-        <div class="ans"><span class="a">20</span>
-<ol class="steps">
-<li><code>p = &amp;a</code> → p에는 <b>a의 주소</b>가 들어 있음 (p → a)</li>
-<li><code>pp = &amp;p</code> → pp에는 <b>p의 주소</b>가 들어 있음 (pp → p → a)</li>
-<li><code>*pp</code> = p, <code>**pp</code> = p가 가리키는 것 = <b>a</b></li>
-<li><code>**pp = 20</code> → 결국 <b>a = 20</b></li>
-</ol>
-<p class="why"><b>기억할 것</b>: <code>&amp;</code>는 "주소 줘", <code>*</code>는 "그 주소로 한 번 가". <mark>*가 두 개면 두 번 따라간다</mark>. 화살표를 그려서 풀면 안 틀린다.</p></div>
+        <div class="ans"><span class="a">20</span><ol class="steps"><li><code>p = &amp;a</code> → p에는 <b>a의 주소</b>가 들어 있음 (p → a)</li><li><code>pp = &amp;p</code> → pp에는 <b>p의 주소</b>가 들어 있음 (pp → p → a)</li><li><code>*pp</code> = p, <code>**pp</code> = p가 가리키는 것 = <b>a</b></li><li><code>**pp = 20</code> → 결국 <b>a = 20</b></li></ol><p class="why"><b>기억할 것</b>: <code>&amp;</code>는 "주소 줘", <code>*</code>는 "그 주소로 한 번 가". <mark>*가 두 개면 두 번 따라간다</mark>. 화살표를 그려서 풀면 안 틀린다.</p></div>
       </article>
-
       <article class="item" data-id="c4">
         <div class="item-h"><span class="lang">C</span><h3>2차원 배열 포인터</h3><label class="chk"><input type="checkbox" id="k-c4">외움</label></div>
 <pre>int a[2][3] = {{1,2,3},{4,5,6}};
 printf("%d", *(*(a+1)+2));</pre>
         <p class="q">출력은?</p>
-        <div class="ans"><span class="a">6</span>
-<ol class="steps">
-<li>배열 모양: 0행 = {1, 2, 3}, 1행 = {4, 5, 6}</li>
-<li><code>a+1</code> → <b>1행</b>으로 이동</li>
-<li><code>*(a+1)</code> → 1행의 맨 앞 칸 (4가 있는 곳)</li>
-<li><code>*(a+1)+2</code> → 그 행에서 <b>2칸 오른쪽</b> (6이 있는 곳)</li>
-<li>바깥 <code>*</code> → 값 꺼내기 = <b>6</b></li>
-</ol>
-<p class="why"><b>기억할 것</b>: <code>*(*(a+i)+j)</code> = <mark>a[i][j]</mark>. 안쪽 숫자는 행(몇 번째 줄), 바깥 숫자는 열(몇 번째 칸).</p></div>
+        <div class="ans"><span class="a">6</span><ol class="steps"><li>배열 모양: 0행 = {1, 2, 3}, 1행 = {4, 5, 6}</li><li><code>a+1</code> → <b>1행</b>으로 이동</li><li><code>*(a+1)</code> → 1행의 맨 앞 칸 (4가 있는 곳)</li><li><code>*(a+1)+2</code> → 그 행에서 <b>2칸 오른쪽</b> (6이 있는 곳)</li><li>바깥 <code>*</code> → 값 꺼내기 = <b>6</b></li></ol><p class="why"><b>기억할 것</b>: <code>*(*(a+i)+j)</code> = <mark>a[i][j]</mark>. 안쪽 숫자는 행(몇 번째 줄), 바깥 숫자는 열(몇 번째 칸).</p></div>
       </article>
-
       <article class="item" data-id="c5">
         <div class="item-h"><span class="lang">C</span><h3>sizeof 와 strlen</h3><label class="chk"><input type="checkbox" id="k-c5">외움</label></div>
 <pre>char s[] = "hello";
 printf("%d %d", sizeof(s), strlen(s));</pre>
         <p class="q">출력은?</p>
-        <div class="ans"><span class="a">6 5</span>
-<ol class="steps">
-<li><code>"hello"</code>는 실제로 메모리에 <b>h e l l o \0</b> 로 저장됨. 끝의 <code>\0</code>은 "문자열 끝" 표시</li>
-<li><code>sizeof(s)</code> → 배열이 차지하는 칸 수. \0까지 셈 → <b>6</b></li>
-<li><code>strlen(s)</code> → 글자 수. \0 앞까지만 셈 → <b>5</b></li>
-</ol>
-<p class="why"><b>기억할 것</b>: <mark>sizeof = 칸 수(끝 표시 포함), strlen = 글자 수</mark>. 차이는 항상 1.</p></div>
+        <div class="ans"><span class="a">6 5</span><ol class="steps"><li><code>"hello"</code>는 실제로 메모리에 <b>h e l l o \0</b> 로 저장됨. 끝의 <code>\0</code>은 "문자열 끝" 표시</li><li><code>sizeof(s)</code> → 배열이 차지하는 칸 수. \0까지 셈 → <b>6</b></li><li><code>strlen(s)</code> → 글자 수. \0 앞까지만 셈 → <b>5</b></li></ol><p class="why"><b>기억할 것</b>: <mark>sizeof = 칸 수(끝 표시 포함), strlen = 글자 수</mark>. 차이는 항상 1.</p></div>
       </article>
-
       <article class="item" data-id="c6">
         <div class="item-h"><span class="lang">C</span><h3>static 지역변수</h3><label class="chk"><input type="checkbox" id="k-c6">외움</label></div>
 <pre>int f() {
@@ -223,15 +183,8 @@ printf("%d %d", sizeof(s), strlen(s));</pre>
 for (int i = 0; i &lt; 3; i++)
   printf("%d", f());</pre>
         <p class="q">출력은?</p>
-        <div class="ans"><span class="a">123</span>
-<ol class="steps">
-<li>1번째 호출: n은 처음 한 번만 0으로 시작 → n++ → <b>1</b> 반환</li>
-<li>2번째 호출: <code>static</code>이라 n = 1이 <b>그대로 남아 있음</b> → n++ → <b>2</b></li>
-<li>3번째 호출: n = 2 → n++ → <b>3</b></li>
-</ol>
-<p class="why"><b>기억할 것</b>: 보통 지역변수는 함수가 끝나면 사라져서 매번 새로 시작한다(그러면 111). <mark>static은 함수가 끝나도 값을 기억</mark>하고, <code>= 0</code> 초기화는 맨 처음 한 번만 한다.</p></div>
+        <div class="ans"><span class="a">123</span><ol class="steps"><li>1번째 호출: n은 처음 한 번만 0으로 시작 → n++ → <b>1</b> 반환</li><li>2번째 호출: <code>static</code>이라 n = 1이 <b>그대로 남아 있음</b> → n++ → <b>2</b></li><li>3번째 호출: n = 2 → n++ → <b>3</b></li></ol><p class="why"><b>기억할 것</b>: 보통 지역변수는 함수가 끝나면 사라져서 매번 새로 시작한다(그러면 111). <mark>static은 함수가 끝나도 값을 기억</mark>하고, <code>= 0</code> 초기화는 맨 처음 한 번만 한다.</p></div>
       </article>
-
       <article class="item" data-id="c7">
         <div class="item-h"><span class="lang">C</span><h3>switch 에 break 없음</h3><label class="chk"><input type="checkbox" id="k-c7">외움</label></div>
 <pre>int n = 2;
@@ -242,47 +195,22 @@ switch (n) {
   default: printf("D");
 }</pre>
         <p class="q">출력은?</p>
-        <div class="ans"><span class="a">BC</span>
-<ol class="steps">
-<li>n = 2 → <code>case 2</code>로 들어감 → "B" 출력</li>
-<li>case 2에 <code>break</code>가 없음 → 멈추지 않고 <b>바로 아래 case 3도 실행</b> → "C" 출력</li>
-<li>case 3에 <code>break</code> 있음 → 여기서 switch 끝. default는 실행 안 됨</li>
-</ol>
-<p class="why"><b>기억할 것</b>: switch는 맞는 case에서 <mark>시작만</mark> 한다. 끝나는 건 break를 만났을 때뿐. break가 없으면 아래로 줄줄이 흘러내린다(fall-through).</p></div>
+        <div class="ans"><span class="a">BC</span><ol class="steps"><li>n = 2 → <code>case 2</code>로 들어감 → "B" 출력</li><li>case 2에 <code>break</code>가 없음 → 멈추지 않고 <b>바로 아래 case 3도 실행</b> → "C" 출력</li><li>case 3에 <code>break</code> 있음 → 여기서 switch 끝. default는 실행 안 됨</li></ol><p class="why"><b>기억할 것</b>: switch는 맞는 case에서 <mark>시작만</mark> 한다. 끝나는 건 break를 만났을 때뿐. break가 없으면 아래로 줄줄이 흘러내린다(fall-through).</p></div>
       </article>
-
       <article class="item" data-id="c8">
         <div class="item-h"><span class="lang">C</span><h3>음수 나눗셈·나머지</h3><label class="chk"><input type="checkbox" id="k-c8">외움</label></div>
 <pre>printf("%d %d ", 7/2, 7%3);
 printf("%d %d", -7/2, -7%3);</pre>
         <p class="q">출력은?</p>
-        <div class="ans"><span class="a">3 1 -3 -1</span>
-<ol class="steps">
-<li><code>7/2</code> = 3.5 → 정수끼리 나누면 소수점 버림 → <b>3</b></li>
-<li><code>7%3</code> = 7을 3으로 나눈 나머지 → 7 = 3×2 + <b>1</b></li>
-<li><code>-7/2</code> = -3.5 → C는 <b>0 쪽으로 버림</b> → <b>-3</b> (-4 아님)</li>
-<li><code>-7%3</code> → -7 = 3×(-2) + <b>-1</b>. 나머지 부호는 <b>앞 숫자(-7)를 따라감</b></li>
-</ol>
-<p class="why"><b>기억할 것</b>: <mark>C·Java는 소수점을 그냥 잘라낸다</mark>. Python은 더 작은 쪽으로 내려서 -7//2 = -4가 된다. 언어마다 다르니 문제의 언어부터 확인.</p></div>
+        <div class="ans"><span class="a">3 1 -3 -1</span><ol class="steps"><li><code>7/2</code> = 3.5 → 정수끼리 나누면 소수점 버림 → <b>3</b></li><li><code>7%3</code> = 7을 3으로 나눈 나머지 → 7 = 3×2 + <b>1</b></li><li><code>-7/2</code> = -3.5 → C는 <b>0 쪽으로 버림</b> → <b>-3</b> (-4 아님)</li><li><code>-7%3</code> → -7 = 3×(-2) + <b>-1</b>. 나머지 부호는 <b>앞 숫자(-7)를 따라감</b></li></ol><p class="why"><b>기억할 것</b>: <mark>C·Java는 소수점을 그냥 잘라낸다</mark>. Python은 더 작은 쪽으로 내려서 -7//2 = -4가 된다. 언어마다 다르니 문제의 언어부터 확인.</p></div>
       </article>
-
       <article class="item" data-id="c9">
         <div class="item-h"><span class="lang">C</span><h3>비트 연산</h3><label class="chk"><input type="checkbox" id="k-c9">외움</label></div>
 <pre>printf("%d %d %d ", 5&amp;3, 5|3, 5^3);
 printf("%d %d", 1&lt;&lt;3, ~5);</pre>
         <p class="q">출력은?</p>
-        <div class="ans"><span class="a">1 7 6 8 -6</span>
-<ol class="steps">
-<li>먼저 2진수로 바꿈: 5 = <b>101</b>, 3 = <b>011</b></li>
-<li><code>&amp;</code> (AND, 둘 다 1이면 1): 101 &amp; 011 = 001 = <b>1</b></li>
-<li><code>|</code> (OR, 하나라도 1이면 1): 101 | 011 = 111 = <b>7</b></li>
-<li><code>^</code> (XOR, 서로 다르면 1): 101 ^ 011 = 110 = <b>6</b></li>
-<li><code>1&lt;&lt;3</code> (왼쪽으로 3칸 밀기 = ×2를 3번): 1 → 1000 = <b>8</b></li>
-<li><code>~5</code> (모든 비트 뒤집기): 공식 <b>-(x+1)</b> → -(5+1) = <b>-6</b></li>
-</ol>
-<p class="why"><b>기억할 것</b>: <mark>&lt;&lt; n은 ×2ⁿ, &gt;&gt; n은 ÷2ⁿ, ~x는 -(x+1)</mark>. 나머지는 2진수로 세로로 맞춰 놓고 한 자리씩 비교.</p></div>
+        <div class="ans"><span class="a">1 7 6 8 -6</span><ol class="steps"><li>먼저 2진수로 바꿈: 5 = <b>101</b>, 3 = <b>011</b></li><li><code>&amp;</code> (AND, 둘 다 1이면 1): 101 &amp; 011 = 001 = <b>1</b></li><li><code>|</code> (OR, 하나라도 1이면 1): 101 | 011 = 111 = <b>7</b></li><li><code>^</code> (XOR, 서로 다르면 1): 101 ^ 011 = 110 = <b>6</b></li><li><code>1&lt;&lt;3</code> (왼쪽으로 3칸 밀기 = ×2를 3번): 1 → 1000 = <b>8</b></li><li><code>~5</code> (모든 비트 뒤집기): 공식 <b>-(x+1)</b> → -(5+1) = <b>-6</b></li></ol><p class="why"><b>기억할 것</b>: <mark>&lt;&lt; n은 ×2ⁿ, &gt;&gt; n은 ÷2ⁿ, ~x는 -(x+1)</mark>. 나머지는 2진수로 세로로 맞춰 놓고 한 자리씩 비교.</p></div>
       </article>
-
       <article class="item" data-id="c10">
         <div class="item-h"><span class="lang">C</span><h3>구조체 포인터 -&gt;</h3><label class="chk"><input type="checkbox" id="k-c10">외움</label></div>
 <pre>struct P { int x; int y; };
@@ -291,19 +219,11 @@ struct P *p = &amp;s;
 p-&gt;x = p-&gt;x + p-&gt;y;
 printf("%d", s.x);</pre>
         <p class="q">출력은?</p>
-        <div class="ans"><span class="a">7</span>
-<ol class="steps">
-<li>s = {x: 3, y: 4}, p는 s를 가리킴</li>
-<li><code>p-&gt;x</code>는 "p가 가리키는 구조체의 x" = s.x = 3</li>
-<li><code>p-&gt;x = p-&gt;x + p-&gt;y</code> → s.x = 3 + 4 = <b>7</b></li>
-<li>p를 통해 바꿨지만 결국 <b>s 자체</b>가 바뀐 것 → s.x = 7</li>
-</ol>
-<p class="why"><b>기억할 것</b>: 구조체 <b>변수</b>는 점(<code>s.x</code>), 구조체 <b>포인터</b>는 화살표(<code>p-&gt;x</code>). <mark>p-&gt;x = (*p).x</mark>.</p></div>
+        <div class="ans"><span class="a">7</span><ol class="steps"><li>s = {x: 3, y: 4}, p는 s를 가리킴</li><li><code>p-&gt;x</code>는 "p가 가리키는 구조체의 x" = s.x = 3</li><li><code>p-&gt;x = p-&gt;x + p-&gt;y</code> → s.x = 3 + 4 = <b>7</b></li><li>p를 통해 바꿨지만 결국 <b>s 자체</b>가 바뀐 것 → s.x = 7</li></ol><p class="why"><b>기억할 것</b>: 구조체 <b>변수</b>는 점(<code>s.x</code>), 구조체 <b>포인터</b>는 화살표(<code>p-&gt;x</code>). <mark>p-&gt;x = (*p).x</mark>.</p></div>
       </article>
     </div>
   </section>
 
-  <!-- ================= Java ================= -->
   <section id="code-java">
     <div class="sec-head">
       <span class="sub">PART 1 · 코드</span>
@@ -320,15 +240,8 @@ class B extends A {
 A obj = new B();
 obj.show();</pre>
         <p class="q">출력은?</p>
-        <div class="ans"><span class="a">B</span>
-<ol class="steps">
-<li><code>A obj = new B();</code> → 변수 타입은 A, <b>실제로 만든 객체는 B</b></li>
-<li>B가 show()를 <b>오버라이딩</b>(같은 모양으로 다시 정의)함</li>
-<li>메서드를 부를 때는 <b>실제 객체(B)</b>의 것을 씀 → "B"</li>
-</ol>
-<p class="why"><b>기억할 것</b>: <mark>메서드는 new 뒤를 본다</mark>. 겉포장(A)이 아니라 안에 든 물건(B)이 일한다. 이걸 동적 바인딩이라고 한다.</p></div>
+        <div class="ans"><span class="a">B</span><ol class="steps"><li><code>A obj = new B();</code> → 변수 타입은 A, <b>실제로 만든 객체는 B</b></li><li>B가 show()를 <b>오버라이딩</b>(같은 모양으로 다시 정의)함</li><li>메서드를 부를 때는 <b>실제 객체(B)</b>의 것을 씀 → "B"</li></ol><p class="why"><b>기억할 것</b>: <mark>메서드는 new 뒤를 본다</mark>. 겉포장(A)이 아니라 안에 든 물건(B)이 일한다. 이걸 동적 바인딩이라고 한다.</p></div>
       </article>
-
       <article class="item" data-id="j2">
         <div class="item-h"><span class="lang">Java</span><h3>필드는 다형성 없음</h3><label class="chk"><input type="checkbox" id="k-j2">외움</label></div>
 <pre>class A { int x = 1; }
@@ -336,15 +249,8 @@ class B extends A { int x = 2; }
 A o = new B();
 System.out.print(o.x);</pre>
         <p class="q">출력은?</p>
-        <div class="ans"><span class="a">1</span>
-<ol class="steps">
-<li>A에도 x, B에도 x가 <b>각각 따로</b> 있음 (B 객체 안에 x가 두 개)</li>
-<li>필드(변수)는 오버라이딩이 <b>안 됨</b></li>
-<li>그래서 <b>변수 타입 A</b>를 보고 A의 x를 읽음 → 1</li>
-</ol>
-<p class="why"><b>기억할 것</b>: <mark>메서드는 new 뒤(B), 필드는 앞쪽 타입(A)</mark>. 문제에서 <code>o.x</code>처럼 변수에 바로 점을 찍으면 선언 타입을 본다.</p></div>
+        <div class="ans"><span class="a">1</span><ol class="steps"><li>A에도 x, B에도 x가 <b>각각 따로</b> 있음 (B 객체 안에 x가 두 개)</li><li>필드(변수)는 오버라이딩이 <b>안 됨</b></li><li>그래서 <b>변수 타입 A</b>를 보고 A의 x를 읽음 → 1</li></ol><p class="why"><b>기억할 것</b>: <mark>메서드는 new 뒤(B), 필드는 앞쪽 타입(A)</mark>. 문제에서 <code>o.x</code>처럼 변수에 바로 점을 찍으면 선언 타입을 본다.</p></div>
       </article>
-
       <article class="item" data-id="j3">
         <div class="item-h"><span class="lang">Java</span><h3>static 메서드</h3><label class="chk"><input type="checkbox" id="k-j3">외움</label></div>
 <pre>class A { static void hi(){ System.out.print("A"); } }
@@ -354,15 +260,8 @@ class B extends A {
 A o = new B();
 o.hi();</pre>
         <p class="q">출력은?</p>
-        <div class="ans"><span class="a">A</span>
-<ol class="steps">
-<li><code>static</code> 메서드는 객체가 아니라 <b>클래스에 붙어 있는</b> 메서드</li>
-<li>그래서 오버라이딩이 안 되고, 자식 것은 그냥 이름만 같은 <b>별개 메서드</b>(숨김, hiding)</li>
-<li><code>o.hi()</code> → o의 <b>선언 타입 A</b>의 hi()가 실행 → "A"</li>
-</ol>
-<p class="why"><b>기억할 것</b>: static은 "클래스 전용". <mark>static 메서드와 필드는 앞쪽 타입, 일반 메서드만 new 뒤</mark>. j1과 차이를 꼭 비교하기.</p></div>
+        <div class="ans"><span class="a">A</span><ol class="steps"><li><code>static</code> 메서드는 객체가 아니라 <b>클래스에 붙어 있는</b> 메서드</li><li>그래서 오버라이딩이 안 되고, 자식 것은 그냥 이름만 같은 <b>별개 메서드</b>(숨김, hiding)</li><li><code>o.hi()</code> → o의 <b>선언 타입 A</b>의 hi()가 실행 → "A"</li></ol><p class="why"><b>기억할 것</b>: static은 "클래스 전용". <mark>static 메서드와 필드는 앞쪽 타입, 일반 메서드만 new 뒤</mark>. j1과 차이를 꼭 비교하기.</p></div>
       </article>
-
       <article class="item" data-id="j4">
         <div class="item-h"><span class="lang">Java</span><h3>생성자 호출 순서</h3><label class="chk"><input type="checkbox" id="k-j4">외움</label></div>
 <pre>class A { A(){ System.out.print("A"); } }
@@ -371,16 +270,8 @@ class B extends A {
 }
 new B();</pre>
         <p class="q">출력은?</p>
-        <div class="ans"><span class="a">AB</span>
-<ol class="steps">
-<li><code>new B()</code> → B의 생성자 호출</li>
-<li>B 생성자 첫 줄에는 눈에 안 보이는 <code>super();</code>가 자동으로 들어 있음</li>
-<li>그래서 <b>A 생성자가 먼저</b> 실행 → "A"</li>
-<li>다시 B 생성자로 돌아와 나머지 실행 → "B"</li>
-</ol>
-<p class="why"><b>기억할 것</b>: <mark>부모가 먼저 태어나야 자식이 태어난다</mark>. 생성자 출력 순서는 항상 부모 → 자식.</p></div>
+        <div class="ans"><span class="a">AB</span><ol class="steps"><li><code>new B()</code> → B의 생성자 호출</li><li>B 생성자 첫 줄에는 눈에 안 보이는 <code>super();</code>가 자동으로 들어 있음</li><li>그래서 <b>A 생성자가 먼저</b> 실행 → "A"</li><li>다시 B 생성자로 돌아와 나머지 실행 → "B"</li></ol><p class="why"><b>기억할 것</b>: <mark>부모가 먼저 태어나야 자식이 태어난다</mark>. 생성자 출력 순서는 항상 부모 → 자식.</p></div>
       </article>
-
       <article class="item" data-id="j5">
         <div class="item-h"><span class="lang">Java</span><h3>super.메서드()</h3><label class="chk"><input type="checkbox" id="k-j5">외움</label></div>
 <pre>class A { void f(){ System.out.print("1"); } }
@@ -389,29 +280,14 @@ class B extends A {
 }
 new B().f();</pre>
         <p class="q">출력은?</p>
-        <div class="ans"><span class="a">12</span>
-<ol class="steps">
-<li><code>new B().f()</code> → B의 f() 실행</li>
-<li>첫 줄 <code>super.f()</code> → <b>부모 A의 f()</b>를 부름 → "1"</li>
-<li>B의 f()로 돌아와 다음 줄 → "2"</li>
-</ol>
-<p class="why"><b>기억할 것</b>: <mark>super.메서드()는 "부모 버전 실행해 줘"</mark>. 오버라이딩해도 부모 것을 이렇게 따로 부를 수 있다.</p></div>
+        <div class="ans"><span class="a">12</span><ol class="steps"><li><code>new B().f()</code> → B의 f() 실행</li><li>첫 줄 <code>super.f()</code> → <b>부모 A의 f()</b>를 부름 → "1"</li><li>B의 f()로 돌아와 다음 줄 → "2"</li></ol><p class="why"><b>기억할 것</b>: <mark>super.메서드()는 "부모 버전 실행해 줘"</mark>. 오버라이딩해도 부모 것을 이렇게 따로 부를 수 있다.</p></div>
       </article>
-
       <article class="item" data-id="j6">
         <div class="item-h"><span class="lang">Java</span><h3>문자열 + 숫자</h3><label class="chk"><input type="checkbox" id="k-j6">외움</label></div>
 <pre>System.out.print(1 + 2 + "3" + 4 + 5);</pre>
         <p class="q">출력은?</p>
-        <div class="ans"><span class="a">3345</span>
-<ol class="steps">
-<li>+는 <b>왼쪽부터</b> 하나씩 계산</li>
-<li><code>1 + 2</code> → 둘 다 숫자라 덧셈 → <b>3</b></li>
-<li><code>3 + "3"</code> → 문자열이 끼면 <b>이어붙이기</b> → "33"</li>
-<li><code>"33" + 4</code> → "334", <code>"334" + 5</code> → <b>"3345"</b></li>
-</ol>
-<p class="why"><b>기억할 것</b>: <mark>문자열을 만나기 전까지는 덧셈, 만난 뒤로는 전부 붙이기</mark>. 만약 <code>"3" + 1 + 2</code>였다면 처음부터 문자열이라 "312".</p></div>
+        <div class="ans"><span class="a">3345</span><ol class="steps"><li>+는 <b>왼쪽부터</b> 하나씩 계산</li><li><code>1 + 2</code> → 둘 다 숫자라 덧셈 → <b>3</b></li><li><code>3 + "3"</code> → 문자열이 끼면 <b>이어붙이기</b> → "33"</li><li><code>"33" + 4</code> → "334", <code>"334" + 5</code> → <b>"3345"</b></li></ol><p class="why"><b>기억할 것</b>: <mark>문자열을 만나기 전까지는 덧셈, 만난 뒤로는 전부 붙이기</mark>. 만약 <code>"3" + 1 + 2</code>였다면 처음부터 문자열이라 "312".</p></div>
       </article>
-
       <article class="item" data-id="j7">
         <div class="item-h"><span class="lang">Java</span><h3>String == 와 equals</h3><label class="chk"><input type="checkbox" id="k-j7">외움</label></div>
 <pre>String a = "hi";
@@ -419,15 +295,8 @@ String b = "hi";
 String c = new String("hi");
 System.out.print((a==b) + " " + (a==c) + " " + a.equals(c));</pre>
         <p class="q">출력은?</p>
-        <div class="ans"><span class="a">true false true</span>
-<ol class="steps">
-<li><code>a = "hi"</code>, <code>b = "hi"</code> → 같은 글자를 따옴표로 쓰면 Java가 <b>하나를 만들어 같이 씀</b> → a와 b는 같은 객체 → <code>a==b</code> <b>true</b></li>
-<li><code>c = new String("hi")</code> → new는 무조건 <b>새 객체</b> → <code>a==c</code> <b>false</b></li>
-<li><code>a.equals(c)</code> → 글자 내용만 비교 → 둘 다 "hi" → <b>true</b></li>
-</ol>
-<p class="why"><b>기억할 것</b>: <mark>== 는 "같은 물건이냐", equals는 "내용이 같냐"</mark>. 쌍둥이는 equals는 true, == 는 false.</p></div>
+        <div class="ans"><span class="a">true false true</span><ol class="steps"><li><code>a = "hi"</code>, <code>b = "hi"</code> → 같은 글자를 따옴표로 쓰면 Java가 <b>하나를 만들어 같이 씀</b> → a와 b는 같은 객체 → <code>a==b</code> <b>true</b></li><li><code>c = new String("hi")</code> → new는 무조건 <b>새 객체</b> → <code>a==c</code> <b>false</b></li><li><code>a.equals(c)</code> → 글자 내용만 비교 → 둘 다 "hi" → <b>true</b></li></ol><p class="why"><b>기억할 것</b>: <mark>== 는 "같은 물건이냐", equals는 "내용이 같냐"</mark>. 쌍둥이는 equals는 true, == 는 false.</p></div>
       </article>
-
       <article class="item" data-id="j8">
         <div class="item-h"><span class="lang">Java</span><h3>static 변수 공유</h3><label class="chk"><input type="checkbox" id="k-j8">외움</label></div>
 <pre>class C {
@@ -437,15 +306,8 @@ System.out.print((a==b) + " " + (a==c) + " " + a.equals(c));</pre>
 new C(); new C(); new C();
 System.out.print(C.cnt);</pre>
         <p class="q">출력은?</p>
-        <div class="ans"><span class="a">3</span>
-<ol class="steps">
-<li><code>static int cnt</code>는 C 클래스 전체에 <b>딱 하나</b>만 있음</li>
-<li>객체를 만들 때마다 생성자에서 cnt++ → 1, 2, 3</li>
-<li>세 객체가 <b>같은 cnt 하나</b>를 올렸으므로 결과 3</li>
-</ol>
-<p class="why"><b>기억할 것</b>: 일반 변수는 객체마다 따로(각자 1), <mark>static 변수는 모두가 공유하는 한 개</mark>. 반 전체 출석부 같은 것.</p></div>
+        <div class="ans"><span class="a">3</span><ol class="steps"><li><code>static int cnt</code>는 C 클래스 전체에 <b>딱 하나</b>만 있음</li><li>객체를 만들 때마다 생성자에서 cnt++ → 1, 2, 3</li><li>세 객체가 <b>같은 cnt 하나</b>를 올렸으므로 결과 3</li></ol><p class="why"><b>기억할 것</b>: 일반 변수는 객체마다 따로(각자 1), <mark>static 변수는 모두가 공유하는 한 개</mark>. 반 전체 출석부 같은 것.</p></div>
       </article>
-
       <article class="item" data-id="j9">
         <div class="item-h"><span class="lang">Java</span><h3>오버로딩 vs 오버라이딩</h3><label class="chk"><input type="checkbox" id="k-j9">외움</label></div>
         <p class="q">둘의 차이는?</p>
@@ -466,7 +328,6 @@ System.out.print(C.cnt);</pre>
 </ol>
 <p class="why"><b>외우는 법</b>: 로딩(loading) = 짐을 다르게 싣기(매개변수가 다름). 라이딩(riding) = 부모 위에 올라타 덮어쓰기.</p></div>
       </article>
-
       <article class="item" data-id="j10">
         <div class="item-h"><span class="lang">Java</span><h3>try-catch-finally</h3><label class="chk"><input type="checkbox" id="k-j10">외움</label></div>
 <pre>try {
@@ -478,19 +339,11 @@ System.out.print(C.cnt);</pre>
   System.out.print("C");
 }</pre>
         <p class="q">출력은?</p>
-        <div class="ans"><span class="a">BC</span>
-<ol class="steps">
-<li><code>10 / 0</code> → 0으로 나눔 → <b>ArithmeticException 발생</b></li>
-<li>예외가 난 순간 try 블록의 <b>나머지 줄은 건너뜀</b> → "A"는 출력 안 됨</li>
-<li>맞는 catch로 이동 → "B"</li>
-<li><code>finally</code>는 예외가 나든 안 나든 <b>항상</b> 실행 → "C"</li>
-</ol>
-<p class="why"><b>기억할 것</b>: <mark>예외 난 줄 아래는 스킵, finally는 무조건</mark>. 예외가 안 났다면 "AC".</p></div>
+        <div class="ans"><span class="a">BC</span><ol class="steps"><li><code>10 / 0</code> → 0으로 나눔 → <b>ArithmeticException 발생</b></li><li>예외가 난 순간 try 블록의 <b>나머지 줄은 건너뜀</b> → "A"는 출력 안 됨</li><li>맞는 catch로 이동 → "B"</li><li><code>finally</code>는 예외가 나든 안 나든 <b>항상</b> 실행 → "C"</li></ol><p class="why"><b>기억할 것</b>: <mark>예외 난 줄 아래는 스킵, finally는 무조건</mark>. 예외가 안 났다면 "AC".</p></div>
       </article>
     </div>
   </section>
 
-  <!-- ================= Python ================= -->
   <section id="code-py">
     <div class="sec-head">
       <span class="sub">PART 1 · 코드</span>
@@ -503,47 +356,21 @@ System.out.print(C.cnt);</pre>
 <pre>a = [1, 2, 3, 4, 5]
 print(a[1:3], a[-2:], a[::2], a[::-1])</pre>
         <p class="q">출력은?</p>
-        <div class="ans"><span class="a">[2, 3] [4, 5] [1, 3, 5] [5, 4, 3, 2, 1]</span>
-<ol class="steps">
-<li>번호 매기기: 값 1 2 3 4 5 → 번호 <b>0 1 2 3 4</b> (뒤에서는 -5 -4 -3 -2 -1)</li>
-<li><code>a[1:3]</code> → 1번부터 <b>3번 직전</b>까지 → 1번, 2번 → [2, 3]</li>
-<li><code>a[-2:]</code> → 뒤에서 두 번째부터 끝까지 → [4, 5]</li>
-<li><code>a[::2]</code> → 처음부터 끝까지 <b>2칸씩</b> 건너뛰기 → 0, 2, 4번 → [1, 3, 5]</li>
-<li><code>a[::-1]</code> → 간격 -1 = <b>거꾸로</b> → [5, 4, 3, 2, 1]</li>
-</ol>
-<p class="why"><b>기억할 것</b>: <mark>[시작 : 끝 : 간격], 끝 번호는 안 들어간다</mark>. 빈칸이면 "처음부터" 또는 "끝까지".</p></div>
+        <div class="ans"><span class="a">[2, 3] [4, 5] [1, 3, 5] [5, 4, 3, 2, 1]</span><ol class="steps"><li>번호 매기기: 값 1 2 3 4 5 → 번호 <b>0 1 2 3 4</b> (뒤에서는 -5 -4 -3 -2 -1)</li><li><code>a[1:3]</code> → 1번부터 <b>3번 직전</b>까지 → 1번, 2번 → [2, 3]</li><li><code>a[-2:]</code> → 뒤에서 두 번째부터 끝까지 → [4, 5]</li><li><code>a[::2]</code> → 처음부터 끝까지 <b>2칸씩</b> 건너뛰기 → 0, 2, 4번 → [1, 3, 5]</li><li><code>a[::-1]</code> → 간격 -1 = <b>거꾸로</b> → [5, 4, 3, 2, 1]</li></ol><p class="why"><b>기억할 것</b>: <mark>[시작 : 끝 : 간격], 끝 번호는 안 들어간다</mark>. 빈칸이면 "처음부터" 또는 "끝까지".</p></div>
       </article>
-
       <article class="item" data-id="p2">
         <div class="item-h"><span class="lang">Py</span><h3>문자열 슬라이싱</h3><label class="chk"><input type="checkbox" id="k-p2">외움</label></div>
 <pre>s = "Hello"
 print(s[1:4], s[-1], s[:2])</pre>
         <p class="q">출력은?</p>
-        <div class="ans"><span class="a">ell o He</span>
-<ol class="steps">
-<li>번호: H=0, e=1, l=2, l=3, o=4</li>
-<li><code>s[1:4]</code> → 1, 2, 3번 → "ell"</li>
-<li><code>s[-1]</code> → 맨 뒤 한 글자 → "o"</li>
-<li><code>s[:2]</code> → 처음부터 2번 직전까지 → 0, 1번 → "He"</li>
-</ol>
-<p class="why"><b>기억할 것</b>: 문자열도 리스트와 똑같이 자른다. <mark>[:2]는 "앞에서 2글자"</mark>로 외우면 편하다.</p></div>
+        <div class="ans"><span class="a">ell o He</span><ol class="steps"><li>번호: H=0, e=1, l=2, l=3, o=4</li><li><code>s[1:4]</code> → 1, 2, 3번 → "ell"</li><li><code>s[-1]</code> → 맨 뒤 한 글자 → "o"</li><li><code>s[:2]</code> → 처음부터 2번 직전까지 → 0, 1번 → "He"</li></ol><p class="why"><b>기억할 것</b>: 문자열도 리스트와 똑같이 자른다. <mark>[:2]는 "앞에서 2글자"</mark>로 외우면 편하다.</p></div>
       </article>
-
       <article class="item" data-id="p3">
         <div class="item-h"><span class="lang">Py</span><h3>// 와 % 와 **</h3><label class="chk"><input type="checkbox" id="k-p3">외움</label></div>
 <pre>print(7//2, -7//2, -7%3, 2**3, 7/2)</pre>
         <p class="q">출력은?</p>
-        <div class="ans"><span class="a">3 -4 2 8 3.5</span>
-<ol class="steps">
-<li><code>7//2</code> → 3.5를 <b>내림</b> → 3</li>
-<li><code>-7//2</code> → -3.5를 <b>내림(더 작은 쪽)</b> → <b>-4</b> (C는 -3)</li>
-<li><code>-7%3</code> → Python 나머지는 <b>나누는 수(3)와 부호가 같음</b> → -7 = 3×(-3) + <b>2</b></li>
-<li><code>2**3</code> → 2의 3제곱 → 8</li>
-<li><code>7/2</code> → <code>/</code>는 항상 실수 → 3.5</li>
-</ol>
-<p class="why"><b>기억할 것</b>: <mark>Python //는 무조건 아래로(바닥으로) 내린다</mark>. 음수가 나오면 C랑 답이 달라지니 함정 1순위.</p></div>
+        <div class="ans"><span class="a">3 -4 2 8 3.5</span><ol class="steps"><li><code>7//2</code> → 3.5를 <b>내림</b> → 3</li><li><code>-7//2</code> → -3.5를 <b>내림(더 작은 쪽)</b> → <b>-4</b> (C는 -3)</li><li><code>-7%3</code> → Python 나머지는 <b>나누는 수(3)와 부호가 같음</b> → -7 = 3×(-3) + <b>2</b></li><li><code>2**3</code> → 2의 3제곱 → 8</li><li><code>7/2</code> → <code>/</code>는 항상 실수 → 3.5</li></ol><p class="why"><b>기억할 것</b>: <mark>Python //는 무조건 아래로(바닥으로) 내린다</mark>. 음수가 나오면 C랑 답이 달라지니 함정 1순위.</p></div>
       </article>
-
       <article class="item" data-id="p4">
         <div class="item-h"><span class="lang">Py</span><h3>리스트는 같이 바뀜</h3><label class="chk"><input type="checkbox" id="k-p4">외움</label></div>
 <pre>a = [1, 2, 3]
@@ -551,16 +378,8 @@ b = a
 b.append(4)
 print(a)</pre>
         <p class="q">출력은?</p>
-        <div class="ans"><span class="a">[1, 2, 3, 4]</span>
-<ol class="steps">
-<li><code>a = [1, 2, 3]</code> → 리스트 하나를 만들고 a라는 이름표를 붙임</li>
-<li><code>b = a</code> → 리스트를 <b>복사하지 않고</b> 같은 리스트에 b라는 이름표를 하나 더 붙임</li>
-<li><code>b.append(4)</code> → 그 리스트 하나에 4 추가</li>
-<li>a도 같은 리스트를 보고 있으니 → [1, 2, 3, 4]</li>
-</ol>
-<p class="why"><b>기억할 것</b>: <mark>= 는 복사가 아니라 이름표 하나 더 붙이기</mark>. 따로 쓰려면 <code>b = a[:]</code> 또는 <code>b = a.copy()</code>.</p></div>
+        <div class="ans"><span class="a">[1, 2, 3, 4]</span><ol class="steps"><li><code>a = [1, 2, 3]</code> → 리스트 하나를 만들고 a라는 이름표를 붙임</li><li><code>b = a</code> → 리스트를 <b>복사하지 않고</b> 같은 리스트에 b라는 이름표를 하나 더 붙임</li><li><code>b.append(4)</code> → 그 리스트 하나에 4 추가</li><li>a도 같은 리스트를 보고 있으니 → [1, 2, 3, 4]</li></ol><p class="why"><b>기억할 것</b>: <mark>= 는 복사가 아니라 이름표 하나 더 붙이기</mark>. 따로 쓰려면 <code>b = a[:]</code> 또는 <code>b = a.copy()</code>.</p></div>
       </article>
-
       <article class="item" data-id="p5">
         <div class="item-h"><span class="lang">Py</span><h3>append vs extend</h3><label class="chk"><input type="checkbox" id="k-p5">외움</label></div>
 <pre>a = [1, 2]; b = [1, 2]
@@ -568,69 +387,34 @@ a.append([3, 4])
 b.extend([3, 4])
 print(a, len(a), b, len(b))</pre>
         <p class="q">출력은?</p>
-        <div class="ans"><span class="a">[1, 2, [3, 4]] 3 [1, 2, 3, 4] 4</span>
-<ol class="steps">
-<li><code>a.append([3, 4])</code> → [3, 4] <b>리스트 통째로</b>를 한 칸에 넣음 → [1, 2, [3, 4]], 칸 수 3</li>
-<li><code>b.extend([3, 4])</code> → 안의 값을 <b>하나씩 꺼내서</b> 넣음 → [1, 2, 3, 4], 칸 수 4</li>
-</ol>
-<p class="why"><b>기억할 것</b>: <mark>append = 상자째 넣기, extend = 상자 풀어서 넣기</mark>.</p></div>
+        <div class="ans"><span class="a">[1, 2, [3, 4]] 3 [1, 2, 3, 4] 4</span><ol class="steps"><li><code>a.append([3, 4])</code> → [3, 4] <b>리스트 통째로</b>를 한 칸에 넣음 → [1, 2, [3, 4]], 칸 수 3</li><li><code>b.extend([3, 4])</code> → 안의 값을 <b>하나씩 꺼내서</b> 넣음 → [1, 2, 3, 4], 칸 수 4</li></ol><p class="why"><b>기억할 것</b>: <mark>append = 상자째 넣기, extend = 상자 풀어서 넣기</mark>.</p></div>
       </article>
-
       <article class="item" data-id="p6">
         <div class="item-h"><span class="lang">Py</span><h3>range</h3><label class="chk"><input type="checkbox" id="k-p6">외움</label></div>
 <pre>print(list(range(5)), list(range(1, 10, 3)), list(range(5, 0, -2)))</pre>
         <p class="q">출력은?</p>
-        <div class="ans"><span class="a">[0, 1, 2, 3, 4] [1, 4, 7] [5, 3, 1]</span>
-<ol class="steps">
-<li><code>range(5)</code> → 0부터 5 직전까지 → 0~4</li>
-<li><code>range(1, 10, 3)</code> → 1에서 시작, 3씩 증가, 10 직전까지 → 1, 4, 7 (10은 안 됨)</li>
-<li><code>range(5, 0, -2)</code> → 5에서 시작, 2씩 감소, 0 직전까지 → 5, 3, 1</li>
-</ol>
-<p class="why"><b>기억할 것</b>: <mark>range(시작, 끝, 간격)에서 끝은 절대 안 들어간다</mark>. 숫자를 직접 써 보면서 끝에 닿기 전에 멈추기.</p></div>
+        <div class="ans"><span class="a">[0, 1, 2, 3, 4] [1, 4, 7] [5, 3, 1]</span><ol class="steps"><li><code>range(5)</code> → 0부터 5 직전까지 → 0~4</li><li><code>range(1, 10, 3)</code> → 1에서 시작, 3씩 증가, 10 직전까지 → 1, 4, 7 (10은 안 됨)</li><li><code>range(5, 0, -2)</code> → 5에서 시작, 2씩 감소, 0 직전까지 → 5, 3, 1</li></ol><p class="why"><b>기억할 것</b>: <mark>range(시작, 끝, 간격)에서 끝은 절대 안 들어간다</mark>. 숫자를 직접 써 보면서 끝에 닿기 전에 멈추기.</p></div>
       </article>
-
       <article class="item" data-id="p7">
         <div class="item-h"><span class="lang">Py</span><h3>리스트 컴프리헨션</h3><label class="chk"><input type="checkbox" id="k-p7">외움</label></div>
 <pre>print([x*2 for x in range(5) if x % 2 == 0])</pre>
         <p class="q">출력은?</p>
-        <div class="ans"><span class="a">[0, 4, 8]</span>
-<ol class="steps">
-<li>읽는 순서: <b>for → if → 앞의 식</b></li>
-<li><code>for x in range(5)</code> → x = 0, 1, 2, 3, 4</li>
-<li><code>if x % 2 == 0</code> → 짝수만 통과 → 0, 2, 4</li>
-<li><code>x*2</code> → 0, 4, 8</li>
-</ol>
-<p class="why"><b>기억할 것</b>: 리스트 컴프리헨션은 <mark>가운데(for) → 오른쪽(if) → 왼쪽(식)</mark> 순서로 읽는다.</p></div>
+        <div class="ans"><span class="a">[0, 4, 8]</span><ol class="steps"><li>읽는 순서: <b>for → if → 앞의 식</b></li><li><code>for x in range(5)</code> → x = 0, 1, 2, 3, 4</li><li><code>if x % 2 == 0</code> → 짝수만 통과 → 0, 2, 4</li><li><code>x*2</code> → 0, 4, 8</li></ol><p class="why"><b>기억할 것</b>: 리스트 컴프리헨션은 <mark>가운데(for) → 오른쪽(if) → 왼쪽(식)</mark> 순서로 읽는다.</p></div>
       </article>
-
       <article class="item" data-id="p8">
         <div class="item-h"><span class="lang">Py</span><h3>set 연산</h3><label class="chk"><input type="checkbox" id="k-p8">외움</label></div>
 <pre>a = {1, 2, 3}; b = {2, 3, 4}
 print(a &amp; b, a | b, a - b)</pre>
         <p class="q">출력은?</p>
-        <div class="ans"><span class="a">{2, 3} {1, 2, 3, 4} {1}</span>
-<ol class="steps">
-<li><code>a &amp; b</code> 교집합: 둘 다 있는 것 → {2, 3}</li>
-<li><code>a | b</code> 합집합: 하나라도 있는 것 (중복은 한 번만) → {1, 2, 3, 4}</li>
-<li><code>a - b</code> 차집합: a에만 있는 것 → {1}</li>
-</ol>
-<p class="why"><b>기억할 것</b>: <mark>&amp; = 그리고(둘 다), | = 또는(하나라도), - = 빼기</mark>. set은 중복을 자동으로 없앤다.</p></div>
+        <div class="ans"><span class="a">{2, 3} {1, 2, 3, 4} {1}</span><ol class="steps"><li><code>a &amp; b</code> 교집합: 둘 다 있는 것 → {2, 3}</li><li><code>a | b</code> 합집합: 하나라도 있는 것 (중복은 한 번만) → {1, 2, 3, 4}</li><li><code>a - b</code> 차집합: a에만 있는 것 → {1}</li></ol><p class="why"><b>기억할 것</b>: <mark>&amp; = 그리고(둘 다), | = 또는(하나라도), - = 빼기</mark>. set은 중복을 자동으로 없앤다.</p></div>
       </article>
-
       <article class="item" data-id="p9">
         <div class="item-h"><span class="lang">Py</span><h3>print 의 sep, end</h3><label class="chk"><input type="checkbox" id="k-p9">외움</label></div>
 <pre>print(1, 2, 3, sep="-", end="!")
 print("A")</pre>
         <p class="q">출력은?</p>
-        <div class="ans"><span class="a">1-2-3!A</span>
-<ol class="steps">
-<li><code>sep="-"</code> → 값과 값 <b>사이</b>에 "-"를 넣음 → 1-2-3</li>
-<li><code>end="!"</code> → 끝에 원래 붙는 <b>줄바꿈 대신</b> "!"를 붙임 → 1-2-3!</li>
-<li>줄이 안 바뀌었으니 다음 print("A")가 <b>바로 옆에</b> 이어짐 → 1-2-3!A</li>
-</ol>
-<p class="why"><b>기억할 것</b>: <mark>sep = 사이에, end = 끝에</mark>. 기본값은 sep=" "(공백), end="\n"(줄바꿈).</p></div>
+        <div class="ans"><span class="a">1-2-3!A</span><ol class="steps"><li><code>sep="-"</code> → 값과 값 <b>사이</b>에 "-"를 넣음 → 1-2-3</li><li><code>end="!"</code> → 끝에 원래 붙는 <b>줄바꿈 대신</b> "!"를 붙임 → 1-2-3!</li><li>줄이 안 바뀌었으니 다음 print("A")가 <b>바로 옆에</b> 이어짐 → 1-2-3!A</li></ol><p class="why"><b>기억할 것</b>: <mark>sep = 사이에, end = 끝에</mark>. 기본값은 sep=" "(공백), end="\n"(줄바꿈).</p></div>
       </article>
-
       <article class="item" data-id="p10">
         <div class="item-h"><span class="lang">Py</span><h3>dict 순회</h3><label class="chk"><input type="checkbox" id="k-p10">외움</label></div>
 <pre>d = {"a": 1, "b": 2}
@@ -638,18 +422,11 @@ for k in d:
     print(k, end="")
 print(d.get("c", 0))</pre>
         <p class="q">출력은?</p>
-        <div class="ans"><span class="a">ab0</span>
-<ol class="steps">
-<li><code>for k in d</code> → dict를 그냥 돌리면 <b>키만</b> 나옴 → "a", "b"</li>
-<li><code>end=""</code>라 줄바꿈 없이 붙음 → "ab"</li>
-<li><code>d.get("c", 0)</code> → "c" 키가 없음 → 대신 <b>기본값 0</b> → "ab0"</li>
-</ol>
-<p class="why"><b>기억할 것</b>: <mark>dict 반복 = 키만</mark>. 값은 <code>d.values()</code>, 둘 다는 <code>d.items()</code>. <code>d["c"]</code>처럼 없는 키를 바로 꺼내면 에러, get은 기본값.</p></div>
+        <div class="ans"><span class="a">ab0</span><ol class="steps"><li><code>for k in d</code> → dict를 그냥 돌리면 <b>키만</b> 나옴 → "a", "b"</li><li><code>end=""</code>라 줄바꿈 없이 붙음 → "ab"</li><li><code>d.get("c", 0)</code> → "c" 키가 없음 → 대신 <b>기본값 0</b> → "ab0"</li></ol><p class="why"><b>기억할 것</b>: <mark>dict 반복 = 키만</mark>. 값은 <code>d.values()</code>, 둘 다는 <code>d.items()</code>. <code>d["c"]</code>처럼 없는 키를 바로 꺼내면 에러, get은 기본값.</p></div>
       </article>
     </div>
   </section>
 
-  <!-- ================= SQL ================= -->
   <section id="code-sql">
     <div class="sec-head">
       <span class="sub">PART 1 · 코드</span>
@@ -658,18 +435,14 @@ print(d.get("c", 0))</pre>
     <div class="grid">
       <article class="item" data-id="s1">
         <div class="item-h"><span class="lang">SQL</span><h3>COUNT(*) vs COUNT(열)</h3><label class="chk"><input type="checkbox" id="k-s1">외움</label></div>
+
         <p class="q">점수 열이 90, NULL, 80인 3행 테이블에서 COUNT(*)와 COUNT(점수)는?</p>
-        <div class="ans"><span class="a">3, 2</span>
-<ol class="steps">
-<li><code>COUNT(*)</code> → 행이 몇 줄인지 셈 → NULL이 있는 줄도 한 줄 → <b>3</b></li>
-<li><code>COUNT(점수)</code> → 점수 칸에 <b>값이 있는 것만</b> 셈 → 90, 80 → <b>2</b></li>
-</ol>
-<p class="why"><b>기억할 것</b>: <mark>*는 줄 수, 열 이름은 NULL 빼고</mark>. SUM, AVG, MAX, MIN도 NULL은 없는 셈 친다. 그래서 AVG(점수) = (90+80)/2 = 85.</p></div>
+        <div class="ans"><span class="a">3, 2</span><ol class="steps"><li><code>COUNT(*)</code> → 행이 몇 줄인지 셈 → NULL이 있는 줄도 한 줄 → <b>3</b></li><li><code>COUNT(점수)</code> → 점수 칸에 <b>값이 있는 것만</b> 셈 → 90, 80 → <b>2</b></li></ol><p class="why"><b>기억할 것</b>: <mark>*는 줄 수, 열 이름은 NULL 빼고</mark>. SUM, AVG, MAX, MIN도 NULL은 없는 셈 친다. 그래서 AVG(점수) = (90+80)/2 = 85.</p></div>
       </article>
       <article class="item" data-id="s2">
         <div class="item-h"><span class="lang">SQL</span><h3>WHERE vs HAVING</h3><label class="chk"><input type="checkbox" id="k-s2">외움</label></div>
         <p class="q">둘의 차이는?</p>
-        <ul class="quiz-opts" hidden data-q="WHERE 절에 쓸 수 없는 조건은?"><li class="ok">COUNT(*) &gt; 10</li><li>학년 = 3</li><li>이름 LIKE &#x27;김%&#x27;</li><li>점수 BETWEEN 80 AND 90</li></ul>
+        <ul class="quiz-opts" hidden data-q="WHERE 절에 쓸 수 없는 조건은?"><li class="ok">COUNT(*) &gt; 10</li><li>학년 = 3</li><li>이름 LIKE '김%'</li><li>점수 BETWEEN 80 AND 90</li></ul>
         <div class="ans"><ol class="steps">
 <li>SQL 실행 순서: <b>FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY</b></li>
 <li><code>WHERE</code>는 GROUP BY <b>전</b>: 한 줄 한 줄을 거름 (예: 학년 = 3인 학생만)</li>
@@ -684,8 +457,8 @@ HAVING COUNT(*) &gt; 10;   -- 10명 넘는 학과만</pre>
       <article class="item" data-id="s3">
         <div class="item-h"><span class="lang">SQL</span><h3>LIKE 기호</h3><label class="chk"><input type="checkbox" id="k-s3">외움</label></div>
         <p class="q"><code>'김%'</code>, <code>'김_'</code>, <code>'%김%'</code>의 뜻은?</p>
-        <ul class="quiz-opts" hidden data-q="이름 LIKE &#x27;김_&#x27; 조건에 맞는 이름은?"><li class="ok">김철</li><li>김철수</li><li>김</li><li>박김철</li></ul>
-        <ul class="quiz-opts" hidden data-q="이름 LIKE &#x27;%수&#x27; 조건에 맞는 이름은?"><li class="ok">박민수</li><li>수민</li><li>민수진</li><li>김수현</li></ul>
+        <ul class="quiz-opts" hidden data-q="이름 LIKE '김_' 조건에 맞는 이름은?"><li class="ok">김철</li><li>김철수</li><li>김</li><li>박김철</li></ul>
+        <ul class="quiz-opts" hidden data-q="이름 LIKE '%수' 조건에 맞는 이름은?"><li class="ok">박민수</li><li>수민</li><li>민수진</li><li>김수현</li></ul>
         <div class="ans"><ol class="steps">
 <li><code>%</code> = 글자 <b>0개 이상 아무거나</b></li>
 <li><code>_</code> = 글자 <b>딱 1개</b></li>
@@ -735,25 +508,15 @@ REVOKE SELECT ON 학생 FROM 홍길동 CASCADE;</pre>
       </article>
       <article class="item" data-id="s7">
         <div class="item-h"><span class="lang">SQL</span><h3>BETWEEN, IN</h3><label class="chk"><input type="checkbox" id="k-s7">외움</label></div>
+
         <p class="q"><code>점수 BETWEEN 80 AND 90</code>에 80과 90이 포함되나?</p>
-        <div class="ans"><span class="a">둘 다 포함</span>
-<ol class="steps">
-<li><code>점수 BETWEEN 80 AND 90</code> = <code>점수 &gt;= 80 AND 점수 &lt;= 90</code></li>
-<li>80점, 90점인 사람도 결과에 나옴</li>
-<li><code>학년 IN (1, 3)</code> = <code>학년 = 1 OR 학년 = 3</code></li>
-</ol>
-<p class="why"><b>기억할 것</b>: <mark>BETWEEN은 양 끝을 포함</mark>. Python range와 반대라 헷갈리기 쉽다.</p></div>
+        <div class="ans"><span class="a">둘 다 포함</span><ol class="steps"><li><code>점수 BETWEEN 80 AND 90</code> = <code>점수 &gt;= 80 AND 점수 &lt;= 90</code></li><li>80점, 90점인 사람도 결과에 나옴</li><li><code>학년 IN (1, 3)</code> = <code>학년 = 1 OR 학년 = 3</code></li></ol><p class="why"><b>기억할 것</b>: <mark>BETWEEN은 양 끝을 포함</mark>. Python range와 반대라 헷갈리기 쉽다.</p></div>
       </article>
       <article class="item" data-id="s8">
         <div class="item-h"><span class="lang">SQL</span><h3>ORDER BY 기본값</h3><label class="chk"><input type="checkbox" id="k-s8">외움</label></div>
+
         <p class="q">ASC, DESC를 안 쓰면?</p>
-        <div class="ans"><span class="a">ASC (오름차순)</span>
-<ol class="steps">
-<li><code>ORDER BY 점수</code> → 아무것도 안 쓰면 ASC → 작은 수부터 (60, 70, 80…)</li>
-<li><code>ORDER BY 점수 DESC</code> → 큰 수부터 (100, 90, 80…)</li>
-<li>여러 개: <code>ORDER BY 학년 ASC, 점수 DESC</code> → 학년 순으로 먼저, 같은 학년 안에서는 점수 높은 순</li>
-</ol>
-<p class="why"><b>기억할 것</b>: <mark>ASC = Ascending(올라감), DESC = Descending(내려감)</mark>. 기본은 올라가는 쪽.</p></div>
+        <div class="ans"><span class="a">ASC (오름차순)</span><ol class="steps"><li><code>ORDER BY 점수</code> → 아무것도 안 쓰면 ASC → 작은 수부터 (60, 70, 80…)</li><li><code>ORDER BY 점수 DESC</code> → 큰 수부터 (100, 90, 80…)</li><li>여러 개: <code>ORDER BY 학년 ASC, 점수 DESC</code> → 학년 순으로 먼저, 같은 학년 안에서는 점수 높은 순</li></ol><p class="why"><b>기억할 것</b>: <mark>ASC = Ascending(올라감), DESC = Descending(내려감)</mark>. 기본은 올라가는 쪽.</p></div>
       </article>
     </div>
     <p class="group-title">조각으로 만들기</p>
@@ -784,19 +547,15 @@ REVOKE SELECT ON 학생 FROM 홍길동 CASCADE;</pre>
         <div class="ans"><ol class="steps build-answer"><li>UPDATE</li><li>학생</li><li>SET</li><li>학년 = 4</li><li>WHERE</li><li>학번 = 1001</li></ol><p class="why">UPDATE 테이블 <b>SET</b> 열 = 값 <b>WHERE</b> 조건. INTO와 VALUES는 INSERT에서 쓴다. WHERE를 빼면 모든 학생의 학년이 바뀐다.</p></div>
       </article>
     </div>
-
   </section>
 
-  <!-- ================= DB ================= -->
   <section id="db">
     <div class="sec-head">
       <span class="sub">PART 1.5 · 데이터베이스</span>
       <h2>DB 이론, 헷갈리는 것만</h2>
       <p>DB는 용어가 비슷해서 헷갈립니다. <mark>엑셀 표 하나</mark>를 떠올리면서 보세요. 표 = 테이블, 가로줄 = 행, 세로줄 = 열입니다.</p>
     </div>
-
     <div class="tip"><b>"무결성"이 두 번 나오는 이유</b><span>무결성은 한마디로 <mark>데이터가 틀리지 않고 올바른 상태</mark>라는 뜻입니다.</span><span><b>보안에서</b>: 허락 없이 데이터를 못 바꾸게 지키는 것 (CIA의 I). <b>DB에서</b>: 규칙에 안 맞는 데이터가 아예 못 들어오게 막는 것 (무결성 제약조건). 뜻은 같고 보는 쪽만 다릅니다.</span></div>
-
     <p class="group-title">관계형 DB 기본 용어</p>
     <div class="table-wrap">
       <table>
@@ -812,48 +571,29 @@ REVOKE SELECT ON 학생 FROM 홍길동 CASCADE;</pre>
         </tbody>
       </table>
     </div>
-
     <div class="grid">
       <article class="item" data-id="d-q1">
         <div class="item-h"><span class="lang">연습</span><h3>차수와 카디널리티</h3><label class="chk"><input type="checkbox" id="k-d-q1">외움</label></div>
 <pre>학생(학번, 이름, 학과, 학년)
 행 5개가 들어 있음</pre>
         <p class="q">차수와 카디널리티는?</p>
-        <div class="ans"><span class="a">차수 4, 카디널리티 5</span>
-<ol class="steps">
-<li>열(속성) 세기: 학번, 이름, 학과, 학년 → <b>4개 = 차수</b></li>
-<li>행(튜플) 세기: 5명 → <b>5개 = 카디널리티</b></li>
-</ol>
-<p class="why"><b>기억할 것</b>: <mark>차수 = 세로줄(열) 수, 카디널리티 = 가로줄(행) 수</mark>. 사람(카드)이 늘면 카디널리티가 는다.</p></div>
+        <div class="ans"><span class="a">차수 4, 카디널리티 5</span><ol class="steps"><li>열(속성) 세기: 학번, 이름, 학과, 학년 → <b>4개 = 차수</b></li><li>행(튜플) 세기: 5명 → <b>5개 = 카디널리티</b></li></ol><p class="why"><b>기억할 것</b>: <mark>차수 = 세로줄(열) 수, 카디널리티 = 가로줄(행) 수</mark>. 사람(카드)이 늘면 카디널리티가 는다.</p></div>
       </article>
       <article class="item" data-id="d-q2">
         <div class="item-h"><span class="lang">연습</span><h3>무슨 무결성 위반?</h3><label class="chk"><input type="checkbox" id="k-d-q2">외움</label></div>
 <pre>학생 테이블 기본키 = 학번
 INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
         <p class="q">어떤 무결성을 어겼나?</p>
-        <div class="ans"><span class="a">개체 무결성</span>
-<ol class="steps">
-<li>학번은 이 테이블의 <b>기본키</b> (학생 한 명을 구별하는 값)</li>
-<li>학번에 NULL을 넣으면 이 학생이 누군지 구별할 수 없음</li>
-<li>기본키는 <b>NULL도 안 되고 중복도 안 됨</b> → 이 규칙이 개체 무결성</li>
-</ol>
-<p class="why"><b>기억할 것</b>: <mark>기본키 문제 = 개체 무결성</mark>. 이름표 없는 학생은 입학 불가.</p></div>
+        <div class="ans"><span class="a">개체 무결성</span><ol class="steps"><li>학번은 이 테이블의 <b>기본키</b> (학생 한 명을 구별하는 값)</li><li>학번에 NULL을 넣으면 이 학생이 누군지 구별할 수 없음</li><li>기본키는 <b>NULL도 안 되고 중복도 안 됨</b> → 이 규칙이 개체 무결성</li></ol><p class="why"><b>기억할 것</b>: <mark>기본키 문제 = 개체 무결성</mark>. 이름표 없는 학생은 입학 불가.</p></div>
       </article>
       <article class="item" data-id="d-q3">
         <div class="item-h"><span class="lang">연습</span><h3>이것도 무슨 무결성?</h3><label class="chk"><input type="checkbox" id="k-d-q3">외움</label></div>
 <pre>학과 테이블: 컴공, 전자만 있음
 학생.학과(외래키) = '경영'으로 입력</pre>
         <p class="q">어떤 무결성을 어겼나?</p>
-        <div class="ans"><span class="a">참조 무결성</span>
-<ol class="steps">
-<li>학생.학과는 학과 테이블을 <b>가리키는 외래키</b></li>
-<li>학과 테이블에는 컴공, 전자만 있고 '경영'은 없음</li>
-<li>없는 학과를 가리키면 안 됨 → 외래키 값은 <b>상대 테이블에 실제로 있는 값이거나 NULL</b>이어야 함</li>
-</ol>
-<p class="why"><b>기억할 것</b>: <mark>외래키 문제 = 참조 무결성</mark>. 존재하지 않는 반에 배정할 수 없다.</p></div>
+        <div class="ans"><span class="a">참조 무결성</span><ol class="steps"><li>학생.학과는 학과 테이블을 <b>가리키는 외래키</b></li><li>학과 테이블에는 컴공, 전자만 있고 '경영'은 없음</li><li>없는 학과를 가리키면 안 됨 → 외래키 값은 <b>상대 테이블에 실제로 있는 값이거나 NULL</b>이어야 함</li></ol><p class="why"><b>기억할 것</b>: <mark>외래키 문제 = 참조 무결성</mark>. 존재하지 않는 반에 배정할 수 없다.</p></div>
       </article>
     </div>
-
     <p class="group-title">무결성 제약조건</p>
     <div class="table-wrap">
       <table>
@@ -867,7 +607,6 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
         </tbody>
       </table>
     </div>
-
     <p class="group-title">키 종류</p>
     <div class="tip"><b>예시 테이블로 보기</b><span>학생(<mark>학번</mark>, 주민번호, 이름, 학과). 학번도 주민번호도 한 사람을 딱 구별할 수 있음.</span></div>
     <div class="table-wrap">
@@ -883,12 +622,9 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
       </table>
     </div>
     <div class="tip"><b>한 줄 정리</b><span>슈퍼키 ⊃ 후보키 = 기본키 + 대체키. 유일성은 "구별됨", 최소성은 "군더더기 없음".</span></div>
-
     <p class="group-title">이상 현상과 정규화</p>
     <div class="tip"><b>이상 현상: 표를 잘못 만들면 생기는 문제</b><span class="mnemo">삽 · 삭 · 갱</span><span><b>삽입 이상</b>: 쓸데없는 정보가 없으면 데이터를 못 넣음 (수강 과목이 없으면 학생을 등록 못 함). <b>삭제 이상</b>: 하나 지웠는데 필요한 정보까지 같이 사라짐. <b>갱신 이상</b>: 같은 정보가 여러 줄에 있어서 일부만 바뀜. 이걸 없애려고 표를 쪼개는 게 <mark>정규화</mark>입니다.</span></div>
-
     <div class="tip"><b>함수 종속 먼저 이해하기</b><span><code>X → Y</code> = X를 알면 Y가 하나로 정해짐. 예) 학번 → 이름 (학번을 알면 이름이 딱 나옴).</span><span><b>부분 함수 종속</b>: 기본키가 (학번, 과목)인데 이름은 <mark>학번만</mark>으로도 정해짐 → 키의 일부에만 종속. <b>이행 함수 종속</b>: 학번 → 학과, 학과 → 학과사무실이면 학번 → 학과사무실이 <mark>건너서</mark> 성립.</span></div>
-
     <div class="table-wrap">
       <table>
         <thead><tr><th class="c"></th><th>단계</th><th>하는 일</th><th>예시 · 외우는 법</th></tr></thead>
@@ -904,7 +640,6 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
       </table>
     </div>
     <div class="tip"><b>정규화 순서 외우기</b><span class="mnemo">도 · 부 · 이 · 결 · 다 · 조</span><span>"도부이결다조" (두부 이겨 다 조려). 각 단계에서 제거하는 것의 앞글자입니다.</span></div>
-
     <p class="group-title">관계대수 기호</p>
     <div class="table-wrap">
       <table>
@@ -919,7 +654,6 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
         </tbody>
       </table>
     </div>
-
     <p class="group-title">트랜잭션과 ACID</p>
     <div class="tip"><b>트랜잭션 = 한 번에 처리되어야 하는 작업 묶음</b><span>계좌이체: A에서 빼기 + B에 넣기. 둘 중 하나만 되면 안 됩니다.</span></div>
     <div class="table-wrap">
@@ -930,27 +664,25 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
           <tr data-id="d-acid-c"><td class="c"><input type="checkbox" id="k-d-acid-c" aria-label="외움"></td><td class="term">일관성<small>Consistency</small></td><td class="ans">트랜잭션 전과 후 모두 DB가 <b>규칙에 맞는 올바른 상태</b>여야 한다.</td><td class="hint">이체 전 두 계좌 합계 100만 원이면, 이체 후에도 합계 100만 원</td></tr>
           <tr data-id="d-acid-i"><td class="c"><input type="checkbox" id="k-d-acid-i" aria-label="외움"></td><td class="term">격리성<small>Isolation</small></td><td class="ans">여러 트랜잭션이 동시에 실행돼도 <b>서로의 중간 과정을 보거나 끼어들지 않는다</b>.</td><td class="hint">내가 이체하는 도중에 다른 사람이 내 잔액을 조회해도 반쯤 처리된 금액은 안 보임</td></tr>
           <tr data-id="d-acid-d"><td class="c"><input type="checkbox" id="k-d-acid-d" aria-label="외움"></td><td class="term">영속성<small>Durability</small></td><td class="ans">Commit으로 완료된 결과는 <mark>영구히</mark> 저장된다. 서버가 꺼져도 사라지지 않는다.</td><td class="hint">이체 완료 문자를 받은 직후 은행 서버가 꺼져도, 켜 보면 이체 기록이 그대로 있음</td></tr>
-          <tr data-quiz="off" data-id="d-tx-state"><td class="c"><input type="checkbox" id="k-d-tx-state" aria-label="외움"></td><td class="term">트랜잭션 상태</td><td class="ans"><b>활동</b>(실행 중) → <b>부분 완료</b>(마지막 명령까지 실행, 아직 Commit 전) → <b>완료</b>(Commit). 중간에 문제가 생기면 <b>실패</b> → <b>철회</b>(Rollback).</td><td class="hint">부분 완료와 완료가 헷갈리면: 부분 완료 = 도장 찍기 직전, 완료 = 도장 찍음</td></tr>
+          <tr data-id="d-tx-state" data-quiz="off"><td class="c"><input type="checkbox" id="k-d-tx-state" aria-label="외움"></td><td class="term">트랜잭션 상태</td><td class="ans"><b>활동</b>(실행 중) → <b>부분 완료</b>(마지막 명령까지 실행, 아직 Commit 전) → <b>완료</b>(Commit). 중간에 문제가 생기면 <b>실패</b> → <b>철회</b>(Rollback).</td><td class="hint">부분 완료와 완료가 헷갈리면: 부분 완료 = 도장 찍기 직전, 완료 = 도장 찍음</td></tr>
         </tbody>
       </table>
     </div>
-
     <p class="group-title">병행 제어와 회복</p>
     <div class="table-wrap">
       <table>
         <thead><tr><th class="c"></th><th>용어</th><th>뜻</th><th>예시 · 외우는 법</th></tr></thead>
         <tbody>
-          <tr data-quiz="off" data-id="d-cc-prob"><td class="c"><input type="checkbox" id="k-d-cc-prob" aria-label="외움"></td><td class="term">병행 제어 안 하면</td><td class="ans">여러 트랜잭션을 동시에 막 실행하면 생기는 문제: <b>갱신 분실</b>(한 사람의 수정이 덮여 사라짐), <b>모순성</b>(값이 앞뒤가 안 맞음), <b>연쇄 복귀</b>(하나를 취소하면 그걸 쓴 다른 것도 줄줄이 취소).</td><td class="hint">두 사람이 같은 문서를 동시에 고치고 저장 → 나중에 저장한 사람 것만 남음 = 갱신 분실</td></tr>
+          <tr data-id="d-cc-prob" data-quiz="off"><td class="c"><input type="checkbox" id="k-d-cc-prob" aria-label="외움"></td><td class="term">병행 제어 안 하면</td><td class="ans">여러 트랜잭션을 동시에 막 실행하면 생기는 문제: <b>갱신 분실</b>(한 사람의 수정이 덮여 사라짐), <b>모순성</b>(값이 앞뒤가 안 맞음), <b>연쇄 복귀</b>(하나를 취소하면 그걸 쓴 다른 것도 줄줄이 취소).</td><td class="hint">두 사람이 같은 문서를 동시에 고치고 저장 → 나중에 저장한 사람 것만 남음 = 갱신 분실</td></tr>
           <tr data-id="d-cc-lock"><td class="c"><input type="checkbox" id="k-d-cc-lock" aria-label="외움"></td><td class="term">로킹<small>Locking</small></td><td class="ans">데이터를 쓰는 동안 <b>잠가서</b> 다른 트랜잭션이 못 쓰게 한다. 다 쓰면 풀어 준다(Lock → Unlock).</td><td class="hint">화장실 문 잠그기. 쓰는 동안 다른 사람은 기다림</td></tr>
-          <tr data-quiz="off" data-id="d-cc-unit"><td class="c"><input type="checkbox" id="k-d-cc-unit" aria-label="외움"></td><td class="term">로킹 단위</td><td class="ans">잠그는 단위가 <mark>크면</mark>(DB 전체, 테이블) → 관리가 쉽지만 동시에 쓸 수 있는 사람이 적음(병행성 낮음). 단위가 <mark>작으면</mark>(행 하나) → 여럿이 동시에 쓸 수 있지만 관리가 복잡함(오버헤드 큼).</td><td class="hint">건물 정문을 잠그면 편하지만 아무도 못 들어감. 방마다 잠그면 여럿이 쓰지만 열쇠 관리가 힘듦</td></tr>
+          <tr data-id="d-cc-unit" data-quiz="off"><td class="c"><input type="checkbox" id="k-d-cc-unit" aria-label="외움"></td><td class="term">로킹 단위</td><td class="ans">잠그는 단위가 <mark>크면</mark>(DB 전체, 테이블) → 관리가 쉽지만 동시에 쓸 수 있는 사람이 적음(병행성 낮음). 단위가 <mark>작으면</mark>(행 하나) → 여럿이 동시에 쓸 수 있지만 관리가 복잡함(오버헤드 큼).</td><td class="hint">건물 정문을 잠그면 편하지만 아무도 못 들어감. 방마다 잠그면 여럿이 쓰지만 열쇠 관리가 힘듦</td></tr>
           <tr data-id="d-cc-ts"><td class="c"><input type="checkbox" id="k-d-cc-ts" aria-label="외움"></td><td class="term">타임스탬프 / 낙관적 검증 / 다중 버전</td><td class="ans"><b>타임스탬프</b>: 먼저 시작한 트랜잭션 순서대로 처리. <b>낙관적 검증</b>: 일단 다 실행하고 끝날 때 충돌 검사. <b>다중 버전(MVCC)</b>: 데이터 버전을 여러 개 두고 각자 맞는 버전을 읽음.</td><td class="hint">로킹 말고 다른 병행 제어 방법들. 번호표 순서대로 / 일단 하고 나중에 확인 / 복사본 여러 개</td></tr>
           <tr data-id="d-rc-redo"><td class="c"><input type="checkbox" id="k-d-rc-redo" aria-label="외움"></td><td class="term">REDO / UNDO</td><td class="ans"><b>REDO</b>: Commit까지 <mark>끝난 작업</mark>을 다시 실행해서 결과를 살림. <b>UNDO</b>: Commit 못 한 <mark>덜 끝난 작업</mark>을 되돌려서 없앰.</td><td class="hint">장애 후 회복할 때: 끝낸 숙제는 다시 써 두기(Redo), 쓰다 만 숙제는 지우기(Undo)</td></tr>
-          <tr data-quiz="off" data-id="d-rc-imm"><td class="c"><input type="checkbox" id="k-d-rc-imm" aria-label="외움"></td><td class="term">즉시 갱신 / 지연 갱신</td><td class="ans"><b>즉시 갱신</b>: 작업하는 즉시 DB에 반영 → 끝난 건 REDO, 덜 끝난 것도 이미 DB에 썼으니 UNDO 필요 → <b>둘 다</b>. <b>지연 갱신</b>: Commit할 때 한꺼번에 반영 → Commit 전엔 DB에 쓴 게 없어서 UNDO 불필요 → <mark>REDO만</mark>.</td><td class="hint">지연 갱신 = 초안에만 쓰다가 확정할 때 옮겨 적기. 확정 전이면 원본은 멀쩡하니 지울 게 없음</td></tr>
+          <tr data-id="d-rc-imm" data-quiz="off"><td class="c"><input type="checkbox" id="k-d-rc-imm" aria-label="외움"></td><td class="term">즉시 갱신 / 지연 갱신</td><td class="ans"><b>즉시 갱신</b>: 작업하는 즉시 DB에 반영 → 끝난 건 REDO, 덜 끝난 것도 이미 DB에 썼으니 UNDO 필요 → <b>둘 다</b>. <b>지연 갱신</b>: Commit할 때 한꺼번에 반영 → Commit 전엔 DB에 쓴 게 없어서 UNDO 불필요 → <mark>REDO만</mark>.</td><td class="hint">지연 갱신 = 초안에만 쓰다가 확정할 때 옮겨 적기. 확정 전이면 원본은 멀쩡하니 지울 게 없음</td></tr>
           <tr data-id="d-rc-etc"><td class="c"><input type="checkbox" id="k-d-rc-etc" aria-label="외움"></td><td class="term">체크포인트 / 그림자 페이징</td><td class="ans"><b>체크포인트</b>: 중간중간 저장 지점을 찍어 두고, 장애가 나면 그 지점부터만 회복. <b>그림자 페이징</b>: 원본(그림자) 페이지를 따로 보관하다가 실패하면 그걸로 바꿔 끼움.</td><td class="hint">체크포인트 = 게임 세이브 포인트, 그림자 페이징 = 원본 백업본</td></tr>
         </tbody>
       </table>
     </div>
-
     <p class="group-title">스키마 3단계와 설계 순서</p>
     <div class="table-wrap">
       <table>
@@ -960,7 +692,7 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
           <tr data-id="d-sch-con"><td class="c"><input type="checkbox" id="k-d-sch-con" aria-label="외움"></td><td class="term">개념 스키마</td><td class="ans">조직 <b>전체 입장</b>에서 본 DB의 논리 구조. 모든 테이블과 관계, 제약조건. DB 하나에 하나만 있다.</td><td class="hint">학교 전체 데이터 설계도 한 장. 보통 그냥 "스키마"라고 하면 이것</td></tr>
           <tr data-id="d-sch-int"><td class="c"><input type="checkbox" id="k-d-sch-int" aria-label="외움"></td><td class="term">내부 스키마</td><td class="ans">데이터가 <b>실제로 디스크에 어떻게 저장되는지</b>의 물리 구조. 저장 방식, 인덱스 등.</td><td class="hint">창고 안에 상자가 어느 선반에 어떻게 쌓였는지</td></tr>
           <tr data-id="d-indep"><td class="c"><input type="checkbox" id="k-d-indep" aria-label="외움"></td><td class="term">논리적 / 물리적 독립성</td><td class="ans"><b>논리적 독립성</b>: 개념 스키마(전체 설계)를 바꿔도 외부 스키마(앱)는 안 고쳐도 됨. <b>물리적 독립성</b>: 내부 스키마(저장 방식)를 바꿔도 개념 스키마는 그대로.</td><td class="hint">외부 ↔ 개념 사이 = 논리적, 개념 ↔ 내부 사이 = 물리적. 아래층을 고쳐도 위층은 모름</td></tr>
-          <tr data-quiz="off" data-id="d-design"><td class="c"><input type="checkbox" id="k-d-design" aria-label="외움"></td><td class="term">DB 설계 순서</td><td class="ans"><b>요구 분석</b>(뭘 저장할지 정리) → <b>개념 설계</b>(E-R 다이어그램 그림) → <b>논리 설계</b>(테이블·키로 바꾸고 정규화) → <b>물리 설계</b>(저장 방식·인덱스) → <b>구현</b>(실제 SQL로 생성).</td><td class="hint">"요개논물구". 집 짓기: 요구 듣기 → 스케치 → 도면 → 자재·시공 방법 → 시공</td></tr>
+          <tr data-id="d-design" data-quiz="off"><td class="c"><input type="checkbox" id="k-d-design" aria-label="외움"></td><td class="term">DB 설계 순서</td><td class="ans"><b>요구 분석</b>(뭘 저장할지 정리) → <b>개념 설계</b>(E-R 다이어그램 그림) → <b>논리 설계</b>(테이블·키로 바꾸고 정규화) → <b>물리 설계</b>(저장 방식·인덱스) → <b>구현</b>(실제 SQL로 생성).</td><td class="hint">"요개논물구". 집 짓기: 요구 듣기 → 스케치 → 도면 → 자재·시공 방법 → 시공</td></tr>
           <tr data-id="d-er" data-quiz="off"><td class="c"><input type="checkbox" id="k-d-er" aria-label="외움"></td><td class="term">E-R 다이어그램 기호</td><td class="ans"><b>사각형</b> = 개체, <b>마름모</b> = 관계, <b>타원</b> = 속성. 예: 학생(개체), 수강한다(관계), 이름(속성). <b>밑줄 친 속성</b>은 기본키.</td><td class="hint">개체 = 명사, 관계 = 동사, 속성 = 형용사처럼 생각하기. UML의 마름모(집합·합성)와는 다른 것</td></tr>
           <tr data-id="d-view"><td class="c"><input type="checkbox" id="k-d-view" aria-label="외움"></td><td class="term">뷰<small>View</small></td><td class="ans"><b>데이터를 저장하지 않는 가상 테이블</b>. 다른 테이블에서 필요한 부분만 골라 보여 준다. <mark>ALTER로 수정 불가</mark> → DROP하고 다시 CREATE.</td><td class="hint">보여주고 싶은 열만 골라 보여줄 수 있어서 보안에 좋음. 뷰를 지워도 원본 테이블은 멀쩡함</td></tr>
         </tbody>
@@ -989,51 +721,51 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
         <div class="ans"><ol class="steps build-answer"><li>Atomicity</li><li>Consistency</li><li>Isolation</li><li>Durability</li></ol><p class="why"><b>원자성</b>(전부 아니면 전무), <b>일관성</b>, <b>격리성</b>, <b>영속성</b>. Availability·Integrity는 보안 3요소(CIA)라서 섞어 내는 함정.</p></div>
       </article>
     </div>
-
     <p class="group-title">개념 확인 문제</p>
     <div class="grid">
       <article class="item" data-id="q-cc-unit">
         <div class="item-h"><span class="lang">개념</span><h3>로킹 단위</h3><label class="chk"><input type="checkbox" id="k-q-cc-unit">외움</label></div>
+        <p class="q">로킹 단위를 작게(행 하나 단위로) 하면 어떻게 될까?</p>
         <ul class="quiz-opts" hidden data-q="로킹 단위를 작게(행 하나 단위로) 하면 어떻게 될까?"><li class="ok">병행성은 높아지고, 관리 부담(오버헤드)은 커진다</li><li>병행성은 낮아지고, 관리 부담은 작아진다</li><li>병행성도 높아지고, 관리 부담도 작아진다</li><li>병행성은 낮아지고, 관리 부담은 커진다</li></ul>
         <div class="ans"><p>잠그는 단위가 <mark>작으면</mark> 여럿이 동시에 쓸 수 있지만(병행성↑) 잠금이 많아 관리가 복잡하다(오버헤드↑). <mark>크면</mark> 그 반대.</p><p class="why"><b>기억할 것</b>: 건물 정문을 잠그면 편하지만 아무도 못 들어가고, 방마다 잠그면 여럿이 쓰지만 열쇠 관리가 힘들다.</p></div>
       </article>
       <article class="item" data-id="q-rc-imm">
         <div class="item-h"><span class="lang">개념</span><h3>즉시 갱신 · 지연 갱신</h3><label class="chk"><input type="checkbox" id="k-q-rc-imm">외움</label></div>
+        <p class="q">지연 갱신 회복 기법에서 장애가 났을 때 필요한 연산은?</p>
         <ul class="quiz-opts" hidden data-q="지연 갱신 회복 기법에서 장애가 났을 때 필요한 연산은?"><li class="ok">REDO만</li><li>UNDO만</li><li>REDO와 UNDO 모두</li><li>필요 없음</li></ul>
         <ul class="quiz-opts" hidden data-q="즉시 갱신 회복 기법에서 장애가 났을 때 필요한 연산은?"><li class="ok">REDO와 UNDO 모두</li><li>REDO만</li><li>UNDO만</li><li>필요 없음</li></ul>
         <div class="ans"><p><b>즉시 갱신</b>: 작업하는 즉시 DB에 반영 → 끝난 건 REDO, 덜 끝난 것도 이미 DB에 썼으니 UNDO → <b>둘 다</b>.</p><p><b>지연 갱신</b>: Commit할 때 한꺼번에 반영 → Commit 전엔 DB에 쓴 게 없어서 UNDO 불필요 → <mark>REDO만</mark>.</p><p class="why"><b>기억할 것</b>: 지연 갱신 = 초안에만 쓰다가 확정할 때 옮겨 적기. 확정 전이면 원본은 멀쩡하니 지울 게 없다.</p></div>
       </article>
       <article class="item" data-id="q-cc-prob">
         <div class="item-h"><span class="lang">개념</span><h3>병행 제어를 안 하면</h3><label class="chk"><input type="checkbox" id="k-q-cc-prob">외움</label></div>
+        <p class="q">병행 제어를 하지 않을 때 생기는 문제가 아닌 것은?</p>
         <ul class="quiz-opts" hidden data-q="병행 제어를 하지 않을 때 생기는 문제가 아닌 것은?"><li class="ok">정규화 위반</li><li>갱신 분실</li><li>모순성</li><li>연쇄 복귀</li></ul>
         <div class="ans"><p>여러 트랜잭션을 동시에 막 실행하면 <b>갱신 분실</b>(한 사람의 수정이 덮여 사라짐), <b>모순성</b>(값이 앞뒤가 안 맞음), <b>연쇄 복귀</b>(하나를 취소하면 그걸 쓴 다른 것도 줄줄이 취소)가 생긴다.</p><p class="why">정규화는 테이블 설계 문제라 병행 제어와 관계없다.</p></div>
       </article>
       <article class="item" data-id="q-er">
         <div class="item-h"><span class="lang">개념</span><h3>E-R 다이어그램 읽기</h3><label class="chk"><input type="checkbox" id="k-q-er">외움</label></div>
+        <p class="q">E-R 다이어그램에서 마름모는 무엇을 나타낼까?</p>
         <ul class="quiz-opts" hidden data-q="E-R 다이어그램에서 마름모는 무엇을 나타낼까?"><li class="ok">관계</li><li>개체</li><li>속성</li><li>기본키</li></ul>
         <ul class="quiz-opts" hidden data-q="E-R 다이어그램에서 밑줄 친 속성은 무엇일까?"><li class="ok">기본키</li><li>외래키</li><li>다중값 속성</li><li>유도 속성</li></ul>
         <div class="ans"><p><b>사각형</b> = 개체(학생), <b>마름모</b> = 관계(수강한다), <b>타원</b> = 속성(이름), <b>밑줄</b> = 기본키. 이중 타원은 다중값 속성, 점선 타원은 유도 속성이다.</p><p class="why">UML의 마름모(집합·합성)와 헷갈리지 않기: E-R의 마름모는 개체 사이의 관계다.</p></div>
       </article>
       <article class="item" data-id="q-ra-calc">
         <div class="item-h"><span class="lang">개념</span><h3>질의를 적는 두 방식</h3><label class="chk"><input type="checkbox" id="k-q-ra-calc">외움</label></div>
+        <p class="q">원하는 결과를 얻기 위한 연산 순서를 적는 방식은?</p>
         <ul class="quiz-opts" hidden data-q="원하는 결과를 얻기 위한 연산 순서를 적는 방식은?"><li class="ok">관계대수</li><li>관계해석</li><li>정규화</li><li>뷰</li></ul>
         <ul class="quiz-opts" hidden data-q="원하는 결과가 무엇인지만 적고, 구하는 순서는 적지 않는 방식은?"><li class="ok">관계해석</li><li>관계대수</li><li>카티션 프로덕트</li><li>트랜잭션</li></ul>
         <div class="ans"><p><b>관계대수</b> = <mark>절차적</mark>: σ, π, ⋈처럼 연산을 어떤 순서로 할지 적는다(요리 레시피). <b>관계해석</b> = <mark>비절차적</mark>: 원하는 조건만 적는다(주문서). SQL은 관계해석에 가깝다.</p></div>
       </article>
     </div>
-
   </section>
 
-  <!-- ================= Network ================= -->
   <section id="net">
     <div class="sec-head">
       <span class="sub">PART 2</span>
       <h2>네트워크, 처음부터</h2>
       <p>네트워크는 <mark>택배</mark>라고 생각하면 됩니다. 물건(데이터)을 상자에 넣고, 주소를 붙이고, 트럭으로 옮기는 과정을 층층이 나눈 게 OSI 7계층입니다.</p>
     </div>
-
     <div class="tip"><b>OSI 7계층 외우는 법 (아래 1층부터)</b><span class="mnemo">물 · 데 · 네 · 전 · 세 · 표 · 응</span><span>물리 → 데이터링크 → 네트워크 → 전송 → 세션 → 표현 → 응용. "물 데워서 네가 전해줘, 세 표 응?"처럼 문장으로 붙이세요.</span></div>
-
     <div class="table-wrap">
       <table>
         <thead><tr><th class="c"></th><th>계층</th><th>하는 일</th><th>택배로 치면</th><th>대표 단어</th></tr></thead>
@@ -1048,7 +780,6 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
         </tbody>
       </table>
     </div>
-
     <p class="group-title">꼭 나오는 네트워크 용어</p>
     <div class="table-wrap">
       <table>
@@ -1056,7 +787,7 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
         <tbody>
           <tr data-id="n-tcp"><td class="c"><input type="checkbox" id="k-n-tcp" aria-label="외움"></td><td class="term">TCP<small>Transmission Control Protocol</small></td><td class="ans"><b>연결을 맺고</b>, <b>빠짐없이 순서대로</b> 도착했는지 확인하며 보낸다. 못 받은 건 다시 보낸다.</td><td class="hint">등기 우편. 도착 확인까지 받아서 느리지만 확실함. 웹, 이메일, 파일 전송에 사용</td></tr>
           <tr data-id="n-udp"><td class="c"><input type="checkbox" id="k-n-udp" aria-label="외움"></td><td class="term">UDP<small>User Datagram Protocol</small></td><td class="ans">연결 없이 <b>그냥 바로 보내는</b> 방식. 도착 확인을 안 해서 빠르지만 중간에 빠져도 모른다.</td><td class="hint">전단지 뿌리기. 조금 빠져도 괜찮고 빠른 게 중요한 곳: 영상 스트리밍, 게임, DNS</td></tr>
-          <tr data-quiz="off" data-id="n-3way"><td class="c"><input type="checkbox" id="k-n-3way" aria-label="외움"></td><td class="term">3-Way Handshake</td><td class="ans">TCP가 연결을 맺는 3단계: ① <b>SYN</b>(연결하자) → ② <b>SYN+ACK</b>(좋아, 너도 들려?) → ③ <b>ACK</b>(응, 들려).</td><td class="hint">전화: "여보세요?" → "네, 들려요. 제 말도 들려요?" → "네, 들려요." 이후 대화 시작</td></tr>
+          <tr data-id="n-3way" data-quiz="off"><td class="c"><input type="checkbox" id="k-n-3way" aria-label="외움"></td><td class="term">3-Way Handshake</td><td class="ans">TCP가 연결을 맺는 3단계: ① <b>SYN</b>(연결하자) → ② <b>SYN+ACK</b>(좋아, 너도 들려?) → ③ <b>ACK</b>(응, 들려).</td><td class="hint">전화: "여보세요?" → "네, 들려요. 제 말도 들려요?" → "네, 들려요." 이후 대화 시작</td></tr>
           <tr data-id="n-ip"><td class="c"><input type="checkbox" id="k-n-ip" aria-label="외움"></td><td class="term">IPv4 / IPv6</td><td class="ans">IPv4 = <mark>32비트</mark>, 8비트씩 4덩어리를 점으로 구분 (192.168.0.1). IPv6 = <mark>128비트</mark>, 16비트씩 8덩어리를 콜론으로 구분 (2001:db8::1).</td><td class="hint">IPv4 주소가 부족해서 IPv6가 나옴. IPv6에는 <b>브로드캐스트가 없고</b> 유니캐스트(1:1)·멀티캐스트(1:그룹)·애니캐스트(1:가장 가까운 하나)가 있음</td></tr>
           <tr data-id="n-arp"><td class="c"><input type="checkbox" id="k-n-arp" aria-label="외움"></td><td class="term">ARP / RARP<small>Address Resolution Protocol</small></td><td class="ans"><b>ARP</b>: IP 주소로 <b>MAC 주소</b>를 알아낸다(MAC = 랜카드 고유 번호). <b>RARP</b>: 반대로 MAC 주소로 IP 주소를 알아낸다.</td><td class="hint">R = Reverse(거꾸로). ARP = 이름(IP)으로 얼굴(MAC) 찾기</td></tr>
           <tr data-id="n-icmp"><td class="c"><input type="checkbox" id="k-n-icmp" aria-label="외움"></td><td class="term">ICMP<small>Internet Control Message Protocol</small></td><td class="ans">네트워크에서 <b>오류가 났거나 상태를 알려줄 때</b> 쓰는 메시지 프로토콜. "목적지에 도달할 수 없음" 같은 알림.</td><td class="hint"><code>ping</code> 명령어가 ICMP를 씀. Smurf, Ping of Death 공격에도 등장</td></tr>
@@ -1068,7 +799,6 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
         </tbody>
       </table>
     </div>
-
     <p class="group-title">포트 번호 (숫자로 자주 나옴)</p>
     <div class="table-wrap">
       <table>
@@ -1082,7 +812,6 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
         </tbody>
       </table>
     </div>
-
     <div class="tip"><b>서브넷 계산 한 가지만</b><span><code>/26</code> 같은 숫자는 앞에서부터 1인 비트 수. 한 서브넷 주소 수 = <mark>2^(32−n)</mark>, 쓸 수 있는 호스트 = 그 값 −2 (네트워크 주소, 브로드캐스트 주소 제외).</span><span>예) 192.168.1.0/26 → 2^6 = 64개씩 4개로 나뉨 → 호스트 62개. 서브넷 마스크는 255.255.255.192.</span></div>
     <p class="group-title">조각으로 만들기</p>
     <div class="grid">
@@ -1113,24 +842,21 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
       </article>
       <article class="item" data-id="q-dev">
         <div class="item-h"><span class="lang">개념</span><h3>네트워크 장비의 계층</h3><label class="chk"><input type="checkbox" id="k-q-dev">외움</label></div>
+        <p class="q">스위치는 OSI 몇 계층 장비일까?</p>
         <ul class="quiz-opts" hidden data-q="스위치는 OSI 몇 계층 장비일까?"><li class="ok">2계층 (데이터링크)</li><li>1계층 (물리)</li><li>3계층 (네트워크)</li><li>4계층 (전송)</li></ul>
         <ul class="quiz-opts" hidden data-q="IP 주소를 보고 다른 네트워크로 가는 길을 찾는 장비는?"><li class="ok">라우터</li><li>스위치</li><li>허브</li><li>브리지</li></ul>
         <div class="ans"><p><b>1계층</b>: 허브, 리피터(신호만 키우거나 뿌림). <b>2계층</b>: 스위치, 브리지(MAC 주소를 보고 받을 장비에게만 전달). <b>3계층</b>: 라우터(IP 주소를 보고 다른 네트워크까지 길 찾기).</p><p class="why">장비가 똑똑할수록 층이 높다. 허브는 무조건 다 뿌리고, 스위치는 받을 사람한테만, 라우터는 네트워크 밖까지.</p></div>
       </article>
     </div>
-
   </section>
 
-  <!-- ================= Security ================= -->
   <section id="sec">
     <div class="sec-head">
       <span class="sub">PART 3</span>
       <h2>보안 용어, 처음부터</h2>
       <p>공격 이름은 <mark>이름 안에 힌트가 있는 경우</mark>가 많습니다. 영어 뜻을 같이 보면 훨씬 덜 외워도 됩니다.</p>
     </div>
-
     <div class="tip"><b>보안의 3요소 (CIA)</b><span><b>기밀성</b>(Confidentiality): 허락된 사람만 봄 · <b>무결성</b>(Integrity): 함부로 못 바꿈 · <b>가용성</b>(Availability): 필요할 때 쓸 수 있음. DoS 공격은 가용성을 깨는 공격.</span></div>
-
     <p class="group-title">서비스 거부 공격 (서버를 마비시킴)</p>
     <div class="table-wrap">
       <table>
@@ -1145,7 +871,6 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
         </tbody>
       </table>
     </div>
-
     <p class="group-title">웹 공격</p>
     <div class="table-wrap">
       <table>
@@ -1157,7 +882,6 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
         </tbody>
       </table>
     </div>
-
     <p class="group-title">속이기 · 가로채기</p>
     <div class="table-wrap">
       <table>
@@ -1175,7 +899,6 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
         </tbody>
       </table>
     </div>
-
     <p class="group-title">악성코드</p>
     <div class="table-wrap">
       <table>
@@ -1189,7 +912,6 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
         </tbody>
       </table>
     </div>
-
     <p class="group-title">암호 · 접근통제 · 방어</p>
     <div class="table-wrap">
       <table>
@@ -1197,7 +919,7 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
         <tbody>
           <tr data-id="x-sym"><td class="c"><input type="checkbox" id="k-x-sym" aria-label="외움"></td><td class="term">대칭키 암호</td><td class="ans">암호화할 때와 풀 때 <b>같은 키 하나</b>를 쓴다. 빠르지만 키를 안전하게 나눠 주기가 어렵다. 종류: <mark>DES, AES, SEED, ARIA</mark>.</td><td class="hint">집 열쇠 하나를 복사해 나눠 갖기. SEED와 ARIA는 한국에서 만든 것</td></tr>
           <tr data-id="x-asym"><td class="c"><input type="checkbox" id="k-x-asym" aria-label="외움"></td><td class="term">비대칭키(공개키) 암호</td><td class="ans"><b>공개키</b>(누구나 가짐)로 잠그고 <b>개인키</b>(나만 가짐)로 연다. 키 나눠 주기 문제가 없지만 느리다. 종류: <mark>RSA, ECC, ElGamal</mark>.</td><td class="hint">우체통: 편지는 누구나 넣을 수 있지만(공개키) 꺼내는 건 열쇠 가진 주인만(개인키)</td></tr>
-          <tr data-quiz="off" data-id="x-keys"><td class="c"><input type="checkbox" id="k-x-keys" aria-label="외움"></td><td class="term">필요한 키 개수 (n명)</td><td class="ans">n명이 서로 암호 통신할 때 필요한 키 개수. 대칭키 = <mark>n(n−1)/2</mark> (두 명마다 하나씩), 비대칭키 = <mark>2n</mark> (한 명당 공개키·개인키 2개).</td><td class="hint">10명이면 대칭키 10×9/2 = 45개, 비대칭키 10×2 = 20개</td></tr>
+          <tr data-id="x-keys" data-quiz="off"><td class="c"><input type="checkbox" id="k-x-keys" aria-label="외움"></td><td class="term">필요한 키 개수 (n명)</td><td class="ans">n명이 서로 암호 통신할 때 필요한 키 개수. 대칭키 = <mark>n(n−1)/2</mark> (두 명마다 하나씩), 비대칭키 = <mark>2n</mark> (한 명당 공개키·개인키 2개).</td><td class="hint">10명이면 대칭키 10×9/2 = 45개, 비대칭키 10×2 = 20개</td></tr>
           <tr data-id="x-hash"><td class="c"><input type="checkbox" id="k-x-hash" aria-label="외움"></td><td class="term">해시<small>MD5, SHA</small></td><td class="ans">어떤 데이터든 <b>정해진 길이의 값</b>으로 바꾼다. 거꾸로 원래 값을 알아낼 수 없다. 데이터가 바뀌었는지(무결성) 확인할 때 쓴다. 종류: MD5, SHA.</td><td class="hint">사람의 지문. 지문으로 사람을 되살릴 순 없지만 같은 사람인지는 알 수 있음. 비밀번호도 해시로 저장</td></tr>
           <tr data-id="x-mac"><td class="c"><input type="checkbox" id="k-x-mac" aria-label="외움"></td><td class="term">MAC / DAC / RBAC</td><td class="ans"><b>MAC</b>(강제적): 관리자가 정한 <b>보안 등급</b>으로 접근을 강제로 통제. <b>DAC</b>(임의적): 데이터 <b>주인</b>이 누구에게 줄지 마음대로 정함. <b>RBAC</b>(역할 기반): <b>직급·역할</b>에 따라 권한을 줌.</td><td class="hint">MAC = 군대 비밀 등급(Mandatory 강제). DAC = 내 구글 드라이브 공유 설정(Discretionary 재량). RBAC = 팀장이면 결재 권한(Role)</td></tr>
           <tr data-id="x-ids"><td class="c"><input type="checkbox" id="k-x-ids" aria-label="외움"></td><td class="term">방화벽 / IDS / IPS</td><td class="ans"><b>방화벽</b>: 정해 둔 규칙대로 통과·차단. <b>IDS</b>: 침입을 <mark>탐지</mark>하고 알리기만 함. <b>IPS</b>: 침입을 탐지해서 <mark>차단</mark>까지 함.</td><td class="hint">IDS = Detection = CCTV(보고 알림만), IPS = Prevention = 경비원(보고 막음)</td></tr>
@@ -1231,33 +953,30 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
         <div class="ans"><ol class="steps build-answer"><li>Advanced</li><li>Persistent</li><li>Threat</li></ol><p class="why">특정 조직을 <b>오랫동안 끈질기게(Persistent)</b> 노리는 지능형 <b>위협(Threat)</b>. Attack이 아니라 Threat.</p></div>
       </article>
     </div>
-
     <p class="group-title">개념 확인 문제</p>
     <div class="grid">
       <article class="item" data-id="q-keys">
         <div class="item-h"><span class="lang">계산</span><h3>필요한 키 개수</h3><label class="chk"><input type="checkbox" id="k-q-keys">외움</label></div>
+        <p class="q">10명이 대칭키 방식으로 서로 1:1 암호 통신을 하려면 키가 몇 개 필요할까?</p>
         <ul class="quiz-opts" hidden data-q="10명이 대칭키 방식으로 서로 1:1 암호 통신을 하려면 키가 몇 개 필요할까?"><li class="ok">45개</li><li>20개</li><li>10개</li><li>90개</li></ul>
         <ul class="quiz-opts" hidden data-q="10명이 비대칭키(공개키) 방식으로 서로 통신하면 키가 몇 개 필요할까?"><li class="ok">20개</li><li>45개</li><li>10개</li><li>100개</li></ul>
         <div class="ans"><p>대칭키 = <mark>n(n−1)/2</mark> (두 명마다 하나씩) → 10×9/2 = 45개. 비대칭키 = <mark>2n</mark> (한 명당 공개키·개인키 2개) → 20개.</p></div>
       </article>
     </div>
-
   </section>
 
-  <!-- ================= UML ================= -->
   <section id="uml">
     <div class="sec-head">
       <span class="sub">PART 4</span>
       <h2>UML, 그림으로 외우기</h2>
       <p>UML은 <mark>소프트웨어 설계도를 그리는 공통 규칙</mark>입니다. 외울 건 딱 세 덩어리: 다이어그램 종류(구조 vs 행위), 관계 6가지(선 모양), 기호 몇 개.</p>
     </div>
-
     <div class="tip"><b>1단계: 다이어그램은 두 편으로 나뉜다</b><span><b>구조(정적)</b> = 사진. 무엇이 있는지. <b>행위(동적)</b> = 동영상. 무엇이 일어나는지.</span><span>문제에서 "시간", "순서", "상태 변화", "흐름"이 보이면 행위, "구성", "관계", "배치"가 보이면 구조입니다.</span></div>
-
     <div class="grid">
       <article class="item" data-id="u-struct">
         <div class="item-h"><h3>구조 다이어그램 (사진)</h3><label class="chk"><input type="checkbox" id="k-u-struct">외움</label></div>
         <span class="mnemo">클 · 객 · 컴 · 배 · 복 · 패</span>
+        <p class="q">다음 중 구조(정적) 다이어그램이 아닌 것은?</p>
         <ul class="quiz-opts" hidden data-q="다음 중 구조(정적) 다이어그램이 아닌 것은?"><li class="ok">시퀀스 다이어그램</li><li>클래스 다이어그램</li><li>컴포넌트 다이어그램</li><li>배치 다이어그램</li></ul>
         <ul class="quiz-opts" hidden data-q="서버, PC 같은 물리적 장비에 무엇이 설치되는지 보여 주는 다이어그램은?"><li class="ok">배치 다이어그램</li><li>컴포넌트 다이어그램</li><li>패키지 다이어그램</li><li>객체 다이어그램</li></ul>
         <div class="ans"><p class="why">시스템이 <b>무엇으로 이루어져 있는지</b>를 보여 주는 그림. 시간이 흘러도 안 변하는 모습 = 사진.</p>
@@ -1274,8 +993,9 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
       <article class="item" data-id="u-behav">
         <div class="item-h"><h3>행위 다이어그램 (동영상)</h3><label class="chk"><input type="checkbox" id="k-u-behav">외움</label></div>
         <span class="mnemo">유 · 시 · 커 · 상 · 활 · 타 · 상호</span>
+        <p class="q">객체끼리 주고받는 메시지를 시간 순서대로 보여 주는 다이어그램은?</p>
         <ul class="quiz-opts" hidden data-q="객체끼리 주고받는 메시지를 시간 순서대로 보여 주는 다이어그램은?"><li class="ok">시퀀스 다이어그램</li><li>커뮤니케이션 다이어그램</li><li>상태 다이어그램</li><li>활동 다이어그램</li></ul>
-        <ul class="quiz-opts" hidden data-q="주문이 &#x27;접수 → 결제완료 → 배송중&#x27;처럼 한 객체의 상태가 바뀌는 과정을 그리는 다이어그램은?"><li class="ok">상태 다이어그램</li><li>활동 다이어그램</li><li>시퀀스 다이어그램</li><li>유스케이스 다이어그램</li></ul>
+        <ul class="quiz-opts" hidden data-q="주문이 '접수 → 결제완료 → 배송중'처럼 한 객체의 상태가 바뀌는 과정을 그리는 다이어그램은?"><li class="ok">상태 다이어그램</li><li>활동 다이어그램</li><li>시퀀스 다이어그램</li><li>유스케이스 다이어그램</li></ul>
         <div class="ans"><p class="why">시스템이 <b>어떻게 움직이는지</b>를 보여 주는 그림. 시간에 따라 일어나는 일 = 동영상.</p>
 <ol class="steps">
 <li><b>유스케이스</b>: 사용자(액터)가 시스템으로 <b>할 수 있는 기능</b> 목록. 식당 메뉴판</li>
@@ -1289,44 +1009,40 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
 <p class="why"><b>외우는 법</b>: "유시커 상활 타상". 문제에 "시간 순서, 메시지"가 보이면 시퀀스, "상태 변화"면 상태, "흐름, 분기"면 활동.</p></div>
       </article>
     </div>
-
     <div class="tip"><b>2단계: 관계 6가지는 선 모양으로 구분</b><span>실선이면 진짜 붙어 있는 관계, 점선이면 약한 관계. 빈 삼각형은 "상속 계열", 마름모는 "전체-부분".</span></div>
-
     <div class="rel">
       <article class="item" data-id="u-assoc">
-        <svg viewBox="0 0 200 40" role="img" aria-label="실선"><line x1="10" y1="20" x2="190" y2="20" stroke="currentColor" stroke-width="2"/></svg>
+        <svg viewBox="0 0 200 40" role="img" aria-label="실선"><line x1="10" y1="20" x2="190" y2="20" stroke="currentColor" stroke-width="2"></line></svg>
         <div class="item-h"><span class="name" style="flex:1">연관 (Association)</span><label class="chk"><input type="checkbox" id="k-u-assoc">외움</label></div>
         <p class="ex ans">두 클래스가 <b>서로 알고 연결</b>돼 있는 가장 기본 관계. 실선으로 잇는다(방향이 있으면 화살표). 예) 학생 — 강의: 학생은 강의를 수강한다</p>
       </article>
       <article class="item" data-id="u-dep">
-        <svg viewBox="0 0 200 40" role="img" aria-label="점선 화살표"><line x1="10" y1="20" x2="186" y2="20" stroke="currentColor" stroke-width="2" stroke-dasharray="7 5"/><polyline points="176,12 190,20 176,28" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+        <svg viewBox="0 0 200 40" role="img" aria-label="점선 화살표"><line x1="10" y1="20" x2="186" y2="20" stroke="currentColor" stroke-width="2" stroke-dasharray="7 5"></line><polyline points="176,12 190,20 176,28" fill="none" stroke="currentColor" stroke-width="2"></polyline></svg>
         <div class="item-h"><span class="name" style="flex:1">의존 (Dependency)</span><label class="chk"><input type="checkbox" id="k-u-dep">외움</label></div>
         <p class="ex ans">한 클래스가 다른 클래스를 <b>잠깐 빌려 쓰는</b> 약한 관계. 메서드 매개변수나 지역변수로만 쓰고 끝남. 점선 + 열린 화살표. 예) 주문.결제하기(카드) → 카드를 잠깐 씀</p>
       </article>
       <article class="item" data-id="u-gen">
-        <svg viewBox="0 0 200 40" role="img" aria-label="실선 빈 삼각형"><line x1="10" y1="20" x2="172" y2="20" stroke="currentColor" stroke-width="2"/><polygon class="hollow" points="172,10 190,20 172,30" stroke="currentColor" stroke-width="2"/></svg>
+        <svg viewBox="0 0 200 40" role="img" aria-label="실선 빈 삼각형"><line x1="10" y1="20" x2="172" y2="20" stroke="currentColor" stroke-width="2"></line><polygon class="hollow" points="172,10 190,20 172,30" stroke="currentColor" stroke-width="2"></polygon></svg>
         <div class="item-h"><span class="name" style="flex:1">일반화 (Generalization)</span><label class="chk"><input type="checkbox" id="k-u-gen">외움</label></div>
         <p class="ex ans"><mark>상속</mark>(is-a). 자식이 부모의 특징을 물려받음. 실선 + <b>빈 삼각형</b>이 <b>부모 쪽</b>을 가리킴. 예) 강아지 ▷ 동물: 강아지는 동물이다. Java의 extends</p>
       </article>
       <article class="item" data-id="u-real">
-        <svg viewBox="0 0 200 40" role="img" aria-label="점선 빈 삼각형"><line x1="10" y1="20" x2="172" y2="20" stroke="currentColor" stroke-width="2" stroke-dasharray="7 5"/><polygon class="hollow" points="172,10 190,20 172,30" stroke="currentColor" stroke-width="2"/></svg>
+        <svg viewBox="0 0 200 40" role="img" aria-label="점선 빈 삼각형"><line x1="10" y1="20" x2="172" y2="20" stroke="currentColor" stroke-width="2" stroke-dasharray="7 5"></line><polygon class="hollow" points="172,10 190,20 172,30" stroke="currentColor" stroke-width="2"></polygon></svg>
         <div class="item-h"><span class="name" style="flex:1">실체화 (Realization)</span><label class="chk"><input type="checkbox" id="k-u-real">외움</label></div>
         <p class="ex ans"><b>인터페이스를 구현</b>하는 관계. 약속(인터페이스)을 실제로 만든 것. <mark>점선</mark> + 빈 삼각형. 예) 카드결제 ⇢▷ 결제가능. Java의 implements. 일반화와 삼각형은 같고 <b>선만 점선</b></p>
       </article>
       <article class="item" data-id="u-agg">
-        <svg viewBox="0 0 200 40" role="img" aria-label="실선 빈 마름모"><polygon class="hollow" points="10,20 26,11 42,20 26,29" stroke="currentColor" stroke-width="2"/><line x1="42" y1="20" x2="190" y2="20" stroke="currentColor" stroke-width="2"/></svg>
+        <svg viewBox="0 0 200 40" role="img" aria-label="실선 빈 마름모"><polygon class="hollow" points="10,20 26,11 42,20 26,29" stroke="currentColor" stroke-width="2"></polygon><line x1="42" y1="20" x2="190" y2="20" stroke="currentColor" stroke-width="2"></line></svg>
         <div class="item-h"><span class="name" style="flex:1">집합 (Aggregation)</span><label class="chk"><input type="checkbox" id="k-u-agg">외움</label></div>
         <p class="ex ans">전체와 부분 관계인데, 부분이 <mark>따로 살 수 있음</mark>. <b>빈 마름모</b>가 <b>전체 쪽</b>에 붙음. 예) 컴퓨터 ◇— 마우스: 컴퓨터를 버려도 마우스는 다른 컴퓨터에 씀</p>
       </article>
       <article class="item" data-id="u-comp">
-        <svg viewBox="0 0 200 40" role="img" aria-label="실선 채운 마름모"><polygon class="solid" points="10,20 26,11 42,20 26,29" stroke="currentColor" stroke-width="2"/><line x1="42" y1="20" x2="190" y2="20" stroke="currentColor" stroke-width="2"/></svg>
+        <svg viewBox="0 0 200 40" role="img" aria-label="실선 채운 마름모"><polygon class="solid" points="10,20 26,11 42,20 26,29" stroke="currentColor" stroke-width="2"></polygon><line x1="42" y1="20" x2="190" y2="20" stroke="currentColor" stroke-width="2"></line></svg>
         <div class="item-h"><span class="name" style="flex:1">포함·합성 (Composition)</span><label class="chk"><input type="checkbox" id="k-u-comp">외움</label></div>
         <p class="ex ans">전체와 부분 관계인데, 전체가 없어지면 <mark>부분도 같이 없어짐</mark>. <b>채운 마름모</b>가 전체 쪽. 예) 집 ◆— 방: 집을 허물면 방도 사라짐. 집합보다 강한 관계</p>
       </article>
     </div>
-
     <div class="tip"><b>마름모 헷갈릴 때</b><span>속이 <b>꽉 찬</b> 마름모 = 관계도 <b>꽉 묶임</b>(같이 죽음). 속이 <b>빈</b> 마름모 = <b>느슨함</b>(따로 삶).</span></div>
-
     <p class="group-title">3단계: 기호 몇 개</p>
     <div class="table-wrap">
       <table>
@@ -1334,7 +1050,7 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
         <tbody>
           <tr data-id="u-vis"><td class="c"><input type="checkbox" id="k-u-vis" aria-label="외움"></td><td class="term">+ / − / # / ~<small>접근 제어자</small></td><td class="ans"><b>+</b>: public, 누구나 접근. <b>−</b>: private, 자기 클래스 안에서만. <b>#</b>: protected, 자기와 자식 클래스만. <b>~</b>: package, 같은 패키지 안에서만.</td><td class="hint">+ 는 열려 있음, − 는 빼서 숨김, # 은 울타리 쳐서 가족(자식)만, ~ 는 동네(패키지)만</td></tr>
           <tr data-id="u-inc"><td class="c"><input type="checkbox" id="k-u-inc" aria-label="외움"></td><td class="term">&lt;&lt;include&gt;&gt; / &lt;&lt;extend&gt;&gt;</td><td class="ans">유스케이스 사이 관계. <b>&lt;&lt;include&gt;&gt;</b>: 실행하면 <b>반드시 같이</b> 실행되는 기능(필수). <b>&lt;&lt;extend&gt;&gt;</b>: <b>조건에 따라 가끔</b> 추가되는 기능(선택).</td><td class="hint">"결제하기"는 항상 "로그인"을 포함(include). "결제하기"에 "쿠폰 적용"은 원할 때만(extend). include = 포함, extend = 확장(덤)</td></tr>
-          <tr data-quiz="off" data-id="u-parts"><td class="c"><input type="checkbox" id="k-u-parts" aria-label="외움"></td><td class="term">UML 구성요소</td><td class="ans">UML을 이루는 3가지: <b>사물</b>(Things, 클래스·객체 같은 대상), <b>관계</b>(Relationships, 대상끼리 연결), <b>다이어그램</b>(Diagram, 이것들을 그린 그림).</td><td class="hint">"무엇이(사물), 어떻게 연결돼서(관계), 그림으로(다이어그램)"</td></tr>
+          <tr data-id="u-parts" data-quiz="off"><td class="c"><input type="checkbox" id="k-u-parts" aria-label="외움"></td><td class="term">UML 구성요소</td><td class="ans">UML을 이루는 3가지: <b>사물</b>(Things, 클래스·객체 같은 대상), <b>관계</b>(Relationships, 대상끼리 연결), <b>다이어그램</b>(Diagram, 이것들을 그린 그림).</td><td class="hint">"무엇이(사물), 어떻게 연결돼서(관계), 그림으로(다이어그램)"</td></tr>
           <tr data-id="u-actor"><td class="c"><input type="checkbox" id="k-u-actor" aria-label="외움"></td><td class="term">액터 (Actor)</td><td class="ans">시스템 <b>바깥</b>에서 시스템을 쓰는 사람이나 시스템. 유스케이스 다이어그램에 졸라맨 모양으로 그린다.</td><td class="hint">쇼핑몰 시스템에서 고객, 관리자, 외부 결제 시스템이 액터. 시스템 안에 있는 건 액터가 아님</td></tr>
         </tbody>
       </table>
@@ -1343,14 +1059,13 @@ INSERT 학생 VALUES (NULL, '홍길동', ...)</pre>
     <div class="grid">
       <article class="item" data-id="q-uml-parts">
         <div class="item-h"><span class="lang">개념</span><h3>UML 구성요소</h3><label class="chk"><input type="checkbox" id="k-q-uml-parts">외움</label></div>
+        <p class="q">UML의 3가지 구성요소가 아닌 것은?</p>
         <ul class="quiz-opts" hidden data-q="UML의 3가지 구성요소가 아닌 것은?"><li class="ok">속성 (Attribute)</li><li>사물 (Things)</li><li>관계 (Relationships)</li><li>다이어그램 (Diagram)</li></ul>
         <div class="ans"><p>UML = <b>사물</b>(클래스·객체 같은 대상) + <b>관계</b>(대상끼리 연결) + <b>다이어그램</b>(이것들을 그린 그림). 속성은 클래스 안의 항목이다.</p></div>
       </article>
     </div>
-
   </section>
 
-  <!-- ================= SWE ================= -->
   <section id="swe">
     <div class="sec-head">
       <span class="sub">PART 5</span>

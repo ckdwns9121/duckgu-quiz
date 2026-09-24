@@ -1,0 +1,56 @@
+  <footer>{{footer}}</footer>
+</div>
+
+<script>
+(function(){
+  var KEY = '{{storage_key}}';
+  var known = {};
+  try { known = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch(e) { known = {}; }
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(known)); } catch(e) {} }
+
+  var units = document.querySelectorAll('[data-id]');
+  var progress = document.getElementById('progress');
+
+  function update(){
+    var n = 0;
+    units.forEach(function(u){
+      var on = !!known[u.dataset.id];
+      u.classList.toggle('known', on);
+      if (on) n++;
+    });
+    progress.innerHTML = '외운 것 <b>' + n + '</b> / ' + units.length;
+  }
+
+  units.forEach(function(u){
+    var box = u.querySelector('input[type=checkbox]');
+    if (!box) return;
+    box.checked = !!known[u.dataset.id];
+    box.addEventListener('change', function(){
+      if (box.checked) known[u.dataset.id] = 1; else delete known[u.dataset.id];
+      save(); update();
+    });
+  });
+
+  document.getElementById('quiz-toggle').addEventListener('change', function(e){
+    document.body.classList.toggle('quiz', e.target.checked);
+    document.querySelectorAll('.ans.shown').forEach(function(a){ a.classList.remove('shown'); });
+  });
+  document.getElementById('known-toggle').addEventListener('change', function(e){
+    document.body.classList.toggle('hide-known', e.target.checked);
+  });
+  document.addEventListener('click', function(e){
+    if (!document.body.classList.contains('quiz')) return;
+    var a = e.target.closest('.ans');
+    if (a) a.classList.toggle('shown');
+  });
+  update();
+})();
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); });
+}
+</script>
+</body>
+</html>

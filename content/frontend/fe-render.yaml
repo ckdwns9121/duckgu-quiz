@@ -1,0 +1,173 @@
+id: fe-render
+name: 렌더링 방식
+color: "#8C4FFF"
+dark: "#6A35CC"
+part: PART 6
+lede: CSR, SSR, SSG, ISR, 스트리밍, hydration, 서버 컴포넌트까지. 페이지마다 어떤 방식을 고를지, 그 선택이 첫 화면과 SEO에 무엇을 바꾸는지 상황으로 익힙니다.
+blocks:
+  - items:
+      - id: fe-rd-q-csrhtml
+        tag: CSR
+        title: 서버가 준 첫 HTML
+        type: mcq
+        quizzes:
+          - q: Create React App·Vite로 만든 SPA(CSR)에서 "페이지 소스 보기"로 서버가 준 첫 HTML을 보면?
+            answer: 빈 <div id="root">와 script뿐이다
+            wrong:
+              - 글 내용까지 모두 그려진 완성된 HTML
+              - 컴포넌트별로 나뉜 HTML 조각 여러 개
+              - 화면 대신 JSON 데이터만 들어 있다
+        explain: <p>CSR은 서버가 <b>빈 껍데기 HTML</b>과 JS만 주고, 브라우저가 JS를 받아 실행한 뒤에야 화면을 그린다. 그래서 JS가 느리거나 실행되지 않으면 빈 화면이고, JS를 실행하지 않는 크롤러에는 내용이 안 보인다. 개발자 도구의 Elements 탭은 JS가 그린 뒤의 DOM이라 "페이지 소스"와 다르다.</p>
+      - id: fe-rd-b-csr
+        tag: CSR
+        title: CSR 페이지가 내용을 보여 주기까지
+        type: build
+        mode: order
+        join: " → "
+        q: CSR(SPA) 페이지에서 사용자가 내용을 보기까지 일어나는 순서대로 놓으세요.
+        tokens:
+          - 빈 HTML 도착
+          - JS 다운로드·실행
+          - API로 데이터 요청
+          - 데이터로 화면 그리기
+        why: <p class="why">내용이 보이려면 HTML → JS → API가 <b>차례로</b> 끝나야 한다(워터폴). 그래서 CSR은 첫 화면(LCP)이 늦어지기 쉽다. SSR·SSG는 서버에서 이 과정을 끝내고 내용이 든 HTML을 보낸다.</p>
+        hints:
+          - 첫 번째 조각은 <b>빈 HTML 도착</b>
+          - 내용이 보이려면 HTML → JS → API가 <b>차례로</b> 끝나야 한다(워터폴). 그래서 CSR은 첫 화면(LCP)이 늦어지기 쉽다. SSR·SSG는 서버에서 이 과정을 끝내고 내용이 든 HTML을 보낸다.
+      - id: fe-rd-q-seo
+        tag: SEO
+        title: 검색 결과에 글 내용 보이기
+        type: mcq
+        quizzes:
+          - q: 검색 결과에 글 내용이 잘 나와야 하는 블로그다. JS를 실행하지 않아도 HTML에 글이 들어 있게 하려면?
+            answer: SSR이나 SSG로 서버에서 HTML을 만든다
+            wrong:
+              - CSR로 만들고 로딩 스피너를 보여 준다
+              - useEffect에서 글을 fetch해 그린다
+              - 서비스 워커로 글을 캐시해 둔다
+        explain: <p>SSR·SSG는 <b>내용이 든 HTML</b>을 보내므로 크롤러와 링크 미리보기(Open Graph)가 바로 읽는다. CSR에서 useEffect로 가져온 내용은 JS를 실행해야 생긴다. 서비스 워커 캐시는 재방문 속도를 올릴 뿐 첫 HTML에 내용을 넣지 않는다.</p>
+      - id: fe-rd-q-choose
+        tag: 렌더링 고르기
+        title: 페이지마다 방식 고르기
+        type: mcq
+        quizzes:
+          - q: 배포할 때만 내용이 바뀌는 회사 소개 페이지에 가장 알맞은 방식은?
+            answer: SSG (빌드할 때 HTML 생성)
+            wrong:
+              - SSR (요청마다 서버에서 생성)
+              - CSR (브라우저에서 생성)
+              - ISR (정해진 시간마다 다시 생성)
+          - q: 로그인한 사용자별 장바구니 내용을 첫 HTML에 담아야 한다. 가장 알맞은 방식은?
+            answer: SSR (요청마다 서버에서 생성)
+            wrong:
+              - SSG (빌드할 때 HTML 생성)
+              - ISR (정해진 시간마다 다시 생성)
+              - CSR (브라우저에서 생성)
+          - q: 상품 상세 페이지가 10만 개이고, 가격이 몇 분 늦게 반영돼도 괜찮다. 빌드를 매번 다시 하지 않으려면?
+            answer: ISR (정해진 시간마다 다시 생성)
+            wrong:
+              - SSG (빌드할 때 HTML 생성)
+              - SSR (요청마다 서버에서 생성)
+              - CSR (브라우저에서 생성)
+        explain: "<p><b>SSG</b>: 빌드 때 한 번 만들어 CDN에서 바로 준다(가장 빠르고 싸다). <b>SSR</b>: 요청마다 만들어 사용자별 내용을 담을 수 있다(서버 비용, TTFB 증가). <b>ISR</b>: 정적 페이지를 두되 정한 시간이 지나면 다시 만든다(많은 페이지 + 약간의 지연 허용). <b>CSR</b>: 서버는 껍데기만, 로그인 뒤 대시보드처럼 SEO가 필요 없는 화면에 알맞다.</p>"
+      - id: fe-rd-b-ssr
+        tag: SSR
+        title: SSR 페이지가 동작하기까지
+        type: build
+        mode: order
+        join: " → "
+        q: SSR 페이지가 화면에 보이고 클릭까지 되기까지의 순서대로 놓으세요.
+        tokens:
+          - 서버가 데이터를 받아 HTML 생성
+          - HTML 도착, 내용이 바로 보임
+          - JS 다운로드
+          - hydration (이벤트 연결)
+          - 클릭에 반응
+        why: <p class="why">SSR은 내용이 <b>먼저 보이고</b>, JS가 도착해 hydration이 끝나야 <b>동작한다</b>. 보이는 시점과 반응하는 시점 사이에 틈이 있다.</p>
+        hints:
+          - 첫 번째 조각은 <b>서버가 데이터를 받아 HTML 생성</b>
+          - SSR은 내용이 <b>먼저 보이고</b>, JS가 도착해 hydration이 끝나야 <b>동작한다</b>. 보이는 시점과 반응하는 시점 사이에 틈이 있다.
+      - id: fe-rd-q-hydration
+        tag: hydration
+        title: 보이는데 안 눌리는 버튼
+        type: mcq
+        quizzes:
+          - q: SSR 페이지에서 버튼이 보이는데, 처음 몇 초 동안은 눌러도 반응이 없다. 이유는?
+            answer: JS가 도착해 hydration이 끝나기 전이라서
+            wrong:
+              - 서버가 버튼 클릭을 막아 두어서
+              - CSS가 아직 도착하지 않아서
+              - SSR 버튼은 새로고침해야 동작해서
+        explain: <p>SSR HTML은 <b>모양만</b> 있고 이벤트 핸들러는 없다. JS를 받아 React가 같은 트리를 다시 만들며 핸들러를 붙이는 <b>hydration</b>이 끝나야 동작한다. JS가 크거나 메인 스레드가 바쁘면 이 틈이 길어진다. 그래서 JS를 줄이거나 필요한 부분만 hydration하는 방법(서버 컴포넌트, 아일랜드)이 나왔다.</p>
+      - id: fe-rd-q-ttfb
+        tag: SSR
+        title: SSR로 바꿨더니 느려진 것
+        type: mcq
+        quizzes:
+          - q: CSR 페이지를 SSR로 바꿨더니 첫 화면은 빨라졌는데 TTFB(첫 바이트까지 시간)는 늘었다. 이유는?
+            answer: 서버가 데이터를 받아 HTML을 다 만든 뒤에 보내서
+            wrong:
+              - JS 번들이 커져서
+              - 브라우저가 HTML을 두 번 파싱해서
+              - hydration이 서버에서 한 번 더 돌아서
+        explain: <p>SSR은 서버가 데이터를 가져와 HTML을 만드는 동안 응답을 시작하지 못해 <b>TTFB가 늘 수 있다</b>. 대신 도착한 HTML에 내용이 있어 첫 화면(FCP·LCP)은 빨라진다. 느린 데이터는 스트리밍(Suspense)으로 분리하면 TTFB도 줄일 수 있다.</p>
+      - id: fe-rd-q-stream
+        tag: 스트리밍
+        title: 느린 부분 기다리지 않기
+        type: mcq
+        quizzes:
+          - q: SSR 페이지에서 추천 목록 API만 3초 걸린다. 나머지 내용을 먼저 보여 주려면?
+            answer: 추천 목록을 Suspense로 감싸 HTML을 스트리밍한다
+            wrong:
+              - 추천 목록 API를 await로 기다린 뒤 한꺼번에 보낸다
+              - 페이지 전체를 CSR로 바꾼다
+              - 추천 목록 API 결과를 localStorage에 저장한다
+        explain: <p><b>스트리밍 SSR</b>은 준비된 HTML부터 먼저 보내고, Suspense로 감싼 느린 부분은 준비되면 이어서 흘려보낸다. 사용자는 나머지를 먼저 보고, 느린 부분 자리에는 fallback(스켈레톤)이 보인다. 전체를 CSR로 바꾸면 SEO와 첫 화면을 잃는다.</p>
+      - id: fe-rd-q-isr
+        tag: ISR
+        title: 시간이 지난 뒤 첫 요청
+        type: mcq
+        quizzes:
+          - q: Next.js에서 revalidate = 60인 페이지다. 60초가 지난 뒤 들어온 첫 요청은 무엇을 받을까?
+            answer: 옛 페이지를 바로 받고, 새 페이지는 뒤에서 만들어진다
+            wrong:
+              - 새 페이지가 다 만들어질 때까지 기다렸다가 받는다
+              - 404를 받고, 다음 요청부터 새 페이지를 받는다
+              - 매번 요청마다 새로 만든 페이지를 받는다
+        explain: <p>ISR은 <b>stale-while-revalidate</b>다. 시간이 지나도 첫 요청에는 캐시된(옛) 페이지를 바로 주고, 뒤에서 새 페이지를 만든다. 다 만들어지면 그다음 요청부터 새 페이지가 간다. 그래서 "60초마다 갱신"이지만 실제 반영은 그보다 한 번의 요청만큼 늦다. (Next.js 공식 문서 기준)</p>
+      - id: fe-rd-q-rsc
+        tag: 서버 컴포넌트
+        title: 서버 컴포넌트와 SSR의 차이
+        type: mcq
+        quizzes:
+          - q: React 서버 컴포넌트(RSC)에 대한 설명으로 맞는 것은?
+            answer: 서버 컴포넌트의 코드는 브라우저 번들에 들어가지 않는다
+            wrong:
+              - 서버 컴포넌트도 브라우저에서 hydration된다
+              - SSR과 같은 말이라 차이가 없다
+              - 서버 컴포넌트에서는 useState를 쓸 수 있다
+        explain: <p><b>SSR</b>은 컴포넌트를 서버에서 HTML로 <b>한 번 더</b> 그리는 것이라, 그 컴포넌트의 JS는 여전히 브라우저로 가서 hydration된다. <b>서버 컴포넌트</b>는 서버에서만 실행되고 결과만 보내므로 <b>코드가 번들에 들어가지 않고</b> hydration도 없다. 대신 state·이벤트는 못 쓰고, 그런 부분만 클라이언트 컴포넌트로 뗀다.</p>
+      - id: fe-rd-q-island
+        tag: 아일랜드
+        title: 정적인 페이지 속 인터랙티브 한 부분
+        type: mcq
+        quizzes:
+          - q: 페이지 대부분은 정적인 글이고, 이미지 캐러셀 하나만 움직인다. JS를 캐러셀에만 보내는 구조는?
+            answer: 아일랜드 아키텍처 (필요한 부분만 hydration)
+            wrong:
+              - SPA (페이지 전체를 JS로 렌더링)
+              - SSR + 페이지 전체 hydration
+              - ISR (정해진 시간마다 다시 생성)
+        explain: <p><b>아일랜드</b>는 정적 HTML 바다 위에 인터랙티브한 섬(컴포넌트)만 따로 hydration한다(Astro가 대표적). 전체 hydration은 움직이지 않는 글까지 JS로 다시 만들어 낭비가 크다. 서버 컴포넌트도 "필요한 부분만 클라이언트로"라는 같은 생각이다.</p>
+      - id: fe-rd-q-personal
+        tag: SSG
+        title: 정적 페이지에 사용자 이름
+        type: mcq
+        quizzes:
+          - q: SSG로 만든 페이지 상단에 "안녕하세요, ○○님"처럼 로그인한 사용자 이름을 보여 주고 싶다. 가장 알맞은 방법은?
+            answer: 페이지는 정적으로 두고, 이름만 브라우저에서 가져와 채운다
+            wrong:
+              - 빌드할 때 사용자마다 페이지를 하나씩 만든다
+              - SSG 페이지 안에서 쿠키를 읽어 HTML에 넣는다
+              - ISR을 1초로 해서 사용자마다 다시 만든다
+        explain: <p>SSG HTML은 <b>모든 사람에게 같은 파일</b>이라 사용자별 값을 담을 수 없다(빌드 때는 요청도 쿠키도 없다). 공통 부분은 정적으로 빠르게 주고, 이름처럼 사람마다 다른 작은 부분만 브라우저에서 가져오거나(CSR), 그 부분만 서버에서 스트리밍한다. 페이지 전체를 SSR로 바꾸는 것보다 싸다.</p>

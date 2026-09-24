@@ -6,6 +6,8 @@
    "desc": "정보처리기사 실기: 코드 함정, DB, 네트워크, 보안, UML, 소프트웨어 공학",
    "notes": "notes.html",
    "icon": "정보처리\n기사",
+   "color": "#58CC02",
+   "dark": "#58A700",
    "units": [
     {
      "id": "code-c",
@@ -61,9 +63,7 @@
      "color": "#FF6FAE",
      "dark": "#D9508E"
     }
-   ],
-   "color": "#58CC02",
-   "dark": "#58A700"
+   ]
   },
   {
    "id": "frontend",
@@ -71,6 +71,8 @@
    "desc": "JavaScript, 이벤트 루프, 브라우저, CSS, React, 렌더링 방식, Next.js, 성능 최적화, 웹 기본기",
    "notes": "notes-frontend.html",
    "icon": "FE",
+   "color": "#1CB0F6",
+   "dark": "#1899D6",
    "units": [
     {
      "id": "fe-js",
@@ -126,9 +128,7 @@
      "color": "#FF9600",
      "dark": "#CD7900"
     }
-   ],
-   "color": "#1CB0F6",
-   "dark": "#1899D6"
+   ]
   },
   {
    "id": "aws",

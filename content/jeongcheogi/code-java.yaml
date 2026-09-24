@@ -1,0 +1,225 @@
+id: code-java
+name: Java 함정
+color: "#1CB0F6"
+dark: "#1899D6"
+part: PART 1 · 코드
+lede: 핵심은 한 문장입니다. <mark>메서드는 실제 객체(new 뒤)를 따라가고, 필드와 static은 변수 타입(앞쪽)을 따라간다.</mark>
+blocks:
+  - items:
+      - id: j1
+        tag: Java
+        title: 업캐스팅 + 오버라이딩
+        type: answer
+        code: |-
+          class A { void show(){ System.out.print("A"); } }
+          class B extends A {
+            void show(){ System.out.print("B"); }
+          }
+          A obj = new B();
+          obj.show();
+        q: 출력은?
+        answer: B
+        steps:
+          - <code>A obj = new B();</code> → 변수 타입은 A, <b>실제로 만든 객체는 B</b>
+          - B가 show()를 <b>오버라이딩</b>(같은 모양으로 다시 정의)함
+          - 메서드를 부를 때는 <b>실제 객체(B)</b>의 것을 씀 → "B"
+        why: "<b>기억할 것</b>: <mark>메서드는 new 뒤를 본다</mark>. 겉포장(A)이 아니라 안에 든 물건(B)이 일한다. 이걸 동적 바인딩이라고 한다."
+        hints: []
+      - id: j2
+        tag: Java
+        title: 필드는 다형성 없음
+        type: answer
+        code: |-
+          class A { int x = 1; }
+          class B extends A { int x = 2; }
+          A o = new B();
+          System.out.print(o.x);
+        q: 출력은?
+        answer: "1"
+        steps:
+          - A에도 x, B에도 x가 <b>각각 따로</b> 있음 (B 객체 안에 x가 두 개)
+          - 필드(변수)는 오버라이딩이 <b>안 됨</b>
+          - 그래서 <b>변수 타입 A</b>를 보고 A의 x를 읽음 → 1
+        why: "<b>기억할 것</b>: <mark>메서드는 new 뒤(B), 필드는 앞쪽 타입(A)</mark>. 문제에서 <code>o.x</code>처럼 변수에 바로 점을 찍으면 선언 타입을 본다."
+        hints:
+          - A에도 x, B에도 x가 <b>각각 따로</b> 있음 (B 객체 안에 x가 두 개)
+          - "<b>기억할 것</b>: <mark>메서드는 new 뒤(B), 필드는 앞쪽 타입(A)</mark>. 문제에서 <code>o.x</code>처럼 변수에 바로 점을 찍으면 선언 타입을 본다."
+      - id: j3
+        tag: Java
+        title: static 메서드
+        type: answer
+        code: |-
+          class A { static void hi(){ System.out.print("A"); } }
+          class B extends A {
+            static void hi(){ System.out.print("B"); }
+          }
+          A o = new B();
+          o.hi();
+        q: 출력은?
+        answer: A
+        steps:
+          - <code>static</code> 메서드는 객체가 아니라 <b>클래스에 붙어 있는</b> 메서드
+          - 그래서 오버라이딩이 안 되고, 자식 것은 그냥 이름만 같은 <b>별개 메서드</b>(숨김, hiding)
+          - <code>o.hi()</code> → o의 <b>선언 타입 A</b>의 hi()가 실행 → "A"
+        why: '<b>기억할 것</b>: static은 "클래스 전용". <mark>static 메서드와 필드는 앞쪽 타입, 일반 메서드만 new 뒤</mark>. j1과 차이를 꼭 비교하기.'
+        hints:
+          - <code>static</code> 메서드는 객체가 아니라 <b>클래스에 붙어 있는</b> 메서드
+          - '<b>기억할 것</b>: static은 "클래스 전용". <mark>static 메서드와 필드는 앞쪽 타입, 일반 메서드만 new 뒤</mark>. j1과 차이를 꼭 비교하기.'
+      - id: j4
+        tag: Java
+        title: 생성자 호출 순서
+        type: answer
+        code: |-
+          class A { A(){ System.out.print("A"); } }
+          class B extends A {
+            B(){ System.out.print("B"); }
+          }
+          new B();
+        q: 출력은?
+        answer: AB
+        steps:
+          - <code>new B()</code> → B의 생성자 호출
+          - B 생성자 첫 줄에는 눈에 안 보이는 <code>super();</code>가 자동으로 들어 있음
+          - 그래서 <b>A 생성자가 먼저</b> 실행 → "A"
+          - 다시 B 생성자로 돌아와 나머지 실행 → "B"
+        why: "<b>기억할 것</b>: <mark>부모가 먼저 태어나야 자식이 태어난다</mark>. 생성자 출력 순서는 항상 부모 → 자식."
+        hints:
+          - <code>new B()</code> → B의 생성자 호출
+          - "<b>기억할 것</b>: <mark>부모가 먼저 태어나야 자식이 태어난다</mark>. 생성자 출력 순서는 항상 부모 → 자식."
+      - id: j5
+        tag: Java
+        title: super.메서드()
+        type: answer
+        code: |-
+          class A { void f(){ System.out.print("1"); } }
+          class B extends A {
+            void f(){ super.f(); System.out.print("2"); }
+          }
+          new B().f();
+        q: 출력은?
+        answer: "12"
+        steps:
+          - <code>new B().f()</code> → B의 f() 실행
+          - 첫 줄 <code>super.f()</code> → <b>부모 A의 f()</b>를 부름 → "1"
+          - B의 f()로 돌아와 다음 줄 → "2"
+        why: '<b>기억할 것</b>: <mark>super.메서드()는 "부모 버전 실행해 줘"</mark>. 오버라이딩해도 부모 것을 이렇게 따로 부를 수 있다.'
+        hints:
+          - <code>new B().f()</code> → B의 f() 실행
+          - '<b>기억할 것</b>: <mark>super.메서드()는 "부모 버전 실행해 줘"</mark>. 오버라이딩해도 부모 것을 이렇게 따로 부를 수 있다.'
+      - id: j6
+        tag: Java
+        title: 문자열 + 숫자
+        type: answer
+        code: System.out.print(1 + 2 + "3" + 4 + 5);
+        q: 출력은?
+        answer: "3345"
+        steps:
+          - +는 <b>왼쪽부터</b> 하나씩 계산
+          - <code>1 + 2</code> → 둘 다 숫자라 덧셈 → <b>3</b>
+          - <code>3 + "3"</code> → 문자열이 끼면 <b>이어붙이기</b> → "33"
+          - <code>"33" + 4</code> → "334", <code>"334" + 5</code> → <b>"3345"</b>
+        why: '<b>기억할 것</b>: <mark>문자열을 만나기 전까지는 덧셈, 만난 뒤로는 전부 붙이기</mark>. 만약 <code>"3" + 1 + 2</code>였다면 처음부터 문자열이라 "312".'
+        hints:
+          - +는 <b>왼쪽부터</b> 하나씩 계산
+          - '<b>기억할 것</b>: <mark>문자열을 만나기 전까지는 덧셈, 만난 뒤로는 전부 붙이기</mark>. 만약 <code>"3" + 1 + 2</code>였다면 처음부터 문자열이라 "312".'
+      - id: j7
+        tag: Java
+        title: String == 와 equals
+        type: answer
+        code: |-
+          String a = "hi";
+          String b = "hi";
+          String c = new String("hi");
+          System.out.print((a==b) + " " + (a==c) + " " + a.equals(c));
+        q: 출력은?
+        answer: true false true
+        steps:
+          - <code>a = "hi"</code>, <code>b = "hi"</code> → 같은 글자를 따옴표로 쓰면 Java가 <b>하나를 만들어 같이 씀</b> → a와 b는 같은 객체 → <code>a==b</code> <b>true</b>
+          - <code>c = new String("hi")</code> → new는 무조건 <b>새 객체</b> → <code>a==c</code> <b>false</b>
+          - <code>a.equals(c)</code> → 글자 내용만 비교 → 둘 다 "hi" → <b>true</b>
+        why: '<b>기억할 것</b>: <mark>== 는 "같은 물건이냐", equals는 "내용이 같냐"</mark>. 쌍둥이는 equals는 true, == 는 false.'
+        hints:
+          - <code>a = "hi"</code>, <code>b = "hi"</code> → 같은 글자를 따옴표로 쓰면 Java가 <b>하나를 만들어 같이 씀</b> → a와 b는 같은 객체 → <code>a==b</code> <b>true</b>
+          - '<b>기억할 것</b>: <mark>== 는 "같은 물건이냐", equals는 "내용이 같냐"</mark>. 쌍둥이는 equals는 true, == 는 false.'
+      - id: j8
+        tag: Java
+        title: static 변수 공유
+        type: answer
+        code: |-
+          class C {
+            static int cnt = 0;
+            C(){ cnt++; }
+          }
+          new C(); new C(); new C();
+          System.out.print(C.cnt);
+        q: 출력은?
+        answer: "3"
+        steps:
+          - <code>static int cnt</code>는 C 클래스 전체에 <b>딱 하나</b>만 있음
+          - 객체를 만들 때마다 생성자에서 cnt++ → 1, 2, 3
+          - 세 객체가 <b>같은 cnt 하나</b>를 올렸으므로 결과 3
+        why: "<b>기억할 것</b>: 일반 변수는 객체마다 따로(각자 1), <mark>static 변수는 모두가 공유하는 한 개</mark>. 반 전체 출석부 같은 것."
+        hints:
+          - <code>static int cnt</code>는 C 클래스 전체에 <b>딱 하나</b>만 있음
+          - "<b>기억할 것</b>: 일반 변수는 객체마다 따로(각자 1), <mark>static 변수는 모두가 공유하는 한 개</mark>. 반 전체 출석부 같은 것."
+      - id: j9
+        tag: Java
+        title: 오버로딩 vs 오버라이딩
+        type: mcq
+        quizzes:
+          - q: 부모 클래스의 메서드를 자식 클래스에서 이름·매개변수·반환형까지 똑같이 다시 정의하는 것은?
+            answer: 오버라이딩 (Overriding)
+            wrong:
+              - 오버로딩 (Overloading)
+              - 캡슐화 (Encapsulation)
+              - 추상화 (Abstraction)
+            hints:
+              - "<b>외우는 법</b>: 로딩(loading) = 짐을 다르게 싣기(매개변수가 다름). 라이딩(riding) = 부모 위에 올라타 덮어쓰기."
+          - q: 한 클래스 안에서 이름은 같고 매개변수의 개수나 타입만 다른 메서드를 여러 개 만드는 것은?
+            answer: 오버로딩 (Overloading)
+            wrong:
+              - 오버라이딩 (Overriding)
+              - 상속 (Inheritance)
+              - 인터페이스 구현 (implements)
+            hints:
+              - "<b>외우는 법</b>: 로딩(loading) = 짐을 다르게 싣기(매개변수가 다름). 라이딩(riding) = 부모 위에 올라타 덮어쓰기."
+        note_q: 둘의 차이는?
+        explain: |-
+          <p><b>오버로딩 (Overloading)</b></p>
+          <ol class="steps">
+          <li>한 클래스 안에서 <b>이름이 같은 메서드를 여러 개</b> 만드는 것</li>
+          <li>조건: <mark>매개변수의 개수나 타입이 달라야 함</mark></li>
+          <li>반환형만 다르면 안 됨 (컴파일 에러)</li>
+          <li>예) <code>add(int a, int b)</code>, <code>add(double a, double b)</code></li>
+          </ol>
+          <p><b>오버라이딩 (Overriding)</b></p>
+          <ol class="steps">
+          <li>상속받은 <b>부모 메서드를 자식이 다시 정의</b>하는 것</li>
+          <li>조건: 이름, 매개변수, 반환형이 <mark>부모와 똑같아야 함</mark></li>
+          <li>예) 부모 <code>sound()</code> "..." → 자식 강아지 <code>sound()</code> "멍멍"</li>
+          </ol>
+          <p class="why"><b>외우는 법</b>: 로딩(loading) = 짐을 다르게 싣기(매개변수가 다름). 라이딩(riding) = 부모 위에 올라타 덮어쓰기.</p>
+      - id: j10
+        tag: Java
+        title: try-catch-finally
+        type: answer
+        code: |-
+          try {
+            int x = 10 / 0;
+            System.out.print("A");
+          } catch (ArithmeticException e) {
+            System.out.print("B");
+          } finally {
+            System.out.print("C");
+          }
+        q: 출력은?
+        answer: BC
+        steps:
+          - <code>10 / 0</code> → 0으로 나눔 → <b>ArithmeticException 발생</b>
+          - 예외가 난 순간 try 블록의 <b>나머지 줄은 건너뜀</b> → "A"는 출력 안 됨
+          - 맞는 catch로 이동 → "B"
+          - <code>finally</code>는 예외가 나든 안 나든 <b>항상</b> 실행 → "C"
+        why: '<b>기억할 것</b>: <mark>예외 난 줄 아래는 스킵, finally는 무조건</mark>. 예외가 안 났다면 "AC".'
+        hints:
+          - <code>10 / 0</code> → 0으로 나눔 → <b>ArithmeticException 발생</b>
+          - '<b>기억할 것</b>: <mark>예외 난 줄 아래는 스킵, finally는 무조건</mark>. 예외가 안 났다면 "AC".'

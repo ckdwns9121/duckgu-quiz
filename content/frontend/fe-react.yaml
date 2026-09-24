@@ -1,0 +1,663 @@
+id: fe-react
+name: React
+color: "#00CD9C"
+dark: "#00A47D"
+part: PART 5
+lede: 상태 업데이트, 렌더링, useEffect, key처럼 React에서 실수가 가장 잦은 부분입니다. React 18 기준입니다.
+blocks:
+  - items:
+      - id: fe-re-q-batch
+        tag: 상태
+        title: state 업데이트
+        type: mcq
+        code: |-
+          const [n, setN] = useState(0);
+
+          function onClick() {
+            setN(n + 1);
+            setN(n + 1);
+            setN(n + 1);
+          }
+        quizzes:
+          - q: n이 0일 때 버튼을 한 번 누르면 n은 몇이 될까?
+            answer: "1"
+            wrong:
+              - "3"
+              - "0"
+              - "2"
+        explain: <p>세 줄 모두 <b>렌더링 당시의 n(0)</b>을 보고 0 + 1을 넣는다. React 18은 한 이벤트 안의 업데이트를 묶어서(batching) 한 번만 다시 렌더링하므로 결과는 <b>1</b>.</p>
+      - id: fe-re-q-updater
+        tag: 상태
+        title: 함수형 업데이트
+        type: mcq
+        code: |-
+          const [n, setN] = useState(0);
+
+          function onClick() {
+            setN((p) => p + 1);
+            setN((p) => p + 1);
+            setN((p) => p + 1);
+          }
+        quizzes:
+          - q: n이 0일 때 버튼을 한 번 누르면 n은 몇이 될까?
+            answer: "3"
+            wrong:
+              - "1"
+              - "0"
+              - "6"
+        explain: <p><code>setN(p =&gt; p + 1)</code>은 <b>바로 앞 업데이트 결과(p)</b>를 받아서 계산한다. 0 → 1 → 2 → 3. 이전 값에 기대는 업데이트는 함수형으로 쓴다.</p>
+      - id: fe-re-q-log
+        tag: 상태
+        title: set 직후 state 읽기
+        type: mcq
+        code: |-
+          const [n, setN] = useState(0);
+
+          function onClick() {
+            setN(n + 1);
+            console.log(n);
+          }
+        quizzes:
+          - q: n이 0일 때 버튼을 누르면 콘솔에 찍히는 값은?
+            answer: "0"
+            wrong:
+              - "1"
+              - undefined
+              - 에러가 난다
+        explain: <p>setN은 state를 바로 바꾸지 않고 <b>다음 렌더링을 예약</b>한다. 지금 실행 중인 함수 안의 n은 이번 렌더링의 값(0) 그대로다. 바뀐 값은 다음 렌더링에서 보인다.</p>
+      - id: fe-re-q-immut
+        tag: 상태
+        title: 배열 state 바꾸기
+        type: mcq
+        quizzes:
+          - q: state 배열 list에 item을 추가하는 올바른 방법은?
+            answer: setList([...list, item])
+            wrong:
+              - list.push(item)
+              - list.push(item); setList(list)
+              - list = [...list, item]
+        explain: <p>React는 <b>이전 값과 새 값이 같은 객체인지</b>로 바뀌었는지 판단한다. push로 원본을 바꾸고 같은 배열을 넘기면 바뀐 걸 모른다. 항상 <b>새 배열</b>을 만들어 넘긴다.</p>
+      - id: fe-re-b-render
+        tag: 순서
+        title: state가 바뀐 뒤 화면까지
+        type: build
+        mode: order
+        join: " → "
+        q: state를 바꾼 뒤 일어나는 일을 순서대로 놓으세요.
+        tokens:
+          - state 변경
+          - 컴포넌트 함수 다시 실행
+          - 가상 DOM 비교
+          - 실제 DOM 반영
+          - useEffect 실행
+        why: <p class="why">state가 바뀌면 컴포넌트를 다시 불러 새 가상 DOM을 만들고(<b>렌더</b>), 이전 것과 비교해서 바뀐 부분만 실제 DOM에 반영(<b>커밋</b>)한 뒤, 마지막에 <b>useEffect</b>가 실행된다.</p>
+        hints:
+          - 첫 번째 조각은 <b>state 변경</b>
+          - state가 바뀌면 컴포넌트를 다시 불러 새 가상 DOM을 만들고(<b>렌더</b>), 이전 것과 비교해서 바뀐 부분만 실제 DOM에 반영(<b>커밋</b>)한 뒤, 마지막에 <b>useEffect</b>가 실행된다.
+      - id: fe-re-q-ref
+        tag: useRef
+        title: ref를 바꾸면
+        type: mcq
+        code: |-
+          const clicks = useRef(0);
+
+          return (
+            <button onClick={() => clicks.current++}>
+              {clicks.current}
+            </button>
+          );
+        quizzes:
+          - q: 버튼을 세 번 누르면 화면에 보이는 숫자는?
+            answer: "0"
+            wrong:
+              - "3"
+              - "1"
+              - 에러가 난다
+        explain: <p><b>ref.current를 바꿔도 다시 렌더링되지 않는다</b>. 값은 3으로 올라가 있지만 화면은 처음 렌더링한 0 그대로다. 화면에 보여야 하는 값은 state로, 렌더링과 상관없는 값(타이머 id, 이전 값)은 ref로.</p>
+      - id: fe-re-q-effect
+        tag: useEffect
+        title: useEffect 실행 시점
+        type: mcq
+        quizzes:
+          - q: useEffect(fn, [])의 fn은 언제 실행될까?
+            answer: 처음 화면에 그려진 뒤 한 번
+            wrong:
+              - 렌더링할 때마다
+              - 처음 렌더링 직전에 한 번
+              - state가 바뀔 때마다
+          - q: useEffect(fn, [id])에서 fn이 돌려준 cleanup은 언제 실행될까?
+            answer: 다음 fn 실행 직전과 언마운트될 때
+            wrong:
+              - 컴포넌트가 사라질 때만
+              - fn이 실행된 바로 직후
+              - 렌더링할 때마다 fn보다 먼저
+        explain: <p>effect는 <b>화면에 반영(커밋)된 뒤</b> 실행된다. 의존성 배열이 []면 마운트 뒤 한 번. cleanup은 <b>의존성이 바뀌어 effect가 다시 실행되기 직전</b>과 <b>언마운트될 때</b> 실행된다.</p>
+      - id: fe-re-q-loop
+        tag: useEffect
+        title: effect 안의 fetch
+        type: mcq
+        code: |-
+          const [user, setUser] = useState(null);
+
+          useEffect(() => {
+            fetch('/api/me')
+              .then((r) => r.json())
+              .then(setUser);
+          });
+        quizzes:
+          - q: 이 컴포넌트의 문제는?
+            answer: 렌더링마다 요청해서 끝없이 반복된다
+            wrong:
+              - 처음 한 번만 요청해서 갱신이 안 된다
+              - user가 null이라 바로 에러가 난다
+              - 문제없다
+        explain: <p>의존성 배열이 없으면 effect는 <b>렌더링할 때마다</b> 실행된다. 요청 → setUser → 다시 렌더링 → 다시 요청… 무한 반복. 처음 한 번만 부르려면 <code>[]</code>를 준다.</p>
+      - id: fe-re-q-objdep
+        tag: useEffect
+        title: effect의 의존성
+        type: mcq
+        code: |-
+          function List({ page }) {
+            const query = { page, size: 20 };
+
+            useEffect(() => {
+              fetchList(query);
+            }, [query]);
+            // ...
+          }
+        quizzes:
+          - q: 이 effect는 언제 실행될까?
+            answer: 렌더링할 때마다
+            wrong:
+              - page가 바뀔 때만
+              - 처음 한 번만
+              - 실행되지 않는다
+        explain: <p>query는 렌더링할 때마다 <b>새로 만든 객체</b>라 이전 것과 주소가 다르다. React는 의존성을 <code>Object.is</code>로 비교하므로 매번 바뀐 것으로 본다. 원시값 <code>[page]</code>를 의존성으로 쓰거나 useMemo로 객체를 고정한다.</p>
+      - id: fe-re-q-stale
+        tag: useEffect
+        title: interval 안의 state
+        type: mcq
+        code: |-
+          const [count, setCount] = useState(0);
+
+          useEffect(() => {
+            const id = setInterval(() => {
+              setCount(count + 1);
+            }, 1000);
+            return () => clearInterval(id);
+          }, []);
+        quizzes:
+          - q: 시간이 지나면 화면의 count는 어떻게 될까?
+            answer: 1이 된 뒤 더 오르지 않는다
+            wrong:
+              - 1초마다 1씩 계속 오른다
+              - 0에서 바뀌지 않는다
+              - 1초마다 2씩 오른다
+        explain: <p>의존성이 []라 effect는 한 번만 실행되고, 그 안의 콜백은 <b>처음 렌더링의 count(0)</b>를 계속 기억한다(오래된 클로저). 매번 <code>setCount(0 + 1)</code>이라 1에서 멈춘다. <code>setCount((c) =&gt; c + 1)</code>로 바꾸면 계속 오른다.</p>
+      - id: fe-re-q-strict
+        tag: useEffect
+        title: effect가 두 번 실행될 때
+        type: mcq
+        quizzes:
+          - q: 개발 모드에서만 useEffect(fn, [])의 fn이 두 번 실행된다. 이유는?
+            answer: StrictMode가 cleanup을 검사하려고
+            wrong:
+              - 의존성 배열이 비어 있으면 원래 두 번이라서
+              - 개발 서버가 코드를 두 번 불러와서
+              - React 18의 알려진 버그라서
+        explain: <p>React 18의 <b>StrictMode</b>는 개발 모드에서 마운트 → 언마운트 → 다시 마운트를 해서 <b>cleanup을 제대로 썼는지</b> 드러낸다. 배포(프로덕션) 빌드에서는 한 번만 실행된다. 두 번 실행돼서 문제가 생기면 cleanup이 빠진 것이다.</p>
+      - id: fe-re-q-hook
+        tag: 훅 규칙
+        title: 조건문 안의 훅
+        type: mcq
+        code: |-
+          function Profile({ isLoggedIn }) {
+            if (isLoggedIn) {
+              const [name, setName] = useState('');
+            }
+            const [tab, setTab] = useState('home');
+            // ...
+          }
+        quizzes:
+          - q: 이 코드의 문제는?
+            answer: 렌더링마다 훅 호출 순서가 달라져 state가 꼬인다
+            wrong:
+              - name을 if 밖에서 못 쓸 뿐 동작은 괜찮다
+              - isLoggedIn이 false면 name이 빈 문자열이 된다
+              - 문제없다
+        explain: <p>React는 훅을 <b>호출 순서</b>로 구별한다. 조건에 따라 useState를 건너뛰면 그 뒤의 훅들이 엉뚱한 state를 받는다. 훅은 항상 컴포넌트 최상단에서, 조건문·반복문 밖에서 부른다.</p>
+      - id: fe-re-q-key
+        tag: key
+        title: key로 index 쓰기
+        type: mcq
+        quizzes:
+          - q: 할 일 목록(각 항목에 체크박스 입력 상태가 있음)의 key로 배열 index를 쓰고, 맨 앞에 새 항목을 추가하면?
+            answer: 체크 상태가 한 칸씩 밀려 엉뚱한 항목에 붙는다
+            wrong:
+              - 문제없이 잘 동작하고 조금 느려질 뿐이다
+              - 콘솔 경고만 뜨고 동작은 같다
+              - key가 겹쳐서 새 항목이 안 보인다
+        explain: <p>index는 순서가 바뀌면 같은 항목이 다른 key를 받는다. React는 key로 항목을 짝지어서 <b>상태를 엉뚱한 항목에 붙인다</b>. 추가·삭제·정렬이 있는 목록은 고유 id를 쓴다.</p>
+      - id: fe-re-q-memo
+        tag: 성능
+        title: React.memo와 함수 props
+        type: mcq
+        code: |-
+          function Parent({ id }) {
+            return <Child onSave={() => save(id)} />;
+          }
+
+          const Child = React.memo(
+            function Child({ onSave }) {
+              // ...
+            }
+          );
+        quizzes:
+          - q: Child는 React.memo로 감싸져 있다. Parent가 다시 렌더링되면 Child는?
+            answer: 매번 같이 다시 렌더링된다
+            wrong:
+              - 다시 렌더링되지 않는다
+              - id가 바뀔 때만 다시 렌더링된다
+              - 처음 한 번만 렌더링된다
+          - q: Child가 불필요하게 다시 렌더링되지 않게 하려면?
+            answer: onSave를 useCallback으로 감싼다
+            wrong:
+              - Child를 useMemo로 감싼다
+              - save를 state에 넣는다
+              - Child에 key를 준다
+        explain: <p>화살표 함수는 렌더링할 때마다 <b>새 함수</b>라서, memo가 props를 비교하면 onSave가 매번 바뀐 것으로 보인다. <code>useCallback(() =&gt; save(id), [id])</code>로 같은 함수를 넘기면 id가 바뀔 때만 다시 렌더링된다.</p>
+      - id: fe-re-q-order
+        tag: 렌더링
+        title: 부모와 자식의 effect 순서
+        type: mcq
+        code: |-
+          function Child() {
+            log('C render');
+            useEffect(() => log('C effect'));
+            return null;
+          }
+
+          function Parent() {
+            log('P render');
+            useEffect(() => log('P effect'));
+            return <Child />;
+          }
+        quizzes:
+          - q: 처음 화면에 그려질 때 로그 순서는?
+            answer: P render → C render → C effect → P effect
+            wrong:
+              - P render → P effect → C render → C effect
+              - P render → C render → P effect → C effect
+              - C render → P render → C effect → P effect
+        explain: <p>렌더링(컴포넌트 함수 실행)은 <b>위에서 아래로</b>, effect는 자식이 먼저 끝나야 부모가 끝나므로 <b>아래에서 위로</b> 실행된다. 그래서 부모 effect에서는 자식 DOM이 이미 준비돼 있다.</p>
+      - id: fe-re-q-layoutfx
+        tag: useLayoutEffect
+        title: n이 바뀔 때 cleanup 순서
+        type: mcq
+        code: |-
+          useLayoutEffect(() => {
+            log('layout ' + n);
+            return () => log('layout cleanup ' + n);
+          }, [n]);
+
+          useEffect(() => {
+            log('effect ' + n);
+            return () => log('effect cleanup ' + n);
+          }, [n]);
+        quizzes:
+          - q: n이 0에서 1로 바뀔 때 로그 순서는?
+            answer: layout cleanup 0 → layout 1 → effect cleanup 0 → effect 1
+            wrong:
+              - layout cleanup 0 → effect cleanup 0 → layout 1 → effect 1
+              - effect cleanup 0 → layout cleanup 0 → layout 1 → effect 1
+              - layout 1 → effect 1 → layout cleanup 0 → effect cleanup 0
+        explain: <p><b>useLayoutEffect</b>는 DOM을 바꾼 직후, 화면에 그리기 <b>전에</b> 동기로 실행된다(이전 cleanup → 새 effect). <b>useEffect</b>는 그 뒤, 보통 화면을 그린 다음에 실행된다(역시 이전 cleanup → 새 effect). 그래서 layout 쪽 한 쌍이 먼저, effect 쪽 한 쌍이 나중이다. 깜빡임 없이 크기를 재야 할 때 useLayoutEffect를 쓴다.</p>
+      - id: fe-re-q-strictrender
+        tag: StrictMode
+        title: 개발 모드의 렌더링 횟수
+        type: mcq
+        quizzes:
+          - q: 개발 모드 StrictMode에서 첫 화면을 그릴 때 컴포넌트 함수는 몇 번 호출될까?
+            answer: 2번
+            wrong:
+              - 1번
+              - 3번
+              - 0번
+        explain: <p>StrictMode는 개발 모드에서 컴포넌트 함수를 <b>두 번</b> 불러, 렌더링 중에 바깥 값을 바꾸는 등 순수하지 않은 코드를 드러낸다. effect도 마운트 → cleanup → 마운트를 한 번 더 한다. 프로덕션에서는 한 번씩이다.</p>
+      - id: fe-re-q-position
+        tag: state 보존
+        title: 같은 자리의 같은 컴포넌트
+        type: mcq
+        code: |-
+          function Counter({ label }) {
+            const [n, setN] = useState(0);
+            return (
+              <button onClick={() => setN(n + 1)}>
+                {label}{n}
+              </button>
+            );
+          }
+
+          // App
+          {isA
+            ? <Counter label="A" />
+            : <Counter label="B" />}
+        quizzes:
+          - q: A 버튼을 두 번 눌러 A2가 된 뒤 isA를 false로 바꾸면 화면은?
+            answer: B2
+            wrong:
+              - B0
+              - A2
+              - A0
+        explain: <p>React는 state를 컴포넌트가 아니라 <b>트리의 자리</b>에 붙인다. 삼항의 두 쪽이 <b>같은 자리의 같은 타입(Counter)</b>이라 React는 "props만 바뀐 같은 Counter"로 보고 count 2를 유지한다. 서로 다른 Counter로 다루려면 <code>key="A"</code>, <code>key="B"</code>를 준다.</p>
+      - id: fe-re-q-position2
+        tag: state 보존
+        title: 감싸는 태그가 바뀌면
+        type: mcq
+        code: |-
+          {isA ? (
+            <div><Counter label="A" /></div>
+          ) : (
+            <section><Counter label="B" /></section>
+          )}
+        quizzes:
+          - q: A2가 된 뒤 isA를 false로 바꾸면 화면은?
+            answer: B0
+            wrong:
+              - B2
+              - A2
+              - A0
+        explain: <p>이번에는 Counter를 감싼 부모 태그가 <b>div → section으로 타입이 바뀐다</b>. 타입이 다르면 React는 그 아래를 통째로 버리고 새로 만들어서 state가 0으로 돌아간다. 같은 자리·같은 타입일 때만 state가 유지된다.</p>
+      - id: fe-re-q-inner
+        tag: state 보존
+        title: 컴포넌트 안에서 컴포넌트 정의
+        type: mcq
+        code: |-
+          function App() {
+            const [t, setT] = useState(0);
+
+            function Input() {
+              const [v, setV] = useState('');
+              return (
+                <input
+                  value={v}
+                  onChange={(e) => setV(e.target.value)}
+                />
+              );
+            }
+
+            return <><Input /><Clock onTick={setT} /></>;
+          }
+        quizzes:
+          - q: Input에 글자를 입력한 뒤 App의 t가 바뀌면?
+            answer: Input에 입력한 글자가 사라진다
+            wrong:
+              - 입력한 글자는 그대로 남는다
+              - Input은 다시 렌더링되지 않는다
+              - 에러가 난다
+        explain: <p>App이 렌더링될 때마다 <code>function Input</code>이 <b>새 함수</b>로 만들어진다. React 입장에서는 매번 타입이 다른 컴포넌트라 이전 Input을 버리고 새로 만들어서 state가 사라진다(포커스도 잃는다). 컴포넌트는 항상 다른 컴포넌트 밖(파일 최상단)에서 정의한다.</p>
+      - id: fe-re-q-init
+        tag: useState
+        title: 초기값 계산 횟수
+        type: mcq
+        code: |-
+          function TodoList() {
+            const [todos, setTodos] =
+              useState(createTodos());
+
+            return (
+              <button onClick={() => setTodos([...todos])}>
+                +
+              </button>
+            );
+          }
+        quizzes:
+          - q: 버튼을 두 번 누르면 createTodos()는 모두 몇 번 호출될까?
+            answer: 3번
+            wrong:
+              - 1번
+              - 2번
+              - 0번
+          - q: createTodos를 처음 한 번만 부르려면?
+            answer: useState(createTodos)처럼 함수 자체를 넘긴다
+            wrong:
+              - useRef(createTodos())로 바꾼다
+              - createTodos를 async 함수로 바꾼다
+              - useEffect 안에서 useState를 부른다
+        explain: <p><code>useState(createTodos())</code>는 초기값을 처음에만 쓰지만, <b>함수 호출은 렌더링마다</b> 일어난다(처음 1 + 클릭 2 = 3번). <b>함수 자체</b>를 넘기면(<code>useState(createTodos)</code>) React가 처음 한 번만 부른다. useRef(createTodos())도 매번 호출된다.</p>
+      - id: fe-re-q-children2
+        tag: 렌더링
+        title: children으로 받은 요소
+        type: mcq
+        code: |-
+          function Wrapper({ children }) {
+            const [n, setN] = useState(0);
+            return (
+              <button onClick={() => setN(n + 1)}>
+                {children}
+              </button>
+            );
+          }
+
+          function App() {
+            return <Wrapper><Expensive /></Wrapper>;
+          }
+        quizzes:
+          - q: Wrapper의 버튼을 두 번 누르면 Expensive는 모두 몇 번 렌더링될까?
+            answer: 1번 (처음에만)
+            wrong:
+              - 3번 (처음 + 클릭마다)
+              - memo로 감싸지 않았으니 3번
+              - 0번
+        explain: <p>Expensive 요소는 <b>App이 만들어서</b> children으로 넘긴 것이다. Wrapper의 state가 바뀌어 Wrapper가 다시 렌더링돼도 children은 App이 만든 <b>같은 요소</b>라 React가 건너뛴다. Wrapper 안에서 <code>&lt;Expensive /&gt;</code>를 직접 쓰면 클릭마다 다시 렌더링된다. memo 없이 렌더링을 줄이는 방법이다.</p>
+      - id: fe-re-q-context
+        tag: Context
+        title: Provider의 value
+        type: mcq
+        code: |-
+          const Ctx = createContext(null);
+          const Child = memo(() => {
+            useContext(Ctx);
+            return null;
+          });
+
+          function App() {
+            const [n, setN] = useState(0);
+            return (
+              <Ctx.Provider value={{ theme: 'dark' }}>
+                <button onClick={() => setN(n + 1)} />
+                <Child />
+              </Ctx.Provider>
+            );
+          }
+        quizzes:
+          - q: App의 버튼을 누를 때마다 memo로 감싼 Child는?
+            answer: 매번 다시 렌더링된다
+            wrong:
+              - memo라서 다시 렌더링되지 않는다
+              - theme 값이 'dark' 그대로라 건너뛴다
+              - 처음 한 번만 렌더링된다
+          - q: Child가 불필요하게 다시 렌더링되지 않게 하려면?
+            answer: value 객체를 useMemo로 고정한다
+            wrong:
+              - Child를 memo로 한 번 더 감싼다
+              - Provider에 key를 준다
+              - createContext의 기본값을 객체로 바꾼다
+        explain: "<p>Provider의 value가 <code>{ theme: 'dark' }</code>처럼 <b>렌더링마다 새 객체</b>면, 내용이 같아도 React는 바뀐 것으로 보고(Object.is 비교) 그 context를 쓰는 컴포넌트를 모두 다시 렌더링한다. <b>memo도 context 변경은 막지 못한다</b>. value를 useMemo로 고정하거나 컴포넌트 밖 상수로 둔다.</p>"
+      - id: fe-re-q-timeoutbatch
+        tag: 배치
+        title: setTimeout 안의 두 업데이트
+        type: mcq
+        code: |-
+          function onClick() {
+            setTimeout(() => {
+              setA(1);
+              setB(1);
+            }, 0);
+          }
+        quizzes:
+          - q: React 18 이상에서 버튼을 누르면, setTimeout 안의 두 set 때문에 다시 렌더링되는 횟수는?
+            answer: 1번
+            wrong:
+              - 2번
+              - 0번
+              - 3번
+        explain: <p>React 18부터는 이벤트 핸들러뿐 아니라 <b>setTimeout, Promise, 네이티브 이벤트 안의 업데이트도 자동으로 묶어서</b>(automatic batching) 한 번만 렌더링한다. React 17에서는 setTimeout 안이면 2번이었다.</p>
+      - id: fe-re-q-flushsync
+        tag: 배치
+        title: flushSync 직후의 DOM
+        type: mcq
+        code: |-
+          const ref = useRef(null);
+
+          function onClick() {
+            flushSync(() => setA(1));
+            console.log(ref.current.textContent);
+          }
+
+          return (
+            <button ref={ref} onClick={onClick}>
+              {a}
+            </button>
+          );
+        quizzes:
+          - q: a가 0일 때 버튼을 누르면 로그에 찍히는 값은?
+            answer: "1"
+            wrong:
+              - "0"
+              - undefined
+              - 에러가 난다
+        explain: <p>보통 set은 다음 렌더링을 예약할 뿐이라 바로 뒤에서 DOM을 읽으면 옛 값이다. <b>flushSync</b>로 감싸면 그 자리에서 <b>렌더링과 DOM 반영을 동기로</b> 끝낸다. 새로 추가한 항목으로 바로 스크롤해야 할 때처럼 드물게 쓴다(성능에 나쁘다).</p>
+      - id: fe-re-q-derived
+        tag: 상태 설계
+        title: effect로 파생 값 만들기
+        type: mcq
+        code: |-
+          const [first, setFirst] = useState('');
+          const [last, setLast] = useState('');
+          const [fullName, setFullName] = useState('');
+
+          useEffect(() => {
+            setFullName(first + ' ' + last);
+          }, [first, last]);
+        quizzes:
+          - q: 이 코드의 가장 큰 문제는?
+            answer: 렌더링이 한 번 더 일어나고 잠깐 옛 값이 보인다
+            wrong:
+              - effect 안에서 set해서 무한 루프에 빠진다
+              - first가 바뀌어도 fullName은 그대로다
+              - 의존성 배열에 fullName이 빠져서 경고가 난다
+        explain: "<p>first가 바뀌면 옛 fullName으로 한 번 그리고, effect가 setFullName을 해서 <b>한 번 더</b> 그린다. 다른 state로 계산할 수 있는 값은 state로 두지 말고 <b>렌더링 중에 바로 계산</b>한다: <code>const fullName = first + ' ' + last</code>. 계산이 무거우면 useMemo.</p>"
+      - id: fe-re-q-race
+        tag: useEffect
+        title: 늦게 온 응답
+        type: mcq
+        code: |-
+          useEffect(() => {
+            fetch(`/api/users/${id}`)
+              .then((r) => r.json())
+              .then(setUser);
+          }, [id]);
+        quizzes:
+          - q: id를 1에서 2로 빠르게 바꿨는데, 1번 응답이 2번보다 늦게 왔다. 화면에는?
+            answer: 1번 사용자가 보인다
+            wrong:
+              - 2번 사용자가 보인다
+              - 두 사용자가 번갈아 보인다
+              - 에러가 난다
+          - q: 이 문제를 막는 방법은?
+            answer: cleanup에서 이전 요청을 무시하거나 abort한다
+            wrong:
+              - 의존성 배열을 []로 바꾼다
+              - setUser를 useCallback으로 감싼다
+              - fetch 앞에 await를 붙인다
+        explain: <p>두 요청이 동시에 날아가고 <b>늦게 도착한 응답이 마지막으로 setUser</b>한다. id가 바뀌면 이전 effect의 cleanup이 먼저 실행되므로, 거기서 <code>ignore = true</code>로 표시하거나 <code>AbortController</code>로 요청을 취소한다. 데이터 요청 라이브러리(TanStack Query 등)는 이 처리를 대신 해 준다.</p>
+      - id: fe-re-q-eb
+        tag: 에러 바운더리
+        title: 에러 바운더리 안의 버튼
+        type: mcq
+        code: |-
+          <ErrorBoundary fallback={<p>문제가 생겼어요</p>}>
+            <button onClick={() => { throw new Error('boom'); }}>
+              저장
+            </button>
+          </ErrorBoundary>
+        quizzes:
+          - q: ErrorBoundary 안의 버튼을 누르면?
+            answer: fallback으로 바뀌지 않고 화면은 그대로다
+            wrong:
+              - fallback 화면으로 바뀐다
+              - 앱 전체가 흰 화면이 된다
+              - 버튼만 사라지고 나머지는 그대로다
+        explain: <p>에러 바운더리는 <b>렌더링 중·생명주기·effect</b>에서 난 에러만 잡는다. <b>이벤트 핸들러, setTimeout, Promise</b> 안의 에러는 React 렌더링 밖에서 일어나서 잡지 못한다(전역 에러로 간다). 이벤트 핸들러에서는 try/catch로 잡고, 필요하면 state로 에러 화면을 보여 준다.</p>
+      - id: fe-re-q-ref19
+        tag: React 19
+        title: ref를 prop으로 받기
+        type: mcq
+        code: |-
+          function MyInput({ ref }) {
+            return <input ref={ref} />;
+          }
+
+          function App() {
+            const r = useRef(null);
+            useEffect(() => console.log(r.current?.tagName));
+            return <MyInput ref={r} />;
+          }
+        quizzes:
+          - q: React 19에서 App의 effect가 찍는 값은?
+            answer: INPUT
+            wrong:
+              - undefined
+              - "에러: forwardRef로 감싸야 한다"
+              - MyInput 컴포넌트 객체
+        explain: <p>React 19부터 함수 컴포넌트는 <b>ref를 일반 prop처럼</b> 받을 수 있다. 그래서 forwardRef 없이 input까지 ref를 이어 줄 수 있다. React 18에서는 ref prop이 전달되지 않아 undefined였다.</p>
+      - id: fe-re-q-deferred
+        tag: 동시성
+        title: 입력은 빠르게, 목록은 나중에
+        type: mcq
+        quizzes:
+          - q: 검색어 입력은 바로 반영하고, 느린 결과 목록 렌더링은 뒤로 미뤄 타이핑이 끊기지 않게 하고 싶다. React 기능만 쓴다면?
+            answer: useDeferredValue(query)로 목록에 넘긴다
+            wrong:
+              - useMemo로 목록을 감싼다
+              - useLayoutEffect에서 목록을 그린다
+              - query를 useRef에 담는다
+        explain: <p><b>useDeferredValue</b>는 급한 업데이트(입력)를 먼저 그리고, 미룬 값으로 그리는 무거운 부분은 여유가 있을 때 다시 그린다. 새 입력이 오면 하던 목록 렌더링을 중단할 수도 있다. setState 쪽을 미루고 싶으면 useTransition을 쓴다. useMemo는 같은 입력의 재계산만 줄일 뿐 입력이 바뀔 때마다의 렌더링은 막지 못한다.</p>
+  - group: React 용어
+  - table:
+      heads:
+        - 용어
+        - 뜻
+        - 예시 · 외우는 법
+      rows:
+        - id: fe-re-t-vdom
+          term: 가상 DOM / 재조정
+          desc: "<b>가상 DOM</b>: 실제 DOM을 흉내 낸 가벼운 JS 객체 트리. <b>재조정</b>: 새 렌더링 결과를 이전 결과와 비교(diff)해서 바뀐 부분만 실제 DOM에 반영하는 과정."
+          hint: 재조정은 Reconciliation. 같은 자리의 같은 타입이면 재사용, 타입이 다르면 새로 만든다
+          quiz: false
+        - id: fe-re-t-key
+          term: key
+          desc: 목록에서 각 항목을 구별하는 값. 바뀌지 않는 고유한 값(id)을 써야 React가 항목을 제대로 재사용한다.
+          hint: index를 key로 쓰면 순서가 바뀔 때 입력값 같은 상태가 엉뚱한 항목에 붙는다
+          quiz: false
+        - id: fe-re-t-props
+          term: props / state
+          desc: "<b>props</b>: 부모가 내려주는 값으로, 자식은 바꿀 수 없다. <b>state</b>: 컴포넌트가 스스로 가지는 값으로, 바꾸면 다시 렌더링된다."
+          hint: props가 바뀌거나 state가 바뀌면 다시 렌더링
+          quiz: false
+        - id: fe-re-t-memo
+          term: useMemo / useCallback
+          desc: "<b>useMemo</b>: 계산한 결과 값을 기억해 두고, 의존성이 바뀔 때만 다시 계산한다. <b>useCallback</b>: 함수 자체를 기억해 두고, 의존성이 바뀔 때만 새로 만든다."
+          hint: React.memo로 감싼 자식에 함수를 넘길 때 useCallback이 쓸모 있다
+          quiz: false
+        - id: fe-re-t-control
+          term: 제어 컴포넌트 / 비제어 컴포넌트
+          desc: "<b>제어 컴포넌트</b>: input 값을 state로 관리한다 (value + onChange). <b>비제어 컴포넌트</b>: 값은 DOM이 가지고 있고, 필요할 때 ref로 읽는다."
+          hint: 입력할 때마다 검사해야 하면 제어, 제출할 때만 읽으면 비제어
+          quiz: false
+        - id: fe-re-t-ref
+          term: useRef
+          desc: 렌더링과 상관없이 값을 계속 들고 있는 상자. 값을 바꿔도 다시 렌더링되지 않고, DOM 요소를 잡을 때도 쓴다.
+          hint: 타이머 id, 이전 값 저장, input 포커스 주기
+          quiz: false

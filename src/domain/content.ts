@@ -5,7 +5,7 @@ import jeongcheogiCards from '../data/cards/jeongcheogi.json';
 import { buildLessons } from './lessons';
 import type { Card, Course, Lesson } from './types';
 
-// 코스를 늘리면 courses.json에 코스를 적고, 노트를 만든 뒤 `pnpm extract`로 뽑은 카드를 여기 이어 준다
+// 코스를 늘리면 content/<코스>/에 문제를 쓰고 `pnpm content`로 만든 카드를 여기 이어 준다
 const CARDS_BY_COURSE: Record<string, Card[]> = {
   jeongcheogi: jeongcheogiCards as Card[],
   frontend: frontendCards as Card[],

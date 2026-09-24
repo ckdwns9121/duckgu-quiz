@@ -1,0 +1,241 @@
+id: fe-web
+name: 웹 · 성능 · 보안
+color: "#FF9600"
+dark: "#CD7900"
+part: PART 9
+lede: HTTP 상태 코드와 메서드, Core Web Vitals, 캐시처럼 프론트엔드 개발자가 매일 보는 웹 기본기입니다.
+blocks:
+  - items:
+      - id: fe-web-q-status
+        tag: 상태 코드
+        title: 상태 코드 고르기
+        type: mcq
+        quizzes:
+          - q: 로그인은 했지만 관리자 페이지에 들어갈 권한이 없다.
+            answer: 403 Forbidden
+            wrong:
+              - 401 Unauthorized
+              - 404 Not Found
+              - 400 Bad Request
+          - q: 토큰이 만료돼서 서버가 누군지 확인할 수 없다.
+            answer: 401 Unauthorized
+            wrong:
+              - 403 Forbidden
+              - 400 Bad Request
+              - 500 Internal Server Error
+          - q: POST로 새 글을 만드는 데 성공했다.
+            answer: 201 Created
+            wrong:
+              - 200 OK
+              - 204 No Content
+              - 202 Accepted
+          - q: 브라우저가 캐시한 파일이 바뀌었는지 물었더니 그대로라서, 본문 없이 온 응답은?
+            answer: 304 Not Modified
+            wrong:
+              - 204 No Content
+              - 200 OK
+              - 302 Found
+        explain: '<p><b>401</b>: 누군지 모름 → 로그인 필요. <b>403</b>: 누군지는 알지만 권한 없음. <b>201</b>: 새로 만들어짐 (200은 일반 성공, 204는 성공인데 본문 없음). <b>304</b>: If-None-Match(ETag) 같은 조건부 요청에 "안 바뀌었으니 캐시 써"라는 답.</p>'
+      - id: fe-web-q-redirect
+        tag: 상태 코드
+        title: 주소 옮기기
+        type: mcq
+        quizzes:
+          - q: http:// 주소를 https://로 영구히 옮겼다. 검색 엔진도 새 주소를 기억하게 하려면?
+            answer: 301 Moved Permanently
+            wrong:
+              - 302 Found
+              - 307 Temporary Redirect
+              - 304 Not Modified
+        explain: <p><b>301</b>은 영구 이동이라 브라우저와 검색 엔진이 새 주소를 기억한다. <b>302·307</b>은 잠깐 다른 곳으로 보내는 것이라 원래 주소를 계속 쓴다 (로그인 후 원래 페이지로 보내기).</p>
+      - id: fe-web-q-idem
+        tag: HTTP
+        title: 멱등성
+        type: mcq
+        quizzes:
+          - q: 같은 요청을 여러 번 보내면 결과가 달라질 수 있는(멱등하지 않은) 메서드는?
+            answer: POST
+            wrong:
+              - GET
+              - PUT
+              - DELETE
+        explain: "<p><b>멱등</b>: 여러 번 보내도 한 번 보낸 것과 결과가 같음. GET·PUT·DELETE는 멱등하고, <b>POST</b>는 보낼 때마다 새 리소스가 생길 수 있다. 결제 버튼을 두 번 누르지 못하게 막는 이유.</p>"
+      - id: fe-web-q-cache
+        tag: 캐시
+        title: Cache-Control 고르기
+        type: mcq
+        quizzes:
+          - q: app.3f9a2c.js처럼 파일 이름에 내용 해시가 붙은 파일에 가장 알맞은 것은?
+            answer: max-age=31536000, immutable
+            wrong:
+              - no-cache, must-revalidate
+              - no-store, max-age=0
+              - max-age=0, s-maxage=60
+          - q: "Cache-Control: no-cache의 뜻은?"
+            answer: 저장은 하되, 쓸 때마다 서버에 바뀌었는지 묻는다
+            wrong:
+              - 아예 저장하지 않는다
+              - 정한 시간 동안 서버에 묻지 않고 쓴다
+              - 브라우저만 저장하고 CDN은 저장하지 않는다
+        explain: <p>내용이 바뀌면 파일 이름(해시)도 바뀌므로 같은 이름의 파일은 영원히 같다 → <b>1년 캐시</b>. 반대로 index.html은 이름이 그대로라 <b>no-cache</b>로 매번 확인한다. 이름과 달리 no-cache도 저장은 한다. 아예 저장하지 않는 건 <b>no-store</b>.</p>
+      - id: fe-web-q-vitals
+        tag: 성능
+        title: 어느 지표가 나빠질까
+        type: mcq
+        quizzes:
+          - q: 첫 화면의 가장 큰 히어로 이미지에 loading="lazy"를 주면?
+            answer: LCP가 나빠진다
+            wrong:
+              - LCP가 좋아진다
+              - CLS가 좋아진다
+              - 아무 영향이 없다
+          - q: 버튼 클릭 핸들러가 400ms 동안 무거운 계산을 하면 가장 나빠지는 지표는?
+            answer: INP
+            wrong:
+              - LCP
+              - CLS
+              - TTFB
+          - q: img에 width·height를 주지 않아 이미지가 뜰 때 아래 글이 밀려 내려간다. 나빠지는 지표는?
+            answer: CLS
+            wrong:
+              - LCP
+              - INP
+              - TTFB
+        explain: "<p><b>LCP</b>(가장 큰 콘텐츠가 그려지는 시간): 첫 화면 이미지를 lazy로 미루면 늦게 받아서 나빠진다. 첫 화면 밖 이미지만 lazy. <b>INP</b>(입력에 반응하는 시간): 핸들러가 메인 스레드를 오래 붙잡으면 나빠진다. <b>CLS</b>(레이아웃이 밀리는 정도): 크기를 모르는 이미지·광고가 원인.</p>"
+      - id: fe-web-q-xss
+        tag: 보안
+        title: 사용자 입력 넣기
+        type: mcq
+        code: |-
+          const comment = getUserInput();
+          el.innerHTML = comment;
+        quizzes:
+          - q: comment에 <img src=x onerror="alert(1)">가 들어오면?
+            answer: onerror의 스크립트가 실행된다 (XSS)
+            wrong:
+              - 태그가 글자 그대로 화면에 보인다
+              - 이미지만 깨질 뿐 스크립트는 안 돈다
+              - 브라우저가 XSS를 알아서 막아 준다
+          - q: 사용자가 쓴 글을 안전하게 화면에 넣으려면?
+            answer: el.textContent = comment
+            wrong:
+              - el.innerHTML = comment.trim()
+              - el.outerHTML = comment
+              - el.insertAdjacentHTML('beforeend', comment)
+        explain: <p>innerHTML은 문자열을 <b>HTML로 해석</b>하므로 이벤트 속성의 스크립트가 실행된다(XSS). <b>textContent</b>는 글자로만 넣는다. outerHTML, insertAdjacentHTML도 HTML로 해석해서 똑같이 위험하다. React의 <code>{comment}</code>는 자동으로 글자 처리하고, dangerouslySetInnerHTML만 위험하다.</p>
+      - id: fe-web-q-cookie
+        tag: 보안
+        title: 쿠키 속성
+        type: mcq
+        quizzes:
+          - q: 자바스크립트(document.cookie)가 쿠키를 읽지 못하게 하는 속성은?
+            answer: HttpOnly
+            wrong:
+              - Secure
+              - SameSite
+              - Domain
+          - q: 다른 사이트에서 보낸 요청에는 쿠키가 붙지 않게 해 CSRF를 막는 속성은?
+            answer: SameSite
+            wrong:
+              - HttpOnly
+              - Secure
+              - Domain
+          - q: HTTPS 연결에서만 쿠키를 보내게 하는 속성은?
+            answer: Secure
+            wrong:
+              - HttpOnly
+              - SameSite
+              - Domain
+        explain: "<p><b>HttpOnly</b>: JS에서 못 읽음 → XSS로 세션 쿠키를 훔치기 어려움. <b>SameSite</b>(Lax·Strict): 다른 사이트발 요청에 쿠키를 안 붙임 → CSRF 방어. <b>Secure</b>: HTTPS에서만 전송. <b>Domain</b>은 어느 도메인에 보낼지 정하는 것.</p>"
+  - group: HTTP 상태 코드
+  - table:
+      heads:
+        - 코드
+        - 뜻
+        - 예시 · 외우는 법
+      rows:
+        - id: fe-web-200
+          term: 200 OK
+          desc: 요청이 성공했고, 결과를 응답 본문에 담아 돌려준다.
+          hint: 가장 흔한 성공. GET으로 목록 조회
+          quiz: false
+        - id: fe-web-201
+          term: 201 Created
+          desc: 요청이 성공해서 새 리소스가 만들어졌다.
+          hint: POST로 회원가입 성공
+          quiz: false
+        - id: fe-web-204
+          term: 204 No Content
+          desc: 요청은 성공했지만 돌려줄 본문이 없다.
+          hint: DELETE 성공 뒤 자주 씀
+          quiz: false
+        - id: fe-web-301
+          term: 301 Moved Permanently
+          desc: 요청한 주소가 영구히 다른 주소로 바뀌었다.
+          hint: 검색 엔진도 새 주소로 바꿔 기억
+          quiz: false
+        - id: fe-web-302
+          term: 302 Found
+          desc: 잠시 다른 주소로 가라는 뜻이다.
+          hint: 로그인 후 원래 페이지로 보내기
+          quiz: false
+        - id: fe-web-304
+          term: 304 Not Modified
+          desc: 바뀐 게 없으니 캐시해 둔 것을 그대로 쓰면 된다.
+          hint: ETag·Last-Modified로 확인한 결과
+          quiz: false
+        - id: fe-web-400
+          term: 400 Bad Request
+          desc: 요청 형식이 잘못됐다.
+          hint: 필수 값 누락, JSON 형식 오류
+          quiz: false
+        - id: fe-web-401
+          term: 401 Unauthorized
+          desc: 인증이 안 됐다. 누군지 모르니 로그인이 필요하다.
+          hint: 토큰이 없거나 만료
+          quiz: false
+        - id: fe-web-403
+          term: 403 Forbidden
+          desc: 누군지는 알지만 이 리소스에 접근할 권한이 없다.
+          hint: 로그인했지만 관리자 페이지
+          quiz: false
+        - id: fe-web-404
+          term: 404 Not Found
+          desc: 요청한 리소스를 찾을 수 없다.
+          hint: 없는 주소
+          quiz: false
+        - id: fe-web-500
+          term: 500 Internal Server Error
+          desc: 서버 안에서 예상하지 못한 오류가 났다.
+          hint: 서버 코드의 버그
+          quiz: false
+        - id: fe-web-503
+          term: 503 Service Unavailable
+          desc: 서버가 과부하나 점검으로 잠시 요청을 처리할 수 없다.
+          hint: 배포 중, 트래픽 폭주
+          quiz: false
+  - group: 성능 · 캐시 · 메서드
+  - table:
+      heads:
+        - 용어
+        - 뜻
+        - 예시 · 외우는 법
+      rows:
+        - id: fe-web-vitals
+          term: LCP / INP / CLS / TTFB
+          sub: 웹 성능 지표
+          desc: "<b>LCP</b>: 화면에서 가장 큰 콘텐츠가 그려지기까지의 시간(로딩 속도). <b>INP</b>: 클릭이나 입력에 화면이 반응하기까지의 시간(반응 속도). <b>CLS</b>: 로딩 중에 화면 요소가 갑자기 밀리는 정도(시각 안정성). <b>TTFB</b>: 요청을 보낸 뒤 서버에서 첫 바이트가 도착하기까지의 시간(서버 응답 속도)."
+          hint: "Core Web Vitals는 LCP·INP·CLS 세 개. 좋음 기준: LCP 2.5초 이하, INP 200ms 이하, CLS 0.1 이하"
+          quiz: false
+        - id: fe-web-cache
+          term: no-cache / no-store / max-age
+          sub: Cache-Control
+          desc: "<b>no-cache</b>: 저장은 해 두되, 쓰기 전에 서버에 바뀌었는지 매번 확인한다. <b>no-store</b>: 아예 저장하지 않는다. <b>max-age</b>: 정한 초 동안은 서버에 묻지 않고 저장해 둔 것을 그대로 쓴다."
+          hint: 이름과 반대로 no-cache도 저장은 한다. 민감한 정보는 no-store. 파일 이름에 해시가 붙은 JS·CSS는 max-age를 길게
+          quiz: false
+        - id: fe-web-method
+          term: GET / POST / PUT / PATCH / DELETE
+          sub: HTTP 메서드
+          desc: "<b>GET</b>: 리소스를 조회한다. <b>POST</b>: 새 리소스를 만든다. <b>PUT</b>: 리소스 전체를 새 값으로 바꾼다. <b>PATCH</b>: 리소스의 일부만 고친다. <b>DELETE</b>: 리소스를 지운다."
+          hint: PUT은 통째로 교체, PATCH는 일부 수정
+          quiz: false

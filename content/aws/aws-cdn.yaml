@@ -1,0 +1,126 @@
+id: aws-cdn
+name: CloudFront · 배포
+color: "#1CB0F6"
+dark: "#1899D6"
+part: PART 5
+lede: S3 + CloudFront로 프론트엔드를 배포할 때 실제로 부딪히는 것들입니다. 버킷을 비공개로 두기, 인증서, SPA 새로고침 에러, 캐시와 무효화.
+blocks:
+  - items:
+      - id: aws-cdn-b-flow
+        tag: 요청 흐름
+        title: 정적 사이트 요청이 가는 길
+        type: build
+        mode: order
+        join: " → "
+        q: 사용자가 https://example.com을 열 때 요청이 지나가는 순서대로 놓으세요.
+        tokens:
+          - 브라우저
+          - Route 53 (DNS 조회)
+          - CloudFront 엣지 (캐시 확인)
+          - S3 버킷 (캐시에 없을 때)
+        why: <p class="why">DNS가 가장 가까운 CloudFront 엣지 주소를 알려 주고, 엣지에 캐시가 있으면 S3까지 가지 않고 바로 응답한다. 캐시가 없을 때만 오리진(S3)에서 가져와 캐시한다.</p>
+        hints:
+          - 첫 번째 조각은 <b>브라우저</b>
+          - DNS가 가장 가까운 CloudFront 엣지 주소를 알려 주고, 엣지에 캐시가 있으면 S3까지 가지 않고 바로 응답한다. 캐시가 없을 때만 오리진(S3)에서 가져와 캐시한다.
+      - id: aws-cdn-q-oac
+        tag: 오리진 보호
+        title: 버킷은 비공개로, 사이트는 공개로
+        type: mcq
+        quizzes:
+          - q: S3 버킷은 비공개로 두고, CloudFront를 통해서만 사이트가 보이게 하고 싶다.
+            answer: OAC를 쓰고 버킷 정책에 CloudFront만 허용한다
+            wrong:
+              - 버킷을 공개로 열고 CloudFront를 앞에 둔다
+              - S3 웹사이트 엔드포인트를 공개 오리진으로 쓴다
+              - 모든 파일에 presigned URL을 붙인다
+        explain: <p><b>OAC</b>는 CloudFront가 서명한 요청으로 S3에 접근하게 하고, 버킷 정책은 서비스 주체 <code>cloudfront.amazonaws.com</code>을 <b>그 배포의 ARN(AWS:SourceArn)</b>일 때만 허용한다. 그러면 S3 주소로 직접 들어오는 요청은 막힌다. 예전 방식인 OAI보다 OAC가 권장된다.</p>
+      - id: aws-cdn-q-acm
+        tag: 인증서
+        title: CloudFront용 인증서
+        type: mcq
+        quizzes:
+          - q: 서울 리전 ACM에서 인증서를 만들었는데 CloudFront 설정의 인증서 목록에 나오지 않는다. 이유는?
+            answer: CloudFront용 인증서는 us-east-1에 있어야 해서
+            wrong:
+              - 새 인증서는 24시간 뒤에야 목록에 보여서
+              - CloudFront는 ACM 인증서를 아예 못 써서
+              - 와일드카드 인증서만 쓸 수 있어서
+        explain: <p>CloudFront는 전 세계 엣지에서 도는 글로벌 서비스라, ACM 인증서를 <b>us-east-1</b>에서 만들거나 가져와야 한다. 서울 리전 인증서는 같은 리전의 ALB 같은 곳에 쓴다. 처음 배포할 때 가장 많이 막히는 지점이다.</p>
+      - id: aws-cdn-q-spa
+        tag: SPA
+        title: 새로고침하면 에러
+        type: mcq
+        quizzes:
+          - q: React SPA를 S3 + CloudFront(OAC)에 올렸다. 첫 화면은 되는데 /settings에서 새로고침하면 AccessDenied(403)가 뜬다. 해결은?
+            answer: 403·404 오류 응답을 /index.html(200)로 바꾼다
+            wrong:
+              - CloudFront 캐시를 /*로 전부 무효화한다
+              - 버킷 CORS 설정에 GET 요청을 허용한다
+              - 버킷 정책에 s3:ListBucket을 허용한다
+          - q: S3 + CloudFront(OAC) 사이트에서 없는 경로를 요청하면 404가 아니라 403이 온다. 이유는?
+            answer: ListBucket 권한이 없으면 S3가 403을 줘서
+            wrong:
+              - CloudFront가 404를 403으로 바꿔서
+              - OAC가 GetObject를 허용하지 않아서
+              - 버킷의 퍼블릭 액세스 차단 때문에
+        explain: '<p>브라우저가 /settings를 요청하면 S3에는 <code>settings</code>라는 객체가 없다. 라우팅은 JS가 하므로 <b>어떤 경로든 index.html을 돌려주면</b> 된다: CloudFront의 사용자 지정 오류 응답(403, 404 → /index.html, 응답 코드 200)이나 CloudFront Functions로 경로를 바꾼다. S3는 목록 권한이 없는 요청자에게 "없다"는 정보를 주지 않으려고 403을 준다.</p>'
+      - id: aws-cdn-q-stale
+        tag: 캐시
+        title: 배포했는데 옛 화면
+        type: mcq
+        quizzes:
+          - q: 새 버전을 S3에 올렸는데 사용자에게 한동안 옛 화면이 보인다. 가장 가능성 높은 원인은?
+            answer: CloudFront 엣지에 옛 파일이 남아서
+            wrong:
+              - S3가 최종적 일관성이라 옛 파일을 줘서
+              - S3 버전 관리가 옛 버전을 돌려줘서
+              - 새 파일이 다른 리전으로 복제되는 중이라서
+          - q: 무효화 경로를 /*로 한 번 넣으면 요금 계산에서 경로는 몇 개로 칠까?
+            answer: 1개
+            wrong:
+              - 파일 수만큼
+              - 폴더 수만큼
+              - 무효화는 항상 무료다
+        explain: <p>CloudFront는 TTL 동안 엣지에 캐시한 파일을 준다. 배포 뒤에는 <b>무효화(Invalidation)</b>로 지우거나, 애초에 index.html은 짧게 캐시한다. 무효화는 매달 1,000개 경로까지 무료이고 <code>/*</code> 같은 와일드카드는 <b>경로 1개</b>로 친다. 해시가 붙은 JS·CSS는 이름이 바뀌므로 무효화할 필요가 없다.</p>
+      - id: aws-cdn-q-ttl
+        tag: 캐시
+        title: CloudFront는 얼마나 캐시할까
+        type: mcq
+        quizzes:
+          - q: "S3 객체에 Cache-Control: max-age=60이 있고, 캐시 정책은 최소 TTL 0초·최대 TTL 1년이다. CloudFront는 이 객체를 얼마나 캐시할까?"
+            answer: 60초
+            wrong:
+              - 1년
+              - 0초
+              - 24시간
+        explain: "<p>CloudFront는 오리진의 <code>Cache-Control: max-age</code>를 따르되, 캐시 정책의 <b>최소·최대 TTL 범위 안으로</b> 맞춘다. 60초는 0초~1년 안이라 그대로 60초. 오리진이 헤더를 주지 않으면 기본 TTL(보통 24시간)을 쓴다. 그래서 배포 파일별로 S3에 Cache-Control을 달아 두면 제어하기 쉽다.</p>"
+      - id: aws-cdn-q-cachekey
+        tag: 캐시
+        title: 캐시 적중률이 낮을 때
+        type: mcq
+        quizzes:
+          - q: CloudFront 캐시 적중률이 유난히 낮다. 원인이 될 수 있는 설정은?
+            answer: 캐시 키에 모든 쿼리 문자열과 쿠키를 넣었다
+            wrong:
+              - TTL을 길게 잡았다
+              - gzip·brotli 압축을 켰다
+              - 오리진을 OAC로 보호했다
+        explain: <p>캐시 키에 들어가는 값이 다르면 <b>다른 파일로 따로 캐시</b>된다. 쿼리 문자열(utm 태그 등)이나 쿠키를 모두 키에 넣으면 사실상 요청마다 다른 키가 되어 오리진까지 간다. 내용에 영향을 주는 값만 캐시 키에 넣고, 오리진에 전달만 할 값은 오리진 요청 정책으로 따로 보낸다.</p>
+      - id: aws-cdn-q-edge
+        tag: 엣지 컴퓨팅
+        title: 엣지에서 코드 돌리기
+        type: mcq
+        quizzes:
+          - q: 모든 요청에서 /about 같은 경로를 /about/index.html로 바꾸는 가벼운 처리를 엣지에서 하고 싶다.
+            answer: CloudFront Functions
+            wrong:
+              - Lambda@Edge
+              - ALB 리스너 규칙
+              - S3 리다이렉트 규칙
+          - q: 오리진에 요청하기 전에 외부 인증 API를 호출해 결과에 따라 막고 싶다.
+            answer: Lambda@Edge
+            wrong:
+              - CloudFront Functions
+              - S3 버킷 정책
+              - Route 53 상태 검사
+        explain: "<p><b>CloudFront Functions</b>: 뷰어 요청·응답 단계에서만, JavaScript로, 1밀리초 안쪽의 가벼운 처리(URL 바꾸기, 헤더 붙이기). 네트워크 호출은 못 한다. <b>Lambda@Edge</b>: 오리진 요청·응답 단계도 되고 네트워크 호출, 긴 처리가 가능하지만 더 느리고 비싸다.</p>"
