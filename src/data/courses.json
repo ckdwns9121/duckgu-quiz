@@ -5,7 +5,7 @@
    "name": "정보처리기사",
    "desc": "정보처리기사 실기: 코드 함정, DB, 네트워크, 보안, UML, 소프트웨어 공학",
    "notes": "notes.html",
-   "icon": "정처기",
+   "icon": "정보처리\n기사",
    "units": [
     {
      "id": "code-c",

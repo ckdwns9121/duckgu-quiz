@@ -18,7 +18,7 @@ const CourseCard = ({ course, done, last }: { course: Course; done: Record<strin
   const pct = total ? Math.round((cleared / total) * 100) : 0;
   return (
     <button className="course-card" type="button" style={`--cc:${course.color};--cd:${course.dark}`} onClick={() => open(course)}>
-      <span className="course-badge">{course.icon}</span>
+      <span className={`course-badge${course.icon.length > 3 ? " long" : ""}`}>{course.icon}</span>
       <span className="course-body">
         <span className="course-title">
           <b>{course.name}</b>
