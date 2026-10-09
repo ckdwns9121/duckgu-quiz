@@ -101,13 +101,13 @@ blocks:
               - 메시지가 사라질 수 있다
               - 메시지 하나에 소비자가 하나로 고정된다
               - 메시지가 항상 순서대로 온다
-          - q: 같은 주문의 이벤트를 들어온 순서대로, 한 번만 처리하고 싶다.
+          - q: 같은 주문의 이벤트 순서를 지키고, 5분 안의 중복 전송을 제거하고 싶다.
             answer: FIFO 큐 (주문 ID를 메시지 그룹 ID로)
             wrong:
               - 표준 큐 (소비자를 한 개만 둔다)
               - 표준 큐 (메시지에 순번을 붙인다)
               - 표준 큐 + DLQ (실패는 따로 모은다)
-        explain: "<p><b>표준 큐</b>: 처리량이 매우 크지만 <b>최소 한 번 전달</b>(가끔 중복)이고 순서는 최선일 뿐이다. 그래서 소비자를 <b>멱등</b>하게 만든다. <b>FIFO 큐</b>: 같은 <b>메시지 그룹</b> 안에서 순서를 지키고 정확히 한 번 처리한다.</p>"
+        explain: "<p><b>표준 큐</b>: 처리량이 매우 크지만 <b>최소 한 번 전달</b>(가끔 중복)이고 순서는 최선일 뿐이다. <b>FIFO 큐</b>: 같은 메시지 그룹 안에서 순서를 지키고 5분 중복 제거 구간의 같은 메시지를 전달하지 않는다. 소비자가 삭제하기 전에 가시성 제한이 끝나는 경우처럼 다시 처리될 수는 있으므로, 어느 큐든 소비자는 <b>멱등</b>하게 만든다.</p>"
       - id: aws-db-q-dlq
         tag: SQS
         title: 계속 실패하는 메시지
@@ -132,3 +132,51 @@ blocks:
               - SQS FIFO 큐 하나를 세 서비스가 같이 읽는다
               - SQS 큐 하나에 소비자 그룹을 세 개 만든다
         explain: <p>SQS 큐 하나를 여러 소비자가 읽으면 메시지 하나를 <b>한 소비자만</b> 가져간다(일을 나눠 가짐). 모두가 받아야 하면 <b>SNS 토픽 → 여러 SQS 큐(팬아웃)</b>로 복사해서 보낸다. 서비스마다 자기 큐가 있어 속도도, 장애도 서로 영향을 덜 준다.</p>
+      - id: aws-db-q-rds-reconnect
+        tag: RDS 장애 조치
+        title: DB는 복구됐는데 앱만 못 붙을 때
+        type: mcq
+        quizzes:
+          - q: RDS Multi-AZ 장애 조치가 끝나 엔드포인트는 새 주 DB를 가리킨다. 기존 앱 연결은 어떻게 해야 할까?
+            answer: 끊긴 연결을 버리고 엔드포인트로 다시 연결한다
+            wrong:
+              - 기존 TCP 연결이 자동으로 새 주 DB에 붙는다
+              - 대기 DB의 고정 IP로 연결 문자열을 바꾼다
+              - 읽기 복제본 엔드포인트를 쓰면 기존 연결이 산다
+          - q: RDS 장애 조치 후 일부 Java 앱만 계속 예전 IP로 접속한다. 가장 먼저 의심할 설정은?
+            answer: JVM의 DNS 캐시 TTL
+            wrong:
+              - RDS 백업 보존 기간
+              - DB 파라미터 그룹의 max_connections
+              - 보안 그룹의 상태 저장 여부
+        explain: <p>Multi-AZ 장애 조치에서는 같은 DB <b>엔드포인트의 DNS가 새 주 인스턴스</b>를 가리키도록 바뀐다. 이미 열린 TCP 연결이 옮겨지는 것은 아니므로 연결 풀은 실패한 연결을 버리고 재시도해야 한다. JVM이 DNS를 오래 캐시하면 예전 IP를 계속 쓸 수 있어 AWS는 DNS TTL을 60초 이하로 두도록 권장한다.</p>
+      - id: aws-db-q-conditional
+        tag: DynamoDB 동시성
+        title: 네트워크 오류 뒤 중복 갱신 막기
+        type: mcq
+        quizzes:
+          - q: 재고 10을 9로 바꾸는 UpdateItem 응답을 못 받아 재시도해야 한다. 두 번 차감되지 않게 하려면?
+            answer: 재고가 10일 때만 9로 바꾸는 조건식을 쓴다
+            wrong:
+              - 먼저 GetItem으로 읽고 조건 없이 1을 뺀다
+              - 재시도 전에 1초 기다리고 같은 갱신을 보낸다
+              - Eventually consistent 읽기로 현재 값을 확인한다
+          - q: 주문·재고 여러 항목을 TransactWriteItems로 한 번만 반영하고, 같은 요청의 재전송도 안전하게 하려면?
+            answer: 동일한 ClientRequestToken을 함께 보낸다
+            wrong:
+              - 각 PutItem에 같은 Partition Key를 쓴다
+              - ReturnConsumedCapacity를 TOTAL로 설정한다
+              - 트랜잭션 직후 BatchGetItem을 호출한다
+        explain: <p>현재 값이 예상한 값일 때만 변경하는 <b>조건부 쓰기</b>는 성공 여부를 모르는 요청을 다시 보내도 같은 변경이 두 번 적용되지 않게 만들 수 있다. 여러 항목의 트랜잭션에는 동일한 <code>ClientRequestToken</code>을 보내면 같은 요청의 재전송을 멱등하게 처리한다.</p>
+      - id: aws-db-q-visibility-extend
+        tag: SQS
+        title: 작업 시간이 매번 다를 때
+        type: mcq
+        quizzes:
+          - q: SQS 작업은 보통 30초지만 일부는 10분 걸린다. 가시성 제한을 무조건 길게 잡지 않고 중복 처리를 줄이려면?
+            answer: 처리 중 ChangeMessageVisibility로 연장한다
+            wrong:
+              - 처리 시작과 동시에 메시지를 삭제한다
+              - ReceiveMessage를 반복 호출해 잠금을 유지한다
+              - 소비자 수를 한 개로 제한한다
+        explain: <p>예상 처리 시간만큼 가시성 제한을 잡고, 오래 걸리는 작업은 <code>ChangeMessageVisibility</code>로 남은 시간을 연장한다. 먼저 삭제하면 작업 실패 시 메시지를 잃고, 제한이 끝나면 다른 소비자가 같은 메시지를 받을 수 있다. 연장하더라도 소비자는 멱등하게 설계한다.</p>

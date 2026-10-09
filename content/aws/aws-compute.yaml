@@ -138,3 +138,39 @@ blocks:
               - EC2에 Docker를 직접 설치
               - EKS 관리형 노드 그룹
         explain: <p><b>Fargate</b>는 컨테이너가 돌 서버를 AWS가 관리해서, 작업(Task)에 CPU·메모리만 정해 주면 된다. ECS on EC2나 EKS 노드 그룹은 컨테이너를 올릴 EC2 인스턴스를 직접 두고 관리해야 한다. 대신 Fargate는 같은 자원이면 보통 더 비싸다.</p>
+      - id: aws-cmp-q-ecsrole
+        tag: ECS 권한
+        title: 컨테이너 권한이 빠졌을 때
+        type: mcq
+        quizzes:
+          - q: Fargate가 ECR 이미지를 받고 CloudWatch Logs에 로그를 쓰는 데 필요한 권한은 어느 역할에 줄까?
+            answer: 태스크 실행 역할
+            wrong:
+              - 애플리케이션의 태스크 역할
+              - 서비스 연결 역할
+              - 컨테이너 안의 IAM 사용자
+          - q: 실행 중인 컨테이너 애플리케이션이 S3 객체를 읽어야 한다. 권한은 어느 역할에 줄까?
+            answer: 애플리케이션의 태스크 역할
+            wrong:
+              - 태스크 실행 역할
+              - ECS 서비스 연결 역할
+              - ECR 리포지토리 정책
+        explain: <p><b>태스크 실행 역할</b>은 ECS 에이전트가 이미지를 받고 로그를 보내며 태스크 시작에 필요한 비밀 값을 읽을 때 쓴다. <b>태스크 역할</b>은 실행된 애플리케이션 코드가 S3·DynamoDB 같은 AWS API를 호출할 때 쓴다. 둘을 나누면 앱에 ECR 관리 권한을 주거나 에이전트에 업무 데이터 권한을 주는 일을 피할 수 있다.</p>
+      - id: aws-cmp-q-sqsbatch
+        tag: Lambda · SQS
+        title: 메시지 하나 때문에 모두 재처리될 때
+        type: mcq
+        quizzes:
+          - q: Lambda가 SQS 메시지 10개 중 9개를 처리한 뒤 1개에서 예외를 던졌다. 기본 동작은?
+            answer: 가시성 제한 뒤 10개 모두 다시 보인다
+            wrong:
+              - 실패한 1개만 즉시 다시 보인다
+              - 성공한 9개는 Lambda가 바로 삭제한다
+              - 10개가 모두 자동으로 DLQ로 이동한다
+          - q: SQS 배치에서 성공한 메시지는 다시 처리하지 않고 실패한 메시지만 재시도하려면?
+            answer: 부분 배치 응답으로 실패한 ID만 반환한다
+            wrong:
+              - 함수 타임아웃을 가시성 제한보다 길게 잡는다
+              - 배치 크기를 늘려 성공 비율을 높인다
+              - 성공한 메시지를 다른 표준 큐로 다시 보낸다
+        explain: <p>기본 설정에서 Lambda 호출이 실패하면 배치 전체가 가시성 제한 뒤 다시 나타나 성공한 메시지도 중복 처리될 수 있다. 이벤트 소스 매핑에 <code>ReportBatchItemFailures</code>를 켜고 응답의 <code>batchItemFailures</code>에 실패한 메시지 ID만 넣으면 그 메시지만 재시도한다. 그래도 중복 전달 가능성은 있으므로 결제·재고 변경은 멱등하게 만든다.</p>

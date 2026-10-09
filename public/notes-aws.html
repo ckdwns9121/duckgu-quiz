@@ -193,6 +193,20 @@ footer{margin-top:48px;color:var(--muted);font-size:13px}
         <ul class="quiz-opts" hidden data-q="EC2 앱의 SSRF 취약점으로 메타데이터(169.254.169.254)의 역할 자격 증명을 빼앗기는 위험을 줄이는 설정은?"><li class="ok">IMDSv2를 필수로 한다 (세션 토큰 요구)</li><li>보안 그룹에서 169.254.169.254를 막는다</li><li>역할 대신 액세스 키를 쓴다</li><li>인스턴스의 퍼블릭 IP를 없앤다</li></ul>
         <div class="ans"><p><b>IMDSv2</b>는 먼저 PUT 요청으로 세션 토큰을 받아야 메타데이터를 읽을 수 있어서, 단순히 URL을 대신 요청하게 만드는 SSRF로는 뚫기 어렵다. 메타데이터 주소는 인스턴스 안에서만 닿는 주소라 보안 그룹으로 막는 대상이 아니다.</p></div>
       </article>
+      <article class="item" data-id="aws-iam-q-boundary">
+        <div class="item-h"><span class="lang">권한 경계</span><h3>관리자 정책인데도 거부될 때</h3><label class="chk"><input type="checkbox" id="k-aws-iam-q-boundary">외움</label></div>
+        <p class="q">역할에 AdministratorAccess가 붙어 있지만 권한 경계는 s3:*만 허용한다. 이 역할이 ec2:RunInstances를 호출하면?</p>
+        <ul class="quiz-opts" hidden data-q="역할에 AdministratorAccess가 붙어 있지만 권한 경계는 s3:*만 허용한다. 이 역할이 ec2:RunInstances를 호출하면?"><li class="ok">거부된다. 두 정책이 모두 허용해야 한다</li><li>허용된다. AdministratorAccess가 더 넓다</li><li>허용된다. 권한 경계는 경고만 만든다</li><li>정책을 나중에 붙인 쪽의 결과를 따른다</li></ul>
+        <ul class="quiz-opts" hidden data-q="개발자가 새 역할을 만들 수 있게 하되, 그 역할이 회사가 정한 범위 밖의 권한은 갖지 못하게 하려면?"><li class="ok">새 역할에 지정된 권한 경계를 붙이도록 강제한다</li><li>새 역할마다 AdministratorAccess를 먼저 붙인다</li><li>역할의 최대 세션 시간을 짧게 설정한다</li><li>역할 이름에 허용 서비스 이름을 넣게 한다</li></ul>
+        <div class="ans"><p><b>권한 경계</b>는 권한을 주는 정책이 아니라 사용자·역할이 가질 수 있는 <b>최대 범위</b>다. 자격 증명 정책과 권한 경계의 교집합만 유효하므로, AdministratorAccess가 있어도 경계 밖의 EC2 작업은 거부된다. 역할 생성 권한을 위임할 때 지정된 경계를 반드시 붙이도록 조건을 걸면 권한 상승을 제한할 수 있다.</p></div>
+      </article>
+      <article class="item" data-id="aws-iam-q-scp">
+        <div class="item-h"><span class="lang">Organizations</span><h3>조직 정책은 허용했는데</h3><label class="chk"><input type="checkbox" id="k-aws-iam-q-scp">외움</label></div>
+        <p class="q">조직의 SCP가 s3:GetObject를 허용하지만 역할의 IAM 정책에는 S3 권한이 없다. 이 역할이 객체를 읽으면?</p>
+        <ul class="quiz-opts" hidden data-q="조직의 SCP가 s3:GetObject를 허용하지만 역할의 IAM 정책에는 S3 권한이 없다. 이 역할이 객체를 읽으면?"><li class="ok">거부된다. SCP는 권한을 직접 부여하지 않는다</li><li>허용된다. SCP가 계정 전체에 권한을 준다</li><li>허용된다. 읽기 작업은 SCP 허용만 있으면 된다</li><li>루트 사용자로 한 번 승인하면 계속 허용된다</li></ul>
+        <ul class="quiz-opts" hidden data-q="역할 정책은 ec2:*를 허용하지만 상위 OU의 SCP가 ec2:TerminateInstances를 명시적으로 거부한다. 종료 요청 결과는?"><li class="ok">거부된다. 상위 SCP의 명시적 거부가 적용된다</li><li>허용된다. 역할 정책이 서비스 전체를 허용한다</li><li>허용된다. SCP는 루트 사용자에게만 적용된다</li><li>역할 정책과 SCP 중 나중에 바꾼 쪽을 따른다</li></ul>
+        <div class="ans"><p><b>SCP</b>도 계정 안 주체가 가질 수 있는 최대 권한을 제한한다. SCP의 Allow만으로 실제 권한이 생기지는 않으며 IAM 정책 등에서 따로 허용해야 한다. 반대로 상위 조직이나 OU의 명시적 Deny는 멤버 계정의 Allow로 덮을 수 없다.</p></div>
+      </article>
     </div>
   </section>
 
@@ -277,6 +291,26 @@ footer{margin-top:48px;color:var(--muted);font-size:13px}
         <ul class="quiz-opts" hidden data-q="TCP로 통신하는 게임 서버 앞에, 고정 IP가 필요한 로드 밸런서를 두고 싶다."><li class="ok">Network Load Balancer</li><li>Application Load Balancer</li><li>Gateway Load Balancer</li><li>CloudFront</li></ul>
         <div class="ans"><p><b>ALB</b>는 7계층(HTTP·HTTPS)이라 경로, 호스트, 헤더를 보고 나눠 보낸다. <b>NLB</b>는 4계층(TCP·UDP·TLS)이라 내용은 보지 않고 매우 빠르며, AZ마다 <b>고정 IP(탄력적 IP)</b>를 줄 수 있다. Gateway LB는 방화벽 같은 네트워크 장비를 끼워 넣을 때 쓴다.</p></div>
       </article>
+      <article class="item" data-id="aws-net-q-ephemeral">
+        <div class="item-h"><span class="lang">NACL</span><h3>요청은 나가는데 응답이 안 올 때</h3><label class="chk"><input type="checkbox" id="k-aws-net-q-ephemeral">외움</label></div>
+        <p class="q">프라이빗 EC2가 NAT 게이트웨이를 통해 외부 HTTPS 서버의 443에 연결한다. 커스텀 NACL에서 반환 트래픽을 위해 열어야 할 대상 포트는?</p>
+        <ul class="quiz-opts" hidden data-q="프라이빗 EC2가 NAT 게이트웨이를 통해 외부 HTTPS 서버의 443에 연결한다. 커스텀 NACL에서 반환 트래픽을 위해 열어야 할 대상 포트는?"><li class="ok">클라이언트의 임시 포트 범위</li><li>인바운드 443만 열면 충분하다</li><li>NAT 게이트웨이의 443 포트</li><li>인터넷 게이트웨이의 80 포트</li></ul>
+        <ul class="quiz-opts" hidden data-q="보안 그룹은 정상인데 커스텀 NACL을 적용한 뒤 외부 API 호출이 타임아웃 난다. 요청 패킷은 나간다. 먼저 확인할 것은?"><li class="ok">양쪽 서브넷 NACL의 반환용 임시 포트 규칙</li><li>EC2 인바운드 규칙에 외부 API IP 추가</li><li>NAT 게이트웨이에 보안 그룹 연결</li><li>인터넷 게이트웨이에 443 리스너 추가</li></ul>
+        <div class="ans"><p>NACL은 <b>상태 비저장</b>이라 요청과 응답 방향을 각각 허용해야 한다. EC2가 외부 443으로 접속하면 응답은 EC2가 고른 임시 포트로 돌아온다. NAT 게이트웨이는 1024~65535 포트를 사용할 수 있으므로 프라이빗·퍼블릭 서브넷 양쪽 NACL의 방향과 포트 범위를 함께 확인한다. NAT 게이트웨이에는 보안 그룹을 붙이지 않는다.</p></div>
+      </article>
+      <article class="item" data-id="aws-net-q-flowlog">
+        <div class="item-h"><span class="lang">진단</span><h3>타임아웃 난 패킷 추적</h3><label class="chk"><input type="checkbox" id="k-aws-net-q-flowlog">외움</label></div>
+        <p class="q">EC2에서 DB로 가는 연결이 간헐적으로 끊긴다. ENI 수준에서 트래픽이 허용됐는지 거부됐는지 확인하려면?</p>
+        <ul class="quiz-opts" hidden data-q="EC2에서 DB로 가는 연결이 간헐적으로 끊긴다. ENI 수준에서 트래픽이 허용됐는지 거부됐는지 확인하려면?"><li class="ok">VPC Flow Logs의 ACCEPT·REJECT 기록을 본다</li><li>CloudTrail에서 TCP 패킷 본문을 찾는다</li><li>Route 53 쿼리 로그에서 포트 번호를 찾는다</li><li>AWS Config에서 재전송 패킷을 찾는다</li></ul>
+        <ul class="quiz-opts" hidden data-q="VPC Flow Logs에 ACCEPT가 찍혔는데 앱은 계속 HTTP 500을 받는다. 이 기록으로 확정할 수 있는 것은?"><li class="ok">기록 지점에서 트래픽이 허용됐다는 것뿐이다</li><li>애플리케이션 요청 처리가 성공했다</li><li>응답 본문이 정상 JSON이었다</li><li>대상 프로세스가 오류 없이 실행됐다</li></ul>
+        <div class="ans"><p><b>VPC Flow Logs</b>는 ENI를 오간 IP 트래픽의 출발지·목적지·포트와 ACCEPT/REJECT 같은 메타데이터를 남긴다. 보안 그룹·NACL 거부를 찾는 데 유용하지만 패킷 본문이나 HTTP 상태, 전체 경로의 성공은 보여 주지 않는다. ACCEPT 뒤의 500은 ALB 액세스 로그와 앱 로그를 이어서 봐야 한다.</p></div>
+      </article>
+      <article class="item" data-id="aws-net-q-albsg">
+        <div class="item-h"><span class="lang">보안 그룹</span><h3>로드 밸런서는 되는데 직접 접근도 될 때</h3><label class="chk"><input type="checkbox" id="k-aws-net-q-albsg">외움</label></div>
+        <p class="q">ALB 뒤 EC2의 8080 포트를 인터넷에서는 막고 ALB에서 온 요청만 허용하려면 인스턴스 보안 그룹의 소스를 무엇으로 잡을까?</p>
+        <ul class="quiz-opts" hidden data-q="ALB 뒤 EC2의 8080 포트를 인터넷에서는 막고 ALB에서 온 요청만 허용하려면 인스턴스 보안 그룹의 소스를 무엇으로 잡을까?"><li class="ok">ALB의 보안 그룹</li><li>ALB가 있는 서브넷의 CIDR 전체</li><li>0.0.0.0/0에서 8080 허용</li><li>ALB의 현재 퍼블릭 IP 하나</li></ul>
+        <div class="ans"><p>대상 인스턴스의 인바운드 소스에 <b>ALB 보안 그룹</b>을 참조하면 ALB를 거친 트래픽만 허용할 수 있다. ALB IP는 바뀔 수 있고, 서브넷 CIDR 전체를 열면 같은 서브넷의 다른 자원도 직접 접근할 수 있어 범위가 불필요하게 넓다.</p></div>
+      </article>
     </div>
   </section>
 
@@ -349,6 +383,20 @@ export const handler = async (event) =&gt; {
         <ul class="quiz-opts" hidden data-q="EC2 서버를 만들고 패치하는 일 없이 컨테이너만 돌리고 싶다."><li class="ok">ECS on Fargate</li><li>ECS on EC2</li><li>EC2에 Docker를 직접 설치</li><li>EKS 관리형 노드 그룹</li></ul>
         <div class="ans"><p><b>Fargate</b>는 컨테이너가 돌 서버를 AWS가 관리해서, 작업(Task)에 CPU·메모리만 정해 주면 된다. ECS on EC2나 EKS 노드 그룹은 컨테이너를 올릴 EC2 인스턴스를 직접 두고 관리해야 한다. 대신 Fargate는 같은 자원이면 보통 더 비싸다.</p></div>
       </article>
+      <article class="item" data-id="aws-cmp-q-ecsrole">
+        <div class="item-h"><span class="lang">ECS 권한</span><h3>컨테이너 권한이 빠졌을 때</h3><label class="chk"><input type="checkbox" id="k-aws-cmp-q-ecsrole">외움</label></div>
+        <p class="q">Fargate가 ECR 이미지를 받고 CloudWatch Logs에 로그를 쓰는 데 필요한 권한은 어느 역할에 줄까?</p>
+        <ul class="quiz-opts" hidden data-q="Fargate가 ECR 이미지를 받고 CloudWatch Logs에 로그를 쓰는 데 필요한 권한은 어느 역할에 줄까?"><li class="ok">태스크 실행 역할</li><li>애플리케이션의 태스크 역할</li><li>서비스 연결 역할</li><li>컨테이너 안의 IAM 사용자</li></ul>
+        <ul class="quiz-opts" hidden data-q="실행 중인 컨테이너 애플리케이션이 S3 객체를 읽어야 한다. 권한은 어느 역할에 줄까?"><li class="ok">애플리케이션의 태스크 역할</li><li>태스크 실행 역할</li><li>ECS 서비스 연결 역할</li><li>ECR 리포지토리 정책</li></ul>
+        <div class="ans"><p><b>태스크 실행 역할</b>은 ECS 에이전트가 이미지를 받고 로그를 보내며 태스크 시작에 필요한 비밀 값을 읽을 때 쓴다. <b>태스크 역할</b>은 실행된 애플리케이션 코드가 S3·DynamoDB 같은 AWS API를 호출할 때 쓴다. 둘을 나누면 앱에 ECR 관리 권한을 주거나 에이전트에 업무 데이터 권한을 주는 일을 피할 수 있다.</p></div>
+      </article>
+      <article class="item" data-id="aws-cmp-q-sqsbatch">
+        <div class="item-h"><span class="lang">Lambda · SQS</span><h3>메시지 하나 때문에 모두 재처리될 때</h3><label class="chk"><input type="checkbox" id="k-aws-cmp-q-sqsbatch">외움</label></div>
+        <p class="q">Lambda가 SQS 메시지 10개 중 9개를 처리한 뒤 1개에서 예외를 던졌다. 기본 동작은?</p>
+        <ul class="quiz-opts" hidden data-q="Lambda가 SQS 메시지 10개 중 9개를 처리한 뒤 1개에서 예외를 던졌다. 기본 동작은?"><li class="ok">가시성 제한 뒤 10개 모두 다시 보인다</li><li>실패한 1개만 즉시 다시 보인다</li><li>성공한 9개는 Lambda가 바로 삭제한다</li><li>10개가 모두 자동으로 DLQ로 이동한다</li></ul>
+        <ul class="quiz-opts" hidden data-q="SQS 배치에서 성공한 메시지는 다시 처리하지 않고 실패한 메시지만 재시도하려면?"><li class="ok">부분 배치 응답으로 실패한 ID만 반환한다</li><li>함수 타임아웃을 가시성 제한보다 길게 잡는다</li><li>배치 크기를 늘려 성공 비율을 높인다</li><li>성공한 메시지를 다른 표준 큐로 다시 보낸다</li></ul>
+        <div class="ans"><p>기본 설정에서 Lambda 호출이 실패하면 배치 전체가 가시성 제한 뒤 다시 나타나 성공한 메시지도 중복 처리될 수 있다. 이벤트 소스 매핑에 <code>ReportBatchItemFailures</code>를 켜고 응답의 <code>batchItemFailures</code>에 실패한 메시지 ID만 넣으면 그 메시지만 재시도한다. 그래도 중복 전달 가능성은 있으므로 결제·재고 변경은 멱등하게 만든다.</p></div>
+      </article>
     </div>
   </section>
 
@@ -410,6 +458,20 @@ export const handler = async (event) =&gt; {
         <ul class="quiz-opts" hidden data-q="코드를 짜지 않고, 30일 지난 로그는 Standard-IA로 옮기고 1년 지나면 자동으로 지우고 싶다."><li class="ok">S3 수명 주기(Lifecycle) 규칙</li><li>매일 도는 Lambda 크론</li><li>S3 Intelligent-Tiering</li><li>버킷 버전 관리</li></ul>
         <div class="ans"><p><b>수명 주기 규칙</b>으로 접두사·태그별로 "며칠 뒤 다른 클래스로 전환", "며칠 뒤 삭제", "옛 버전·미완료 멀티파트 정리"를 코드 없이 걸 수 있다. Intelligent-Tiering은 접근 빈도에 따라 클래스를 알아서 옮기지만 지워 주지는 않는다.</p></div>
       </article>
+      <article class="item" data-id="aws-s3-q-multipart-cost">
+        <div class="item-h"><span class="lang">멀티파트 업로드</span><h3>버킷 용량은 늘었는데 객체가 없을 때</h3><label class="chk"><input type="checkbox" id="k-aws-s3-q-multipart-cost">외움</label></div>
+        <p class="q">대용량 업로드가 자주 취소된다. 객체 목록에는 없는데 S3 저장 비용이 계속 늘어난다. 가장 가능성 높은 원인은?</p>
+        <ul class="quiz-opts" hidden data-q="대용량 업로드가 자주 취소된다. 객체 목록에는 없는데 S3 저장 비용이 계속 늘어난다. 가장 가능성 높은 원인은?"><li class="ok">완료·중단되지 않은 멀티파트 조각이 남았다</li><li>실패한 단일 PUT이 객체 버전으로 남았다</li><li>삭제 마커가 원본 크기만큼 공간을 쓴다</li><li>presigned URL이 만료될 때마다 사본이 생긴다</li></ul>
+        <ul class="quiz-opts" hidden data-q="오래 남은 미완료 멀티파트 업로드를 코드 없이 자동 정리하려면?"><li class="ok">미완료 멀티파트 중단 수명 주기 작업</li><li>객체 만료 Expiration 규칙만 설정</li><li>버킷 버전 관리를 일시 중지</li><li>Intelligent-Tiering을 모든 객체에 적용</li></ul>
+        <div class="ans"><p>멀티파트 업로드는 <b>Complete</b> 또는 <b>Abort</b>할 때까지 올린 조각을 보관하고 저장 요금을 청구한다. 미완료라 객체 목록에 완성 객체로 보이지 않아 놓치기 쉽다. 일반 객체 만료 규칙과 별개인 <code>AbortIncompleteMultipartUpload</code> 수명 주기 작업으로 시작 후 일정 기간이 지난 업로드를 정리한다.</p></div>
+      </article>
+      <article class="item" data-id="aws-s3-q-event-order">
+        <div class="item-h"><span class="lang">이벤트</span><h3>썸네일이 이전 버전으로 돌아갈 때</h3><label class="chk"><input type="checkbox" id="k-aws-s3-q-event-order">외움</label></div>
+        <p class="q">같은 키의 이미지가 빠르게 두 번 덮어써졌다. S3 이벤트로 만든 썸네일이 가끔 이전 이미지로 돌아간다. 원인은?</p>
+        <ul class="quiz-opts" hidden data-q="같은 키의 이미지가 빠르게 두 번 덮어써졌다. S3 이벤트로 만든 썸네일이 가끔 이전 이미지로 돌아간다. 원인은?"><li class="ok">이벤트가 중복되거나 순서가 바뀔 수 있다</li><li>S3 GET은 덮어쓰기 후 최종 일관성이라서</li><li>S3 이벤트는 키마다 정확히 한 번만 오기 때문에</li><li>버전 관리를 켜면 이벤트 순서가 항상 보장돼서</li></ul>
+        <ul class="quiz-opts" hidden data-q="같은 객체 키의 S3 이벤트가 순서가 바뀌어 와도 최신 처리 결과를 지키려면 무엇을 비교할까?"><li class="ok">이벤트의 sequencer 값을 저장해 비교한다</li><li>알림을 받은 Lambda의 요청 ID</li><li>SQS 메시지의 ApproximateReceiveCount</li><li>CloudWatch 로그 스트림 이름</li></ul>
+        <div class="ans"><p>S3 이벤트 알림은 <b>최소 한 번</b> 전달되며 드물게 중복될 수 있고, 발생 순서대로 도착한다고 보장하지 않는다. 같은 객체 키의 이벤트라면 <code>sequencer</code>를 비교해 더 오래된 이벤트의 결과가 최신 결과를 덮지 않게 만들고, 중복 처리에도 결과가 바뀌지 않도록 멱등성을 둔다.</p></div>
+      </article>
     </div>
   </section>
 
@@ -470,6 +532,26 @@ export const handler = async (event) =&gt; {
         <ul class="quiz-opts" hidden data-q="오리진에 요청하기 전에 외부 인증 API를 호출해 결과에 따라 막고 싶다."><li class="ok">Lambda@Edge</li><li>CloudFront Functions</li><li>S3 버킷 정책</li><li>Route 53 상태 검사</li></ul>
         <div class="ans"><p><b>CloudFront Functions</b>: 뷰어 요청·응답 단계에서만, JavaScript로, 1밀리초 안쪽의 가벼운 처리(URL 바꾸기, 헤더 붙이기). 네트워크 호출은 못 한다. <b>Lambda@Edge</b>: 오리진 요청·응답 단계도 되고 네트워크 호출, 긴 처리가 가능하지만 더 느리고 비싸다.</p></div>
       </article>
+      <article class="item" data-id="aws-cdn-q-policies">
+        <div class="item-h"><span class="lang">캐시 정책</span><h3>오리진에는 보내되 캐시는 나누지 않기</h3><label class="chk"><input type="checkbox" id="k-aws-cdn-q-policies">외움</label></div>
+        <p class="q">추적용 X-Request-Id는 오리진에 보내야 하지만 응답 내용에는 영향이 없다. 캐시 적중률을 지키려면?</p>
+        <ul class="quiz-opts" hidden data-q="추적용 X-Request-Id는 오리진에 보내야 하지만 응답 내용에는 영향이 없다. 캐시 적중률을 지키려면?"><li class="ok">오리진 요청 정책에만 헤더를 넣는다</li><li>캐시 정책의 캐시 키에 헤더를 넣는다</li><li>모든 헤더를 캐시 키에 넣는다</li><li>헤더 값마다 별도 캐시 동작을 만든다</li></ul>
+        <ul class="quiz-opts" hidden data-q="언어 쿠키 값에 따라 응답 본문이 달라진다. 사용자에게 다른 언어의 캐시가 섞이지 않게 하려면?"><li class="ok">해당 쿠키를 캐시 키에 포함한다</li><li>해당 쿠키를 오리진 요청 정책에만 넣는다</li><li>쿠키를 오리진에서 응답 헤더로 돌려준다</li><li>TTL만 길게 설정해 캐시를 고정한다</li></ul>
+        <div class="ans"><p><b>캐시 정책</b>은 어떤 헤더·쿠키·쿼리 문자열을 캐시 키에 넣을지 정한다. 응답을 바꾸는 값은 키에 넣어 서로 다른 객체로 캐시해야 한다. 오리진이 기록에는 필요하지만 응답을 바꾸지 않는 값은 <b>오리진 요청 정책</b>으로만 전달해야 불필요한 캐시 분할을 피할 수 있다.</p></div>
+      </article>
+      <article class="item" data-id="aws-cdn-q-authcache">
+        <div class="item-h"><span class="lang">인증</span><h3>다른 사용자의 응답이 보일 때</h3><label class="chk"><input type="checkbox" id="k-aws-cdn-q-authcache">외움</label></div>
+        <p class="q">오리진이 Authorization 헤더로 사용자별 응답을 만들지만 CloudFront 캐시 키에는 이 헤더가 없다. 가장 큰 위험은?</p>
+        <ul class="quiz-opts" hidden data-q="오리진이 Authorization 헤더로 사용자별 응답을 만들지만 CloudFront 캐시 키에는 이 헤더가 없다. 가장 큰 위험은?"><li class="ok">한 사용자의 응답이 다른 사용자에게 캐시될 수 있다</li><li>CloudFront가 모든 요청을 자동으로 401 처리한다</li><li>인증 헤더 때문에 모든 객체의 TTL이 0이 된다</li><li>오리진 요청이 항상 서명된 요청으로 바뀐다</li></ul>
+        <ul class="quiz-opts" hidden data-q="오리진에서 Authorization으로 접근을 제어하는 동적 API를 CloudFront로 전달한다. 안전한 기본 선택은?"><li class="ok">인증 헤더를 캐시 키에 넣거나 캐시를 끈다</li><li>인증 헤더는 전달하되 캐시 키에서는 뺀다</li><li>인증 헤더를 고정 값으로 바꿔 오리진에 보낸다</li><li>TTL을 늘려 인증 확인 횟수를 줄인다</li></ul>
+        <div class="ans"><p>인증에 따라 응답이 달라지는데 <code>Authorization</code>이 캐시 키에 없으면 먼저 채워진 응답을 다른 요청에 돌려줄 수 있다. 인증 헤더를 오리진으로 전달하면서 <b>캐시 키에도 포함</b>하거나, 사용자별 API 동작은 캐시를 비활성화한다. 단순 전달만 하는 설정은 접근 제어에 안전하지 않다.</p></div>
+      </article>
+      <article class="item" data-id="aws-cdn-q-versioned">
+        <div class="item-h"><span class="lang">배포</span><h3>롤백과 캐시를 함께 다루기</h3><label class="chk"><input type="checkbox" id="k-aws-cdn-q-versioned">외움</label></div>
+        <p class="q">정적 JS를 자주 배포하며 브라우저·회사 프록시 캐시까지 확실히 새 파일로 바꾸고 쉽게 롤백하려면?</p>
+        <ul class="quiz-opts" hidden data-q="정적 JS를 자주 배포하며 브라우저·회사 프록시 캐시까지 확실히 새 파일로 바꾸고 쉽게 롤백하려면?"><li class="ok">파일명에 콘텐츠 해시나 버전을 넣는다</li><li>같은 app.js를 덮고 CloudFront TTL만 늘린다</li><li>매 배포마다 배포 도메인을 새로 만든다</li><li>모든 정적 파일의 Cache-Control을 없앤다</li></ul>
+        <div class="ans"><p><code>app.a1b2.js</code>처럼 <b>버전이 있는 파일명</b>을 쓰면 새 배포가 새 URL을 참조하므로 CloudFront뿐 아니라 브라우저와 중간 프록시의 오래된 캐시도 피할 수 있다. 이전 HTML로 되돌리면 이전 자산으로 롤백하기도 쉽다. 같은 이름을 덮는 방식은 무효화 밖의 캐시에 옛 파일이 남을 수 있다.</p></div>
+      </article>
     </div>
   </section>
 
@@ -522,8 +604,8 @@ export const handler = async (event) =&gt; {
         <div class="item-h"><span class="lang">SQS</span><h3>큐 종류 고르기</h3><label class="chk"><input type="checkbox" id="k-aws-db-q-sqstype">외움</label></div>
         <p class="q">SQS 표준 큐의 소비자가 대비해야 하는 것은?</p>
         <ul class="quiz-opts" hidden data-q="SQS 표준 큐의 소비자가 대비해야 하는 것은?"><li class="ok">같은 메시지가 두 번 이상 올 수 있다</li><li>메시지가 사라질 수 있다</li><li>메시지 하나에 소비자가 하나로 고정된다</li><li>메시지가 항상 순서대로 온다</li></ul>
-        <ul class="quiz-opts" hidden data-q="같은 주문의 이벤트를 들어온 순서대로, 한 번만 처리하고 싶다."><li class="ok">FIFO 큐 (주문 ID를 메시지 그룹 ID로)</li><li>표준 큐 (소비자를 한 개만 둔다)</li><li>표준 큐 (메시지에 순번을 붙인다)</li><li>표준 큐 + DLQ (실패는 따로 모은다)</li></ul>
-        <div class="ans"><p><b>표준 큐</b>: 처리량이 매우 크지만 <b>최소 한 번 전달</b>(가끔 중복)이고 순서는 최선일 뿐이다. 그래서 소비자를 <b>멱등</b>하게 만든다. <b>FIFO 큐</b>: 같은 <b>메시지 그룹</b> 안에서 순서를 지키고 정확히 한 번 처리한다.</p></div>
+        <ul class="quiz-opts" hidden data-q="같은 주문의 이벤트 순서를 지키고, 5분 안의 중복 전송을 제거하고 싶다."><li class="ok">FIFO 큐 (주문 ID를 메시지 그룹 ID로)</li><li>표준 큐 (소비자를 한 개만 둔다)</li><li>표준 큐 (메시지에 순번을 붙인다)</li><li>표준 큐 + DLQ (실패는 따로 모은다)</li></ul>
+        <div class="ans"><p><b>표준 큐</b>: 처리량이 매우 크지만 <b>최소 한 번 전달</b>(가끔 중복)이고 순서는 최선일 뿐이다. <b>FIFO 큐</b>: 같은 메시지 그룹 안에서 순서를 지키고 5분 중복 제거 구간의 같은 메시지를 전달하지 않는다. 소비자가 삭제하기 전에 가시성 제한이 끝나는 경우처럼 다시 처리될 수는 있으므로, 어느 큐든 소비자는 <b>멱등</b>하게 만든다.</p></div>
       </article>
       <article class="item" data-id="aws-db-q-dlq">
         <div class="item-h"><span class="lang">SQS</span><h3>계속 실패하는 메시지</h3><label class="chk"><input type="checkbox" id="k-aws-db-q-dlq">외움</label></div>
@@ -536,6 +618,26 @@ export const handler = async (event) =&gt; {
         <p class="q">주문이 들어오면 결제·알림·분석 서비스가 각자 같은 이벤트를 받아 따로 처리해야 한다.</p>
         <ul class="quiz-opts" hidden data-q="주문이 들어오면 결제·알림·분석 서비스가 각자 같은 이벤트를 받아 따로 처리해야 한다."><li class="ok">SNS 토픽에 서비스별 SQS 큐를 구독시킨다</li><li>SQS 큐 하나를 세 서비스가 같이 읽는다</li><li>SQS FIFO 큐 하나를 세 서비스가 같이 읽는다</li><li>SQS 큐 하나에 소비자 그룹을 세 개 만든다</li></ul>
         <div class="ans"><p>SQS 큐 하나를 여러 소비자가 읽으면 메시지 하나를 <b>한 소비자만</b> 가져간다(일을 나눠 가짐). 모두가 받아야 하면 <b>SNS 토픽 → 여러 SQS 큐(팬아웃)</b>로 복사해서 보낸다. 서비스마다 자기 큐가 있어 속도도, 장애도 서로 영향을 덜 준다.</p></div>
+      </article>
+      <article class="item" data-id="aws-db-q-rds-reconnect">
+        <div class="item-h"><span class="lang">RDS 장애 조치</span><h3>DB는 복구됐는데 앱만 못 붙을 때</h3><label class="chk"><input type="checkbox" id="k-aws-db-q-rds-reconnect">외움</label></div>
+        <p class="q">RDS Multi-AZ 장애 조치가 끝나 엔드포인트는 새 주 DB를 가리킨다. 기존 앱 연결은 어떻게 해야 할까?</p>
+        <ul class="quiz-opts" hidden data-q="RDS Multi-AZ 장애 조치가 끝나 엔드포인트는 새 주 DB를 가리킨다. 기존 앱 연결은 어떻게 해야 할까?"><li class="ok">끊긴 연결을 버리고 엔드포인트로 다시 연결한다</li><li>기존 TCP 연결이 자동으로 새 주 DB에 붙는다</li><li>대기 DB의 고정 IP로 연결 문자열을 바꾼다</li><li>읽기 복제본 엔드포인트를 쓰면 기존 연결이 산다</li></ul>
+        <ul class="quiz-opts" hidden data-q="RDS 장애 조치 후 일부 Java 앱만 계속 예전 IP로 접속한다. 가장 먼저 의심할 설정은?"><li class="ok">JVM의 DNS 캐시 TTL</li><li>RDS 백업 보존 기간</li><li>DB 파라미터 그룹의 max_connections</li><li>보안 그룹의 상태 저장 여부</li></ul>
+        <div class="ans"><p>Multi-AZ 장애 조치에서는 같은 DB <b>엔드포인트의 DNS가 새 주 인스턴스</b>를 가리키도록 바뀐다. 이미 열린 TCP 연결이 옮겨지는 것은 아니므로 연결 풀은 실패한 연결을 버리고 재시도해야 한다. JVM이 DNS를 오래 캐시하면 예전 IP를 계속 쓸 수 있어 AWS는 DNS TTL을 60초 이하로 두도록 권장한다.</p></div>
+      </article>
+      <article class="item" data-id="aws-db-q-conditional">
+        <div class="item-h"><span class="lang">DynamoDB 동시성</span><h3>네트워크 오류 뒤 중복 갱신 막기</h3><label class="chk"><input type="checkbox" id="k-aws-db-q-conditional">외움</label></div>
+        <p class="q">재고 10을 9로 바꾸는 UpdateItem 응답을 못 받아 재시도해야 한다. 두 번 차감되지 않게 하려면?</p>
+        <ul class="quiz-opts" hidden data-q="재고 10을 9로 바꾸는 UpdateItem 응답을 못 받아 재시도해야 한다. 두 번 차감되지 않게 하려면?"><li class="ok">재고가 10일 때만 9로 바꾸는 조건식을 쓴다</li><li>먼저 GetItem으로 읽고 조건 없이 1을 뺀다</li><li>재시도 전에 1초 기다리고 같은 갱신을 보낸다</li><li>Eventually consistent 읽기로 현재 값을 확인한다</li></ul>
+        <ul class="quiz-opts" hidden data-q="주문·재고 여러 항목을 TransactWriteItems로 한 번만 반영하고, 같은 요청의 재전송도 안전하게 하려면?"><li class="ok">동일한 ClientRequestToken을 함께 보낸다</li><li>각 PutItem에 같은 Partition Key를 쓴다</li><li>ReturnConsumedCapacity를 TOTAL로 설정한다</li><li>트랜잭션 직후 BatchGetItem을 호출한다</li></ul>
+        <div class="ans"><p>현재 값이 예상한 값일 때만 변경하는 <b>조건부 쓰기</b>는 성공 여부를 모르는 요청을 다시 보내도 같은 변경이 두 번 적용되지 않게 만들 수 있다. 여러 항목의 트랜잭션에는 동일한 <code>ClientRequestToken</code>을 보내면 같은 요청의 재전송을 멱등하게 처리한다.</p></div>
+      </article>
+      <article class="item" data-id="aws-db-q-visibility-extend">
+        <div class="item-h"><span class="lang">SQS</span><h3>작업 시간이 매번 다를 때</h3><label class="chk"><input type="checkbox" id="k-aws-db-q-visibility-extend">외움</label></div>
+        <p class="q">SQS 작업은 보통 30초지만 일부는 10분 걸린다. 가시성 제한을 무조건 길게 잡지 않고 중복 처리를 줄이려면?</p>
+        <ul class="quiz-opts" hidden data-q="SQS 작업은 보통 30초지만 일부는 10분 걸린다. 가시성 제한을 무조건 길게 잡지 않고 중복 처리를 줄이려면?"><li class="ok">처리 중 ChangeMessageVisibility로 연장한다</li><li>처리 시작과 동시에 메시지를 삭제한다</li><li>ReceiveMessage를 반복 호출해 잠금을 유지한다</li><li>소비자 수를 한 개로 제한한다</li></ul>
+        <div class="ans"><p>예상 처리 시간만큼 가시성 제한을 잡고, 오래 걸리는 작업은 <code>ChangeMessageVisibility</code>로 남은 시간을 연장한다. 먼저 삭제하면 작업 실패 시 메시지를 잃고, 제한이 끝나면 다른 소비자가 같은 메시지를 받을 수 있다. 연장하더라도 소비자는 멱등하게 설계한다.</p></div>
       </article>
     </div>
   </section>
@@ -589,6 +691,26 @@ export const handler = async (event) =&gt; {
         <p class="q">"RPO 1시간"의 뜻은?</p>
         <ul class="quiz-opts" hidden data-q="&quot;RPO 1시간&quot;의 뜻은?"><li class="ok">최대 1시간 치 데이터까지는 잃어도 된다</li><li>1시간 안에 서비스를 되살려야 한다</li><li>백업을 1시간 동안 보관한다</li><li>복제가 1시간 넘게 밀리면 경보를 낸다</li></ul>
         <div class="ans"><p><b>RPO</b>(복구 시점 목표): 얼마만큼의 <b>데이터</b>를 잃어도 되나 → 백업·복제 주기를 정한다. <b>RTO</b>(복구 시간 목표): 얼마 만에 <b>서비스</b>를 되살려야 하나 → 대기 환경을 얼마나 준비해 둘지 정한다. 둘 다 짧을수록 비싸다.</p></div>
+      </article>
+      <article class="item" data-id="aws-ops-q-dataevent">
+        <div class="item-h"><span class="lang">CloudTrail</span><h3>객체를 읽은 사람을 찾을 수 없을 때</h3><label class="chk"><input type="checkbox" id="k-aws-ops-q-dataevent">외움</label></div>
+        <p class="q">CloudTrail 이벤트 기록에서 S3 버킷 생성은 보이는데 누가 특정 객체를 GetObject 했는지는 없다. 이유는?</p>
+        <ul class="quiz-opts" hidden data-q="CloudTrail 이벤트 기록에서 S3 버킷 생성은 보이는데 누가 특정 객체를 GetObject 했는지는 없다. 이유는?"><li class="ok">S3 객체 데이터 이벤트는 기본 기록 대상이 아니다</li><li>GetObject는 읽기라 어떤 설정에서도 기록할 수 없다</li><li>S3가 글로벌 서비스라 CloudTrail에 남지 않는다</li><li>버킷 버전 관리를 켜야 읽기 기록이 생긴다</li></ul>
+        <ul class="quiz-opts" hidden data-q="특정 S3 버킷의 PutObject·DeleteObject 감사 기록을 남기려면 CloudTrail에 무엇을 설정할까?"><li class="ok">해당 버킷의 쓰기 데이터 이벤트</li><li>관리 이벤트를 읽기 전용으로 설정</li><li>CloudTrail Insights 이벤트만 활성화</li><li>VPC Flow Logs를 버킷에 연결</li></ul>
+        <div class="ans"><p>CloudTrail의 기본 이벤트 기록은 계정·서비스 설정을 바꾸는 <b>관리 이벤트</b> 중심이다. S3 객체의 GetObject·PutObject 같은 고빈도 작업은 <b>데이터 이벤트</b>라 명시적으로 대상 리소스와 읽기·쓰기를 선택해야 하며 추가 비용이 발생할 수 있다.</p></div>
+      </article>
+      <article class="item" data-id="aws-ops-q-missing">
+        <div class="item-h"><span class="lang">CloudWatch 경보</span><h3>지표가 끊겼을 때 정상으로 보이는 문제</h3><label class="chk"><input type="checkbox" id="k-aws-ops-q-missing">외움</label></div>
+        <p class="q">서버가 살아 있으면 매분 보내는 heartbeat 지표가 끊겼다. 누락 자체를 장애로 보려면 경보의 누락 데이터를 어떻게 처리할까?</p>
+        <ul class="quiz-opts" hidden data-q="서버가 살아 있으면 매분 보내는 heartbeat 지표가 끊겼다. 누락 자체를 장애로 보려면 경보의 누락 데이터를 어떻게 처리할까?"><li class="ok">breaching으로 처리한다</li><li>notBreaching으로 처리한다</li><li>ignore로 현재 상태만 유지한다</li><li>지표의 단위를 Count에서 Percent로 바꾼다</li></ul>
+        <ul class="quiz-opts" hidden data-q="오류가 발생할 때만 1을 보내는 ErrorCount 지표에 값이 없다. 불필요한 경보를 피하려면 누락 데이터를 어떻게 처리할까?"><li class="ok">notBreaching으로 처리한다</li><li>breaching으로 처리한다</li><li>모든 누락 구간을 오류 1건으로 채운다</li><li>지표가 없으므로 경보 자체를 삭제한다</li></ul>
+        <div class="ans"><p>CloudWatch 경보에서 누락 데이터는 지표의 의미에 맞게 정해야 한다. 항상 와야 하는 heartbeat가 없으면 장애이므로 <b>breaching</b>이 맞다. 오류가 있을 때만 찍히는 희소 지표는 값이 없는 것이 정상이라 <b>notBreaching</b>이 맞다. 기본값인 missing은 실제 데이터가 모두 없을 때 INSUFFICIENT_DATA가 될 수 있다.</p></div>
+      </article>
+      <article class="item" data-id="aws-ops-q-composite">
+        <div class="item-h"><span class="lang">경보 설계</span><h3>장애 한 번에 알림이 수십 개 올 때</h3><label class="chk"><input type="checkbox" id="k-aws-ops-q-composite">외움</label></div>
+        <p class="q">같은 장애로 CPU·지연 시간·5xx 경보가 연달아 울려 당직자에게 알림이 쏟아진다. 핵심 알림 하나로 묶으려면?</p>
+        <ul class="quiz-opts" hidden data-q="같은 장애로 CPU·지연 시간·5xx 경보가 연달아 울려 당직자에게 알림이 쏟아진다. 핵심 알림 하나로 묶으려면?"><li class="ok">하위 경보를 조합한 복합 경보를 만든다</li><li>모든 경보의 임계값을 같은 값으로 맞춘다</li><li>각 경보의 평가 기간을 1분으로 줄인다</li><li>SNS 토픽을 경보마다 따로 만든다</li></ul>
+        <div class="ans"><p><b>복합 경보</b>는 다른 경보의 ALARM·OK·INSUFFICIENT_DATA 상태를 AND·OR·NOT으로 조합한다. 하위 경보는 원인 분석용으로 유지하면서 복합 경보에서만 호출 알림을 보내면, 한 장애가 여러 지표를 흔들 때 중복 호출을 줄일 수 있다.</p></div>
       </article>
     </div>
   </section>

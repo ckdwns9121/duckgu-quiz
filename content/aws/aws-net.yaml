@@ -173,3 +173,51 @@ blocks:
               - Gateway Load Balancer
               - CloudFront
         explain: <p><b>ALB</b>는 7계층(HTTP·HTTPS)이라 경로, 호스트, 헤더를 보고 나눠 보낸다. <b>NLB</b>는 4계층(TCP·UDP·TLS)이라 내용은 보지 않고 매우 빠르며, AZ마다 <b>고정 IP(탄력적 IP)</b>를 줄 수 있다. Gateway LB는 방화벽 같은 네트워크 장비를 끼워 넣을 때 쓴다.</p>
+      - id: aws-net-q-ephemeral
+        tag: NACL
+        title: 요청은 나가는데 응답이 안 올 때
+        type: mcq
+        quizzes:
+          - q: 프라이빗 EC2가 NAT 게이트웨이를 통해 외부 HTTPS 서버의 443에 연결한다. 커스텀 NACL에서 반환 트래픽을 위해 열어야 할 대상 포트는?
+            answer: 클라이언트의 임시 포트 범위
+            wrong:
+              - 인바운드 443만 열면 충분하다
+              - NAT 게이트웨이의 443 포트
+              - 인터넷 게이트웨이의 80 포트
+          - q: 보안 그룹은 정상인데 커스텀 NACL을 적용한 뒤 외부 API 호출이 타임아웃 난다. 요청 패킷은 나간다. 먼저 확인할 것은?
+            answer: 양쪽 서브넷 NACL의 반환용 임시 포트 규칙
+            wrong:
+              - EC2 인바운드 규칙에 외부 API IP 추가
+              - NAT 게이트웨이에 보안 그룹 연결
+              - 인터넷 게이트웨이에 443 리스너 추가
+        explain: <p>NACL은 <b>상태 비저장</b>이라 요청과 응답 방향을 각각 허용해야 한다. EC2가 외부 443으로 접속하면 응답은 EC2가 고른 임시 포트로 돌아온다. NAT 게이트웨이는 1024~65535 포트를 사용할 수 있으므로 프라이빗·퍼블릭 서브넷 양쪽 NACL의 방향과 포트 범위를 함께 확인한다. NAT 게이트웨이에는 보안 그룹을 붙이지 않는다.</p>
+      - id: aws-net-q-flowlog
+        tag: 진단
+        title: 타임아웃 난 패킷 추적
+        type: mcq
+        quizzes:
+          - q: EC2에서 DB로 가는 연결이 간헐적으로 끊긴다. ENI 수준에서 트래픽이 허용됐는지 거부됐는지 확인하려면?
+            answer: VPC Flow Logs의 ACCEPT·REJECT 기록을 본다
+            wrong:
+              - CloudTrail에서 TCP 패킷 본문을 찾는다
+              - Route 53 쿼리 로그에서 포트 번호를 찾는다
+              - AWS Config에서 재전송 패킷을 찾는다
+          - q: VPC Flow Logs에 ACCEPT가 찍혔는데 앱은 계속 HTTP 500을 받는다. 이 기록으로 확정할 수 있는 것은?
+            answer: 기록 지점에서 트래픽이 허용됐다는 것뿐이다
+            wrong:
+              - 애플리케이션 요청 처리가 성공했다
+              - 응답 본문이 정상 JSON이었다
+              - 대상 프로세스가 오류 없이 실행됐다
+        explain: <p><b>VPC Flow Logs</b>는 ENI를 오간 IP 트래픽의 출발지·목적지·포트와 ACCEPT/REJECT 같은 메타데이터를 남긴다. 보안 그룹·NACL 거부를 찾는 데 유용하지만 패킷 본문이나 HTTP 상태, 전체 경로의 성공은 보여 주지 않는다. ACCEPT 뒤의 500은 ALB 액세스 로그와 앱 로그를 이어서 봐야 한다.</p>
+      - id: aws-net-q-albsg
+        tag: 보안 그룹
+        title: 로드 밸런서는 되는데 직접 접근도 될 때
+        type: mcq
+        quizzes:
+          - q: ALB 뒤 EC2의 8080 포트를 인터넷에서는 막고 ALB에서 온 요청만 허용하려면 인스턴스 보안 그룹의 소스를 무엇으로 잡을까?
+            answer: ALB의 보안 그룹
+            wrong:
+              - ALB가 있는 서브넷의 CIDR 전체
+              - 0.0.0.0/0에서 8080 허용
+              - ALB의 현재 퍼블릭 IP 하나
+        explain: <p>대상 인스턴스의 인바운드 소스에 <b>ALB 보안 그룹</b>을 참조하면 ALB를 거친 트래픽만 허용할 수 있다. ALB IP는 바뀔 수 있고, 서브넷 CIDR 전체를 열면 같은 서브넷의 다른 자원도 직접 접근할 수 있어 범위가 불필요하게 넓다.</p>
