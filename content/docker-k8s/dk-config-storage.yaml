@@ -1,0 +1,134 @@
+id: dk-config-storage
+name: 설정 · Secret · 스토리지
+color: "#4F74D8"
+dark: "#3856A7"
+part: PART 5
+lede: 설정을 바꿨는데 Pod에 반영되지 않고, PVC가 Pending에 머물며, StatefulSet 교체 뒤 데이터가 엉키는 원인을 다룹니다.
+blocks:
+  - items:
+      - id: dk-cfg-q-configmap-update
+        tag: ConfigMap
+        title: 설정을 바꿨는데 환경 변수가 그대로일 때
+        type: mcq
+        quizzes:
+          - q: ConfigMap 값을 envFrom으로 주입한 뒤 ConfigMap을 수정했다. 실행 중 컨테이너의 환경 변수는?
+            answer: 자동으로 바뀌지 않아 Pod 재시작이 필요하다
+            wrong:
+              - kubelet 동기화 때 환경 변수도 바로 바뀐다
+              - 앱이 다음 요청을 받을 때 자동으로 다시 읽는다
+              - Deployment의 replicas가 자동으로 0이 됐다 돌아온다
+          - q: ConfigMap을 볼륨 파일로 마운트했다. ConfigMap 수정은 일반적으로 어떻게 반영될까?
+            answer: kubelet 동기화 뒤 파일이 갱신될 수 있다
+            wrong:
+              - 마운트 방식도 반드시 Pod를 다시 만들어야 한다
+              - 파일은 즉시 바뀌고 앱 프로세스도 자동 재시작된다
+              - ConfigMap 수정 시 볼륨이 영구 삭제된다
+        explain: <p>환경 변수는 프로세스 시작 때 만들어져 실행 중 자동 변경되지 않는다. ConfigMap 볼륨은 kubelet 동기화와 캐시 지연 뒤 파일이 갱신될 수 있지만 앱이 파일을 다시 읽는지는 별개다. 확실한 배포를 위해 설정 체크섬을 Pod 템플릿에 넣어 롤아웃하는 패턴도 쓴다.</p>
+      - id: dk-cfg-q-subpath
+        tag: ConfigMap
+        title: 파일 하나만 마운트하자 갱신이 멈출 때
+        type: mcq
+        quizzes:
+          - q: ConfigMap 키 하나를 subPath로 파일에 마운트했다. ConfigMap을 바꾼 뒤 파일은?
+            answer: 실행 중 Pod에는 자동 갱신되지 않는다
+            wrong:
+              - 전체 볼륨보다 더 빠르게 갱신된다
+              - 키가 바뀔 때마다 컨테이너가 자동 재시작된다
+              - subPath를 쓰면 ConfigMap이 Secret으로 변환된다
+          - q: 디렉터리 전체 ConfigMap 마운트가 이미지 안 같은 경로의 기존 파일에 미치는 영향은?
+            answer: 마운트된 디렉터리가 기존 파일을 가린다
+            wrong:
+              - 기존 파일과 키가 자동으로 병합된다
+              - 이미지 파일이 ConfigMap으로 복사된다
+              - 기존 파일이 영구히 이미지에서 삭제된다
+        explain: <p>ConfigMap·Secret의 <code>subPath</code> 마운트는 자동 갱신을 받지 않는다. 또한 볼륨을 디렉터리에 마운트하면 이미지에 있던 같은 경로의 내용이 가려진다. 기존 설정 파일 일부만 유지해야 하면 마운트 경로와 앱의 설정 포함 방식을 설계해야 한다.</p>
+      - id: dk-cfg-q-secret
+        tag: Secret
+        title: base64라서 안전하다고 착각할 때
+        type: mcq
+        quizzes:
+          - q: Secret manifest의 data 값이 base64이므로 Git에 커밋해도 안전하다는 판단은?
+            answer: 틀리다. base64는 암호화가 아니라 인코딩이다
+            wrong:
+              - 맞다. API 서버만 원문으로 복호화할 수 있다
+              - 맞다. namespace 밖에서는 디코딩할 수 없다
+              - 틀리다. base64는 해시라 원문을 검증만 할 수 있다
+          - q: etcd에 저장되는 Secret의 기밀성을 높이는 클러스터 설정은?
+            answer: API 데이터의 저장 시 암호화를 설정한다
+            wrong:
+              - Secret 이름을 무작위 UUID로 바꾼다
+              - 모든 Secret을 ConfigMap으로 변환한다
+              - Pod의 imagePullPolicy를 Always로 둔다
+        explain: <p>base64는 누구나 되돌릴 수 있다. Secret은 권한 분리와 전달 편의를 주지만 기본 etcd 저장이 항상 암호화되는 것은 아니다. 저장 시 암호화, 최소 RBAC, 외부 비밀 관리 연동을 함께 쓰고 manifest 원문을 저장소에 넣지 않는다.</p>
+      - id: dk-cfg-q-pvc
+        tag: PVC
+        title: PVC가 Pending에 머물 때
+        type: mcq
+        quizzes:
+          - q: PVC가 특정 StorageClass와 ReadWriteMany를 요구하지만 이를 만족하는 프로비저너·PV가 없다. 상태는?
+            answer: 조건에 맞는 볼륨이 없어 Pending에 머문다
+            wrong:
+              - 가장 비슷한 ReadWriteOnce 볼륨에 자동 바인딩된다
+              - emptyDir로 자동 대체되어 Pod가 시작된다
+              - PVC 용량을 0으로 바꿔 Bound가 된다
+          - q: 동적 프로비저닝으로 PVC 요청에 맞는 PV를 만들도록 정의하는 객체는?
+            answer: StorageClass
+            wrong:
+              - ServiceClass
+              - VolumeDeployment
+              - NodePort
+        explain: <p>PVC는 필요한 용량·접근 모드·StorageClass를 요청하고, 조건이 맞는 PV와 바인딩된다. 동적 프로비저너가 없거나 접근 모드를 지원하지 않으면 Pending이다. 이벤트에서 프로비저닝 오류와 토폴로지·용량 조건을 확인한다.</p>
+      - id: dk-cfg-q-reclaim
+        tag: PV 수명
+        title: PVC 삭제 뒤 디스크까지 사라질 때
+        type: mcq
+        quizzes:
+          - q: PV reclaimPolicy가 Delete인 동적 볼륨에서 PVC를 삭제하면 일반적으로?
+            answer: PV와 연결된 외부 저장소도 삭제 대상이 된다
+            wrong:
+              - 데이터가 항상 영구 보존된다
+              - PVC만 이름이 바뀌고 PV는 Bound로 남는다
+              - StatefulSet이 자동으로 새 PVC를 같은 데이터에 연결한다
+          - q: PVC 삭제 뒤 데이터를 보존해 수동 복구·정리하려면 어떤 reclaimPolicy를 검토할까?
+            answer: Retain
+            wrong:
+              - Restart
+              - Recreate
+              - RollingUpdate
+        explain: <p>reclaimPolicy는 claim이 풀린 뒤 PV와 실제 저장소를 어떻게 할지 정한다. <b>Delete</b>는 지원되는 외부 볼륨도 함께 삭제할 수 있고, <b>Retain</b>은 관리자가 데이터를 확인하고 재사용·삭제하도록 남긴다. 중요한 데이터는 정책과 별개로 백업한다.</p>
+      - id: dk-cfg-q-stateful
+        tag: StatefulSet
+        title: 복제본마다 저장소와 이름이 필요할 때
+        type: mcq
+        quizzes:
+          - q: DB 복제본마다 안정된 이름과 전용 PVC가 필요하다. 적합한 워크로드는?
+            answer: StatefulSet과 복제본별 PVC
+            wrong:
+              - Deployment와 하나의 emptyDir
+              - DaemonSet과 ConfigMap
+              - Job과 hostPort
+          - q: StatefulSet의 web-0·web-1처럼 개별 Pod DNS 이름을 제공하는 데 함께 쓰는 것은?
+            answer: Headless Service
+            wrong:
+              - ExternalName Service
+              - NodePort만 있는 Service
+              - PodDisruptionBudget
+        explain: <p>StatefulSet은 순서가 있는 안정된 Pod 이름을 유지하고 <code>volumeClaimTemplates</code>로 복제본마다 PVC를 만든다. Headless Service는 개별 Pod를 찾을 DNS 레코드를 제공한다. StatefulSet을 지워도 PVC가 자동 삭제되지 않는 구성이 일반적이므로 정리 정책을 확인한다.</p>
+      - id: dk-cfg-q-emptydir
+        tag: 임시 볼륨
+        title: 같은 Pod의 컨테이너끼리 파일을 나눌 때
+        type: mcq
+        quizzes:
+          - q: init container가 만든 파일을 같은 Pod의 app container가 읽게 하되 Pod 삭제 후 보존은 필요 없다. 적합한 볼륨은?
+            answer: emptyDir
+            wrong:
+              - 각 컨테이너의 독립 쓰기 레이어
+              - ClusterRole
+              - LoadBalancer Service
+          - q: emptyDir 데이터는 컨테이너 하나만 재시작될 때 어떻게 될까?
+            answer: Pod가 유지되는 동안 남아 있다
+            wrong:
+              - 컨테이너 재시작마다 반드시 삭제된다
+              - 자동으로 PV에 복제된다
+              - 노드와 무관하게 영구 보존된다
+        explain: <p><code>emptyDir</code>은 Pod가 노드에 배치될 때 만들어져 같은 Pod의 컨테이너들이 공유한다. 컨테이너 재시작에는 남지만 Pod가 노드에서 제거되면 사라진다. 영속 데이터에는 PVC를 쓰고, 메모리 매체를 고르면 노드 메모리 사용량도 고려한다.</p>

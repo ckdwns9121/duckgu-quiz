@@ -1,5 +1,6 @@
 import courseConfig from '../data/courses.json';
 import awsCards from '../data/cards/aws.json';
+import dockerK8sCards from '../data/cards/docker-k8s.json';
 import frontendCards from '../data/cards/frontend.json';
 import jeongcheogiCards from '../data/cards/jeongcheogi.json';
 import { buildLessons } from './lessons';
@@ -10,6 +11,7 @@ const CARDS_BY_COURSE: Record<string, Card[]> = {
   jeongcheogi: jeongcheogiCards as Card[],
   frontend: frontendCards as Card[],
   aws: awsCards as Card[],
+  'docker-k8s': dockerK8sCards as Card[],
 };
 
 export const COURSES: Course[] = courseConfig.courses.map((c) => {

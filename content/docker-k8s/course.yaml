@@ -1,0 +1,21 @@
+id: docker-k8s
+name: Docker · Kubernetes
+desc: 이미지 빌드, 컨테이너 런타임, Pod·배포, 네트워크, 스토리지, 운영·보안
+icon: DK
+color: "#2496ED"
+dark: "#1769AA"
+notes:
+  file: notes-docker-k8s.html
+  title: Docker · Kubernetes 노트 · 출근길 IT 퀴즈
+  h1: Docker · Kubernetes 노트
+  lede: Docker 이미지와 컨테이너부터 Kubernetes 배포·네트워크·스토리지·보안까지, 운영 중 실제로 만나는 실패 상황을 중심으로 정리했습니다. 정답은 Docker와 Kubernetes 공식 문서 기준입니다. <b>퀴즈 모드</b>를 켜면 답이 가려집니다.
+  back_label: ← Docker · Kubernetes 레슨으로
+  footer: 체크한 항목은 이 브라우저에만 저장됩니다.
+  storage_key: jck-known-docker-k8s-v1
+units:
+  - dk-image
+  - dk-runtime
+  - dk-workloads
+  - dk-network
+  - dk-config-storage
+  - dk-ops-security

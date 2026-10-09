@@ -1,0 +1,134 @@
+id: dk-ops-security
+name: 운영 · 오토스케일링 · 보안
+color: "#3558B8"
+dark: "#273F84"
+part: PART 6
+lede: 노드 유지 보수, 자동 확장, RBAC, ServiceAccount와 컨테이너 권한을 실제 운영 경계에 맞춰 설정합니다.
+blocks:
+  - items:
+      - id: dk-ops-q-qos
+        tag: QoS · 퇴거
+        title: 노드 메모리가 부족할 때 먼저 밀려나는 Pod
+        type: mcq
+        quizzes:
+          - q: CPU·메모리 request와 limit가 전혀 없는 Pod의 QoS 등급은?
+            answer: BestEffort
+            wrong:
+              - Guaranteed
+              - Burstable
+              - Critical
+          - q: 노드 리소스 압박에서 퇴거 가능성을 낮추는 Guaranteed 조건은?
+            answer: 모든 컨테이너의 CPU·메모리 request와 limit가 같음
+            wrong:
+              - limit 없이 request만 가장 크게 설정
+              - 모든 컨테이너에 liveness probe만 설정
+              - replicas와 maxSurge를 같은 값으로 설정
+        explain: <p>Kubernetes는 request·limit 구성으로 Guaranteed, Burstable, BestEffort를 정하고 노드 압박 시 퇴거 순서에 활용한다. Guaranteed라도 limit 초과나 더 심한 압박에서 절대 종료되지 않는 것은 아니다. 실제 사용량과 여유를 측정해 값을 잡는다.</p>
+      - id: dk-ops-q-hpa
+        tag: HPA
+        title: CPU 자동 확장이 계산되지 않을 때
+        type: mcq
+        quizzes:
+          - q: CPU 평균 사용률 기준 HPA인데 Pod에 CPU request가 없다. 왜 확장 계산이 안 될 수 있을까?
+            answer: 사용률의 기준이 되는 CPU request가 없어서
+            wrong:
+              - CPU limit가 request보다 커야만 HPA가 켜져서
+              - HPA는 메모리 지표만 지원해서
+              - Deployment는 HPA 대상이 될 수 없어서
+          - q: HPA가 현재 CPU 지표를 읽으려면 일반적으로 필요한 구성은?
+            answer: Metrics Server
+            wrong:
+              - Ingress Controller
+              - CSI 스토리지 드라이버
+              - imagePullSecret
+        explain: <p>CPU <b>Utilization</b>은 현재 사용량을 CPU request로 나눈 값이다. request가 없으면 해당 Pod의 사용률을 정의할 수 없다. 리소스 지표는 보통 Metrics Server가 제공하며, 요청 수·큐 길이 같은 확장은 custom 또는 external metrics API가 필요하다.</p>
+      - id: dk-ops-q-pdb
+        tag: 가용성
+        title: 노드 drain이 멈출 때
+        type: mcq
+        quizzes:
+          - q: replicas 3인 앱에 PDB minAvailable 2가 있다. 정상 Pod가 3개라면 동시에 허용되는 자발적 중단 수는?
+            answer: 1개
+            wrong:
+              - 0개
+              - 2개
+              - 3개
+          - q: PDB maxUnavailable 0 때문에 kubectl drain의 퇴거가 거부된다. 이 설정이 보장하는 범위는?
+            answer: 자발적 퇴거를 제한한다
+            wrong:
+              - 노드 전원 장애에서도 Pod가 절대 사라지지 않는다
+              - 컨테이너 OOM 종료를 막는다
+              - readiness 실패를 자동 복구한다
+        explain: <p>PodDisruptionBudget은 drain·클러스터 오토스케일러 같은 <b>자발적 중단</b>에서 동시에 줄일 수 있는 준비된 Pod 수를 제한한다. 하드웨어 장애 같은 비자발적 중단을 막지는 못한다. 단일 복제본에 maxUnavailable 0을 두면 유지 보수가 막힐 수 있다.</p>
+      - id: dk-ops-q-rbac
+        tag: RBAC
+        title: 한 namespace만 읽게 할 때
+        type: mcq
+        quizzes:
+          - q: 개발자에게 dev namespace의 Pod 조회만 허용하려면 가장 좁은 조합은?
+            answer: dev의 Role과 RoleBinding
+            wrong:
+              - cluster-admin ClusterRoleBinding
+              - 모든 namespace의 ClusterRoleBinding
+              - Pod마다 별도 Service를 생성
+          - q: 공통 ClusterRole을 재사용하되 dev namespace에서만 권한을 주려면?
+            answer: dev의 RoleBinding이 그 ClusterRole을 참조한다
+            wrong:
+              - ClusterRoleBinding으로 dev 이름을 적는다
+              - ClusterRole을 dev namespace 안에 생성한다
+              - ServiceAccount 없이 ClusterRole만 만든다
+        explain: <p>RoleBinding은 자신이 있는 namespace 범위에서 Role 또는 ClusterRole의 권한을 주고, ClusterRoleBinding은 클러스터 전체에 권한을 준다. 공통 읽기 규칙은 ClusterRole로 정의해도 namespace별 RoleBinding으로 범위를 좁힐 수 있다.</p>
+      - id: dk-ops-q-serviceaccount
+        tag: 워크로드 신원
+        title: 모든 Pod가 같은 권한을 쓸 때
+        type: mcq
+        quizzes:
+          - q: API를 전혀 호출하지 않는 Pod에도 기본 ServiceAccount 토큰이 마운트된다. 노출을 줄이려면?
+            answer: 토큰 자동 마운트를 끈다
+            wrong:
+              - Service를 ExternalName으로 바꾼다
+              - Pod IP를 고정한다
+              - 모든 Secret을 환경 변수로 바꾼다
+          - q: 컨트롤러 Pod가 특정 ConfigMap만 읽어야 한다. 적절한 권한 설계는?
+            answer: 전용 ServiceAccount에 최소 RBAC를 바인딩한다
+            wrong:
+              - default ServiceAccount에 cluster-admin을 준다
+              - 컨테이너 안에 관리자 kubeconfig를 굽는다
+              - namespace의 모든 Secret 읽기를 함께 허용한다
+        explain: <p>ServiceAccount는 워크로드의 Kubernetes API 신원이다. 앱마다 전용 계정을 두고 필요한 동작·리소스·namespace만 허용한다. API를 쓰지 않으면 토큰 자동 마운트를 끄면 탈취 가능한 자격 증명을 줄일 수 있다.</p>
+      - id: dk-ops-q-context
+        tag: SecurityContext
+        title: 컨테이너 탈출 피해를 줄이기
+        type: mcq
+        quizzes:
+          - q: 일반 웹 앱 컨테이너의 기본 보안 설정으로 가장 적절한 조합은?
+            answer: non-root, 권한 상승 금지, capability 제거
+            wrong:
+              - privileged, hostPID, root 사용자
+              - hostNetwork, SYS_ADMIN 추가, 쓰기 가능한 루트
+              - root 사용자, Docker 소켓 마운트, 모든 Secret 주입
+          - q: 앱이 /tmp에만 써야 하고 나머지 이미지 파일 시스템 변경은 막고 싶다. 구성은?
+            answer: readOnlyRootFilesystem과 쓰기 가능한 /tmp 볼륨
+            wrong:
+              - privileged와 hostPath /
+              - allowPrivilegeEscalation true
+              - 모든 경로를 하나의 PVC에 마운트
+        explain: "<p><code>runAsNonRoot</code>, <code>allowPrivilegeEscalation: false</code>, capability 전체 제거 후 필요한 것만 추가, <code>readOnlyRootFilesystem</code>은 침해 뒤 할 수 있는 일을 줄인다. 쓰기 경로는 emptyDir나 PVC로 명시한다. privileged와 Docker 소켓은 호스트 장악으로 이어질 수 있다.</p>"
+      - id: dk-ops-q-image
+        tag: 이미지 배포
+        title: 같은 태그를 푸시했는데 배포가 안 바뀔 때
+        type: mcq
+        quizzes:
+          - q: Deployment가 myapp:1.0을 쓰는 상태에서 레지스트리의 같은 태그만 새 이미지로 바꿨다. 기존 Pod는?
+            answer: 템플릿이 안 바뀌어 자동 교체되지 않는다
+            wrong:
+              - 레지스트리 변경을 감지해 즉시 모두 재시작된다
+              - kubelet이 실행 중 파일 시스템을 새 이미지로 덮는다
+              - Service가 새 이미지 Pod를 자동 생성한다
+          - q: 배포할 이미지와 롤백 대상을 명확히 추적하는 가장 좋은 방법은?
+            answer: 불변 버전 태그나 이미지 다이제스트를 사용한다
+            wrong:
+              - latest 태그만 계속 덮어쓴다
+              - Pod 이름에 배포 날짜만 넣는다
+              - 실행 중 컨테이너에서 패키지를 직접 수정한다
+        explain: <p>Deployment는 Pod 템플릿이 바뀔 때 새 ReplicaSet을 만든다. 레지스트리의 같은 태그 내용만 바꿔도 실행 중 Pod는 교체되지 않으며, 새 Pod도 노드 캐시·pull 정책에 따라 다른 이미지를 쓸 위험이 있다. 불변 참조로 배포 이력을 명확히 한다.</p>

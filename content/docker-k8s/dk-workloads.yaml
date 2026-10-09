@@ -1,0 +1,134 @@
+id: dk-workloads
+name: Pod · Deployment · 리소스
+color: "#326CE5"
+dark: "#2453B3"
+part: PART 3
+lede: Pod가 반복 재시작되고 배포가 멈추며 스케줄링되지 않는 상황을 컨트롤러·프로브·리소스 설정으로 진단합니다.
+blocks:
+  - items:
+      - id: dk-work-q-controller
+        tag: 워크로드
+        title: 노드 장애 뒤 Pod가 돌아오지 않을 때
+        type: mcq
+        quizzes:
+          - q: kubectl run으로 만든 단독 Pod가 삭제된 뒤 다시 생성되지 않는다. 이유는?
+            answer: 원하는 복제 수를 관리하는 컨트롤러가 없어서
+            wrong:
+              - Pod 이름에 하이픈이 들어가서
+              - kubelet은 종료된 Pod를 절대 확인하지 않아서
+              - Service가 없는 Pod는 한 번만 실행돼서
+          - q: 웹 서버 Pod 3개를 유지하고 이미지 변경을 롤링 배포하려면 어떤 객체를 쓸까?
+            answer: Deployment
+            wrong:
+              - 단독 Pod 세 개
+              - ConfigMap
+              - ClusterIP Service만 생성
+        explain: <p>Pod 자체는 원하는 상태를 계속 복구하는 컨트롤러가 아니다. <b>Deployment</b>가 ReplicaSet을 관리해 지정한 복제 수를 유지하고 템플릿 변경을 롤링 업데이트한다. 일회성 완료 작업은 Job, 안정된 이름과 저장소가 필요한 워크로드는 StatefulSet을 검토한다.</p>
+      - id: dk-work-q-selector
+        tag: 라벨
+        title: Deployment가 Pod를 세지 못할 때
+        type: mcq
+        quizzes:
+          - q: Deployment의 selector는 app=api인데 Pod 템플릿 라벨은 app=web이다. 적용 결과는?
+            answer: selector와 템플릿 라벨 불일치로 거부된다
+            wrong:
+              - 두 종류의 Pod가 절반씩 생성된다
+              - selector가 템플릿 라벨로 자동 변경된다
+              - Pod는 생성되지만 Service만 연결되지 않는다
+          - q: 운영 중 Deployment의 selector를 다른 라벨로 바꾸려는데 필드가 immutable이라는 오류가 난다. 일반적인 대응은?
+            answer: 새 Deployment를 만들고 트래픽을 전환한다
+            wrong:
+              - 기존 Pod의 UID를 selector로 넣는다
+              - ReplicaSet을 수동으로 삭제하면 selector가 바뀐다
+              - kubelet을 재시작하면 수정 가능해진다
+        explain: <p>Deployment의 selector는 자신이 관리할 Pod 집합을 정하며 Pod 템플릿 라벨과 맞아야 한다. 생성 후 selector 변경은 기존 ReplicaSet과 소유 관계를 뒤섞을 수 있어 허용되지 않는다. 다른 selector가 필요하면 새 Deployment로 이동한다.</p>
+      - id: dk-work-q-probes
+        tag: 상태 검사
+        title: 살아 있지만 트래픽은 받으면 안 될 때
+        type: mcq
+        quizzes:
+          - q: 앱은 실행 중이지만 DB 연결이 끊겨 요청을 처리할 수 없다. 재시작보다 Service 대상에서 잠시 빼고 싶다면?
+            answer: readiness probe가 실패하게 한다
+            wrong:
+              - liveness probe를 즉시 실패시킨다
+              - startup probe를 계속 성공시킨다
+              - Pod의 restartPolicy를 Never로 바꾼다
+          - q: 앱이 교착 상태에 빠져 프로세스는 살아 있지만 영구히 회복하지 못한다. 자동 재시작에 사용할 검사는?
+            answer: liveness probe
+            wrong:
+              - readiness probe
+              - Service selector
+              - PodDisruptionBudget
+        explain: <p><b>readiness</b> 실패는 컨테이너를 살려 둔 채 Service 엔드포인트에서 제외한다. <b>liveness</b> 실패는 kubelet이 컨테이너를 재시작한다. 의존성의 일시 장애를 liveness로 검사하면 재시작 폭풍이 날 수 있으므로 회복 불가능한 내부 상태만 검사한다.</p>
+      - id: dk-work-q-startup
+        tag: 상태 검사
+        title: 느린 시작 때문에 계속 재시작될 때
+        type: mcq
+        quizzes:
+          - q: 시작에 2분 걸리는 레거시 앱이 liveness 검사에 계속 실패해 준비되기 전에 재시작된다. 적절한 해결은?
+            answer: startup probe로 초기화 시간을 보호한다
+            wrong:
+              - readiness probe를 삭제한다
+              - Service를 NodePort로 바꾼다
+              - liveness 성공 코드를 500으로 바꾼다
+          - q: startup probe를 설정하면 성공하기 전 liveness와 readiness 검사는 어떻게 될까?
+            answer: 두 검사 모두 시작되지 않는다
+            wrong:
+              - 둘 다 같은 주기로 계속 실행된다
+              - readiness만 실행되고 liveness는 삭제된다
+              - liveness 실패 횟수가 startup에 합산된다
+        explain: <p><b>startup probe</b>가 있으면 성공할 때까지 liveness와 readiness를 시작하지 않는다. 느린 초기화 시간을 넉넉히 주면서도 시작이 끝난 뒤에는 더 빠른 liveness 주기로 실제 교착을 감지할 수 있다.</p>
+      - id: dk-work-q-resources
+        tag: CPU · 메모리
+        title: Pending과 OOMKilled 구분하기
+        type: mcq
+        quizzes:
+          - q: Pod의 CPU request가 어떤 노드의 남은 할당 가능 CPU보다도 크다. Pod 상태는?
+            answer: 스케줄할 노드가 없어 Pending에 머문다
+            wrong:
+              - 가장 큰 노드에 배치된 뒤 CPU가 제한된다
+              - 실행 후 즉시 OOMKilled가 된다
+              - request를 무시하고 BestEffort로 실행된다
+          - q: 컨테이너가 memory limit를 넘겨 메모리를 계속 사용하면 가장 가능성 높은 결과는?
+            answer: OOM으로 종료되고 정책에 따라 재시작된다
+            wrong:
+              - request 값까지 자동으로 메모리가 늘어난다
+              - CPU만 스로틀되고 프로세스는 계속 돈다
+              - 다른 노드로 실행 중인 컨테이너가 이동한다
+        explain: <p><b>request</b>는 스케줄러가 자리 계산에 쓰고, <b>limit</b>은 실행 중 사용 상한에 관여한다. CPU 초과는 보통 스로틀되지만 메모리 limit 초과는 OOM 종료로 이어질 수 있다. 실행 중 컨테이너가 다른 노드로 이동하는 것이 아니라 새 Pod가 다시 배치된다.</p>
+      - id: dk-work-q-rollout
+        tag: 롤링 배포
+        title: 새 버전이 준비되지 않아 배포가 멈출 때
+        type: mcq
+        quizzes:
+          - q: 새 이미지의 readiness probe가 계속 실패한다. RollingUpdate Deployment는 일반적으로 어떻게 될까?
+            answer: 새 Pod를 준비되지 않은 채 두고 교체 진행이 막힌다
+            wrong:
+              - Service가 준비 안 된 새 Pod에도 트래픽을 보낸다
+              - 기존 Pod를 모두 먼저 지운 뒤 계속 진행한다
+              - readiness 실패를 무시하고 배포 성공으로 기록한다
+          - q: replicas 4, maxUnavailable 0인 배포에서 업데이트 중 준비된 Pod의 최소 수는?
+            answer: 4개
+            wrong:
+              - 0개
+              - 1개
+              - maxSurge와 같은 수
+        explain: "<p>Deployment는 새 Pod가 Ready가 되는 것을 보며 기존 Pod를 줄인다. <code>maxUnavailable: 0</code>이면 원하는 복제 수만큼 준비 상태를 유지해야 하므로 새 Pod를 추가할 여유인 <code>maxSurge</code>도 필요하다. readiness가 영구 실패하면 진행 기한 초과로 진단할 수 있다.</p>"
+      - id: dk-work-q-debug
+        tag: 장애 진단
+        title: 재시작 직전 로그가 사라졌을 때
+        type: mcq
+        quizzes:
+          - q: CrashLoopBackOff Pod의 현재 로그에는 시작 메시지만 있다. 직전 종료된 컨테이너 로그를 보려면?
+            answer: kubectl logs --previous를 사용한다
+            wrong:
+              - kubectl get pod --watch만 실행한다
+              - kubectl apply --force를 실행한다
+              - Service의 EndpointSlice를 삭제한다
+          - q: ImagePullBackOff가 발생했다. private registry 이미지라면 먼저 확인할 것은?
+            answer: 이미지 이름·태그와 imagePullSecrets
+            wrong:
+              - readiness probe의 응답 본문
+              - Service의 externalTrafficPolicy
+              - PVC의 reclaimPolicy
+        explain: <p><code>CrashLoopBackOff</code>는 반복 실패 사이의 대기 상태다. <code>describe</code>의 이벤트·종료 이유와 <code>logs --previous</code>를 함께 본다. <code>ImagePullBackOff</code>는 앱이 시작되기 전 이미지 가져오기 실패이므로 레지스트리 주소, 태그, 인증 Secret과 노드 네트워크를 확인한다.</p>

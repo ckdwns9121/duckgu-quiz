@@ -3,8 +3,7 @@ courses:
   - jeongcheogi
   - frontend
   - aws
+  - docker-k8s
 soon:
   - name: 백엔드
     icon: BE
-  - name: Kubernetes
-    icon: K8s

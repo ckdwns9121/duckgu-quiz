@@ -182,16 +182,59 @@
      "dark": "#B88700"
     }
    ]
+  },
+  {
+   "id": "docker-k8s",
+   "name": "Docker · Kubernetes",
+   "desc": "이미지 빌드, 컨테이너 런타임, Pod·배포, 네트워크, 스토리지, 운영·보안",
+   "notes": "notes-docker-k8s.html",
+   "icon": "DK",
+   "color": "#2496ED",
+   "dark": "#1769AA",
+   "units": [
+    {
+     "id": "dk-image",
+     "name": "Docker 이미지 · 빌드",
+     "color": "#2496ED",
+     "dark": "#1769AA"
+    },
+    {
+     "id": "dk-runtime",
+     "name": "Docker 런타임 · Compose",
+     "color": "#0DB7ED",
+     "dark": "#087EA4"
+    },
+    {
+     "id": "dk-workloads",
+     "name": "Pod · Deployment · 리소스",
+     "color": "#326CE5",
+     "dark": "#2453B3"
+    },
+    {
+     "id": "dk-network",
+     "name": "Service · Ingress · NetworkPolicy",
+     "color": "#326CE5",
+     "dark": "#244EA3"
+    },
+    {
+     "id": "dk-config-storage",
+     "name": "설정 · Secret · 스토리지",
+     "color": "#4F74D8",
+     "dark": "#3856A7"
+    },
+    {
+     "id": "dk-ops-security",
+     "name": "운영 · 오토스케일링 · 보안",
+     "color": "#3558B8",
+     "dark": "#273F84"
+    }
+   ]
   }
  ],
  "soon": [
   {
    "name": "백엔드",
    "icon": "BE"
-  },
-  {
-   "name": "Kubernetes",
-   "icon": "K8s"
   }
  ]
 }

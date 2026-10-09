@@ -1,0 +1,116 @@
+id: dk-runtime
+name: Docker 런타임 · Compose
+color: "#0DB7ED"
+dark: "#087EA4"
+part: PART 2
+lede: 컨테이너가 사라질 때 데이터가 없어지고, localhost 연결이 실패하고, 종료 신호가 앱까지 닿지 않는 이유를 런타임 관점에서 다룹니다.
+blocks:
+  - items:
+      - id: dk-run-q-storage
+        tag: 데이터 영속성
+        title: 컨테이너를 다시 만들자 DB가 비었을 때
+        type: mcq
+        quizzes:
+          - q: PostgreSQL 데이터를 컨테이너의 쓰기 레이어에만 저장했다. 컨테이너를 삭제하고 새로 만들면?
+            answer: 기존 데이터는 사라진다
+            wrong:
+              - 같은 이미지면 데이터가 자동 복구된다
+              - 컨테이너 이름이 같으면 데이터가 연결된다
+              - Docker가 삭제 전에 자동 스냅샷을 만든다
+          - q: DB 데이터를 컨테이너 교체 뒤에도 유지하고 Docker가 저장 위치를 관리하게 하려면?
+            answer: 이름 있는 볼륨을 데이터 경로에 마운트한다
+            wrong:
+              - 이미지의 VOLUME 줄만 지운다
+              - 컨테이너의 restart 정책을 always로 둔다
+              - 매 요청마다 docker commit을 실행한다
+        explain: <p>컨테이너의 쓰기 레이어는 컨테이너와 수명을 같이한다. <b>볼륨</b>은 컨테이너 밖에서 Docker가 관리하므로 컨테이너를 삭제해도 남고, 쓰기 많은 DB에도 쓰기 레이어보다 적합하다. 볼륨 자체를 삭제하면 데이터도 없어지므로 백업은 별도로 필요하다.</p>
+      - id: dk-run-q-bind
+        tag: 마운트
+        title: 이미지 안 파일이 갑자기 안 보일 때
+        type: mcq
+        quizzes:
+          - q: 이미지의 /app에 빌드 결과가 있지만 빈 호스트 폴더를 /app에 bind mount하자 파일이 안 보인다. 이유는?
+            answer: 마운트가 이미지의 기존 /app 내용을 가렸다
+            wrong:
+              - bind mount가 이미지 레이어를 영구 삭제했다
+              - Docker가 빈 폴더를 이미지에 다시 빌드했다
+              - 컨테이너의 WORKDIR가 자동으로 루트로 바뀌었다
+          - q: 컨테이너가 호스트 설정 파일을 읽기만 하고 바꾸지 못하게 하려면?
+            answer: bind mount를 readonly로 설정한다
+            wrong:
+              - 파일을 EXPOSE 목록에 넣는다
+              - 컨테이너 이름에 read-only를 붙인다
+              - 호스트 경로 대신 컨테이너 ID를 마운트한다
+        explain: <p>마운트 대상 경로에 이미지 파일이 있어도 마운트가 그 내용을 가린다. 컨테이너를 마운트 없이 다시 만들면 원래 파일이 보인다. bind mount는 기본이 쓰기 가능해 호스트 파일도 바꿀 수 있으므로 필요하지 않다면 <code>readonly</code>로 제한한다.</p>
+      - id: dk-run-q-port
+        tag: 포트
+        title: EXPOSE했는데 접속이 안 될 때
+        type: mcq
+        quizzes:
+          - q: Dockerfile에 EXPOSE 3000만 적고 컨테이너를 실행했다. 호스트의 localhost:3000으로 접속하면?
+            answer: 포트 게시를 안 했으므로 연결되지 않는다
+            wrong:
+              - EXPOSE가 자동으로 같은 호스트 포트를 연다
+              - HTTP만 자동 게시되고 TCP는 게시되지 않는다
+              - root 사용자로 실행했을 때만 연결된다
+          - q: 컨테이너 3000 포트를 호스트 8080에만 게시하는 실행 옵션은?
+            answer: -p 8080:3000
+            wrong:
+              - -p 3000:8080
+              - --expose 8080:3000
+              - --network 8080=3000
+        explain: <p><code>EXPOSE</code>는 이미지가 어느 포트를 쓰는지 설명하는 메타데이터이며 호스트 방화벽이나 포트 매핑을 만들지 않는다. <code>-p 호스트:컨테이너</code>로 게시해야 호스트에서 접근할 수 있다.</p>
+      - id: dk-run-q-localhost
+        tag: 컨테이너 네트워크
+        title: 웹 컨테이너가 DB에 못 붙을 때
+        type: mcq
+        quizzes:
+          - q: Compose의 web 컨테이너가 localhost:5432로 db 컨테이너에 연결하려 한다. 왜 실패할까?
+            answer: localhost는 web 컨테이너 자신을 가리킨다
+            wrong:
+              - Compose 네트워크는 HTTP만 허용한다
+              - PostgreSQL은 컨테이너 사이 통신을 막는다
+              - 서비스 이름은 포트 번호로만 해석된다
+          - q: 같은 Compose 네트워크의 db 서비스에 web이 연결할 기본 호스트 이름은?
+            answer: Compose 서비스 이름 db
+            wrong:
+              - 호스트의 localhost
+              - 실행 때마다 바뀌는 컨테이너 IP를 직접 입력
+              - 이미지 이름 postgres
+        explain: <p>각 컨테이너는 자기 네트워크 네임스페이스를 가져 <code>localhost</code>가 자기 자신이다. Compose 기본 네트워크에서는 서비스 이름이 DNS 이름이 되므로 <code>db:5432</code>처럼 연결한다. 컨테이너 IP는 재생성 때 바뀔 수 있어 직접 고정하지 않는다.</p>
+      - id: dk-run-q-signal
+        tag: 프로세스 종료
+        title: 종료 때 요청이 잘릴 때
+        type: mcq
+        quizzes:
+          - q: CMD ["node", "server.js"] 같은 exec 형식이 종료 신호 처리에 유리한 이유는?
+            answer: 앱이 PID 1이 되어 신호를 직접 받는다
+            wrong:
+              - 앱이 자동으로 root 권한을 버린다
+              - Docker가 앱 코드를 미리 컴파일한다
+              - 모든 자식 프로세스가 별도 컨테이너가 된다
+          - q: CMD node server.js를 셸 형식으로 실행해 셸이 PID 1이 됐다. 생길 수 있는 문제는?
+            answer: 종료 신호가 앱에 제대로 전달되지 않을 수 있다
+            wrong:
+              - 컨테이너 포트가 임의로 바뀐다
+              - 이미지 레이어가 실행 때마다 합쳐진다
+              - 볼륨이 자동으로 읽기 전용이 된다
+        explain: <p>exec 형식 <code>CMD ["node", "server.js"]</code>은 앱을 PID 1로 실행해 Docker의 종료 신호를 직접 받게 한다. 셸 형식은 <code>/bin/sh -c</code>가 PID 1이 되어 신호 전달과 좀비 프로세스 회수가 어긋날 수 있다. 앱은 SIGTERM에서 새 요청을 멈추고 진행 중 작업을 정리해야 한다.</p>
+      - id: dk-run-q-compose-ready
+        tag: Docker Compose
+        title: DB 컨테이너는 떴는데 앱이 실패할 때
+        type: mcq
+        quizzes:
+          - q: web에 depends_on으로 db를 적었는데 시작 직후 연결 실패가 난다. 원인은?
+            answer: 기본 의존성은 DB가 준비될 때까지 기다리지 않는다
+            wrong:
+              - depends_on은 종료 순서에만 적용된다
+              - Compose는 서비스 사이 DNS를 만들지 않는다
+              - DB 포트는 호스트에 게시해야만 접근된다
+          - q: DB가 실제 쿼리를 받을 준비가 된 뒤 web을 시작하려면?
+            answer: service_healthy 조건을 쓴다
+            wrong:
+              - web의 restart를 no로 설정한다
+              - DB에 EXPOSE만 추가한다
+              - 두 서비스를 host 네트워크로 바꾼다
+        explain: "<p>컨테이너가 <b>실행 중</b>인 것과 애플리케이션이 <b>준비됨</b>은 다르다. Compose의 짧은 <code>depends_on</code>은 시작 순서만 보장한다. DB에 실제 준비 상태를 검사하는 healthcheck를 두고 <code>condition: service_healthy</code>를 사용해야 한다. 앱 자체의 재시도도 함께 두는 편이 안전하다.</p>"
