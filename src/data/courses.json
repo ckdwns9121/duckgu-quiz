@@ -68,7 +68,7 @@
   {
    "id": "frontend",
    "name": "프론트엔드",
-   "desc": "JavaScript, 이벤트 루프, 브라우저, CSS, React, 렌더링 방식, Next.js, 성능 최적화, 웹 기본기",
+   "desc": "JavaScript, 이벤트 루프, 브라우저, CSS, React, 렌더링 방식, Next.js, 성능 최적화, 웹 기본기, 성능 진단",
    "notes": "notes-frontend.html",
    "icon": "FE",
    "color": "#1CB0F6",
@@ -127,6 +127,12 @@
      "name": "웹 · 성능 · 보안",
      "color": "#FF9600",
      "dark": "#CD7900"
+    },
+    {
+     "id": "fe-diag",
+     "name": "성능 진단",
+     "color": "#FF4B4B",
+     "dark": "#D33131"
     }
    ]
   },

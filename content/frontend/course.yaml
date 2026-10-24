@@ -1,7 +1,7 @@
 # 코스 정보와 유닛 순서. 유닛 내용은 같은 폴더의 <유닛>.yaml
 id: frontend
 name: 프론트엔드
-desc: JavaScript, 이벤트 루프, 브라우저, CSS, React, 렌더링 방식, Next.js, 성능 최적화, 웹 기본기
+desc: JavaScript, 이벤트 루프, 브라우저, CSS, React, 렌더링 방식, Next.js, 성능 최적화, 웹 기본기, 성능 진단
 icon: FE
 color: "#1CB0F6"
 dark: "#1899D6"
@@ -23,3 +23,4 @@ units:
   - fe-next
   - fe-perf
   - fe-web
+  - fe-diag

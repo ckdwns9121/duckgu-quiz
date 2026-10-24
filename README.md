@@ -6,7 +6,7 @@
 
 **출근길 5분, 개발 공부를 게임처럼.**
 
-정보처리기사 189문제, 프론트엔드 202문제, AWS 79문제를<br>
+정보처리기사 189문제, 프론트엔드 224문제, AWS 79문제를<br>
 듀오링고처럼 짧은 레슨으로, 러버덕 **덕구**와 같이 풀어 보세요.
 
 ### [👉 지금 풀어 보기](https://ckdwns9121.github.io/duckgu-quiz/)
@@ -45,7 +45,7 @@
 | UML | 구조·행위 다이어그램, 관계 6가지 선 모양, 접근 제어 기호, 구성요소 | 14 |
 | 소프트웨어 공학 | 결합도·응집도 순서, 테스트 단계, 폭포수 모델, 통합 테스트 | 5 |
 
-### 프론트엔드 (202문제)
+### 프론트엔드 (224문제)
 
 <img src="docs/screenshots/19-frontend-map.png" width="200" align="right" alt="프론트엔드 레슨 지도">
 
@@ -60,6 +60,7 @@
 | Next.js | 서버·클라이언트 컴포넌트 경계(children, import, 함수 props), Next 16의 `await params`, 정적·동적 렌더링(○·●·ƒ), `dynamicParams`, try 안의 `redirect`, `error`·`loading`·`template`, Suspense 스트리밍, Server Action 권한, `NEXT_PUBLIC_` 빌드 인라인, `server-only`, hydration 에러, `useSearchParams`와 Suspense, fetch 캐시와 cacheComponents, `updateTag`, `proxy.ts` | 26 |
 | 성능 최적화 | ETag와 `If-None-Match`·304, Last-Modified의 한계, Brotli·gzip, 코드 스플리팅과 `React.lazy`, 트리 셰이킹(lodash vs lodash-es), `loading="lazy"`, `fetchpriority`, 이미지 포맷·srcset, `font-display`, 광고 자리 잡기(CLS), 목록 가상화, `content-visibility`, 긴 작업 50ms, INP, memo 남용 | 17 |
 | 웹 · 성능 · 보안 | 상황별 상태 코드, 멱등성, `Cache-Control` 고르기, LCP·INP·CLS를 나쁘게 만드는 코드, `innerHTML`과 XSS, 쿠키 속성(HttpOnly·SameSite·Secure) | 16 |
+| 성능 진단 | LCP 네 구간으로 원인 찾기(렌더 지연·발견 지연), 순서대로 await와 형제 `useQuery`의 대기 시간, 로딩 분기 아래 자식 요청과 `prefetchQuery`, Server-Timing으로 거리와 서버 처리 나누기, CDN 캐시 키와 MISS, 개인화 응답 캐시 사고와 `private`·`s-maxage`, HTTP 캐시 때문에 안 바뀌는 `invalidateQueries`, `requestIdleCallback`과 Worker, 닫은 모달의 Detached DOM, `AbortController`, 큰 목록은 DOM 노드로, 나눈 청크 미리 받기, 배럴 파일의 사이드 이펙트 | 22 |
 
 용어 뜻 맞히기 대신 **코드나 상황을 보고 결과·해결책을 고르는 문제**로 만들었고, 오답 보기는 실제로 자주 하는 착각으로 채웠어요. 정답은 손으로 쓰지 않고 실제로 돌려서 확인했어요: JS는 Node, React는 React 19를 jsdom에서, 브라우저 동작은 실제 Chrome에서(ETag·304, lazy 이미지 포함), 번들 크기는 esbuild로, Next.js는 Next 16 공식 문서와 실제 빌드로(`tools/verify/`).
 

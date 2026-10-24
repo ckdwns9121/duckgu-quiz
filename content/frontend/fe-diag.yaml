@@ -1,0 +1,316 @@
+id: fe-diag
+name: 성능 진단
+color: "#FF4B4B"
+dark: "#D33131"
+part: PART 10
+lede: 느리다는 말을 숫자로 나누고 원인을 찾는 연습입니다. LCP 네 구간, Server-Timing과 CDN 캐시, 데이터 요청 워터폴, 메인 스레드를 막는 계산, 메모리 누수, 번들을 키우는 import를 다룹니다. 숫자는 웹 성능 실습 서버와 실제 Chrome에서 잰 값입니다.
+blocks:
+  - items:
+      - id: fe-dg-q-render-delay
+        tag: LCP
+        title: 서버도 이미지도 빠른데 늦은 화면
+        type: mcq
+        quizzes:
+          - q: "LCP를 네 구간으로 나눴다. TTFB 4ms, 리소스 발견 0ms, 다운로드 0ms, 렌더 지연 3,140ms. 먼저 볼 곳은?"
+            answer: 그리기 전에 기다린 데이터·CSS·스크립트
+            wrong:
+              - 서버 응답 속도와 DB 쿼리
+              - 히어로 이미지의 크기와 포맷
+              - CDN 캐시 HIT 비율
+        explain: |-
+          <p>앞의 세 구간이 거의 0이면 서버·발견·다운로드는 문제가 아니다. <b>렌더 지연</b>은 받을 건 다 받았는데 그리지 못한 시간이라, 데이터 요청 워터폴, 렌더링을 막는 CSS·동기 스크립트, 메인 스레드를 막는 계산을 본다. 서버·CDN은 TTFB 칸, 이미지 크기는 다운로드 칸의 문제다. 실습에서 API 세 개를 순서대로 기다린 페이지가 렌더 지연 3,140ms였다.</p>
+      - id: fe-dg-q-discovery
+        tag: LCP
+        title: JS가 넣는 히어로 이미지
+        type: mcq
+        code: |-
+          // app.js (defer)
+          const img = new Image();
+          img.src = '/hero.webp';
+          slot.replaceWith(img);
+        quizzes:
+          - q: 이 히어로 이미지가 LCP다. 네 구간 중 길어지는 곳과 해결책은?
+            answer: 발견 지연 → HTML에 img를 두거나 preload
+            wrong:
+              - 다운로드 → 이미지를 더 작게 압축
+              - TTFB → CDN으로 HTML 캐시
+              - 렌더 지연 → img에 decoding="async"
+        explain: |-
+          <p>브라우저는 HTML을 훑으며(프리로드 스캐너) 이미지를 미리 요청하는데, JS가 넣는 이미지는 <b>app.js를 받아 실행한 뒤에야</b> 존재를 안다. 그 기다림이 <b>리소스 발견 지연</b>이다. HTML에 img를 직접 두거나 <code>&lt;link rel="preload" as="image"&gt;</code>로 먼저 알린다. 압축은 다운로드 칸을, CDN은 TTFB 칸을 줄일 뿐 발견을 앞당기지 못한다.</p>
+      - id: fe-dg-q-waterfall-ms
+        tag: 워터폴
+        title: 세 API를 기다리는 시간
+        type: mcq
+        code: |-
+          // API 하나에 600ms씩 걸린다
+          const user = await get('user');
+          const products = await get('products');
+          const reco = await get('reco');
+          render(user, products, reco);
+        quizzes:
+          - q: render가 실행될 때까지 대략 얼마나 걸릴까? (네트워크 외 시간은 무시)
+            answer: 약 1800ms
+            wrong:
+              - 약 600ms
+              - 약 1200ms
+              - 약 0ms
+        explain: |-
+          <p>await는 <b>응답이 올 때까지 다음 줄로 가지 않는다</b>. user 600 → products 600 → reco 600이 차례로 쌓여 약 1800ms다. 600ms는 세 요청이 동시에 나간다는 착각이다. 셋이 서로의 결과를 쓰지 않으니 <code>Promise.all</code>로 함께 보내면 약 600ms가 된다. 실습 실측 1,822ms → Promise.all 약 610ms.</p>
+      - id: fe-dg-q-server-timing
+        tag: TTFB
+        title: TTFB가 길 때 나눠 보기
+        type: mcq
+        quizzes:
+          - q: "TTFB 900ms, 응답 헤더 Server-Timing: app;dur=40. 가장 먼저 의심할 것은?"
+            answer: 원본까지의 거리나 캐시 MISS
+            wrong:
+              - 느린 DB 쿼리
+              - 첫 화면 JS 번들 크기
+              - 렌더링을 막는 CSS
+          - q: "TTFB 1,300ms, 응답 헤더 Server-Timing: db;dur=1200. CDN을 붙이면 캐시 MISS 요청은?"
+            answer: 여전히 약 1.3초 걸린다
+            wrong:
+              - 엣지가 가까우니 수십 ms로 준다
+              - DB 조회가 엣지에서 실행돼 빨라진다
+              - 브라우저가 이전 응답을 대신 쓴다
+        explain: |-
+          <p><b>Server-Timing</b>은 서버가 응답을 만드느라 쓴 시간을 헤더로 알려 준다. 서버 일이 40ms인데 TTFB가 900ms면 나머지는 <b>오가는 길</b>(거리, 캐시 MISS)이라 CDN을 본다. 반대로 서버 일 자체가 1.2초면 CDN이 MISS일 때 결국 원본까지 가서 그만큼 기다린다. 이때는 쿼리·스트리밍이 먼저다. 번들·CSS는 TTFB 뒤의 문제다.</p>
+      - id: fe-dg-q-idle-block
+        tag: 메인 스레드
+        title: 계산을 나중으로 미루면
+        type: mcq
+        code: |-
+          app.innerHTML = render(products);
+          requestIdleCallback(() => heavyWork());
+          // heavyWork: 800ms 걸리는 동기 계산
+        quizzes:
+          - q: 그리기 전에 하던 heavyWork를 이렇게 옮겼다. 맞는 것은?
+            answer: 첫 화면은 빨라지지만 그 뒤 클릭은 막힐 수 있다
+            wrong:
+              - 계산이 빈 시간에 조금씩 나뉘어 실행된다
+              - 메인 스레드가 아닌 곳에서 계산한다
+              - 첫 화면도 클릭도 그대로다
+        explain: |-
+          <p>requestIdleCallback은 <b>언제 시작할지</b>만 미룬다. 한번 시작한 800ms 동기 계산은 쪼개지지 않고 메인 스레드를 그대로 잡는다. 실습 실측: 그리기 전 계산은 LCP 1,128ms·최대 막힘 809ms, idle로 미루면 LCP 328ms인데 최대 막힘은 788ms로 남았다. 나누려면 직접 잘라 양보하고, 다른 스레드로 보내려면 Worker를 쓴다.</p>
+      - id: fe-dg-q-worker
+        tag: 메인 스레드
+        title: DOM과 상관없는 800ms 계산
+        type: mcq
+        quizzes:
+          - q: DOM을 건드리지 않는 800ms 계산을 하면서 클릭 반응도 지키려 한다. 메인 스레드 막힘이 가장 작은 방법은?
+            answer: Web Worker로 보낸다
+            wrong:
+              - async 함수 안에서 실행한다
+              - Promise.resolve().then 안에서 실행한다
+              - requestIdleCallback 안에서 실행한다
+        explain: |-
+          <p>async 함수와 then 콜백도 <b>같은 메인 스레드</b>에서 돈다. 순서만 바뀔 뿐 800ms를 통째로 잡는다. requestIdleCallback은 시작만 미룬다. <b>Worker</b>는 다른 스레드라 메인 스레드가 비어 있다. 실습 실측 최대 막힘: idle 788ms, 50ms씩 잘라 양보 84ms, Worker 6ms. Worker는 DOM에 접근할 수 없어서 순수 계산에만 쓴다.</p>
+      - id: fe-dg-q-sibling-query
+        tag: 워터폴
+        title: 나란히 놓인 세 목록
+        type: mcq
+        code: |-
+          // 각 컴포넌트 안에서 자기 데이터를 useQuery로 요청
+          // API 하나에 600ms
+          <>
+            <UserList />
+            <BookList />
+            <CommentList />
+          </>
+        quizzes:
+          - q: 세 목록이 모두 데이터로 그려지는 시점은 대략?
+            answer: 약 600ms
+            wrong:
+              - 약 1800ms
+              - 약 1200ms
+              - 약 0ms
+        explain: |-
+          <p>useQuery는 응답을 <b>기다리지 않고</b> 로딩 상태를 바로 돌려준다. 그래서 React는 형제 셋을 한 번에 렌더링하고, 세 요청이 같이 출발한다. 1800ms는 컴포넌트가 위에서부터 하나씩 기다린다는 착각이다. 실습(React 19, TanStack Query 5) 실측 609ms. useEffect 안에서 fetch해도 형제끼리는 같다.</p>
+      - id: fe-dg-q-gated-child
+        tag: 워터폴
+        title: 사용자 정보가 온 뒤에 그리는 목록
+        type: mcq
+        code: |-
+          function Page() {
+            const { data: user } = useQuery(userQuery);
+            if (!user) return <Spinner />;
+            return <BookList />; // 안에서 useQuery(bookQuery)
+          }
+        quizzes:
+          - q: 두 API가 600ms씩이고 서로 결과를 쓰지 않는다. book 요청이 출발하는 시점은?
+            answer: 약 600ms, user 응답 뒤
+            wrong:
+              - 약 0ms, user와 같이
+              - 약 1200ms, user를 그린 뒤
+              - Spinner가 사라질 때까지 안 보낸다
+          - q: 화면 구조(사용자 먼저)를 그대로 두고 book 요청을 앞당기는 방법은?
+            answer: 화면 진입 전에 prefetchQuery
+            wrong:
+              - BookList를 React.memo로 감싼다
+              - bookQuery의 staleTime을 늘린다
+              - BookList를 Suspense로 감싼다
+        explain: |-
+          <p><code>if (!user) return</code>이 사실상 await다. BookList가 아직 마운트되지 않아 요청할 기회가 없다. user 응답(600ms) 뒤 마운트되면서 출발한다(실측 608ms). <b>prefetchQuery</b>로 화면에 들어가기 전에 시작하면, 나중에 마운트된 useQuery가 진행 중인 요청을 이어받는다(실측 모두 609ms). memo·staleTime은 다시 그리기·다시 받기 설정이고, Suspense만으로는 요청을 일찍 시작하지 않는다.</p>
+      - id: fe-dg-q-cdn-miss
+        tag: CDN
+        title: CDN을 붙였는데 매번 느린 페이지
+        type: mcq
+        quizzes:
+          - q: "CDN을 붙였지만 응답 헤더가 거의 항상 x-cache: MISS다. 주소에 ?utm_source=가 방문마다 다르게 붙는다. 원인은?"
+            answer: 쿼리가 캐시 키에 들어가 매번 다른 캐시다
+            wrong:
+              - CDN이 HTML은 원래 저장하지 않는다
+              - 브라우저의 Disable cache가 켜져 있다
+              - ETag가 없어 CDN이 비교를 못 한다
+          - q: 캐시가 MISS일 때의 TTFB는 CDN이 없을 때와 비교하면?
+            answer: 거의 같다
+            wrong:
+              - 엣지를 거치니 늘 훨씬 빠르다
+              - 항상 절반쯤으로 준다
+              - 엣지를 한 번 더 거쳐 두 배쯤 된다
+        explain: |-
+          <p>CDN은 <b>같은 캐시 키</b>로 다시 왔을 때만 저장본을 준다. 기본 키에는 주소의 쿼리가 들어가므로, 추적용 쿼리가 매번 다르면 매번 새 손님이다. CDN 설정에서 이런 쿼리를 키에서 빼거나 무시한다. MISS면 엣지가 원본까지 다녀와야 해서 CDN이 없는 것과 거의 같다(실습 실측 CDN 없음 803ms, MISS 813ms, HIT 17ms). Disable cache는 브라우저 캐시 설정이라 CDN과 관계없다.</p>
+      - id: fe-dg-q-personal-cache
+        tag: CDN
+        title: 남의 이름이 보이는 화면
+        type: mcq
+        quizzes:
+          - q: 로그인한 사용자 이름이 들어간 HTML을 CDN에 캐시했다. B가 들어오니 A의 이름이 보인다. 원인은?
+            answer: 캐시 키에 사용자가 없어 A의 HTML을 줬다
+            wrong:
+              - B의 브라우저에 A의 쿠키가 남았다
+              - 서버가 세션을 잘못 읽어 A로 렌더링했다
+              - CDN 캐시가 만료되어 옛 응답을 줬다
+          - q: 사용자마다 다른 응답을 CDN 같은 공유 캐시가 저장하지 못하게 하는 응답 헤더는?
+            answer: "Cache-Control: private"
+            wrong:
+              - "Cache-Control: public"
+              - "Cache-Control: immutable"
+              - "Cache-Control: s-maxage=60"
+        explain: |-
+          <p>CDN은 키가 같으면 <b>누가 요청했는지 모른 채</b> 저장본을 준다. 서버는 B 요청을 받지도 않았다(HIT). 그래서 개인화된 응답은 <b>private</b>(브라우저에만 저장)이나 no-store로 보내거나, 키를 사용자별로 나눈다. 키를 나누면 캐시가 덜 맞으니, 보통은 공통 부분만 캐시하고 개인 정보는 따로 받는다. public·s-maxage는 오히려 공유 캐시 저장을 허락한다.</p>
+      - id: fe-dg-q-smaxage
+        tag: 캐시
+        title: CDN에만 잠깐 저장하기
+        type: mcq
+        quizzes:
+          - q: 공개 목록 API를 CDN에는 60초 저장하고, 브라우저는 저장해 두고 그냥 쓰지 않게 하려 한다. 알맞은 헤더는?
+            answer: "public, max-age=0, s-maxage=60"
+            wrong:
+              - "public, max-age=60, immutable"
+              - "private, max-age=0, s-maxage=60"
+              - "no-store, max-age=0, s-maxage=60"
+        explain: |-
+          <p><b>s-maxage</b>는 CDN 같은 공유 캐시에만 적용되고, 있으면 공유 캐시는 max-age 대신 이것을 따른다. <b>max-age=0</b>은 브라우저가 쓸 때마다 확인하게 한다. max-age=60을 주면 브라우저도 60초 동안 묻지 않고 쓰고, immutable은 그 기간에 새로고침해도 확인하지 않게 한다. private는 공유 캐시 저장을 막고, no-store는 아무도 저장하지 못하게 해서 s-maxage가 의미 없다.</p>
+      - id: fe-dg-q-http-vs-query
+        tag: 캐시
+        title: 무효화했는데 그대로인 목록
+        type: mcq
+        quizzes:
+          - q: "API가 Cache-Control: max-age=60을 보낸다. 좋아요 뒤 invalidateQueries로 목록을 다시 요청했는데 화면이 그대로다. 원인은?"
+            answer: 브라우저 HTTP 캐시가 옛 응답을 돌려줬다
+            wrong:
+              - staleTime 안이라 요청 자체를 안 했다
+              - invalidateQueries는 다음 마운트 때만 받는다
+              - 서버가 304를 보내 본문이 비었다
+        explain: |-
+          <p>TanStack Query는 다시 요청했지만, fetch는 기본적으로 <b>HTTP 캐시를 따른다</b>. max-age 60초 안이라 브라우저가 서버에 가지 않고 저장된 응답을 줬다. 실제 Chrome에서 max-age=60 응답을 두 번 fetch하자 서버는 한 번만 불렸고, <code>cache: 'no-cache'</code>로 바꾸자 새 값이 왔다. invalidateQueries는 staleTime과 상관없이 쓰고 있는 쿼리를 다시 받는다. Network 탭 Size 열의 (disk cache)·(memory cache)로 확인한다.</p>
+      - id: fe-dg-q-detached
+        tag: 메모리
+        title: 닫은 모달의 행방
+        type: mcq
+        code: |-
+          function openModal() {
+            const el = renderModal();
+            document.body.append(el);
+            setInterval(() => refresh(el), 1000);
+            closeBtn.onclick = () => el.remove();
+          }
+        quizzes:
+          - q: 모달을 수십 번 열고 닫은 뒤 GC를 강제로 돌렸다. 닫힌 모달의 DOM은?
+            answer: 타이머가 참조해 메모리에 남는다
+            wrong:
+              - remove() 순간 메모리에서 지워진다
+              - 화면에 없으니 GC가 치운다
+              - 화면 밖이라 타이머가 저절로 멈춘다
+        explain: |-
+          <p>remove()는 <b>화면 트리에서 뗄 뿐</b>이다. GC는 어디서도 닿을 수 없는 것만 치우는데, 멈추지 않은 setInterval의 콜백이 클로저로 el을 들고 있다. 이렇게 떨어졌지만 남은 DOM이 <b>Detached DOM</b>이다. 실습 실측(GC 두 번 후): 20번마다 DOM 노드 약 24,000개씩 계단처럼 늘었고, 닫을 때 clearInterval하고 리스너를 떼자 처음 숫자로 돌아왔다.</p>
+      - id: fe-dg-q-abort-listener
+        tag: 메모리
+        title: 리스너 여러 개 한 번에 떼기
+        type: mcq
+        code: |-
+          const ac = new AbortController();
+          const opt = { signal: ac.signal };
+          window.addEventListener('resize', onResize, opt);
+          window.addEventListener('scroll', onScroll, opt);
+        quizzes:
+          - q: 모달을 닫을 때 두 리스너를 함께 떼는 코드는?
+            answer: ac.abort()
+            wrong:
+              - window.removeEventListener('resize')
+              - ac.signal = null
+              - window.onresize = null
+        explain: |-
+          <p>signal 옵션으로 단 리스너는 그 <b>AbortController를 abort()하면 모두 떨어진다</b>. removeEventListener는 같은 함수를 넘겨야 하고 이벤트마다 따로 불러야 한다. signal을 null로 바꿔도 이미 단 리스너는 그대로다. onresize = null은 addEventListener로 단 리스너와 관계없다. React에서는 useEffect cleanup에서 abort()를 부르면 된다.</p>
+      - id: fe-dg-q-dom-not-heap
+        tag: 메모리
+        title: 2만 줄 목록의 메모리
+        type: mcq
+        quizzes:
+          - q: 레슨 2만 개를 전부 DOM으로 그렸다. Performance monitor에서 크게 드러나는 숫자는?
+            answer: DOM 노드 수
+            wrong:
+              - JS heap size
+              - JS event listeners
+              - Documents
+        explain: |-
+          <p>실습 실측: 전부 그리면 DOM 노드 140,049개, 보이는 줄만 그리면 211개인데 <b>JS 힙은 둘 다 0.5MB</b>였다. DOM은 JS 힙이 아니라 렌더러 메모리에 있어서 JS 힙만 보면 놓친다. 반복해도 더 늘지 않으니 누수(계단)가 아니라 그냥 많이 쓰는 것이다. 이벤트 위임으로 붙였다면 리스너 수도 늘지 않는다. 해결은 가상화로 그리는 양을 줄이는 것이다.</p>
+      - id: fe-dg-q-leak-next
+        tag: 메모리
+        title: GC 뒤에도 남는 계단
+        type: mcq
+        quizzes:
+          - q: 같은 동작을 반복하면 JS 힙과 DOM 노드가 계단처럼 오르고, GC를 강제로 돌려도 안 내려간다. 다음으로 할 일은?
+            answer: 동작 전후 힙 스냅샷을 Comparison으로 비교
+            wrong:
+              - Lighthouse로 성능 점수를 다시 잰다
+              - Coverage 탭으로 안 쓴 코드를 찾는다
+              - Network 탭에서 큰 응답을 찾는다
+        explain: |-
+          <p>누수가 확인되면 <b>무엇이 남았는지</b> 찾는다. Memory 탭에서 동작 전후로 스냅샷을 찍고 Comparison으로 늘어난 객체와 <code>Detached</code> DOM을 찾은 뒤, <b>Retainers</b>로 누가 붙잡고 있는지 따라간다. Lighthouse는 로딩 점수, Coverage는 실행 안 한 코드, Network는 받은 응답을 보는 도구라 붙잡고 있는 참조를 보여 주지 않는다.</p>
+      - id: fe-dg-q-preload-modal
+        tag: 코드 스플리팅
+        title: 나눴더니 늦게 열리는 모달
+        type: mcq
+        quizzes:
+          - q: 700KB 모달 코드를 import()로 나눴다. 첫 화면은 빨라졌는데 Slow 4G에서 버튼을 누르면 4초 넘게 걸려 열린다. 첫 화면을 지키며 줄이려면?
+            answer: 로드 뒤 빈 시간에 모달 청크를 미리 받는다
+            wrong:
+              - 모달 코드를 다시 첫 번들에 합친다
+              - 모달을 여는 버튼에 defer를 준다
+              - 모달 코드를 minify만 한다
+        explain: |-
+          <p>코드 스플리팅은 비용을 <b>없애지 않고 옮긴다</b>. 첫 화면의 비용이 버튼 누르는 순간으로 갔다. load 뒤 requestIdleCallback에서 <code>&lt;link rel="modulepreload"&gt;</code>로 미리 받아 두면 둘 다 지킨다. 실습 실측(Slow 4G, CPU 4x): 첫 번들에 합침 조작 가능 5,922ms·열림 28ms, 누를 때 import 1,846ms·4,658ms, 빈 시간에 미리 받기 1,855ms·29ms. 다시 합치면 첫 화면이 나빠진다.</p>
+      - id: fe-dg-q-barrel
+        tag: 번들
+        title: 훅 하나 가져왔을 뿐인데
+        type: mcq
+        code: |-
+          // shared/index.ts
+          export { useT } from './useT';
+          export { fetchFromS3 } from './fetchFromS3';
+
+          // shared/fetchFromS3.ts
+          import { S3Client } from 'heavy-sdk';
+          const s3 = new S3Client({ region });
+          export function fetchFromS3() { /* ... */ }
+        quizzes:
+          - q: 클라이언트 코드가 shared에서 useT만 import한다. sideEffects 설정은 없다. 번들 결과로 맞는 것은?
+            answer: S3 SDK가 클라이언트 번들에 들어간다
+            wrong:
+              - 안 쓰는 export라 트리 셰이킹으로 빠진다
+              - 서버 코드가 섞여 빌드가 실패한다
+              - SDK는 빠지고 new S3Client 줄만 남는다
+        explain: |-
+          <p>index.ts(배럴)가 서버용 파일도 다시 내보내고, 그 파일 맨 위의 <code>new S3Client()</code>는 <b>읽기만 해도 실행되는 코드</b>(사이드 이펙트)다. 설정이 없으면 번들러는 이 줄을 안전하게 남기고, 그 줄이 쓰는 SDK도 통째로 따라 들어온다. esbuild로 같은 구조를 번들해 보니 SDK가 들어갔고, shared에 <code>"sideEffects": false</code>를 주거나 <code>./shared/useT</code>로 직접 import하면 빠졌다. 실무에서는 서버 코드를 별도 진입점(예: <code>shared/server</code>)으로 나누고 <code>import 'server-only'</code>를 넣는다. 그러면 클라이언트에서 가져올 때 빌드가 실패해 다시 섞이지 않는다.</p>
