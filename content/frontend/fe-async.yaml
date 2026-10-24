@@ -7,6 +7,7 @@ lede: console.log 출력 순서 문제는 면접 단골입니다. 동기 코드 
 blocks:
   - items:
       - id: fe-as-order
+        wrong_answers: ["1 2 3 4","1 4 2 3"]
         tag: 이벤트루프
         title: setTimeout vs Promise
         type: answer
@@ -42,6 +43,7 @@ blocks:
               - 브라우저마다 다르다
         explain: <p>setTimeout은 0ms여도 <b>매크로태스크</b>, then은 <b>마이크로태스크</b>. 지금 코드가 끝나면 마이크로태스크를 전부 먼저 실행하므로 <b>g</b>가 먼저다. 이 순서는 표준으로 정해져 있다.</p>
       - id: fe-as-micro
+        wrong_answers: ["s t m","m s t"]
         tag: 이벤트루프
         title: queueMicrotask
         type: answer
@@ -61,6 +63,7 @@ blocks:
           - "동기 코드: <b>s</b>"
           - "<b>기억할 것</b>: queueMicrotask는 <mark>Promise.then과 같은 줄</mark>(마이크로태스크 큐)에 선다."
       - id: fe-as-executor
+        wrong_answers: ["end p then","p then end"]
         tag: Promise
         title: Promise 생성자 안의 코드
         type: answer
@@ -83,6 +86,7 @@ blocks:
           - <code>new Promise(콜백)</code>의 콜백은 <b>즉시 동기로</b> 실행 → <b>p</b>
           - "<b>기억할 것</b>: <mark>Promise 생성자 콜백(executor)은 동기</mark>, then·catch·finally만 비동기."
       - id: fe-as-return
+        wrong_answers: ["1 2"]
         tag: async
         title: async 함수의 반환값
         type: answer
@@ -120,6 +124,7 @@ blocks:
           - 첫 번째 조각은 <b>콜 스택의 동기 코드</b>
           - 지금 실행 중인 코드(콜 스택)가 끝나면 <mark>마이크로태스크를 큐가 빌 때까지 전부</mark> 실행하고, 필요하면 화면을 그린 뒤, 매크로태스크를 <b>하나</b> 꺼낸다. 이것을 반복한다.
       - id: fe-as-await
+        wrong_answers: ["a b c"]
         tag: async
         title: await 뒤의 코드
         type: answer
@@ -144,6 +149,7 @@ blocks:
           - <code>f()</code> 안의 <code>console.log('a')</code>는 바로 실행 → <b>a</b>
           - "<b>기억할 것</b>: <mark>await 앞은 동기, await 뒤는 마이크로태스크</mark>. async 함수도 처음 await 전까지는 그냥 동기 코드."
       - id: fe-as-mix
+        wrong_answers: ["A C D F E B","A C F B D E"]
         tag: 이벤트루프
         title: async 함수와 Promise 섞기
         type: answer
@@ -169,6 +175,7 @@ blocks:
           - "동기 코드: <b>A</b> → async 함수 안의 await 앞까지 <b>C</b> → <b>F</b>"
           - "<b>기억할 것</b>: <mark>async 함수는 await를 만나기 전까지 동기</mark>로 돈다. 마이크로태스크끼리는 줄 선 순서대로."
       - id: fe-as-nested
+        wrong_answers: ["1 3 2 4","4 1 3 2"]
         tag: 이벤트루프
         title: then 안에서 setTimeout
         type: answer
@@ -205,6 +212,7 @@ blocks:
               - setTimeout 콜백이 반복문 중간에 끼어든다
         explain: <p>JS는 메인 스레드 하나에서 돈다. 콜 스택이 비지 않으면 이벤트 루프가 다음 작업(클릭, 렌더링, 타이머)을 꺼내지 못해 <b>화면 전체가 멈춘다</b>. 오래 걸리는 계산은 Web Worker로 보내거나 잘게 나눠 실행한다.</p>
       - id: fe-as-catch
+        wrong_answers: ["1 2 3"]
         tag: Promise
         title: catch 뒤의 then
         type: answer
@@ -245,6 +253,7 @@ blocks:
               - SyntaxError가 나서 실행이 안 된다
         explain: <p>try 블록은 fetch를 <b>시작만</b> 하고 바로 끝난다. then 콜백은 나중에 마이크로태스크로 실행되므로 그때는 이미 try 밖이다. 잡으려면 <code>.catch()</code>를 붙이거나, async 함수 안에서 <code>await fetch(...)</code>로 기다린다.</p>
       - id: fe-as-foreach
+        wrong_answers: ["10 30 done","done 30 10"]
         tag: async
         title: forEach 안의 await
         type: answer

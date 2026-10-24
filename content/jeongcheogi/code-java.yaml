@@ -7,6 +7,7 @@ lede: 핵심은 한 문장입니다. <mark>메서드는 실제 객체(new 뒤)�
 blocks:
   - items:
       - id: j1
+        wrong_answers: ["A"]
         tag: Java
         title: 업캐스팅 + 오버라이딩
         type: answer
@@ -26,6 +27,7 @@ blocks:
         why: "<b>기억할 것</b>: <mark>메서드는 new 뒤를 본다</mark>. 겉포장(A)이 아니라 안에 든 물건(B)이 일한다. 이걸 동적 바인딩이라고 한다."
         hints: []
       - id: j2
+        wrong_answers: ["2"]
         tag: Java
         title: 필드는 다형성 없음
         type: answer
@@ -45,6 +47,7 @@ blocks:
           - A에도 x, B에도 x가 <b>각각 따로</b> 있음 (B 객체 안에 x가 두 개)
           - "<b>기억할 것</b>: <mark>메서드는 new 뒤(B), 필드는 앞쪽 타입(A)</mark>. 문제에서 <code>o.x</code>처럼 변수에 바로 점을 찍으면 선언 타입을 본다."
       - id: j3
+        wrong_answers: ["B"]
         tag: Java
         title: static 메서드
         type: answer
@@ -66,6 +69,7 @@ blocks:
           - <code>static</code> 메서드는 객체가 아니라 <b>클래스에 붙어 있는</b> 메서드
           - '<b>기억할 것</b>: static은 "클래스 전용". <mark>static 메서드와 필드는 앞쪽 타입, 일반 메서드만 new 뒤</mark>. j1과 차이를 꼭 비교하기.'
       - id: j4
+        wrong_answers: ["BA","B"]
         tag: Java
         title: 생성자 호출 순서
         type: answer
@@ -87,6 +91,7 @@ blocks:
           - <code>new B()</code> → B의 생성자 호출
           - "<b>기억할 것</b>: <mark>부모가 먼저 태어나야 자식이 태어난다</mark>. 생성자 출력 순서는 항상 부모 → 자식."
       - id: j5
+        wrong_answers: ["2","21"]
         tag: Java
         title: super.메서드()
         type: answer
@@ -107,6 +112,7 @@ blocks:
           - <code>new B().f()</code> → B의 f() 실행
           - '<b>기억할 것</b>: <mark>super.메서드()는 "부모 버전 실행해 줘"</mark>. 오버라이딩해도 부모 것을 이렇게 따로 부를 수 있다.'
       - id: j6
+        wrong_answers: ["15","12345"]
         tag: Java
         title: 문자열 + 숫자
         type: answer
@@ -123,6 +129,7 @@ blocks:
           - +는 <b>왼쪽부터</b> 하나씩 계산
           - '<b>기억할 것</b>: <mark>문자열을 만나기 전까지는 덧셈, 만난 뒤로는 전부 붙이기</mark>. 만약 <code>"3" + 1 + 2</code>였다면 처음부터 문자열이라 "312".'
       - id: j7
+        wrong_answers: ["true true true","false false true"]
         tag: Java
         title: String == 와 equals
         type: answer
@@ -142,6 +149,7 @@ blocks:
           - <code>a = "hi"</code>, <code>b = "hi"</code> → 같은 글자를 따옴표로 쓰면 Java가 <b>하나를 만들어 같이 씀</b> → a와 b는 같은 객체 → <code>a==b</code> <b>true</b>
           - '<b>기억할 것</b>: <mark>== 는 "같은 물건이냐", equals는 "내용이 같냐"</mark>. 쌍둥이는 equals는 true, == 는 false.'
       - id: j8
+        wrong_answers: ["1","0"]
         tag: Java
         title: static 변수 공유
         type: answer
@@ -200,6 +208,7 @@ blocks:
           </ol>
           <p class="why"><b>외우는 법</b>: 로딩(loading) = 짐을 다르게 싣기(매개변수가 다름). 라이딩(riding) = 부모 위에 올라타 덮어쓰기.</p>
       - id: j10
+        wrong_answers: ["B","ABC"]
         tag: Java
         title: try-catch-finally
         type: answer

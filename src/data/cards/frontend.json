@@ -7,6 +7,9 @@
   "pre": "<pre>console.log(a);\nvar a = 1;\nconsole.log(a);</pre>",
   "q": "출력은? (여러 줄이면 띄어쓰기로 이어서)",
   "answer": "undefined 1",
+  "wrongAnswers": [
+   "1 1"
+  ],
   "explain": "<span class=\"a\">undefined 1</span><ol class=\"steps\"><li><code>var a</code> 선언이 맨 위로 끌어올려진 것처럼 동작하고, 값은 <b>undefined</b>로 시작</li><li>첫 <code>console.log(a)</code> → <b>undefined</b> (에러가 아님)</li><li><code>a = 1</code> 대입 뒤 두 번째 출력 → <b>1</b></li></ol><p class=\"why\"><b>기억할 것</b>: <mark>var는 선언만 올라가고 값은 안 올라간다</mark>. let·const였다면 첫 줄에서 ReferenceError.</p>",
   "hints": [
    "<code>var a</code> 선언이 맨 위로 끌어올려진 것처럼 동작하고, 값은 <b>undefined</b>로 시작",
@@ -38,6 +41,10 @@
   "pre": "<pre>function makeCounter() {\n  let n = 0;\n  return () =&gt; ++n;\n}\nconst c1 = makeCounter();\nconst c2 = makeCounter();\nconsole.log(c1(), c1(), c2());</pre>",
   "q": "출력은? (여러 줄이면 띄어쓰기로 이어서)",
   "answer": "1 2 1",
+  "wrongAnswers": [
+   "1 2 3",
+   "1 1 1"
+  ],
   "explain": "<span class=\"a\">1 2 1</span><ol class=\"steps\"><li><code>makeCounter()</code>를 부를 때마다 <b>새 n</b>이 만들어짐</li><li>c1은 자기 n을 기억 → 1, 2</li><li>c2는 따로 만든 n → 1</li></ol><p class=\"why\"><b>기억할 것</b>: <mark>클로저는 만들어질 때의 변수를 각자 따로 기억</mark>한다. c1과 c2는 서로의 n을 모른다.</p>",
   "hints": [
    "<code>makeCounter()</code>를 부를 때마다 <b>새 n</b>이 만들어짐",
@@ -69,6 +76,9 @@
   "pre": "<pre>for (var i = 0; i &lt; 3; i++) {\n  setTimeout(() =&gt; console.log(i));\n}</pre>",
   "q": "출력은? (여러 줄이면 띄어쓰기로 이어서)",
   "answer": "3 3 3",
+  "wrongAnswers": [
+   "0 1 2"
+  ],
   "explain": "<span class=\"a\">3 3 3</span><ol class=\"steps\"><li><code>var i</code>는 반복문 전체에서 <b>하나</b>뿐</li><li>setTimeout 콜백은 반복문이 다 끝난 뒤 실행 → 그때 i는 <b>3</b></li><li>세 콜백이 같은 i를 보므로 3이 세 번</li></ol><p class=\"why\"><b>기억할 것</b>: <mark>var는 함수 스코프라 반복마다 새로 안 생긴다</mark>. 해결: let으로 바꾸기.</p>",
   "hints": [
    "<code>var i</code>는 반복문 전체에서 <b>하나</b>뿐",
@@ -83,6 +93,9 @@
   "pre": "<pre>for (let i = 0; i &lt; 3; i++) {\n  setTimeout(() =&gt; console.log(i));\n}</pre>",
   "q": "출력은? (여러 줄이면 띄어쓰기로 이어서)",
   "answer": "0 1 2",
+  "wrongAnswers": [
+   "3 3 3"
+  ],
   "explain": "<span class=\"a\">0 1 2</span><ol class=\"steps\"><li><code>let i</code>는 반복마다 <b>새 i</b>가 만들어짐</li><li>각 콜백이 자기 반복의 i를 기억 (클로저)</li><li>0, 1, 2 순서로 출력</li></ol><p class=\"why\"><b>기억할 것</b>: <mark>let은 블록 스코프라 반복마다 새 변수</mark>. var 문제와 짝으로 외우기.</p>",
   "hints": [
    "<code>let i</code>는 반복마다 <b>새 i</b>가 만들어짐",
@@ -97,6 +110,10 @@
   "pre": "<pre>const obj = {\n  name: 'A',\n  hi() { return this.name; },\n};\nconsole.log(obj.hi());\nconsole.log(obj.hi.call({ name: 'B' }));</pre>",
   "q": "출력은? (여러 줄이면 띄어쓰기로 이어서)",
   "answer": "A B",
+  "wrongAnswers": [
+   "A A",
+   "B B"
+  ],
   "explain": "<span class=\"a\">A B</span><ol class=\"steps\"><li><code>obj.hi()</code> → 점 앞의 객체(obj)가 this → <b>A</b></li><li><code>obj.hi.call({ name: 'B' })</code> → call로 넘긴 객체가 this → <b>B</b></li></ol><p class=\"why\"><b>기억할 것</b>: 일반 함수의 this는 <mark>어떻게 불렀는지</mark>로 정해진다. 점 앞의 객체, 또는 call·apply·bind로 넘긴 객체.</p>",
   "hints": [
    "<code>obj.hi()</code> → 점 앞의 객체(obj)가 this → <b>A</b>",
@@ -111,6 +128,10 @@
   "pre": "<pre>const user = {\n  nick: 'kim',\n  hi() { return this.nick; },\n  bye: () =&gt; this.nick,\n};\nconsole.log(user.hi());\nconsole.log(user.bye());</pre>",
   "q": "출력은? (여러 줄이면 띄어쓰기로 이어서)",
   "answer": "kim undefined",
+  "wrongAnswers": [
+   "kim kim",
+   "undefined undefined"
+  ],
   "explain": "<span class=\"a\">kim undefined</span><ol class=\"steps\"><li><code>user.hi()</code> → 일반 메서드라 점 앞의 user가 this → <b>kim</b></li><li><code>bye</code>는 화살표 함수라 자기 this가 없고, 객체 리터럴을 감싼 바깥(최상위)의 this를 씀</li><li>최상위 this에는 nick이 없음 → <b>undefined</b></li></ol><p class=\"why\"><b>기억할 것</b>: <mark>객체 메서드를 화살표 함수로 쓰면 this가 객체가 아니다</mark>. 객체 리터럴의 중괄호는 스코프가 아니다.</p>",
   "hints": [
    "<code>user.hi()</code> → 일반 메서드라 점 앞의 user가 this → <b>kim</b>",
@@ -159,6 +180,10 @@
   "pre": "<pre>console.log(0 == '0');\nconsole.log(0 === '0');\nconsole.log(null == undefined);\nconsole.log(null === undefined);\nconsole.log(NaN === NaN);</pre>",
   "q": "출력은? (여러 줄이면 띄어쓰기로 이어서)",
   "answer": "true false true false false",
+  "wrongAnswers": [
+   "true false false false false",
+   "true false true false true"
+  ],
   "explain": "<span class=\"a\">true false true false false</span><ol class=\"steps\"><li><code>0 == '0'</code> → 타입을 맞춰 비교 → <b>true</b></li><li><code>0 === '0'</code> → 타입이 다름 → <b>false</b></li><li><code>null == undefined</code> → 특별 규칙으로 <b>true</b></li><li><code>null === undefined</code> → <b>false</b></li><li><code>NaN === NaN</code> → NaN은 자기 자신과도 다름 → <b>false</b></li></ol><p class=\"why\"><b>기억할 것</b>: <mark>==는 타입을 바꿔서 비교, ===는 타입까지 비교</mark>. NaN 확인은 Number.isNaN().</p>",
   "hints": [
    "<code>0 == '0'</code> → 타입을 맞춰 비교 → <b>true</b>",
@@ -173,6 +198,9 @@
   "pre": "<pre>console.log(typeof null);\nconsole.log(typeof []);\nconsole.log(typeof undefined);\nconsole.log(typeof function () {});</pre>",
   "q": "출력은? (여러 줄이면 띄어쓰기로 이어서)",
   "answer": "object object undefined function",
+  "wrongAnswers": [
+   "null array undefined function"
+  ],
   "explain": "<span class=\"a\">object object undefined function</span><ol class=\"steps\"><li><code>typeof null</code> → <b>object</b> (JS 초기 설계 버그가 그대로 남음)</li><li><code>typeof []</code> → 배열도 <b>object</b></li><li><code>typeof undefined</code> → <b>undefined</b></li><li><code>typeof function(){}</code> → <b>function</b></li></ol><p class=\"why\"><b>기억할 것</b>: <mark>null과 배열은 typeof로 구별이 안 된다</mark>. 배열은 Array.isArray(), null은 === null.</p>",
   "hints": [
    "<code>typeof null</code> → <b>object</b> (JS 초기 설계 버그가 그대로 남음)",
@@ -187,6 +215,9 @@
   "pre": "<pre>console.log(Boolean(''));\nconsole.log(Boolean('0'));\nconsole.log(Boolean([]));\nconsole.log(Boolean(0));</pre>",
   "q": "출력은? (여러 줄이면 띄어쓰기로 이어서)",
   "answer": "false true true false",
+  "wrongAnswers": [
+   "false false false false"
+  ],
   "explain": "<span class=\"a\">false true true false</span><ol class=\"steps\"><li><code>''</code> 빈 문자열 → <b>false</b></li><li><code>'0'</code> 글자가 있는 문자열 → <b>true</b></li><li><code>[]</code> 빈 배열도 객체라 → <b>true</b></li><li><code>0</code> → <b>false</b></li></ol><p class=\"why\"><b>기억할 것</b>: falsy는 <mark>false, 0, '', null, undefined, NaN</mark> 여섯 개뿐. 나머지는 빈 배열·빈 객체까지 전부 truthy.</p>",
   "hints": [
    "<code>''</code> 빈 문자열 → <b>false</b>",
@@ -201,6 +232,10 @@
   "pre": "<pre>const u = { n: 0 };\nconsole.log(u.n || 5);\nconsole.log(u.n ?? 5);\nconsole.log(u.x?.y);</pre>",
   "q": "출력은? (여러 줄이면 띄어쓰기로 이어서)",
   "answer": "5 0 undefined",
+  "wrongAnswers": [
+   "5 5 undefined",
+   "0 0 undefined"
+  ],
   "explain": "<span class=\"a\">5 0 undefined</span><ol class=\"steps\"><li><code>u.n || 5</code> → 0은 falsy라 <b>5</b></li><li><code>u.n ?? 5</code> → ??는 null·undefined일 때만 뒤를 씀 → <b>0</b></li><li><code>u.x?.y</code> → u.x가 없으니 에러 대신 <b>undefined</b></li></ol><p class=\"why\"><b>기억할 것</b>: <mark>||는 falsy면 대체, ??는 null·undefined일 때만 대체</mark>. 0이나 빈 문자열을 살리고 싶으면 ??.</p>",
   "hints": [
    "<code>u.n || 5</code> → 0은 falsy라 <b>5</b>",
@@ -215,6 +250,10 @@
   "pre": "<pre>const a = { x: 1, inner: { y: 1 } };\nconst b = { ...a };\nb.x = 2;\nb.inner.y = 2;\nconsole.log(a.x, a.inner.y);</pre>",
   "q": "출력은? (여러 줄이면 띄어쓰기로 이어서)",
   "answer": "1 2",
+  "wrongAnswers": [
+   "1 1",
+   "2 2"
+  ],
   "explain": "<span class=\"a\">1 2</span><ol class=\"steps\"><li><code>{ ...a }</code>는 바깥 객체만 새로 만든다</li><li><code>b.x = 2</code> → b만 바뀜 → a.x는 <b>1</b></li><li><code>b.inner</code>는 a.inner와 <b>같은 객체</b> → a.inner.y도 <b>2</b></li></ol><p class=\"why\"><b>기억할 것</b>: <mark>spread는 얕은 복사</mark>. 안쪽 객체까지 복사하려면 structuredClone().</p>",
   "hints": [
    "<code>{ ...a }</code>는 바깥 객체만 새로 만든다",
@@ -246,6 +285,10 @@
   "pre": "<pre>const nums = [10, 1, 2];\nnums.sort();\nconsole.log(...nums);</pre>",
   "q": "출력은? (여러 줄이면 띄어쓰기로 이어서)",
   "answer": "1 10 2",
+  "wrongAnswers": [
+   "1 2 10",
+   "10 1 2"
+  ],
   "explain": "<span class=\"a\">1 10 2</span><ol class=\"steps\"><li>인자 없는 <code>sort()</code>는 값을 <b>문자열로 바꿔서</b> 사전 순으로 비교</li><li>\"10\", \"1\", \"2\" → 사전 순으로 \"1\" &lt; \"10\" &lt; \"2\"</li><li>결과 <b>1 10 2</b></li></ol><p class=\"why\"><b>기억할 것</b>: <mark>숫자 정렬은 sort((a, b) =&gt; a - b)</mark>. 그리고 sort는 원본 배열을 바꾼다.</p>",
   "hints": [
    "인자 없는 <code>sort()</code>는 값을 <b>문자열로 바꿔서</b> 사전 순으로 비교",
@@ -311,6 +354,10 @@
   "pre": "<pre>console.log(1);\nsetTimeout(() =&gt; console.log(2), 0);\nPromise.resolve().then(() =&gt; console.log(3));\nconsole.log(4);</pre>",
   "q": "출력은? (여러 줄이면 띄어쓰기로 이어서)",
   "answer": "1 4 3 2",
+  "wrongAnswers": [
+   "1 2 3 4",
+   "1 4 2 3"
+  ],
   "explain": "<span class=\"a\">1 4 3 2</span><ol class=\"steps\"><li>동기 코드 먼저: <b>1</b>, <b>4</b></li><li>동기 코드가 끝나면 마이크로태스크(Promise.then) 전부: <b>3</b></li><li>그다음 매크로태스크(setTimeout): <b>2</b></li></ol><p class=\"why\"><b>기억할 것</b>: <mark>동기 → 마이크로태스크 → 매크로태스크</mark>. setTimeout 0초여도 Promise.then보다 늦다.</p>",
   "hints": [
    "동기 코드 먼저: <b>1</b>, <b>4</b>",
@@ -342,6 +389,10 @@
   "pre": "<pre>setTimeout(() =&gt; console.log('t'), 0);\nqueueMicrotask(() =&gt; console.log('m'));\nconsole.log('s');</pre>",
   "q": "출력은? (여러 줄이면 띄어쓰기로 이어서)",
   "answer": "s m t",
+  "wrongAnswers": [
+   "s t m",
+   "m s t"
+  ],
   "explain": "<span class=\"a\">s m t</span><ol class=\"steps\"><li>동기 코드: <b>s</b></li><li>queueMicrotask는 마이크로태스크 → <b>m</b></li><li>setTimeout은 매크로태스크 → <b>t</b></li></ol><p class=\"why\"><b>기억할 것</b>: queueMicrotask는 <mark>Promise.then과 같은 줄</mark>(마이크로태스크 큐)에 선다.</p>",
   "hints": [
    "동기 코드: <b>s</b>",
@@ -356,6 +407,10 @@
   "pre": "<pre>new Promise((resolve) =&gt; {\n  console.log('p');\n  resolve();\n}).then(() =&gt; console.log('then'));\nconsole.log('end');</pre>",
   "q": "출력은? (여러 줄이면 띄어쓰기로 이어서)",
   "answer": "p end then",
+  "wrongAnswers": [
+   "end p then",
+   "p then end"
+  ],
   "explain": "<span class=\"a\">p end then</span><ol class=\"steps\"><li><code>new Promise(콜백)</code>의 콜백은 <b>즉시 동기로</b> 실행 → <b>p</b></li><li>then은 마이크로태스크로 미뤄짐</li><li>동기 코드 → <b>end</b></li><li>마이크로태스크 → <b>then</b></li></ol><p class=\"why\"><b>기억할 것</b>: <mark>Promise 생성자 콜백(executor)은 동기</mark>, then·catch·finally만 비동기.</p>",
   "hints": [
    "<code>new Promise(콜백)</code>의 콜백은 <b>즉시 동기로</b> 실행 → <b>p</b>",
@@ -370,6 +425,9 @@
   "pre": "<pre>async function getN() {\n  return 1;\n}\ngetN().then((n) =&gt; console.log(n));\nconsole.log(2);</pre>",
   "q": "출력은? (여러 줄이면 띄어쓰기로 이어서)",
   "answer": "2 1",
+  "wrongAnswers": [
+   "1 2"
+  ],
   "explain": "<span class=\"a\">2 1</span><ol class=\"steps\"><li>async 함수는 값을 return해도 <b>Promise로 감싸서</b> 돌려줌</li><li>then 콜백은 마이크로태스크 → 동기 코드 <b>2</b>가 먼저</li><li>그다음 <b>1</b></li></ol><p class=\"why\"><b>기억할 것</b>: <mark>async 함수의 결과는 항상 Promise</mark>. 값을 바로 쓰려면 await나 then.</p>",
   "hints": [
    "async 함수는 값을 return해도 <b>Promise로 감싸서</b> 돌려줌",
@@ -405,6 +463,9 @@
   "pre": "<pre>async function f() {\n  console.log('a');\n  await null;\n  console.log('b');\n}\nf();\nconsole.log('c');</pre>",
   "q": "출력은? (여러 줄이면 띄어쓰기로 이어서)",
   "answer": "a c b",
+  "wrongAnswers": [
+   "a b c"
+  ],
   "explain": "<span class=\"a\">a c b</span><ol class=\"steps\"><li><code>f()</code> 안의 <code>console.log('a')</code>는 바로 실행 → <b>a</b></li><li><code>await</code>를 만나면 f의 나머지는 마이크로태스크로 미뤄짐</li><li>바깥 동기 코드 → <b>c</b></li><li>마이크로태스크로 f 재개 → <b>b</b></li></ol><p class=\"why\"><b>기억할 것</b>: <mark>await 앞은 동기, await 뒤는 마이크로태스크</mark>. async 함수도 처음 await 전까지는 그냥 동기 코드.</p>",
   "hints": [
    "<code>f()</code> 안의 <code>console.log('a')</code>는 바로 실행 → <b>a</b>",
@@ -419,6 +480,10 @@
   "pre": "<pre>console.log('A');\nsetTimeout(() =&gt; console.log('B'));\n(async () =&gt; {\n  console.log('C');\n  await null;\n  console.log('D');\n})();\nPromise.resolve().then(() =&gt; console.log('E'));\nconsole.log('F');</pre>",
   "q": "출력은? (여러 줄이면 띄어쓰기로 이어서)",
   "answer": "A C F D E B",
+  "wrongAnswers": [
+   "A C D F E B",
+   "A C F B D E"
+  ],
   "explain": "<span class=\"a\">A C F D E B</span><ol class=\"steps\"><li>동기 코드: <b>A</b> → async 함수 안의 await 앞까지 <b>C</b> → <b>F</b></li><li>마이크로태스크는 등록된 순서대로: await 뒤의 <b>D</b>가 먼저 줄 섬, 그다음 then의 <b>E</b></li><li>마지막으로 매크로태스크 setTimeout: <b>B</b></li></ol><p class=\"why\"><b>기억할 것</b>: <mark>async 함수는 await를 만나기 전까지 동기</mark>로 돈다. 마이크로태스크끼리는 줄 선 순서대로.</p>",
   "hints": [
    "동기 코드: <b>A</b> → async 함수 안의 await 앞까지 <b>C</b> → <b>F</b>",
@@ -433,6 +498,10 @@
   "pre": "<pre>Promise.resolve()\n  .then(() =&gt; {\n    console.log(1);\n    setTimeout(() =&gt; console.log(2));\n  })\n  .then(() =&gt; console.log(3));\nsetTimeout(() =&gt; console.log(4));</pre>",
   "q": "출력은? (여러 줄이면 띄어쓰기로 이어서)",
   "answer": "1 3 4 2",
+  "wrongAnswers": [
+   "1 3 2 4",
+   "4 1 3 2"
+  ],
   "explain": "<span class=\"a\">1 3 4 2</span><ol class=\"steps\"><li>처음에 등록: 첫 then(마이크로), setTimeout 4(매크로)</li><li>마이크로태스크: 첫 then → <b>1</b>, 이때 setTimeout 2를 등록 (4 뒤에 줄 섬)</li><li>이어서 두 번째 then → <b>3</b></li><li>매크로태스크는 줄 선 순서대로: <b>4</b>, <b>2</b></li></ol><p class=\"why\"><b>기억할 것</b>: <mark>마이크로태스크는 큐가 빌 때까지 이어서</mark> 실행되고, 매크로태스크는 등록된 순서대로 하나씩.</p>",
   "hints": [
    "처음에 등록: 첫 then(마이크로), setTimeout 4(매크로)",
@@ -464,6 +533,9 @@
   "pre": "<pre>Promise.reject(new Error('x'))\n  .then(() =&gt; console.log(1))\n  .catch(() =&gt; console.log(2))\n  .then(() =&gt; console.log(3));</pre>",
   "q": "출력은? (여러 줄이면 띄어쓰기로 이어서)",
   "answer": "2 3",
+  "wrongAnswers": [
+   "1 2 3"
+  ],
   "explain": "<span class=\"a\">2 3</span><ol class=\"steps\"><li>reject된 Promise라 첫 then은 <b>건너뜀</b> → 1은 안 찍힘</li><li><code>.catch</code>가 에러를 받아 <b>2</b></li><li>catch가 에러 없이 끝나면 체인은 <b>다시 성공 상태</b> → 다음 then이 실행되어 <b>3</b></li></ol><p class=\"why\"><b>기억할 것</b>: <mark>catch 뒤의 then은 실행된다</mark>. catch가 에러를 \"처리\"한 것으로 보기 때문. 계속 실패로 두려면 catch 안에서 다시 throw.</p>",
   "hints": [
    "reject된 Promise라 첫 then은 <b>건너뜀</b> → 1은 안 찍힘",
@@ -495,6 +567,10 @@
   "pre": "<pre>const wait = (ms) =&gt;\n  new Promise((r) =&gt; setTimeout(r, ms));\n\nasync function main() {\n  [30, 10].forEach(async (ms) =&gt; {\n    await wait(ms);\n    console.log(ms);\n  });\n  console.log('done');\n}\nmain();</pre>",
   "q": "출력은? (여러 줄이면 띄어쓰기로 이어서)",
   "answer": "done 10 30",
+  "wrongAnswers": [
+   "10 30 done",
+   "done 30 10"
+  ],
   "explain": "<span class=\"a\">done 10 30</span><ol class=\"steps\"><li>forEach는 콜백이 돌려준 Promise를 <b>기다리지 않음</b> → 곧바로 <b>done</b></li><li>두 콜백의 wait는 동시에 시작 → 10ms짜리가 먼저 끝나 <b>10</b></li><li>그다음 <b>30</b></li></ol><p class=\"why\"><b>기억할 것</b>: <mark>forEach는 await를 기다려 주지 않는다</mark>. 차례로 하려면 for...of + await, 동시에 하려면 Promise.all(arr.map(...)).</p>",
   "hints": [
    "forEach는 콜백이 돌려준 Promise를 <b>기다리지 않음</b> → 곧바로 <b>done</b>",
@@ -1552,7 +1628,7 @@
   "id": "fe-re-q-batch",
   "unit": "fe-react",
   "title": "state 업데이트",
-  "q": "n이 0일 때 버튼을 한 번 누르면 n은 몇이 될까?",
+  "q": "n이 0일 때 버튼을 한 번 누르면 n은 몇이 될까? (React 19, StrictMode·Compiler 끔)",
   "pre": "<pre>const [n, setN] = useState(0);\n\nfunction onClick() {\n  setN(n + 1);\n  setN(n + 1);\n  setN(n + 1);\n}</pre>",
   "options": [
    "1",
@@ -1569,7 +1645,7 @@
   "id": "fe-re-q-updater",
   "unit": "fe-react",
   "title": "함수형 업데이트",
-  "q": "n이 0일 때 버튼을 한 번 누르면 n은 몇이 될까?",
+  "q": "n이 0일 때 버튼을 한 번 누르면 n은 몇이 될까? (React 19, StrictMode·Compiler 끔)",
   "pre": "<pre>const [n, setN] = useState(0);\n\nfunction onClick() {\n  setN((p) =&gt; p + 1);\n  setN((p) =&gt; p + 1);\n  setN((p) =&gt; p + 1);\n}</pre>",
   "options": [
    "3",
@@ -1586,7 +1662,7 @@
   "id": "fe-re-q-log",
   "unit": "fe-react",
   "title": "set 직후 state 읽기",
-  "q": "n이 0일 때 버튼을 누르면 콘솔에 찍히는 값은?",
+  "q": "n이 0일 때 버튼을 누르면 콘솔에 찍히는 값은? (React 19, StrictMode·Compiler 끔)",
   "pre": "<pre>const [n, setN] = useState(0);\n\nfunction onClick() {\n  setN(n + 1);\n  console.log(n);\n}</pre>",
   "options": [
    "0",
@@ -1603,7 +1679,7 @@
   "id": "fe-re-q-immut",
   "unit": "fe-react",
   "title": "배열 state 바꾸기",
-  "q": "state 배열 list에 item을 추가하는 올바른 방법은?",
+  "q": "state 배열 list에 item을 추가하는 올바른 방법은? (React 19, StrictMode·Compiler 끔)",
   "pre": "",
   "options": [
    "setList([...list, item])",
@@ -1642,7 +1718,7 @@
   "id": "fe-re-q-ref",
   "unit": "fe-react",
   "title": "ref를 바꾸면",
-  "q": "버튼을 세 번 누르면 화면에 보이는 숫자는?",
+  "q": "버튼을 세 번 누르면 화면에 보이는 숫자는? (React 19, StrictMode·Compiler 끔)",
   "pre": "<pre>const clicks = useRef(0);\n\nreturn (\n  &lt;button onClick={() =&gt; clicks.current++}&gt;\n    {clicks.current}\n  &lt;/button&gt;\n);</pre>",
   "options": [
    "0",
@@ -1659,15 +1735,15 @@
   "id": "fe-re-q-effect",
   "unit": "fe-react",
   "title": "useEffect 실행 시점",
-  "q": "useEffect(fn, [])의 fn은 언제 실행될까?",
+  "q": "useEffect(fn, [])의 fn은 언제 실행될까? (React 19, StrictMode·Compiler 끔)",
   "pre": "",
   "options": [
-   "처음 화면에 그려진 뒤 한 번",
+   "처음 DOM에 반영된 뒤 한 번",
    "렌더링할 때마다",
    "처음 렌더링 직전에 한 번",
    "state가 바뀔 때마다"
   ],
-  "correct": "처음 화면에 그려진 뒤 한 번",
+  "correct": "처음 DOM에 반영된 뒤 한 번",
   "explain": "<p>effect는 <b>화면에 반영(커밋)된 뒤</b> 실행된다. 의존성 배열이 []면 마운트 뒤 한 번. cleanup은 <b>의존성이 바뀌어 effect가 다시 실행되기 직전</b>과 <b>언마운트될 때</b> 실행된다.</p>",
   "hints": []
  },
@@ -1676,7 +1752,7 @@
   "id": "fe-re-q-effect-2",
   "unit": "fe-react",
   "title": "useEffect 실행 시점",
-  "q": "useEffect(fn, [id])에서 fn이 돌려준 cleanup은 언제 실행될까?",
+  "q": "useEffect(fn, [id])에서 fn이 돌려준 cleanup은 언제 실행될까? (React 19, StrictMode·Compiler 끔)",
   "pre": "",
   "options": [
    "다음 fn 실행 직전과 언마운트될 때",
@@ -1693,7 +1769,7 @@
   "id": "fe-re-q-loop",
   "unit": "fe-react",
   "title": "effect 안의 fetch",
-  "q": "이 컴포넌트의 문제는?",
+  "q": "이 컴포넌트의 문제는? (React 19, StrictMode·Compiler 끔)",
   "pre": "<pre>const [user, setUser] = useState(null);\n\nuseEffect(() =&gt; {\n  fetch('/api/me')\n    .then((r) =&gt; r.json())\n    .then(setUser);\n});</pre>",
   "options": [
    "렌더링마다 요청해서 끝없이 반복된다",
@@ -1710,7 +1786,7 @@
   "id": "fe-re-q-objdep",
   "unit": "fe-react",
   "title": "effect의 의존성",
-  "q": "이 effect는 언제 실행될까?",
+  "q": "이 effect는 언제 실행될까? (React 19, StrictMode·Compiler 끔)",
   "pre": "<pre>function List({ page }) {\n  const query = { page, size: 20 };\n\n  useEffect(() =&gt; {\n    fetchList(query);\n  }, [query]);\n  // ...\n}</pre>",
   "options": [
    "렌더링할 때마다",
@@ -1727,7 +1803,7 @@
   "id": "fe-re-q-stale",
   "unit": "fe-react",
   "title": "interval 안의 state",
-  "q": "시간이 지나면 화면의 count는 어떻게 될까?",
+  "q": "시간이 지나면 화면의 count는 어떻게 될까? (React 19, StrictMode·Compiler 끔)",
   "pre": "<pre>const [count, setCount] = useState(0);\n\nuseEffect(() =&gt; {\n  const id = setInterval(() =&gt; {\n    setCount(count + 1);\n  }, 1000);\n  return () =&gt; clearInterval(id);\n}, []);</pre>",
   "options": [
    "1이 된 뒤 더 오르지 않는다",
@@ -1761,7 +1837,7 @@
   "id": "fe-re-q-hook",
   "unit": "fe-react",
   "title": "조건문 안의 훅",
-  "q": "이 코드의 문제는?",
+  "q": "이 코드의 문제는? (React 19, StrictMode·Compiler 끔)",
   "pre": "<pre>function Profile({ isLoggedIn }) {\n  if (isLoggedIn) {\n    const [name, setName] = useState('');\n  }\n  const [tab, setTab] = useState('home');\n  // ...\n}</pre>",
   "options": [
    "렌더링마다 훅 호출 순서가 달라져 state가 꼬인다",
@@ -1778,7 +1854,7 @@
   "id": "fe-re-q-key",
   "unit": "fe-react",
   "title": "key로 index 쓰기",
-  "q": "할 일 목록(각 항목에 체크박스 입력 상태가 있음)의 key로 배열 index를 쓰고, 맨 앞에 새 항목을 추가하면?",
+  "q": "할 일 목록(각 항목에 체크박스 입력 상태가 있음)의 key로 배열 index를 쓰고, 맨 앞에 새 항목을 추가하면? (React 19, StrictMode·Compiler 끔)",
   "pre": "",
   "options": [
    "체크 상태가 한 칸씩 밀려 엉뚱한 항목에 붙는다",
@@ -1795,15 +1871,15 @@
   "id": "fe-re-q-memo",
   "unit": "fe-react",
   "title": "React.memo와 함수 props",
-  "q": "Child는 React.memo로 감싸져 있다. Parent가 다시 렌더링되면 Child는?",
+  "q": "Child는 React.memo로 감쌌다. id가 같아도 Parent와 함께 다시 렌더링되는 이유는? (React 19, StrictMode·Compiler 끔)",
   "pre": "<pre>function Parent({ id }) {\n  return &lt;Child onSave={() =&gt; save(id)} /&gt;;\n}\n\nconst Child = React.memo(\n  function Child({ onSave }) {\n    // ...\n  }\n);</pre>",
   "options": [
-   "매번 같이 다시 렌더링된다",
-   "다시 렌더링되지 않는다",
-   "id가 바뀔 때만 다시 렌더링된다",
-   "처음 한 번만 렌더링된다"
+   "새로운 onSave 함수가 매번 전달돼서",
+   "memo는 부모의 렌더링을 항상 따라가서",
+   "화살표 함수가 렌더링 도중 save를 실행해서",
+   "함수 prop을 받으면 memo가 오류를 던져서"
   ],
-  "correct": "매번 같이 다시 렌더링된다",
+  "correct": "새로운 onSave 함수가 매번 전달돼서",
   "explain": "<p>화살표 함수는 렌더링할 때마다 <b>새 함수</b>라서, memo가 props를 비교하면 onSave가 매번 바뀐 것으로 보인다. <code>useCallback(() =&gt; save(id), [id])</code>로 같은 함수를 넘기면 id가 바뀔 때만 다시 렌더링된다.</p>",
   "hints": []
  },
@@ -1812,7 +1888,7 @@
   "id": "fe-re-q-memo-2",
   "unit": "fe-react",
   "title": "React.memo와 함수 props",
-  "q": "Child가 불필요하게 다시 렌더링되지 않게 하려면?",
+  "q": "Child가 불필요하게 다시 렌더링되지 않게 하려면? (React 19, StrictMode·Compiler 끔)",
   "pre": "<pre>function Parent({ id }) {\n  return &lt;Child onSave={() =&gt; save(id)} /&gt;;\n}\n\nconst Child = React.memo(\n  function Child({ onSave }) {\n    // ...\n  }\n);</pre>",
   "options": [
    "onSave를 useCallback으로 감싼다",
@@ -1829,7 +1905,7 @@
   "id": "fe-re-q-order",
   "unit": "fe-react",
   "title": "부모와 자식의 effect 순서",
-  "q": "처음 화면에 그려질 때 로그 순서는?",
+  "q": "처음 화면에 그려질 때 로그 순서는? (React 19, StrictMode·Compiler 끔)",
   "pre": "<pre>function Child() {\n  log('C render');\n  useEffect(() =&gt; log('C effect'));\n  return null;\n}\n\nfunction Parent() {\n  log('P render');\n  useEffect(() =&gt; log('P effect'));\n  return &lt;Child /&gt;;\n}</pre>",
   "options": [
    "P render → C render → C effect → P effect",
@@ -1846,7 +1922,7 @@
   "id": "fe-re-q-layoutfx",
   "unit": "fe-react",
   "title": "n이 바뀔 때 cleanup 순서",
-  "q": "n이 0에서 1로 바뀔 때 로그 순서는?",
+  "q": "n이 0에서 1로 바뀔 때 로그 순서는? (React 19, StrictMode·Compiler 끔)",
   "pre": "<pre>useLayoutEffect(() =&gt; {\n  log('layout ' + n);\n  return () =&gt; log('layout cleanup ' + n);\n}, [n]);\n\nuseEffect(() =&gt; {\n  log('effect ' + n);\n  return () =&gt; log('effect cleanup ' + n);\n}, [n]);</pre>",
   "options": [
    "layout cleanup 0 → layout 1 → effect cleanup 0 → effect 1",
@@ -1880,7 +1956,7 @@
   "id": "fe-re-q-position",
   "unit": "fe-react",
   "title": "같은 자리의 같은 컴포넌트",
-  "q": "A 버튼을 두 번 눌러 A2가 된 뒤 isA를 false로 바꾸면 화면은?",
+  "q": "A 버튼을 두 번 눌러 Counter는 useState(0)의 n을 클릭마다 1씩 올리고 label과 n을 출력한다. A2가 된 뒤 isA를 false로 바꾸면 화면은? (React 19, StrictMode·Compiler 끔)",
   "pre": "<pre>function Counter({ label }) {\n  const [n, setN] = useState(0);\n  return (\n    &lt;button onClick={() =&gt; setN(n + 1)}&gt;\n      {label}{n}\n    &lt;/button&gt;\n  );\n}\n\n// App\n{isA\n  ? &lt;Counter label=\"A\" /&gt;\n  : &lt;Counter label=\"B\" /&gt;}</pre>",
   "options": [
    "B2",
@@ -1897,7 +1973,7 @@
   "id": "fe-re-q-position2",
   "unit": "fe-react",
   "title": "감싸는 태그가 바뀌면",
-  "q": "A2가 된 뒤 isA를 false로 바꾸면 화면은?",
+  "q": "Counter는 useState(0)의 n을 클릭마다 1씩 올리고 label과 n을 출력한다. A2가 된 뒤 isA를 false로 바꾸면 화면은? (React 19, StrictMode·Compiler 끔)",
   "pre": "<pre>{isA ? (\n  &lt;div&gt;&lt;Counter label=\"A\" /&gt;&lt;/div&gt;\n) : (\n  &lt;section&gt;&lt;Counter label=\"B\" /&gt;&lt;/section&gt;\n)}</pre>",
   "options": [
    "B0",
@@ -1914,7 +1990,7 @@
   "id": "fe-re-q-inner",
   "unit": "fe-react",
   "title": "컴포넌트 안에서 컴포넌트 정의",
-  "q": "Input에 글자를 입력한 뒤 App의 t가 바뀌면?",
+  "q": "Input에 글자를 입력한 뒤 App의 t가 바뀌면? (React 19, StrictMode·Compiler 끔)",
   "pre": "<pre>function App() {\n  const [t, setT] = useState(0);\n\n  function Input() {\n    const [v, setV] = useState('');\n    return (\n      &lt;input\n        value={v}\n        onChange={(e) =&gt; setV(e.target.value)}\n      /&gt;\n    );\n  }\n\n  return &lt;&gt;&lt;Input /&gt;&lt;Clock onTick={setT} /&gt;&lt;/&gt;;\n}</pre>",
   "options": [
    "Input에 입력한 글자가 사라진다",
@@ -1931,7 +2007,7 @@
   "id": "fe-re-q-init",
   "unit": "fe-react",
   "title": "초기값 계산 횟수",
-  "q": "버튼을 두 번 누르면 createTodos()는 모두 몇 번 호출될까?",
+  "q": "버튼을 두 번 누르면 createTodos()는 모두 몇 번 호출될까? (React 19, StrictMode·Compiler 끔)",
   "pre": "<pre>function TodoList() {\n  const [todos, setTodos] =\n    useState(createTodos());\n\n  return (\n    &lt;button onClick={() =&gt; setTodos([...todos])}&gt;\n      +\n    &lt;/button&gt;\n  );\n}</pre>",
   "options": [
    "3번",
@@ -1948,7 +2024,7 @@
   "id": "fe-re-q-init-2",
   "unit": "fe-react",
   "title": "초기값 계산 횟수",
-  "q": "createTodos를 처음 한 번만 부르려면?",
+  "q": "createTodos를 처음 한 번만 부르려면? (React 19, StrictMode·Compiler 끔)",
   "pre": "<pre>function TodoList() {\n  const [todos, setTodos] =\n    useState(createTodos());\n\n  return (\n    &lt;button onClick={() =&gt; setTodos([...todos])}&gt;\n      +\n    &lt;/button&gt;\n  );\n}</pre>",
   "options": [
    "useState(createTodos)처럼 함수 자체를 넘긴다",
@@ -1965,12 +2041,12 @@
   "id": "fe-re-q-children2",
   "unit": "fe-react",
   "title": "children으로 받은 요소",
-  "q": "Wrapper의 버튼을 두 번 누르면 Expensive는 모두 몇 번 렌더링될까?",
+  "q": "Wrapper의 버튼을 두 번 누르면 Expensive는 모두 몇 번 렌더링될까? (React 19, StrictMode·Compiler 끔)",
   "pre": "<pre>function Wrapper({ children }) {\n  const [n, setN] = useState(0);\n  return (\n    &lt;button onClick={() =&gt; setN(n + 1)}&gt;\n      {children}\n    &lt;/button&gt;\n  );\n}\n\nfunction App() {\n  return &lt;Wrapper&gt;&lt;Expensive /&gt;&lt;/Wrapper&gt;;\n}</pre>",
   "options": [
    "1번 (처음에만)",
    "3번 (처음 + 클릭마다)",
-   "memo로 감싸지 않았으니 3번",
+   "2번 (클릭할 때만)",
    "0번"
   ],
   "correct": "1번 (처음에만)",
@@ -1982,15 +2058,15 @@
   "id": "fe-re-q-context",
   "unit": "fe-react",
   "title": "Provider의 value",
-  "q": "App의 버튼을 누를 때마다 memo로 감싼 Child는?",
+  "q": "App의 버튼을 누르면 Child가 다시 렌더링되는 이유는? (React 19, StrictMode·Compiler 끔)",
   "pre": "<pre>const Ctx = createContext(null);\nconst Child = memo(() =&gt; {\n  useContext(Ctx);\n  return null;\n});\n\nfunction App() {\n  const [n, setN] = useState(0);\n  return (\n    &lt;Ctx.Provider value={{ theme: 'dark' }}&gt;\n      &lt;button onClick={() =&gt; setN(n + 1)} /&gt;\n      &lt;Child /&gt;\n    &lt;/Ctx.Provider&gt;\n  );\n}</pre>",
   "options": [
-   "매번 다시 렌더링된다",
-   "memo라서 다시 렌더링되지 않는다",
-   "theme 값이 'dark' 그대로라 건너뛴다",
-   "처음 한 번만 렌더링된다"
+   "매번 새로운 value 객체를 전달해서",
+   "memo는 부모가 렌더링되면 항상 무시돼서",
+   "createContext의 기본값이 매번 초기화돼서",
+   "Context를 읽는 컴포넌트에는 memo를 쓸 수 없어서"
   ],
-  "correct": "매번 다시 렌더링된다",
+  "correct": "매번 새로운 value 객체를 전달해서",
   "explain": "<p>Provider의 value가 <code>{ theme: 'dark' }</code>처럼 <b>렌더링마다 새 객체</b>면, 내용이 같아도 React는 바뀐 것으로 보고(Object.is 비교) 그 context를 쓰는 컴포넌트를 모두 다시 렌더링한다. <b>memo도 context 변경은 막지 못한다</b>. value를 useMemo로 고정하거나 컴포넌트 밖 상수로 둔다.</p>",
   "hints": []
  },
@@ -1999,7 +2075,7 @@
   "id": "fe-re-q-context-2",
   "unit": "fe-react",
   "title": "Provider의 value",
-  "q": "Child가 불필요하게 다시 렌더링되지 않게 하려면?",
+  "q": "Child가 불필요하게 다시 렌더링되지 않게 하려면? (React 19, StrictMode·Compiler 끔)",
   "pre": "<pre>const Ctx = createContext(null);\nconst Child = memo(() =&gt; {\n  useContext(Ctx);\n  return null;\n});\n\nfunction App() {\n  const [n, setN] = useState(0);\n  return (\n    &lt;Ctx.Provider value={{ theme: 'dark' }}&gt;\n      &lt;button onClick={() =&gt; setN(n + 1)} /&gt;\n      &lt;Child /&gt;\n    &lt;/Ctx.Provider&gt;\n  );\n}</pre>",
   "options": [
    "value 객체를 useMemo로 고정한다",
@@ -2016,7 +2092,7 @@
   "id": "fe-re-q-timeoutbatch",
   "unit": "fe-react",
   "title": "setTimeout 안의 두 업데이트",
-  "q": "React 18 이상에서 버튼을 누르면, setTimeout 안의 두 set 때문에 다시 렌더링되는 횟수는?",
+  "q": "a와 b가 모두 0일 때 버튼을 한 번 누르면, setTimeout 안의 두 set 때문에 다시 렌더링되는 횟수는? (React 19, StrictMode·Compiler 끔)",
   "pre": "<pre>function onClick() {\n  setTimeout(() =&gt; {\n    setA(1);\n    setB(1);\n  }, 0);\n}</pre>",
   "options": [
    "1번",
@@ -2033,7 +2109,7 @@
   "id": "fe-re-q-flushsync",
   "unit": "fe-react",
   "title": "flushSync 직후의 DOM",
-  "q": "a가 0일 때 버튼을 누르면 로그에 찍히는 값은?",
+  "q": "a가 0일 때 버튼을 누르면 로그에 찍히는 값은? (React 19, StrictMode·Compiler 끔)",
   "pre": "<pre>const ref = useRef(null);\n\nfunction onClick() {\n  flushSync(() =&gt; setA(1));\n  console.log(ref.current.textContent);\n}\n\nreturn (\n  &lt;button ref={ref} onClick={onClick}&gt;\n    {a}\n  &lt;/button&gt;\n);</pre>",
   "options": [
    "1",
@@ -2050,7 +2126,7 @@
   "id": "fe-re-q-derived",
   "unit": "fe-react",
   "title": "effect로 파생 값 만들기",
-  "q": "이 코드의 가장 큰 문제는?",
+  "q": "이 코드의 가장 큰 문제는? (React 19, StrictMode·Compiler 끔)",
   "pre": "<pre>const [first, setFirst] = useState('');\nconst [last, setLast] = useState('');\nconst [fullName, setFullName] = useState('');\n\nuseEffect(() =&gt; {\n  setFullName(first + ' ' + last);\n}, [first, last]);</pre>",
   "options": [
    "렌더링이 한 번 더 일어나고 잠깐 옛 값이 보인다",
@@ -2067,7 +2143,7 @@
   "id": "fe-re-q-race",
   "unit": "fe-react",
   "title": "늦게 온 응답",
-  "q": "id를 1에서 2로 빠르게 바꿨는데, 1번 응답이 2번보다 늦게 왔다. 화면에는?",
+  "q": "id를 1에서 2로 빠르게 바꿨는데, 1번 응답이 2번보다 늦게 왔다. 화면에는? (React 19, StrictMode·Compiler 끔)",
   "pre": "<pre>useEffect(() =&gt; {\n  fetch(`/api/users/${id}`)\n    .then((r) =&gt; r.json())\n    .then(setUser);\n}, [id]);</pre>",
   "options": [
    "1번 사용자가 보인다",
@@ -2084,7 +2160,7 @@
   "id": "fe-re-q-race-2",
   "unit": "fe-react",
   "title": "늦게 온 응답",
-  "q": "이 문제를 막는 방법은?",
+  "q": "이 문제를 막는 방법은? (React 19, StrictMode·Compiler 끔)",
   "pre": "<pre>useEffect(() =&gt; {\n  fetch(`/api/users/${id}`)\n    .then((r) =&gt; r.json())\n    .then(setUser);\n}, [id]);</pre>",
   "options": [
    "cleanup에서 이전 요청을 무시하거나 abort한다",
@@ -2101,7 +2177,7 @@
   "id": "fe-re-q-eb",
   "unit": "fe-react",
   "title": "에러 바운더리 안의 버튼",
-  "q": "ErrorBoundary 안의 버튼을 누르면?",
+  "q": "ErrorBoundary 안의 버튼을 누르면? (React 19, StrictMode·Compiler 끔)",
   "pre": "<pre>&lt;ErrorBoundary fallback={&lt;p&gt;문제가 생겼어요&lt;/p&gt;}&gt;\n  &lt;button onClick={() =&gt; { throw new Error('boom'); }}&gt;\n    저장\n  &lt;/button&gt;\n&lt;/ErrorBoundary&gt;</pre>",
   "options": [
    "fallback으로 바뀌지 않고 화면은 그대로다",
@@ -2118,7 +2194,7 @@
   "id": "fe-re-q-ref19",
   "unit": "fe-react",
   "title": "ref를 prop으로 받기",
-  "q": "React 19에서 App의 effect가 찍는 값은?",
+  "q": "React 19에서 App의 effect가 찍는 값은? (React 19, StrictMode·Compiler 끔)",
   "pre": "<pre>function MyInput({ ref }) {\n  return &lt;input ref={ref} /&gt;;\n}\n\nfunction App() {\n  const r = useRef(null);\n  useEffect(() =&gt; console.log(r.current?.tagName));\n  return &lt;MyInput ref={r} /&gt;;\n}</pre>",
   "options": [
    "INPUT",
@@ -2135,7 +2211,7 @@
   "id": "fe-re-q-deferred",
   "unit": "fe-react",
   "title": "입력은 빠르게, 목록은 나중에",
-  "q": "검색어 입력은 바로 반영하고, 느린 결과 목록 렌더링은 뒤로 미뤄 타이핑이 끊기지 않게 하고 싶다. React 기능만 쓴다면?",
+  "q": "검색어 입력은 바로 반영하고, 느린 결과 목록 렌더링은 뒤로 미뤄 타이핑이 끊기지 않게 하고 싶다. React 기능만 쓴다면? (React 19, StrictMode·Compiler 끔)",
   "pre": "",
   "options": [
    "useDeferredValue(query)로 목록에 넘긴다",

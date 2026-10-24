@@ -7,6 +7,7 @@ lede: 호이스팅, 클로저, this, 비교 연산, 복사처럼 면접과 코�
 blocks:
   - items:
       - id: fe-js-hoist
+        wrong_answers: ["1 1"]
         tag: JS
         title: var 호이스팅
         type: answer
@@ -42,6 +43,7 @@ blocks:
               - SyntaxError가 난다
         explain: <p>const가 막는 건 <b>변수에 다시 대입하는 것</b>(<code>cfg = {}</code>)뿐이다. 변수가 가리키는 객체의 속성은 바꿀 수 있다. 속성까지 막으려면 <code>Object.freeze(cfg)</code>.</p>
       - id: fe-js-closure
+        wrong_answers: ["1 2 3","1 1 1"]
         tag: JS
         title: 클로저 카운터
         type: answer
@@ -77,6 +79,7 @@ blocks:
               - let과 const 둘 다
         explain: <p><code>var a = 1; var a = 2;</code>는 조용히 넘어가서 실수를 숨긴다. let·const는 같은 스코프에서 다시 선언하면 <b>SyntaxError</b>. var 대신 let·const를 쓰는 이유 중 하나.</p>
       - id: fe-js-varloop
+        wrong_answers: ["0 1 2"]
         tag: JS
         title: var + setTimeout 반복문
         type: answer
@@ -96,6 +99,7 @@ blocks:
           - <code>var i</code>는 반복문 전체에서 <b>하나</b>뿐
           - "<b>기억할 것</b>: <mark>var는 함수 스코프라 반복마다 새로 안 생긴다</mark>. 해결: let으로 바꾸기."
       - id: fe-js-letloop
+        wrong_answers: ["3 3 3"]
         tag: JS
         title: let + setTimeout 반복문
         type: answer
@@ -115,6 +119,7 @@ blocks:
           - <code>let i</code>는 반복마다 <b>새 i</b>가 만들어짐
           - "<b>기억할 것</b>: <mark>let은 블록 스코프라 반복마다 새 변수</mark>. var 문제와 짝으로 외우기."
       - id: fe-js-call
+        wrong_answers: ["A A","B B"]
         tag: JS
         title: this와 call
         type: answer
@@ -136,6 +141,7 @@ blocks:
           - <code>obj.hi()</code> → 점 앞의 객체(obj)가 this → <b>A</b>
           - "<b>기억할 것</b>: 일반 함수의 this는 <mark>어떻게 불렀는지</mark>로 정해진다. 점 앞의 객체, 또는 call·apply·bind로 넘긴 객체."
       - id: fe-js-this2
+        wrong_answers: ["kim kim","undefined undefined"]
         tag: JS
         title: 메서드와 화살표 함수의 this
         type: answer
@@ -199,6 +205,7 @@ blocks:
               - TypeError
         explain: <p>let은 선언 전 구간(TDZ)에서 읽으면 <b>ReferenceError</b>를 던진다. var였다면 undefined.</p>
       - id: fe-js-equal
+        wrong_answers: ["true false false false false","true false true false true"]
         tag: JS
         title: == 와 ===
         type: answer
@@ -222,6 +229,7 @@ blocks:
           - <code>0 == '0'</code> → 타입을 맞춰 비교 → <b>true</b>
           - "<b>기억할 것</b>: <mark>==는 타입을 바꿔서 비교, ===는 타입까지 비교</mark>. NaN 확인은 Number.isNaN()."
       - id: fe-js-typeof
+        wrong_answers: ["null array undefined function"]
         tag: JS
         title: typeof 함정
         type: answer
@@ -243,6 +251,7 @@ blocks:
           - <code>typeof null</code> → <b>object</b> (JS 초기 설계 버그가 그대로 남음)
           - "<b>기억할 것</b>: <mark>null과 배열은 typeof로 구별이 안 된다</mark>. 배열은 Array.isArray(), null은 === null."
       - id: fe-js-truthy
+        wrong_answers: ["false false false false"]
         tag: JS
         title: truthy · falsy
         type: answer
@@ -264,6 +273,7 @@ blocks:
           - <code>''</code> 빈 문자열 → <b>false</b>
           - "<b>기억할 것</b>: falsy는 <mark>false, 0, '', null, undefined, NaN</mark> 여섯 개뿐. 나머지는 빈 배열·빈 객체까지 전부 truthy."
       - id: fe-js-nullish
+        wrong_answers: ["5 5 undefined","0 0 undefined"]
         tag: JS
         title: "|| 와 ?? 와 ?."
         type: answer
@@ -284,6 +294,7 @@ blocks:
           - <code>u.n || 5</code> → 0은 falsy라 <b>5</b>
           - "<b>기억할 것</b>: <mark>||는 falsy면 대체, ??는 null·undefined일 때만 대체</mark>. 0이나 빈 문자열을 살리고 싶으면 ??."
       - id: fe-js-shallow
+        wrong_answers: ["1 1","2 2"]
         tag: JS
         title: spread 얕은 복사
         type: answer
@@ -317,6 +328,7 @@ blocks:
               - const copy = obj
         explain: <p>spread와 Object.assign은 <b>얕은 복사</b>라 안쪽 객체는 원본과 같은 것을 가리킨다. <code>const copy = obj</code>는 복사가 아니라 같은 객체를 하나 더 가리키는 것. 안쪽까지 복사하려면 <b>structuredClone</b>.</p>
       - id: fe-js-sort
+        wrong_answers: ["1 2 10","10 1 2"]
         tag: JS
         title: sort() 기본 정렬
         type: answer

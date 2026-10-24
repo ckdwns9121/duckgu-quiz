@@ -125,6 +125,15 @@ blocks:
         - 예시 · 외우는 법
       rows:
         - id: u-vis
+          scenario:
+            title: 멤버 접근
+            q: UML 클래스 다이어그램에서 자식 클래스가 접근할 수 있는 protected 멤버의 기호는?
+            answer: "#"
+            wrong:
+              - +
+              - −
+              - "~"
+            explain: <p>#는 protected, +는 public, −는 private, ~는 package 가시성이다.</p>
           term: "+ / − / # / ~"
           sub: 접근 제어자
           desc: "<b>+</b>: public, 누구나 접근. <b>−</b>: private, 자기 클래스 안에서만. <b>#</b>: protected, 자기와 자식 클래스만. <b>~</b>: package, 같은 패키지 안에서만."
@@ -140,6 +149,14 @@ blocks:
             - label: "~"
               text: package, 같은 패키지 안에서만
         - id: u-inc
+          scenario:
+            title: 주문 시 인증
+            q: 주문 유스케이스가 실행될 때마다 공통 인증 유스케이스도 반드시 실행한다. 관계는?
+            answer: <<include>>
+            wrong:
+              - <<extend>>
+              - 일반화
+            explain: <p>반드시 포함하는 공통 동작은 include다. extend는 조건에 따라 기본 유스케이스에 동작을 추가한다.</p>
           term: "&lt;&lt;include&gt;&gt; / &lt;&lt;extend&gt;&gt;"
           desc: "유스케이스 사이 관계. <b>&lt;&lt;include&gt;&gt;</b>: 실행하면 <b>반드시 같이</b> 실행되는 기능(필수). <b>&lt;&lt;extend&gt;&gt;</b>: <b>조건에 따라 가끔</b> 추가되는 기능(선택)."
           hint: '"결제하기"는 항상 "로그인"을 포함(include). "결제하기"에 "쿠폰 적용"은 원할 때만(extend). include = 포함, extend = 확장(덤)'
@@ -155,6 +172,15 @@ blocks:
           hint: '"무엇이(사물), 어떻게 연결돼서(관계), 그림으로(다이어그램)"'
           quiz: false
         - id: u-actor
+          scenario:
+            title: 외부 결제 연동
+            q: 쇼핑몰 시스템 경계 밖의 결제 서비스가 쇼핑몰과 상호작용한다. 유스케이스 모델에서 무엇으로 표현할까?
+            answer: 액터
+            wrong:
+              - 유스케이스
+              - 시스템 경계
+              - 클래스 속성
+            explain: <p>액터는 사람뿐 아니라 외부 시스템도 될 수 있다. 유스케이스는 시스템이 제공하는 기능을 나타낸다.</p>
           term: 액터 (Actor)
           desc: 시스템 <b>바깥</b>에서 시스템을 쓰는 사람이나 시스템. 유스케이스 다이어그램에 졸라맨 모양으로 그린다.
           hint: 쇼핑몰 시스템에서 고객, 관리자, 외부 결제 시스템이 액터. 시스템 안에 있는 건 액터가 아님

@@ -21,6 +21,10 @@ function unitCards(unit) {
       const heads = b.table.heads;
       for (const row of b.table.rows) {
         if (row.quiz === false) continue;
+        if (row.scenario) {
+          cards.push(...itemCards({ id: row.id, type: 'mcq', title: row.scenario.title, quizzes: [row.scenario], explain: row.scenario.explain }, unit.id));
+          continue;
+        }
         if (row.short === undefined) throw new Error(`${row.id}: 퀴즈에 쓰는 용어는 short(보기용 짧은 설명)가 있어야 한다`);
         cards.push({
           kind: 'term', id: row.id, unit: unit.id, table: `${unit.id}:${table}`, col: heads[0] ?? '용어',
@@ -44,7 +48,7 @@ function itemCards(it, unit) {
   switch (it.type) {
     case 'mcq':
       return it.quizzes.map((q, i) => ({
-        kind: 'mcq', id: i ? `${it.id}-${i + 1}` : it.id, unit, title, q: q.q, pre: preOf(it),
+        kind: 'mcq', id: i ? `${it.id}-${i + 1}` : it.id, unit, title, q: unit === 'fe-react' && !it.id.includes('strict') ? `${q.q} (React 19, StrictMode·Compiler 끔)` : q.q, pre: preOf(it),
         options: [q.answer, ...q.wrong], correct: q.answer, explain: it.explain, hints: q.hints ?? [],
       }));
     case 'build':
@@ -52,7 +56,7 @@ function itemCards(it, unit) {
     case 'rel':
       return [{ kind: 'rel', id: it.id, unit, title, svg: it.svg, explain: it.explain, hints: it.hints ?? [] }];
     case 'answer':
-      return [{ kind: 'answer', id: it.id, unit, title, pre: preOf(it), q: it.q, answer: it.answer, explain: answerExplain(it), hints: it.hints ?? [] }];
+      return [{ kind: 'answer', id: it.id, unit, title, pre: preOf(it), q: it.q, answer: it.answer, wrongAnswers: it.wrong_answers ?? [], explain: answerExplain(it), hints: it.hints ?? [] }];
     default:
       throw new Error(`${it.id}: 모르는 type ${it.type}`);
   }
@@ -81,7 +85,8 @@ function renderItem(it) {
 }
 function renderTable(t) {
   const rows = t.rows.map((row) => {
-    const cells = cellsOf(row).map((c) => `<td class="${c.cls}">${c.html}</td>`).join('');
+    const scenario = row.scenario ? `<details><summary>상황 문제</summary><p>${esc(row.scenario.q)}</p><p>정답: ${esc(row.scenario.answer)}</p>${row.scenario.explain}</details>` : '';
+    const cells = cellsOf(row).map((c, i) => `<td class="${c.cls}">${c.html}${i === 0 ? scenario : ''}</td>`).join('');
     const off = row.quiz === false ? ' data-quiz="off"' : '';
     return `          <tr data-id="${row.id}"${off}><td class="c"><input type="checkbox" id="k-${row.id}" aria-label="외움"></td><td class="term">${row.term}${row.sub ? `<small>${row.sub}</small>` : ''}</td>${cells}</tr>\n`;
   }).join('');

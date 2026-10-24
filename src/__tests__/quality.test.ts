@@ -97,3 +97,31 @@ describe('문제 품질', () => {
     expect(bad).toEqual([]);
   });
 });
+
+
+describe('출제 범주와 보기 의미', () => {
+  it('웹 공격의 오답에 다른 표의 악성코드·보안 장비를 섞지 않는다', () => {
+    const ids = ['x-sqli', 'x-xss', 'x-csrf'];
+    const cards = ids.map(id => CARDS.find(c => c.id === id)!);
+    const allowed = cards.flatMap(c => c.kind === 'term' ? [c.term, c.short] : []);
+    for (const card of cards) for (let i = 0; i < 40; i++) {
+      const q = makeQuestion(card, CARDS);
+      if (q.type !== 'choice') throw new Error(card.id);
+      for (const option of q.options) expect(allowed, card.id).toContain(option);
+    }
+  });
+  it('횟수를 묻는 객관식은 같은 숫자를 다른 설명으로 중복 제시하지 않는다', () => {
+    const cards = CARDS.filter((c): c is McqCard => c.kind === 'mcq' && c.options.every(o => /^\d+번(?:\s|$)/.test(o)));
+    for (const card of cards) {
+      const counts = card.options.map(o => o.match(/^\d+/)![0]);
+      expect(new Set(counts).size, card.id).toBe(counts.length);
+    }
+  });
+});
+
+
+it('StrictMode 진단 문제에 꺼져 있다는 조건을 붙이지 않는다', () => {
+  const card = CARDS.find(c => c.id === 'fe-re-q-strict');
+  expect(card?.kind).toBe('mcq');
+  if (card?.kind === 'mcq') expect(card.q).not.toContain('StrictMode·Compiler 끔');
+});

@@ -1,5 +1,5 @@
 import { CARDS } from '../domain/content';
-import { answerTokens, decoyTokens, isBuildCorrect, isTypedAnswerCorrect, makeQuestion } from '../domain/question';
+import { answerTokens, isBuildCorrect, isTypedAnswerCorrect, joinAnswerTiles, makeQuestion } from '../domain/question';
 import type { AnswerCard, BuildCard } from '../domain/types';
 import { lessonReducer } from '../stores/lessonStore';
 
@@ -7,12 +7,6 @@ describe('출력값 답 조각', () => {
   it('띄어쓰기가 있으면 칸마다, 없으면 한 글자씩 나눈다', () => {
     expect(answerTokens('7 5 7')).toEqual(['7', '5', '7']);
     expect(answerTokens('3345')).toEqual(['3', '3', '4', '5']);
-  });
-
-  it('가짜 조각은 정답 조각과 겹치지 않는다', () => {
-    const tokens = ['7', '5', '7'];
-    decoyTokens(tokens).forEach((d) => expect(tokens).not.toContain(d));
-    expect(decoyTokens(['true', 'false']).every((d) => d !== 'true' && d !== 'false')).toBe(true);
   });
 
   it('코드 문제는 모두 조각만으로 정답을 만들 수 있다', () => {
@@ -26,7 +20,7 @@ describe('출력값 답 조각', () => {
         pool.splice(i, 1);
         return t;
       });
-      expect(isTypedAnswerCorrect(picked.join(' '), q.correct), card.id).toBe(true);
+      expect(isTypedAnswerCorrect(joinAnswerTiles(picked, q.correct), q.correct), card.id).toBe(true);
     });
   });
 });
@@ -74,5 +68,38 @@ describe('순서 맞추기 조각', () => {
     CARDS.filter((c): c is BuildCard => c.kind === 'build' && c.mode === 'order').forEach((c) => {
       expect(c.decoys, c.id).toEqual([]);
     });
+  });
+});
+
+
+describe('대표 오답 조각', () => {
+  it('모든 출력값 문제에서 대표 오답도 만들 수 있고 채점은 거절한다', () => {
+    for (const card of CARDS) {
+      if (card.kind !== 'answer') continue;
+      const q = makeQuestion(card, CARDS);
+      if (q.type !== 'typing') continue;
+      expect(card.wrongAnswers?.length, card.id).toBeGreaterThan(0);
+      for (const wrong of card.wrongAnswers ?? []) {
+        const pool = [...q.tiles];
+        for (const token of answerTokens(wrong)) {
+          const i = pool.indexOf(token);
+          expect(i, `${card.id}: ${wrong} / ${token}`).toBeGreaterThanOrEqual(0);
+          pool.splice(i, 1);
+        }
+        expect(isTypedAnswerCorrect(wrong, card.answer), card.id).toBe(false);
+      }
+    }
+  });
+  it('부모 메서드와 static 초기화 착각을 실제로 고를 수 있다', () => {
+    for (const [id, wrong] of [['j1', 'A'], ['c6', '111']]) {
+      const q = makeQuestion(CARDS.find(c => c.id === id)!, CARDS);
+      if (q.type !== 'typing') throw new Error(id);
+      const pool = [...q.tiles];
+      for (const token of answerTokens(wrong)) {
+        const i = pool.indexOf(token);
+        expect(i).toBeGreaterThanOrEqual(0);
+        pool.splice(i, 1);
+      }
+    }
   });
 });

@@ -4,6 +4,8 @@ export interface CardRecord {
   ok: number;
   ng: number;
   last: 'ok' | 'ng' | null;
+  /** undefined는 기존 저장 데이터. 마지막 오답을 기준으로 이어받는다. */
+  weak?: boolean;
 }
 
 export interface ProgressState {
@@ -22,7 +24,7 @@ export interface ProgressState {
 
 export type ProgressAction =
   | { type: 'INTRO_SEEN' }
-  | { type: 'RECORD_ANSWER'; cardId: string; ok: boolean }
+  | { type: 'RECORD_ANSWER'; cardId: string; ok: boolean; resolveWeak?: boolean }
   | { type: 'COMPLETE_LESSON'; lessonId: string | null; xp: number; streak: number; day: string }
   | { type: 'TOGGLE_SOUND' }
   | { type: 'SET_INPUT_MODE'; mode: 'tiles' | 'keyboard' }
@@ -43,8 +45,8 @@ export function progressReducer(state: ProgressState, action: ProgressAction): P
     case 'RECORD_ANSWER': {
       const prev = state.cards[action.cardId] ?? { ok: 0, ng: 0, last: null };
       const next: CardRecord = action.ok
-        ? { ...prev, ok: prev.ok + 1, last: 'ok' }
-        : { ...prev, ng: prev.ng + 1, last: 'ng' };
+        ? { ...prev, ok: prev.ok + 1, last: 'ok', weak: action.resolveWeak ? false : (prev.weak ?? prev.last === 'ng') }
+        : { ...prev, ng: prev.ng + 1, last: 'ng', weak: true };
       return { ...state, cards: { ...state.cards, [action.cardId]: next } };
     }
     case 'COMPLETE_LESSON':
@@ -69,6 +71,6 @@ export function progressReducer(state: ProgressState, action: ProgressAction): P
 export const progressStore = createStore(progressReducer, initialState);
 progressStore.subscribe(() => progressStorage.set(progressStore.getState()));
 
-/** 마지막에 틀린 카드. 코스 카드 id 목록을 주면 그 코스 것만 */
+/** 아직 별도 복습에서 해소하지 않은 약점 카드. 코스 카드 id 목록을 주면 그 코스 것만 */
 export const weakCardIds = (state: ProgressState, only?: Set<string>) =>
-  Object.entries(state.cards).filter(([id, r]) => r.last === 'ng' && (!only || only.has(id))).map(([id]) => id);
+  Object.entries(state.cards).filter(([id, r]) => (r.weak ?? r.last === 'ng') && (!only || only.has(id))).map(([id]) => id);

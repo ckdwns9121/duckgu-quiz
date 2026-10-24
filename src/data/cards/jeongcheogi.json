@@ -7,6 +7,10 @@
   "pre": "<pre>int a = 5, b, c;\nb = a++;\nc = ++a;\nprintf(\"%d %d %d\", a, b, c);</pre>",
   "q": "출력은?",
   "answer": "7 5 7",
+  "wrongAnswers": [
+   "6 5 6",
+   "7 6 7"
+  ],
   "explain": "<span class=\"a\">7 5 7</span><ol class=\"steps\"><li>처음: a = 5</li><li><code>b = a++;</code> → <b>먼저 b에 a를 넣고</b>(b = 5), 그다음 a를 1 올림(a = 6)</li><li><code>c = ++a;</code> → <b>먼저 a를 1 올리고</b>(a = 7), 그다음 c에 넣음(c = 7)</li><li>출력: a=7, b=5, c=7</li></ol><p class=\"why\"><b>기억할 것</b>: ++가 <mark>뒤에 있으면 나중에</mark> 올리고, <mark>앞에 있으면 먼저</mark> 올린다. 기호 위치 = 올리는 시점.</p>",
   "hints": [
    "처음: a = 5",
@@ -21,6 +25,10 @@
   "pre": "<pre>int arr[] = {10, 20, 30, 40};\nint *p = arr;\nprintf(\"%d \", *(p+2));\nprintf(\"%d\", *p+2);</pre>",
   "q": "출력은?",
   "answer": "30 12",
+  "wrongAnswers": [
+   "12 30",
+   "30 30"
+  ],
   "explain": "<span class=\"a\">30 12</span><ol class=\"steps\"><li><code>p = arr</code> → p는 배열 맨 앞(10이 있는 칸)을 가리킴</li><li><code>*(p+2)</code> → 괄호 먼저: 주소를 <b>2칸 뒤로 이동</b> → 30이 있는 칸 → 그 값 = <b>30</b></li><li><code>*p+2</code> → <code>*</code>가 먼저: 지금 칸의 값 10을 꺼냄 → 10 + 2 = <b>12</b></li></ol><p class=\"why\"><b>기억할 것</b>: <mark>괄호 안에 +가 있으면 칸 이동</mark>, 괄호가 없으면 값에 더하기. <code>*(p+i)</code>는 <code>arr[i]</code>와 같다.</p>",
   "hints": [
    "<code>p = arr</code> → p는 배열 맨 앞(10이 있는 칸)을 가리킴",
@@ -35,6 +43,10 @@
   "pre": "<pre>int a = 10;\nint *p = &amp;a;\nint **pp = &amp;p;\n**pp = 20;\nprintf(\"%d\", a);</pre>",
   "q": "출력은?",
   "answer": "20",
+  "wrongAnswers": [
+   "10",
+   "2"
+  ],
   "explain": "<span class=\"a\">20</span><ol class=\"steps\"><li><code>p = &amp;a</code> → p에는 <b>a의 주소</b>가 들어 있음 (p → a)</li><li><code>pp = &amp;p</code> → pp에는 <b>p의 주소</b>가 들어 있음 (pp → p → a)</li><li><code>*pp</code> = p, <code>**pp</code> = p가 가리키는 것 = <b>a</b></li><li><code>**pp = 20</code> → 결국 <b>a = 20</b></li></ol><p class=\"why\"><b>기억할 것</b>: <code>&amp;</code>는 \"주소 줘\", <code>*</code>는 \"그 주소로 한 번 가\". <mark>*가 두 개면 두 번 따라간다</mark>. 화살표를 그려서 풀면 안 틀린다.</p>",
   "hints": [
    "<code>p = &amp;a</code> → p에는 <b>a의 주소</b>가 들어 있음 (p → a)",
@@ -49,6 +61,10 @@
   "pre": "<pre>int a[2][3] = {{1,2,3},{4,5,6}};\nprintf(\"%d\", *(*(a+1)+2));</pre>",
   "q": "출력은?",
   "answer": "6",
+  "wrongAnswers": [
+   "5",
+   "3"
+  ],
   "explain": "<span class=\"a\">6</span><ol class=\"steps\"><li>배열 모양: 0행 = {1, 2, 3}, 1행 = {4, 5, 6}</li><li><code>a+1</code> → <b>1행</b>으로 이동</li><li><code>*(a+1)</code> → 1행의 맨 앞 칸 (4가 있는 곳)</li><li><code>*(a+1)+2</code> → 그 행에서 <b>2칸 오른쪽</b> (6이 있는 곳)</li><li>바깥 <code>*</code> → 값 꺼내기 = <b>6</b></li></ol><p class=\"why\"><b>기억할 것</b>: <code>*(*(a+i)+j)</code> = <mark>a[i][j]</mark>. 안쪽 숫자는 행(몇 번째 줄), 바깥 숫자는 열(몇 번째 칸).</p>",
   "hints": [
    "<b>기억할 것</b>: <code>*(*(a+i)+j)</code> = <mark>a[i][j]</mark>. 안쪽 숫자는 행(몇 번째 줄), 바깥 숫자는 열(몇 번째 칸)."
@@ -59,13 +75,17 @@
   "id": "c5",
   "unit": "code-c",
   "title": "sizeof 와 strlen",
-  "pre": "<pre>char s[] = \"hello\";\nprintf(\"%d %d\", sizeof(s), strlen(s));</pre>",
+  "pre": "<pre>char s[] = \"hello\";\nprintf(\"%zu %zu\", sizeof(s), strlen(s));</pre>",
   "q": "출력은?",
   "answer": "6 5",
-  "explain": "<span class=\"a\">6 5</span><ol class=\"steps\"><li><code>\"hello\"</code>는 실제로 메모리에 <b>h e l l o \\0</b> 로 저장됨. 끝의 <code>\\0</code>은 \"문자열 끝\" 표시</li><li><code>sizeof(s)</code> → 배열이 차지하는 칸 수. \\0까지 셈 → <b>6</b></li><li><code>strlen(s)</code> → 글자 수. \\0 앞까지만 셈 → <b>5</b></li></ol><p class=\"why\"><b>기억할 것</b>: <mark>sizeof = 칸 수(끝 표시 포함), strlen = 글자 수</mark>. 차이는 항상 1.</p>",
+  "wrongAnswers": [
+   "5 5",
+   "6 6"
+  ],
+  "explain": "<span class=\"a\">6 5</span><ol class=\"steps\"><li><code>\"hello\"</code>는 실제로 메모리에 <b>h e l l o \\0</b> 로 저장됨. 끝의 <code>\\0</code>은 \"문자열 끝\" 표시</li><li><code>sizeof(s)</code> → 배열이 차지하는 칸 수. \\0까지 셈 → <b>6</b></li><li><code>strlen(s)</code> → 글자 수. \\0 앞까지만 셈 → <b>5</b></li></ol><p class=\"why\"><b>기억할 것</b>: <mark>sizeof = 칸 수(끝 표시 포함), strlen = 글자 수</mark>. 이 예제는 배열을 문자열 크기에 맞춰 만들었으므로 차이가 1이다. <code>char s[10] = &quot;hello&quot;;</code>라면 sizeof는 10, strlen은 5다.</p>",
   "hints": [
    "<code>\"hello\"</code>는 실제로 메모리에 <b>h e l l o \\0</b> 로 저장됨. 끝의 <code>\\0</code>은 \"문자열 끝\" 표시",
-   "<b>기억할 것</b>: <mark>sizeof = 칸 수(끝 표시 포함), strlen = 글자 수</mark>. 차이는 항상 1."
+   "<b>기억할 것</b>: <mark>sizeof = 칸 수(끝 표시 포함), strlen = 글자 수</mark>. 이 예제는 배열을 문자열 크기에 맞춰 만들었으므로 차이가 1이다. <code>char s[10] = &quot;hello&quot;;</code>라면 sizeof는 10, strlen은 5다."
   ]
  },
  {
@@ -76,6 +96,10 @@
   "pre": "<pre>int f() {\n  static int n = 0;\n  n++;\n  return n;\n}\n// main\nfor (int i = 0; i &lt; 3; i++)\n  printf(\"%d\", f());</pre>",
   "q": "출력은?",
   "answer": "123",
+  "wrongAnswers": [
+   "111",
+   "012"
+  ],
   "explain": "<span class=\"a\">123</span><ol class=\"steps\"><li>1번째 호출: n은 처음 한 번만 0으로 시작 → n++ → <b>1</b> 반환</li><li>2번째 호출: <code>static</code>이라 n = 1이 <b>그대로 남아 있음</b> → n++ → <b>2</b></li><li>3번째 호출: n = 2 → n++ → <b>3</b></li></ol><p class=\"why\"><b>기억할 것</b>: 보통 지역변수는 함수가 끝나면 사라져서 매번 새로 시작한다(그러면 111). <mark>static은 함수가 끝나도 값을 기억</mark>하고, <code>= 0</code> 초기화는 맨 처음 한 번만 한다.</p>",
   "hints": [
    "1번째 호출: n은 처음 한 번만 0으로 시작 → n++ → <b>1</b> 반환",
@@ -90,6 +114,10 @@
   "pre": "<pre>int n = 2;\nswitch (n) {\n  case 1: printf(\"A\");\n  case 2: printf(\"B\");\n  case 3: printf(\"C\"); break;\n  default: printf(\"D\");\n}</pre>",
   "q": "출력은?",
   "answer": "BC",
+  "wrongAnswers": [
+   "B",
+   "BCD"
+  ],
   "explain": "<span class=\"a\">BC</span><ol class=\"steps\"><li>n = 2 → <code>case 2</code>로 들어감 → \"B\" 출력</li><li>case 2에 <code>break</code>가 없음 → 멈추지 않고 <b>바로 아래 case 3도 실행</b> → \"C\" 출력</li><li>case 3에 <code>break</code> 있음 → 여기서 switch 끝. default는 실행 안 됨</li></ol><p class=\"why\"><b>기억할 것</b>: switch는 맞는 case에서 <mark>시작만</mark> 한다. 끝나는 건 break를 만났을 때뿐. break가 없으면 아래로 줄줄이 흘러내린다(fall-through).</p>",
   "hints": [
    "n = 2 → <code>case 2</code>로 들어감 → \"B\" 출력",
@@ -104,6 +132,10 @@
   "pre": "<pre>printf(\"%d %d \", 7/2, 7%3);\nprintf(\"%d %d\", -7/2, -7%3);</pre>",
   "q": "출력은?",
   "answer": "3 1 -3 -1",
+  "wrongAnswers": [
+   "3 1 -4 2",
+   "3 1 -3 1"
+  ],
   "explain": "<span class=\"a\">3 1 -3 -1</span><ol class=\"steps\"><li><code>7/2</code> = 3.5 → 정수끼리 나누면 소수점 버림 → <b>3</b></li><li><code>7%3</code> = 7을 3으로 나눈 나머지 → 7 = 3×2 + <b>1</b></li><li><code>-7/2</code> = -3.5 → C는 <b>0 쪽으로 버림</b> → <b>-3</b> (-4 아님)</li><li><code>-7%3</code> → -7 = 3×(-2) + <b>-1</b>. 나머지 부호는 <b>앞 숫자(-7)를 따라감</b></li></ol><p class=\"why\"><b>기억할 것</b>: <mark>C·Java는 소수점을 그냥 잘라낸다</mark>. Python은 더 작은 쪽으로 내려서 -7//2 = -4가 된다. 언어마다 다르니 문제의 언어부터 확인.</p>",
   "hints": [
    "<code>7/2</code> = 3.5 → 정수끼리 나누면 소수점 버림 → <b>3</b>",
@@ -118,6 +150,10 @@
   "pre": "<pre>printf(\"%d %d %d \", 5&amp;3, 5|3, 5^3);\nprintf(\"%d %d\", 1&lt;&lt;3, ~5);</pre>",
   "q": "출력은?",
   "answer": "1 7 6 8 -6",
+  "wrongAnswers": [
+   "1 7 6 8 6",
+   "1 7 6 4 -6"
+  ],
   "explain": "<span class=\"a\">1 7 6 8 -6</span><ol class=\"steps\"><li>먼저 2진수로 바꿈: 5 = <b>101</b>, 3 = <b>011</b></li><li><code>&amp;</code> (AND, 둘 다 1이면 1): 101 &amp; 011 = 001 = <b>1</b></li><li><code>|</code> (OR, 하나라도 1이면 1): 101 | 011 = 111 = <b>7</b></li><li><code>^</code> (XOR, 서로 다르면 1): 101 ^ 011 = 110 = <b>6</b></li><li><code>1&lt;&lt;3</code> (왼쪽으로 3칸 밀기 = ×2를 3번): 1 → 1000 = <b>8</b></li><li><code>~5</code> (모든 비트 뒤집기): 공식 <b>-(x+1)</b> → -(5+1) = <b>-6</b></li></ol><p class=\"why\"><b>기억할 것</b>: <mark>&lt;&lt; n은 ×2ⁿ, &gt;&gt; n은 ÷2ⁿ, ~x는 -(x+1)</mark>. 나머지는 2진수로 세로로 맞춰 놓고 한 자리씩 비교.</p>",
   "hints": [
    "먼저 2진수로 바꿈: 5 = <b>101</b>, 3 = <b>011</b>",
@@ -132,6 +168,10 @@
   "pre": "<pre>struct P { int x; int y; };\nstruct P s = {3, 4};\nstruct P *p = &amp;s;\np-&gt;x = p-&gt;x + p-&gt;y;\nprintf(\"%d\", s.x);</pre>",
   "q": "출력은?",
   "answer": "7",
+  "wrongAnswers": [
+   "3",
+   "4"
+  ],
   "explain": "<span class=\"a\">7</span><ol class=\"steps\"><li>s = {x: 3, y: 4}, p는 s를 가리킴</li><li><code>p-&gt;x</code>는 \"p가 가리키는 구조체의 x\" = s.x = 3</li><li><code>p-&gt;x = p-&gt;x + p-&gt;y</code> → s.x = 3 + 4 = <b>7</b></li><li>p를 통해 바꿨지만 결국 <b>s 자체</b>가 바뀐 것 → s.x = 7</li></ol><p class=\"why\"><b>기억할 것</b>: 구조체 <b>변수</b>는 점(<code>s.x</code>), 구조체 <b>포인터</b>는 화살표(<code>p-&gt;x</code>). <mark>p-&gt;x = (*p).x</mark>.</p>",
   "hints": [
    "s = {x: 3, y: 4}, p는 s를 가리킴",
@@ -146,6 +186,9 @@
   "pre": "<pre>class A { void show(){ System.out.print(\"A\"); } }\nclass B extends A {\n  void show(){ System.out.print(\"B\"); }\n}\nA obj = new B();\nobj.show();</pre>",
   "q": "출력은?",
   "answer": "B",
+  "wrongAnswers": [
+   "A"
+  ],
   "explain": "<span class=\"a\">B</span><ol class=\"steps\"><li><code>A obj = new B();</code> → 변수 타입은 A, <b>실제로 만든 객체는 B</b></li><li>B가 show()를 <b>오버라이딩</b>(같은 모양으로 다시 정의)함</li><li>메서드를 부를 때는 <b>실제 객체(B)</b>의 것을 씀 → \"B\"</li></ol><p class=\"why\"><b>기억할 것</b>: <mark>메서드는 new 뒤를 본다</mark>. 겉포장(A)이 아니라 안에 든 물건(B)이 일한다. 이걸 동적 바인딩이라고 한다.</p>",
   "hints": []
  },
@@ -157,6 +200,9 @@
   "pre": "<pre>class A { int x = 1; }\nclass B extends A { int x = 2; }\nA o = new B();\nSystem.out.print(o.x);</pre>",
   "q": "출력은?",
   "answer": "1",
+  "wrongAnswers": [
+   "2"
+  ],
   "explain": "<span class=\"a\">1</span><ol class=\"steps\"><li>A에도 x, B에도 x가 <b>각각 따로</b> 있음 (B 객체 안에 x가 두 개)</li><li>필드(변수)는 오버라이딩이 <b>안 됨</b></li><li>그래서 <b>변수 타입 A</b>를 보고 A의 x를 읽음 → 1</li></ol><p class=\"why\"><b>기억할 것</b>: <mark>메서드는 new 뒤(B), 필드는 앞쪽 타입(A)</mark>. 문제에서 <code>o.x</code>처럼 변수에 바로 점을 찍으면 선언 타입을 본다.</p>",
   "hints": [
    "A에도 x, B에도 x가 <b>각각 따로</b> 있음 (B 객체 안에 x가 두 개)",
@@ -171,6 +217,9 @@
   "pre": "<pre>class A { static void hi(){ System.out.print(\"A\"); } }\nclass B extends A {\n  static void hi(){ System.out.print(\"B\"); }\n}\nA o = new B();\no.hi();</pre>",
   "q": "출력은?",
   "answer": "A",
+  "wrongAnswers": [
+   "B"
+  ],
   "explain": "<span class=\"a\">A</span><ol class=\"steps\"><li><code>static</code> 메서드는 객체가 아니라 <b>클래스에 붙어 있는</b> 메서드</li><li>그래서 오버라이딩이 안 되고, 자식 것은 그냥 이름만 같은 <b>별개 메서드</b>(숨김, hiding)</li><li><code>o.hi()</code> → o의 <b>선언 타입 A</b>의 hi()가 실행 → \"A\"</li></ol><p class=\"why\"><b>기억할 것</b>: static은 \"클래스 전용\". <mark>static 메서드와 필드는 앞쪽 타입, 일반 메서드만 new 뒤</mark>. j1과 차이를 꼭 비교하기.</p>",
   "hints": [
    "<code>static</code> 메서드는 객체가 아니라 <b>클래스에 붙어 있는</b> 메서드",
@@ -185,6 +234,10 @@
   "pre": "<pre>class A { A(){ System.out.print(\"A\"); } }\nclass B extends A {\n  B(){ System.out.print(\"B\"); }\n}\nnew B();</pre>",
   "q": "출력은?",
   "answer": "AB",
+  "wrongAnswers": [
+   "BA",
+   "B"
+  ],
   "explain": "<span class=\"a\">AB</span><ol class=\"steps\"><li><code>new B()</code> → B의 생성자 호출</li><li>B 생성자 첫 줄에는 눈에 안 보이는 <code>super();</code>가 자동으로 들어 있음</li><li>그래서 <b>A 생성자가 먼저</b> 실행 → \"A\"</li><li>다시 B 생성자로 돌아와 나머지 실행 → \"B\"</li></ol><p class=\"why\"><b>기억할 것</b>: <mark>부모가 먼저 태어나야 자식이 태어난다</mark>. 생성자 출력 순서는 항상 부모 → 자식.</p>",
   "hints": [
    "<code>new B()</code> → B의 생성자 호출",
@@ -199,6 +252,10 @@
   "pre": "<pre>class A { void f(){ System.out.print(\"1\"); } }\nclass B extends A {\n  void f(){ super.f(); System.out.print(\"2\"); }\n}\nnew B().f();</pre>",
   "q": "출력은?",
   "answer": "12",
+  "wrongAnswers": [
+   "2",
+   "21"
+  ],
   "explain": "<span class=\"a\">12</span><ol class=\"steps\"><li><code>new B().f()</code> → B의 f() 실행</li><li>첫 줄 <code>super.f()</code> → <b>부모 A의 f()</b>를 부름 → \"1\"</li><li>B의 f()로 돌아와 다음 줄 → \"2\"</li></ol><p class=\"why\"><b>기억할 것</b>: <mark>super.메서드()는 \"부모 버전 실행해 줘\"</mark>. 오버라이딩해도 부모 것을 이렇게 따로 부를 수 있다.</p>",
   "hints": [
    "<code>new B().f()</code> → B의 f() 실행",
@@ -213,6 +270,10 @@
   "pre": "<pre>System.out.print(1 + 2 + \"3\" + 4 + 5);</pre>",
   "q": "출력은?",
   "answer": "3345",
+  "wrongAnswers": [
+   "15",
+   "12345"
+  ],
   "explain": "<span class=\"a\">3345</span><ol class=\"steps\"><li>+는 <b>왼쪽부터</b> 하나씩 계산</li><li><code>1 + 2</code> → 둘 다 숫자라 덧셈 → <b>3</b></li><li><code>3 + \"3\"</code> → 문자열이 끼면 <b>이어붙이기</b> → \"33\"</li><li><code>\"33\" + 4</code> → \"334\", <code>\"334\" + 5</code> → <b>\"3345\"</b></li></ol><p class=\"why\"><b>기억할 것</b>: <mark>문자열을 만나기 전까지는 덧셈, 만난 뒤로는 전부 붙이기</mark>. 만약 <code>\"3\" + 1 + 2</code>였다면 처음부터 문자열이라 \"312\".</p>",
   "hints": [
    "+는 <b>왼쪽부터</b> 하나씩 계산",
@@ -227,6 +288,10 @@
   "pre": "<pre>String a = \"hi\";\nString b = \"hi\";\nString c = new String(\"hi\");\nSystem.out.print((a==b) + \" \" + (a==c) + \" \" + a.equals(c));</pre>",
   "q": "출력은?",
   "answer": "true false true",
+  "wrongAnswers": [
+   "true true true",
+   "false false true"
+  ],
   "explain": "<span class=\"a\">true false true</span><ol class=\"steps\"><li><code>a = \"hi\"</code>, <code>b = \"hi\"</code> → 같은 글자를 따옴표로 쓰면 Java가 <b>하나를 만들어 같이 씀</b> → a와 b는 같은 객체 → <code>a==b</code> <b>true</b></li><li><code>c = new String(\"hi\")</code> → new는 무조건 <b>새 객체</b> → <code>a==c</code> <b>false</b></li><li><code>a.equals(c)</code> → 글자 내용만 비교 → 둘 다 \"hi\" → <b>true</b></li></ol><p class=\"why\"><b>기억할 것</b>: <mark>== 는 \"같은 물건이냐\", equals는 \"내용이 같냐\"</mark>. 쌍둥이는 equals는 true, == 는 false.</p>",
   "hints": [
    "<code>a = \"hi\"</code>, <code>b = \"hi\"</code> → 같은 글자를 따옴표로 쓰면 Java가 <b>하나를 만들어 같이 씀</b> → a와 b는 같은 객체 → <code>a==b</code> <b>true</b>",
@@ -241,6 +306,10 @@
   "pre": "<pre>class C {\n  static int cnt = 0;\n  C(){ cnt++; }\n}\nnew C(); new C(); new C();\nSystem.out.print(C.cnt);</pre>",
   "q": "출력은?",
   "answer": "3",
+  "wrongAnswers": [
+   "1",
+   "0"
+  ],
   "explain": "<span class=\"a\">3</span><ol class=\"steps\"><li><code>static int cnt</code>는 C 클래스 전체에 <b>딱 하나</b>만 있음</li><li>객체를 만들 때마다 생성자에서 cnt++ → 1, 2, 3</li><li>세 객체가 <b>같은 cnt 하나</b>를 올렸으므로 결과 3</li></ol><p class=\"why\"><b>기억할 것</b>: 일반 변수는 객체마다 따로(각자 1), <mark>static 변수는 모두가 공유하는 한 개</mark>. 반 전체 출석부 같은 것.</p>",
   "hints": [
    "<code>static int cnt</code>는 C 클래스 전체에 <b>딱 하나</b>만 있음",
@@ -293,6 +362,10 @@
   "pre": "<pre>try {\n  int x = 10 / 0;\n  System.out.print(\"A\");\n} catch (ArithmeticException e) {\n  System.out.print(\"B\");\n} finally {\n  System.out.print(\"C\");\n}</pre>",
   "q": "출력은?",
   "answer": "BC",
+  "wrongAnswers": [
+   "B",
+   "ABC"
+  ],
   "explain": "<span class=\"a\">BC</span><ol class=\"steps\"><li><code>10 / 0</code> → 0으로 나눔 → <b>ArithmeticException 발생</b></li><li>예외가 난 순간 try 블록의 <b>나머지 줄은 건너뜀</b> → \"A\"는 출력 안 됨</li><li>맞는 catch로 이동 → \"B\"</li><li><code>finally</code>는 예외가 나든 안 나든 <b>항상</b> 실행 → \"C\"</li></ol><p class=\"why\"><b>기억할 것</b>: <mark>예외 난 줄 아래는 스킵, finally는 무조건</mark>. 예외가 안 났다면 \"AC\".</p>",
   "hints": [
    "<code>10 / 0</code> → 0으로 나눔 → <b>ArithmeticException 발생</b>",
@@ -307,6 +380,9 @@
   "pre": "<pre>a = [1, 2, 3, 4, 5]\nprint(a[1:3], a[-2:], a[::2], a[::-1])</pre>",
   "q": "출력은?",
   "answer": "[2, 3] [4, 5] [1, 3, 5] [5, 4, 3, 2, 1]",
+  "wrongAnswers": [
+   "[2, 3, 4] [4, 5] [1, 3, 5] [5, 4, 3, 2, 1]"
+  ],
   "explain": "<span class=\"a\">[2, 3] [4, 5] [1, 3, 5] [5, 4, 3, 2, 1]</span><ol class=\"steps\"><li>번호 매기기: 값 1 2 3 4 5 → 번호 <b>0 1 2 3 4</b> (뒤에서는 -5 -4 -3 -2 -1)</li><li><code>a[1:3]</code> → 1번부터 <b>3번 직전</b>까지 → 1번, 2번 → [2, 3]</li><li><code>a[-2:]</code> → 뒤에서 두 번째부터 끝까지 → [4, 5]</li><li><code>a[::2]</code> → 처음부터 끝까지 <b>2칸씩</b> 건너뛰기 → 0, 2, 4번 → [1, 3, 5]</li><li><code>a[::-1]</code> → 간격 -1 = <b>거꾸로</b> → [5, 4, 3, 2, 1]</li></ol><p class=\"why\"><b>기억할 것</b>: <mark>[시작 : 끝 : 간격], 끝 번호는 안 들어간다</mark>. 빈칸이면 \"처음부터\" 또는 \"끝까지\".</p>",
   "hints": [
    "번호 매기기: 값 1 2 3 4 5 → 번호 <b>0 1 2 3 4</b> (뒤에서는 -5 -4 -3 -2 -1)",
@@ -321,6 +397,10 @@
   "pre": "<pre>s = \"Hello\"\nprint(s[1:4], s[-1], s[:2])</pre>",
   "q": "출력은?",
   "answer": "ell o He",
+  "wrongAnswers": [
+   "ell o he",
+   "ello o He"
+  ],
   "explain": "<span class=\"a\">ell o He</span><ol class=\"steps\"><li>번호: H=0, e=1, l=2, l=3, o=4</li><li><code>s[1:4]</code> → 1, 2, 3번 → \"ell\"</li><li><code>s[-1]</code> → 맨 뒤 한 글자 → \"o\"</li><li><code>s[:2]</code> → 처음부터 2번 직전까지 → 0, 1번 → \"He\"</li></ol><p class=\"why\"><b>기억할 것</b>: 문자열도 리스트와 똑같이 자른다. <mark>[:2]는 \"앞에서 2글자\"</mark>로 외우면 편하다.</p>",
   "hints": [
    "번호: H=0, e=1, l=2, l=3, o=4",
@@ -335,6 +415,9 @@
   "pre": "<pre>print(7//2, -7//2, -7%3, 2**3, 7/2)</pre>",
   "q": "출력은?",
   "answer": "3 -4 2 8 3.5",
+  "wrongAnswers": [
+   "3 -3 -1 8 3.5"
+  ],
   "explain": "<span class=\"a\">3 -4 2 8 3.5</span><ol class=\"steps\"><li><code>7//2</code> → 3.5를 <b>내림</b> → 3</li><li><code>-7//2</code> → -3.5를 <b>내림(더 작은 쪽)</b> → <b>-4</b> (C는 -3)</li><li><code>-7%3</code> → Python 나머지는 <b>나누는 수(3)와 부호가 같음</b> → -7 = 3×(-3) + <b>2</b></li><li><code>2**3</code> → 2의 3제곱 → 8</li><li><code>7/2</code> → <code>/</code>는 항상 실수 → 3.5</li></ol><p class=\"why\"><b>기억할 것</b>: <mark>Python //는 무조건 아래로(바닥으로) 내린다</mark>. 음수가 나오면 C랑 답이 달라지니 함정 1순위.</p>",
   "hints": [
    "<code>7//2</code> → 3.5를 <b>내림</b> → 3",
@@ -349,6 +432,9 @@
   "pre": "<pre>a = [1, 2, 3]\nb = a\nb.append(4)\nprint(a)</pre>",
   "q": "출력은?",
   "answer": "[1, 2, 3, 4]",
+  "wrongAnswers": [
+   "[1, 2, 3]"
+  ],
   "explain": "<span class=\"a\">[1, 2, 3, 4]</span><ol class=\"steps\"><li><code>a = [1, 2, 3]</code> → 리스트 하나를 만들고 a라는 이름표를 붙임</li><li><code>b = a</code> → 리스트를 <b>복사하지 않고</b> 같은 리스트에 b라는 이름표를 하나 더 붙임</li><li><code>b.append(4)</code> → 그 리스트 하나에 4 추가</li><li>a도 같은 리스트를 보고 있으니 → [1, 2, 3, 4]</li></ol><p class=\"why\"><b>기억할 것</b>: <mark>= 는 복사가 아니라 이름표 하나 더 붙이기</mark>. 따로 쓰려면 <code>b = a[:]</code> 또는 <code>b = a.copy()</code>.</p>",
   "hints": [
    "<code>a = [1, 2, 3]</code> → 리스트 하나를 만들고 a라는 이름표를 붙임",
@@ -363,6 +449,10 @@
   "pre": "<pre>a = [1, 2]; b = [1, 2]\na.append([3, 4])\nb.extend([3, 4])\nprint(a, len(a), b, len(b))</pre>",
   "q": "출력은?",
   "answer": "[1, 2, [3, 4]] 3 [1, 2, 3, 4] 4",
+  "wrongAnswers": [
+   "[1, 2, 3, 4] 4 [1, 2, [3, 4]] 3",
+   "[1, 2, 3, 4] 3 [1, 2, 3, 4] 4"
+  ],
   "explain": "<span class=\"a\">[1, 2, [3, 4]] 3 [1, 2, 3, 4] 4</span><ol class=\"steps\"><li><code>a.append([3, 4])</code> → [3, 4] <b>리스트 통째로</b>를 한 칸에 넣음 → [1, 2, [3, 4]], 칸 수 3</li><li><code>b.extend([3, 4])</code> → 안의 값을 <b>하나씩 꺼내서</b> 넣음 → [1, 2, 3, 4], 칸 수 4</li></ol><p class=\"why\"><b>기억할 것</b>: <mark>append = 상자째 넣기, extend = 상자 풀어서 넣기</mark>.</p>",
   "hints": [
    "<code>a.append([3, 4])</code> → [3, 4] <b>리스트 통째로</b>를 한 칸에 넣음 → [1, 2, [3, 4]], 칸 수 3",
@@ -377,6 +467,9 @@
   "pre": "<pre>print(list(range(5)), list(range(1, 10, 3)), list(range(5, 0, -2)))</pre>",
   "q": "출력은?",
   "answer": "[0, 1, 2, 3, 4] [1, 4, 7] [5, 3, 1]",
+  "wrongAnswers": [
+   "[0, 1, 2, 3, 4, 5] [1, 4, 7, 10] [5, 3, 1]"
+  ],
   "explain": "<span class=\"a\">[0, 1, 2, 3, 4] [1, 4, 7] [5, 3, 1]</span><ol class=\"steps\"><li><code>range(5)</code> → 0부터 5 직전까지 → 0~4</li><li><code>range(1, 10, 3)</code> → 1에서 시작, 3씩 증가, 10 직전까지 → 1, 4, 7 (10은 안 됨)</li><li><code>range(5, 0, -2)</code> → 5에서 시작, 2씩 감소, 0 직전까지 → 5, 3, 1</li></ol><p class=\"why\"><b>기억할 것</b>: <mark>range(시작, 끝, 간격)에서 끝은 절대 안 들어간다</mark>. 숫자를 직접 써 보면서 끝에 닿기 전에 멈추기.</p>",
   "hints": [
    "<code>range(5)</code> → 0부터 5 직전까지 → 0~4",
@@ -391,6 +484,10 @@
   "pre": "<pre>print([x*2 for x in range(5) if x % 2 == 0])</pre>",
   "q": "출력은?",
   "answer": "[0, 4, 8]",
+  "wrongAnswers": [
+   "[0, 2, 4]",
+   "[0, 2, 4, 6, 8]"
+  ],
   "explain": "<span class=\"a\">[0, 4, 8]</span><ol class=\"steps\"><li>읽는 순서: <b>for → if → 앞의 식</b></li><li><code>for x in range(5)</code> → x = 0, 1, 2, 3, 4</li><li><code>if x % 2 == 0</code> → 짝수만 통과 → 0, 2, 4</li><li><code>x*2</code> → 0, 4, 8</li></ol><p class=\"why\"><b>기억할 것</b>: 리스트 컴프리헨션은 <mark>가운데(for) → 오른쪽(if) → 왼쪽(식)</mark> 순서로 읽는다.</p>",
   "hints": [
    "읽는 순서: <b>for → if → 앞의 식</b>",
@@ -402,10 +499,13 @@
   "id": "p8",
   "unit": "code-py",
   "title": "set 연산",
-  "pre": "<pre>a = {1, 2, 3}; b = {2, 3, 4}\nprint(a &amp; b, a | b, a - b)</pre>",
+  "pre": "<pre>a = {1, 2, 3}; b = {2, 3, 4}\nprint(sorted(a &amp; b), sorted(a | b), sorted(a - b))</pre>",
   "q": "출력은?",
-  "answer": "{2, 3} {1, 2, 3, 4} {1}",
-  "explain": "<span class=\"a\">{2, 3} {1, 2, 3, 4} {1}</span><ol class=\"steps\"><li><code>a &amp; b</code> 교집합: 둘 다 있는 것 → {2, 3}</li><li><code>a | b</code> 합집합: 하나라도 있는 것 (중복은 한 번만) → {1, 2, 3, 4}</li><li><code>a - b</code> 차집합: a에만 있는 것 → {1}</li></ol><p class=\"why\"><b>기억할 것</b>: <mark>&amp; = 그리고(둘 다), | = 또는(하나라도), - = 빼기</mark>. set은 중복을 자동으로 없앤다.</p>",
+  "answer": "[2, 3] [1, 2, 3, 4] [1]",
+  "wrongAnswers": [
+   "[1] [1, 2, 3, 4] [2, 3]"
+  ],
+  "explain": "<span class=\"a\">[2, 3] [1, 2, 3, 4] [1]</span><ol class=\"steps\"><li><code>a &amp; b</code> 교집합을 정렬한 리스트 → [2, 3]</li><li><code>a | b</code> 합집합을 정렬한 리스트 → [1, 2, 3, 4]</li><li><code>a - b</code> 차집합을 정렬한 리스트 → [1]</li></ol><p class=\"why\"><b>기억할 것</b>: <mark>&amp; = 그리고(둘 다), | = 또는(하나라도), - = 빼기</mark>. set은 중복을 없애지만 순서는 보장하지 않는다. 이 코드는 sorted로 정렬한 리스트를 출력한다.</p>",
   "hints": [
    "<code>a &amp; b</code> 교집합: 둘 다 있는 것 → {2, 3}",
    "<b>기억할 것</b>: <mark>&amp; = 그리고(둘 다), | = 또는(하나라도), - = 빼기</mark>. set은 중복을 자동으로 없앤다."
@@ -419,6 +519,7 @@
   "pre": "<pre>print(1, 2, 3, sep=\"-\", end=\"!\")\nprint(\"A\")</pre>",
   "q": "출력은?",
   "answer": "1-2-3!A",
+  "wrongAnswers": [],
   "explain": "<span class=\"a\">1-2-3!A</span><ol class=\"steps\"><li><code>sep=\"-\"</code> → 값과 값 <b>사이</b>에 \"-\"를 넣음 → 1-2-3</li><li><code>end=\"!\"</code> → 끝에 원래 붙는 <b>줄바꿈 대신</b> \"!\"를 붙임 → 1-2-3!</li><li>줄이 안 바뀌었으니 다음 print(\"A\")가 <b>바로 옆에</b> 이어짐 → 1-2-3!A</li></ol><p class=\"why\"><b>기억할 것</b>: <mark>sep = 사이에, end = 끝에</mark>. 기본값은 sep=\" \"(공백), end=\"\\n\"(줄바꿈).</p>",
   "hints": [
    "<code>sep=\"-\"</code> → 값과 값 <b>사이</b>에 \"-\"를 넣음 → 1-2-3",
@@ -433,6 +534,10 @@
   "pre": "<pre>d = {\"a\": 1, \"b\": 2}\nfor k in d:\n    print(k, end=\"\")\nprint(d.get(\"c\", 0))</pre>",
   "q": "출력은?",
   "answer": "ab0",
+  "wrongAnswers": [
+   "120",
+   "ab"
+  ],
   "explain": "<span class=\"a\">ab0</span><ol class=\"steps\"><li><code>for k in d</code> → dict를 그냥 돌리면 <b>키만</b> 나옴 → \"a\", \"b\"</li><li><code>end=\"\"</code>라 줄바꿈 없이 붙음 → \"ab\"</li><li><code>d.get(\"c\", 0)</code> → \"c\" 키가 없음 → 대신 <b>기본값 0</b> → \"ab0\"</li></ol><p class=\"why\"><b>기억할 것</b>: <mark>dict 반복 = 키만</mark>. 값은 <code>d.values()</code>, 둘 다는 <code>d.items()</code>. <code>d[\"c\"]</code>처럼 없는 키를 바로 꺼내면 에러, get은 기본값.</p>",
   "hints": [
    "<code>for k in d</code> → dict를 그냥 돌리면 <b>키만</b> 나옴 → \"a\", \"b\"",
@@ -447,6 +552,10 @@
   "pre": "",
   "q": "점수 열이 90, NULL, 80인 3행 테이블에서 COUNT(*)와 COUNT(점수)는?",
   "answer": "3, 2",
+  "wrongAnswers": [
+   "3, 3",
+   "2, 2"
+  ],
   "explain": "<span class=\"a\">3, 2</span><ol class=\"steps\"><li><code>COUNT(*)</code> → 행이 몇 줄인지 셈 → NULL이 있는 줄도 한 줄 → <b>3</b></li><li><code>COUNT(점수)</code> → 점수 칸에 <b>값이 있는 것만</b> 셈 → 90, 80 → <b>2</b></li></ol><p class=\"why\"><b>기억할 것</b>: <mark>*는 줄 수, 열 이름은 NULL 빼고</mark>. SUM, AVG, MAX, MIN도 NULL은 없는 셈 친다. 그래서 AVG(점수) = (90+80)/2 = 85.</p>",
   "hints": [
    "<code>COUNT(*)</code> → 행이 몇 줄인지 셈 → NULL이 있는 줄도 한 줄 → <b>3</b>",
@@ -609,6 +718,7 @@
   "pre": "",
   "q": "<code>점수 BETWEEN 80 AND 90</code>에 80과 90이 포함되나?",
   "answer": "둘 다 포함",
+  "wrongAnswers": [],
   "explain": "<span class=\"a\">둘 다 포함</span><ol class=\"steps\"><li><code>점수 BETWEEN 80 AND 90</code> = <code>점수 &gt;= 80 AND 점수 &lt;= 90</code></li><li>80점, 90점인 사람도 결과에 나옴</li><li><code>학년 IN (1, 3)</code> = <code>학년 = 1 OR 학년 = 3</code></li></ol><p class=\"why\"><b>기억할 것</b>: <mark>BETWEEN은 양 끝을 포함</mark>. Python range와 반대라 헷갈리기 쉽다.</p>",
   "hints": [
    "<code>점수 BETWEEN 80 AND 90</code> = <code>점수 &gt;= 80 AND 점수 &lt;= 90</code>",
@@ -623,6 +733,7 @@
   "pre": "",
   "q": "ASC, DESC를 안 쓰면?",
   "answer": "ASC (오름차순)",
+  "wrongAnswers": [],
   "explain": "<span class=\"a\">ASC (오름차순)</span><ol class=\"steps\"><li><code>ORDER BY 점수</code> → 아무것도 안 쓰면 ASC → 작은 수부터 (60, 70, 80…)</li><li><code>ORDER BY 점수 DESC</code> → 큰 수부터 (100, 90, 80…)</li><li>여러 개: <code>ORDER BY 학년 ASC, 점수 DESC</code> → 학년 순으로 먼저, 같은 학년 안에서는 점수 높은 순</li></ol><p class=\"why\"><b>기억할 것</b>: <mark>ASC = Ascending(올라감), DESC = Descending(내려감)</mark>. 기본은 올라가는 쪽.</p>",
   "hints": [
    "<code>ORDER BY 점수</code> → 아무것도 안 쓰면 ASC → 작은 수부터 (60, 70, 80…)",
@@ -636,7 +747,7 @@
   "mode": "order",
   "join": " → ",
   "title": "SQL 실행 순서",
-  "q": "SELECT 문이 실제로 처리되는 순서대로 놓으세요.",
+  "q": "SELECT 문의 논리적 처리 순서대로 놓으세요.",
   "tokens": [
    "FROM",
    "WHERE",
@@ -966,6 +1077,7 @@
   "pre": "<pre>학생(학번, 이름, 학과, 학년)\n행 5개가 들어 있음</pre>",
   "q": "차수와 카디널리티는?",
   "answer": "차수 4, 카디널리티 5",
+  "wrongAnswers": [],
   "explain": "<span class=\"a\">차수 4, 카디널리티 5</span><ol class=\"steps\"><li>열(속성) 세기: 학번, 이름, 학과, 학년 → <b>4개 = 차수</b></li><li>행(튜플) 세기: 5명 → <b>5개 = 카디널리티</b></li></ol><p class=\"why\"><b>기억할 것</b>: <mark>차수 = 세로줄(열) 수, 카디널리티 = 가로줄(행) 수</mark>. 사람(카드)이 늘면 카디널리티가 는다.</p>",
   "hints": [
    "열(속성) 세기: 학번, 이름, 학과, 학년 → <b>4개 = 차수</b>",
@@ -980,6 +1092,7 @@
   "pre": "<pre>학생 테이블 기본키 = 학번\nINSERT 학생 VALUES (NULL, '홍길동', ...)</pre>",
   "q": "어떤 무결성을 어겼나?",
   "answer": "개체 무결성",
+  "wrongAnswers": [],
   "explain": "<span class=\"a\">개체 무결성</span><ol class=\"steps\"><li>학번은 이 테이블의 <b>기본키</b> (학생 한 명을 구별하는 값)</li><li>학번에 NULL을 넣으면 이 학생이 누군지 구별할 수 없음</li><li>기본키는 <b>NULL도 안 되고 중복도 안 됨</b> → 이 규칙이 개체 무결성</li></ol><p class=\"why\"><b>기억할 것</b>: <mark>기본키 문제 = 개체 무결성</mark>. 이름표 없는 학생은 입학 불가.</p>",
   "hints": [
    "학번은 이 테이블의 <b>기본키</b> (학생 한 명을 구별하는 값)"
@@ -993,145 +1106,96 @@
   "pre": "<pre>학과 테이블: 컴공, 전자만 있음\n학생.학과(외래키) = '경영'으로 입력</pre>",
   "q": "어떤 무결성을 어겼나?",
   "answer": "참조 무결성",
+  "wrongAnswers": [],
   "explain": "<span class=\"a\">참조 무결성</span><ol class=\"steps\"><li>학생.학과는 학과 테이블을 <b>가리키는 외래키</b></li><li>학과 테이블에는 컴공, 전자만 있고 '경영'은 없음</li><li>없는 학과를 가리키면 안 됨 → 외래키 값은 <b>상대 테이블에 실제로 있는 값이거나 NULL</b>이어야 함</li></ol><p class=\"why\"><b>기억할 것</b>: <mark>외래키 문제 = 참조 무결성</mark>. 존재하지 않는 반에 배정할 수 없다.</p>",
   "hints": [
    "학생.학과는 학과 테이블을 <b>가리키는 외래키</b>"
   ]
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "d-i-ent",
   "unit": "db",
-  "table": "db:2",
-  "col": "종류",
-  "term": "개체 무결성",
-  "sub": "",
-  "meaning": "기본키에는 NULL(빈 값)도, 중복 값도 들어갈 수 없다.",
-  "short": "기본키에는 NULL(빈 값)도, 중복 값도 들어갈 수 없다",
-  "segments": [],
-  "parts": [
-   {
-    "label": "규칙",
-    "html": "<mark>기본키</mark>에는 <b>NULL(빈 값)</b>도, <b>중복 값</b>도 들어갈 수 없다.",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "기본키는 학생의 이름표. 이름표가 비어 있거나 두 명이 같은 이름표를 달면 누가 누군지 모른다. 개체 = 나 자신",
-    "hint": true
-   }
+  "title": "학생 등록",
+  "q": "학생 테이블의 기본키인 학번에 NULL을 넣으려 한다. 위반하는 규칙은?",
+  "pre": "",
+  "options": [
+   "개체 무결성",
+   "참조 무결성",
+   "도메인 무결성",
+   "사용자 정의 무결성"
   ],
-  "hints": [
-   "기본키는 학생의 이름표. 이름표가 비어 있거나 두 명이 같은 이름표를 달면 누가 누군지 모른다. 개체 = 나 자신"
-  ]
+  "correct": "개체 무결성",
+  "explain": "<p>기본키는 각 행을 식별하므로 NULL을 허용하지 않는다. 참조 무결성은 다른 테이블을 가리키는 값의 존재 여부에 관한 규칙이다.</p>",
+  "hints": []
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "d-i-ref",
   "unit": "db",
-  "table": "db:2",
-  "col": "종류",
-  "term": "참조 무결성",
-  "sub": "",
-  "meaning": "외래키 값은 상대 테이블의 기본키에 실제로 있는 값이거나 NULL이어야 한다.",
-  "short": "외래키 값은 상대 테이블의 기본키에 실제로 있는 값이거나 NULL이어야 한다",
-  "segments": [],
-  "parts": [
-   {
-    "label": "규칙",
-    "html": "<mark>외래키</mark> 값은 <b>상대 테이블의 기본키에 실제로 있는 값</b>이거나 NULL이어야 한다.",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "학생.학과 = '경영'인데 학과 표에 경영이 없으면 위반. 없는 반에 배정할 수 없음. 참조 = 남을 가리킴",
-    "hint": true
-   }
+  "title": "학과 변경",
+  "q": "학과 테이블에 없는 코드로 학생의 외래키 학과코드를 바꾸려 한다. 위반하는 규칙은?",
+  "pre": "",
+  "options": [
+   "참조 무결성",
+   "개체 무결성",
+   "키 무결성",
+   "사용자 정의 무결성"
   ],
-  "hints": [
-   "학생.학과 = '경영'인데 학과 표에 경영이 없으면 위반. 없는 반에 배정할 수 없음. 참조 = 남을 가리킴"
-  ]
+  "correct": "참조 무결성",
+  "explain": "<p>외래키 값은 참조 대상에 존재해야 한다. 학생의 기본키 중복 여부를 묻는 문제가 아니다.</p>",
+  "hints": []
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "d-i-dom",
   "unit": "db",
-  "table": "db:2",
-  "col": "종류",
-  "term": "도메인 무결성",
-  "sub": "",
-  "meaning": "각 속성 값은 그 속성에 정해진 도메인(범위·형식) 안에 있어야 한다.",
-  "short": "각 속성 값은 그 속성에 정해진 도메인(범위·형식) 안에 있어야 한다",
-  "segments": [],
-  "parts": [
-   {
-    "label": "규칙",
-    "html": "각 속성 값은 그 속성에 정해진 <b>도메인(범위·형식) 안</b>에 있어야 한다.",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "학년에 7, 성별에 '기타', 나이에 '스무살'(숫자 칸에 글자) → 모두 위반",
-    "hint": true
-   }
+  "title": "점수 입력",
+  "q": "점수 열은 0~100의 정수만 허용한다. 120 입력을 막는 제약을 분류하면?",
+  "pre": "",
+  "options": [
+   "도메인 무결성",
+   "참조 무결성",
+   "개체 무결성",
+   "키 무결성"
   ],
-  "hints": [
-   "학년에 7, 성별에 '기타', 나이에 '스무살'(숫자 칸에 글자) → 모두 위반"
-  ]
+  "correct": "도메인 무결성",
+  "explain": "<p>한 속성이 허용하는 값의 범위를 제한한다. 다른 행이나 다른 테이블과 비교하는 제약이 아니다.</p>",
+  "hints": []
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "d-i-key",
   "unit": "db",
-  "table": "db:2",
-  "col": "종류",
-  "term": "키 무결성",
-  "sub": "",
-  "meaning": "한 테이블 안에 같은 키 값을 가진 행이 두 개 있으면 안 된다.",
-  "short": "한 테이블 안에 같은 키 값을 가진 행이 두 개 있으면 안 된다",
-  "segments": [],
-  "parts": [
-   {
-    "label": "규칙",
-    "html": "한 테이블 안에 <b>같은 키 값을 가진 행이 두 개 있으면 안 된다</b>.",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "학번 2024001인 학생이 두 줄 있으면 위반",
-    "hint": true
-   }
+  "title": "이메일 중복",
+  "q": "회원 이메일에 UNIQUE 제약을 두었다. 이미 등록된 이메일의 재사용을 막는 이유는?",
+  "pre": "",
+  "options": [
+   "키 값의 유일성을 유지하려고",
+   "외래키의 참조 대상을 유지하려고",
+   "모든 열의 NULL을 금지하려고",
+   "모든 문자열의 길이를 같게 하려고"
   ],
-  "hints": [
-   "학번 2024001인 학생이 두 줄 있으면 위반"
-  ]
+  "correct": "키 값의 유일성을 유지하려고",
+  "explain": "<p>UNIQUE는 같은 키 값의 중복을 제한한다. 모든 열의 NULL을 막거나 문자열 길이를 통일하는 기능은 아니다.</p>",
+  "hints": []
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "d-i-user",
   "unit": "db",
-  "table": "db:2",
-  "col": "종류",
-  "term": "사용자 정의 무결성",
-  "sub": "",
-  "meaning": "회사나 업무에서 정한 추가 규칙을 지켜야 한다.",
-  "short": "회사나 업무에서 정한 추가 규칙을 지켜야 한다",
-  "segments": [],
-  "parts": [
-   {
-    "label": "규칙",
-    "html": "회사나 업무에서 정한 <b>추가 규칙</b>을 지켜야 한다.",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "\"재고는 0 이상\", \"할인율은 50% 이하\" 같은 규칙",
-    "hint": true
-   }
+  "title": "예약 시간",
+  "q": "회의실 예약의 종료 시각은 시작 시각보다 뒤여야 한다는 업무 규칙을 추가했다. 분류는?",
+  "pre": "",
+  "options": [
+   "사용자 정의 무결성",
+   "참조 무결성",
+   "개체 무결성",
+   "키 무결성"
   ],
-  "hints": [
-   "\"재고는 0 이상\", \"할인율은 50% 이하\" 같은 규칙"
-  ]
+  "correct": "사용자 정의 무결성",
+  "explain": "<p>두 속성의 관계에 적용한 업무별 규칙이다. 기본키나 외래키가 없어도 적용할 수 있다.</p>",
+  "hints": []
  },
  {
   "kind": "term",
@@ -1610,251 +1674,140 @@
   ]
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "d-acid-a",
   "unit": "db",
-  "table": "db:6",
-  "col": "특성",
-  "term": "원자성",
-  "sub": "Atomicity",
-  "meaning": "트랜잭션 안의 작업은 전부 성공하거나, 하나라도 실패하면 전부 취소된다. 성공하면 Commit, 취소하면 Rollback.",
-  "short": "트랜잭션 안의 작업은 전부 성공하거나, 하나라도 실패하면 전부 취소된다",
-  "segments": [],
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "트랜잭션 안의 작업은 <b>전부 성공하거나, 하나라도 실패하면 전부 취소</b>된다. 성공하면 Commit, 취소하면 Rollback.",
-    "hint": false
-   },
-   {
-    "label": "계좌이체로 치면",
-    "html": "A 계좌에서 빼기는 됐는데 B 계좌에 넣기가 실패하면 → 빼기도 취소해서 처음 상태로",
-    "hint": true
-   }
+  "title": "이체 실패",
+  "q": "송금자의 잔액을 줄인 뒤 수신자의 잔액을 늘리기 전에 오류가 났다. 앞의 변경까지 취소하는 성질은?",
+  "pre": "",
+  "options": [
+   "원자성",
+   "일관성",
+   "격리성",
+   "영속성"
   ],
-  "hints": [
-   "A 계좌에서 빼기는 됐는데 B 계좌에 넣기가 실패하면 → 빼기도 취소해서 처음 상태로"
-  ]
+  "correct": "원자성",
+  "explain": "<p>트랜잭션의 작업은 모두 반영되거나 모두 취소된다. 영속성은 성공적으로 커밋한 결과가 남는 성질이다.</p>",
+  "hints": []
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "d-acid-c",
   "unit": "db",
-  "table": "db:6",
-  "col": "특성",
-  "term": "일관성",
-  "sub": "Consistency",
-  "meaning": "트랜잭션 전과 후 모두 DB가 규칙에 맞는 올바른 상태여야 한다.",
-  "short": "트랜잭션 전과 후 모두 DB가 규칙에 맞는 올바른 상태여야 한다",
-  "segments": [],
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "트랜잭션 전과 후 모두 DB가 <b>규칙에 맞는 올바른 상태</b>여야 한다.",
-    "hint": false
-   },
-   {
-    "label": "계좌이체로 치면",
-    "html": "이체 전 두 계좌 합계 100만 원이면, 이체 후에도 합계 100만 원",
-    "hint": true
-   }
+  "title": "잔액 규칙",
+  "q": "트랜잭션이 성공한 뒤에도 잔액은 0 이상이라는 데이터베이스 제약을 만족해야 한다. 관련 성질은?",
+  "pre": "",
+  "options": [
+   "일관성",
+   "원자성",
+   "격리성",
+   "영속성"
   ],
-  "hints": [
-   "이체 전 두 계좌 합계 100만 원이면, 이체 후에도 합계 100만 원"
-  ]
+  "correct": "일관성",
+  "explain": "<p>트랜잭션 전후에 정의된 제약을 만족하는 유효한 상태를 유지한다. 격리성은 동시에 실행하는 트랜잭션 사이의 간섭에 관한 성질이다.</p>",
+  "hints": []
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "d-acid-i",
   "unit": "db",
-  "table": "db:6",
-  "col": "특성",
-  "term": "격리성",
-  "sub": "Isolation",
-  "meaning": "여러 트랜잭션이 동시에 실행돼도 서로의 중간 과정을 보거나 끼어들지 않는다.",
-  "short": "여러 트랜잭션이 동시에 실행돼도 서로의 중간 과정을 보거나 끼어들지 않는다",
-  "segments": [],
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "여러 트랜잭션이 동시에 실행돼도 <b>서로의 중간 과정을 보거나 끼어들지 않는다</b>.",
-    "hint": false
-   },
-   {
-    "label": "계좌이체로 치면",
-    "html": "내가 이체하는 도중에 다른 사람이 내 잔액을 조회해도 반쯤 처리된 금액은 안 보임",
-    "hint": true
-   }
+  "title": "동시 주문",
+  "q": "동시에 처리되는 트랜잭션들이 서로의 중간 상태에 간섭하지 않도록 하는 ACID 성질은?",
+  "pre": "",
+  "options": [
+   "격리성",
+   "원자성",
+   "일관성",
+   "영속성"
   ],
-  "hints": [
-   "내가 이체하는 도중에 다른 사람이 내 잔액을 조회해도 반쯤 처리된 금액은 안 보임"
-  ]
+  "correct": "격리성",
+  "explain": "<p>다른 트랜잭션과의 간섭을 제한하는 성질이다. 실제 보장 범위는 격리 수준에 따라 달라진다.</p>",
+  "hints": []
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "d-acid-d",
   "unit": "db",
-  "table": "db:6",
-  "col": "특성",
-  "term": "영속성",
-  "sub": "Durability",
-  "meaning": "Commit으로 완료된 결과는 영구히 저장된다. 서버가 꺼져도 사라지지 않는다.",
-  "short": "Commit으로 완료된 결과는 영구히 저장된다",
-  "segments": [],
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "Commit으로 완료된 결과는 <mark>영구히</mark> 저장된다. 서버가 꺼져도 사라지지 않는다.",
-    "hint": false
-   },
-   {
-    "label": "계좌이체로 치면",
-    "html": "이체 완료 문자를 받은 직후 은행 서버가 꺼져도, 켜 보면 이체 기록이 그대로 있음",
-    "hint": true
-   }
+  "title": "결제 후 재시작",
+  "q": "결제가 커밋된 직후 서버가 재시작됐다. 결제 결과가 사라지지 않아야 한다는 성질은?",
+  "pre": "",
+  "options": [
+   "영속성",
+   "원자성",
+   "일관성",
+   "격리성"
   ],
-  "hints": [
-   "이체 완료 문자를 받은 직후 은행 서버가 꺼져도, 켜 보면 이체 기록이 그대로 있음"
-  ]
+  "correct": "영속성",
+  "explain": "<p>커밋된 결과는 장애 이후에도 유지돼야 한다. 아직 커밋하지 않은 변경을 취소하는 것은 원자성과 관련된다.</p>",
+  "hints": []
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "d-cc-lock",
   "unit": "db",
-  "table": "db:7",
-  "col": "용어",
-  "term": "로킹",
-  "sub": "Locking",
-  "meaning": "데이터를 쓰는 동안 잠가서 다른 트랜잭션이 못 쓰게 한다. 다 쓰면 풀어 준다(Lock → Unlock).",
-  "short": "데이터를 쓰는 동안 잠가서 다른 트랜잭션이 못 쓰게 한다",
-  "segments": [],
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "데이터를 쓰는 동안 <b>잠가서</b> 다른 트랜잭션이 못 쓰게 한다. 다 쓰면 풀어 준다(Lock → Unlock).",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "화장실 문 잠그기. 쓰는 동안 다른 사람은 기다림",
-    "hint": true
-   }
+  "title": "재고 동시 수정",
+  "q": "두 트랜잭션이 같은 재고를 고치려 한다. 먼저 수정하는 쪽이 잠금을 잡고 다른 쪽을 기다리게 하는 기법은?",
+  "pre": "",
+  "options": [
+   "로킹",
+   "낙관적 검증",
+   "타임스탬프 순서 제어",
+   "다중 버전 읽기"
   ],
-  "hints": [
-   "화장실 문 잠그기. 쓰는 동안 다른 사람은 기다림"
-  ]
+  "correct": "로킹",
+  "explain": "<p>잠금으로 충돌하는 접근을 제어한다. 낙관적 검증은 실행을 진행한 뒤 검증 단계에서 충돌을 확인한다.</p>",
+  "hints": []
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "d-cc-ts",
   "unit": "db",
-  "table": "db:7",
-  "col": "용어",
-  "term": "타임스탬프 / 낙관적 검증 / 다중 버전",
-  "sub": "",
-  "meaning": "타임스탬프: 먼저 시작한 트랜잭션 순서대로 처리. 낙관적 검증: 일단 다 실행하고 끝날 때 충돌 검사. 다중 버전(MVCC): 데이터 버전을 여러 개 두고 각자 맞는 버전을 읽음.",
-  "short": "타임스탬프: 먼저 시작한 트랜잭션 순서대로 처리",
-  "segments": [
-   {
-    "label": "타임스탬프",
-    "text": "먼저 시작한 트랜잭션 순서대로 처리"
-   },
-   {
-    "label": "낙관적 검증",
-    "text": "일단 다 실행하고 끝날 때 충돌 검사"
-   },
-   {
-    "label": "다중 버전(MVCC)",
-    "text": "데이터 버전을 여러 개 두고 각자 맞는 버전을 읽음"
-   }
+  "title": "충돌을 나중에 검사",
+  "q": "충돌이 드물다고 보고 작업을 진행한 뒤, 커밋 전에 읽고 쓴 데이터의 충돌을 확인한다. 기법은?",
+  "pre": "",
+  "options": [
+   "낙관적 검증",
+   "로킹",
+   "타임스탬프 순서 제어",
+   "다중 버전 읽기"
   ],
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "<b>타임스탬프</b>: 먼저 시작한 트랜잭션 순서대로 처리. <b>낙관적 검증</b>: 일단 다 실행하고 끝날 때 충돌 검사. <b>다중 버전(MVCC)</b>: 데이터 버전을 여러 개 두고 각자 맞는 버전을 읽음.",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "로킹 말고 다른 병행 제어 방법들. 번호표 순서대로 / 일단 하고 나중에 확인 / 복사본 여러 개",
-    "hint": true
-   }
-  ],
-  "hints": [
-   "로킹 말고 다른 병행 제어 방법들. 번호표 순서대로 / 일단 하고 나중에 확인 / 복사본 여러 개"
-  ]
+  "correct": "낙관적 검증",
+  "explain": "<p>작업 뒤 검증하는 방식이다. 타임스탬프 순서 제어는 부여한 시간 순서를 기준으로 충돌 작업을 허용하거나 거절한다.</p>",
+  "hints": []
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "d-rc-redo",
   "unit": "db",
-  "table": "db:7",
-  "col": "용어",
-  "term": "REDO / UNDO",
-  "sub": "",
-  "meaning": "REDO: Commit까지 끝난 작업을 다시 실행해서 결과를 살림. UNDO: Commit 못 한 덜 끝난 작업을 되돌려서 없앰.",
-  "short": "REDO: Commit까지 끝난 작업을 다시 실행해서 결과를 살림",
-  "segments": [
-   {
-    "label": "REDO",
-    "text": "Commit까지 끝난 작업을 다시 실행해서 결과를 살림"
-   },
-   {
-    "label": "UNDO",
-    "text": "Commit 못 한 덜 끝난 작업을 되돌려서 없앰"
-   }
+  "title": "장애 뒤 복구",
+  "q": "커밋 기록은 로그에 있지만 변경된 페이지가 디스크에 반영되기 전에 장애가 났다. 필요한 작업은?",
+  "pre": "",
+  "options": [
+   "REDO",
+   "UNDO",
+   "REDO와 UNDO 모두",
+   "복구 작업 없음"
   ],
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "<b>REDO</b>: Commit까지 <mark>끝난 작업</mark>을 다시 실행해서 결과를 살림. <b>UNDO</b>: Commit 못 한 <mark>덜 끝난 작업</mark>을 되돌려서 없앰.",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "장애 후 회복할 때: 끝낸 숙제는 다시 써 두기(Redo), 쓰다 만 숙제는 지우기(Undo)",
-    "hint": true
-   }
-  ],
-  "hints": [
-   "장애 후 회복할 때: 끝낸 숙제는 다시 써 두기(Redo), 쓰다 만 숙제는 지우기(Undo)"
-  ]
+  "correct": "REDO",
+  "explain": "<p>커밋한 변경을 로그에서 다시 반영한다. UNDO는 미완료 트랜잭션의 변경을 되돌린다.</p>",
+  "hints": []
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "d-rc-etc",
   "unit": "db",
-  "table": "db:7",
-  "col": "용어",
-  "term": "체크포인트 / 그림자 페이징",
-  "sub": "",
-  "meaning": "체크포인트: 중간중간 저장 지점을 찍어 두고, 장애가 나면 그 지점부터만 회복. 그림자 페이징: 원본(그림자) 페이지를 따로 보관하다가 실패하면 그걸로 바꿔 끼움.",
-  "short": "체크포인트: 중간중간 저장 지점을 찍어 두고, 장애가 나면 그 지점부터만 회복",
-  "segments": [
-   {
-    "label": "체크포인트",
-    "text": "중간중간 저장 지점을 찍어 두고, 장애가 나면 그 지점부터만 회복"
-   },
-   {
-    "label": "그림자 페이징",
-    "text": "원본(그림자) 페이지를 따로 보관하다가 실패하면 그걸로 바꿔 끼움"
-   }
+  "title": "페이지 교체",
+  "q": "수정 전 페이지를 보존하고 복사본을 수정한다. 성공하면 새 페이지 테이블로 전환하는 회복 기법은?",
+  "pre": "",
+  "options": [
+   "그림자 페이징",
+   "체크포인트",
+   "로그 기반 REDO",
+   "로그 기반 UNDO"
   ],
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "<b>체크포인트</b>: 중간중간 저장 지점을 찍어 두고, 장애가 나면 그 지점부터만 회복. <b>그림자 페이징</b>: 원본(그림자) 페이지를 따로 보관하다가 실패하면 그걸로 바꿔 끼움.",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "체크포인트 = 게임 세이브 포인트, 그림자 페이징 = 원본 백업본",
-    "hint": true
-   }
-  ],
-  "hints": [
-   "○○ = 게임 세이브 포인트, ○○ = 원본 백업본"
-  ]
+  "correct": "그림자 페이징",
+  "explain": "<p>원본 페이지를 보존하는 방식이다. 체크포인트는 복구에 필요한 작업 범위를 줄이기 위한 저장 지점이다.</p>",
+  "hints": []
  },
  {
   "kind": "term",
@@ -2460,278 +2413,157 @@
   ]
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "n-tcp",
   "unit": "net",
-  "table": "net:2",
-  "col": "용어",
-  "term": "TCP",
-  "sub": "Transmission Control Protocol",
-  "meaning": "연결을 맺고, 빠짐없이 순서대로 도착했는지 확인하며 보낸다. 못 받은 건 다시 보낸다.",
-  "short": "연결을 맺고, 빠짐없이 순서대로 도착했는지 확인하며 보낸다",
-  "segments": [],
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "<b>연결을 맺고</b>, <b>빠짐없이 순서대로</b> 도착했는지 확인하며 보낸다. 못 받은 건 다시 보낸다.",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "등기 우편. 도착 확인까지 받아서 느리지만 확실함. 웹, 이메일, 파일 전송에 사용",
-    "hint": true
-   }
+  "title": "파일 전송",
+  "q": "파일의 모든 바이트를 순서대로 전달하고 손실 시 재전송하는 전송 계층 프로토콜은?",
+  "pre": "",
+  "options": [
+   "TCP",
+   "UDP",
+   "IP",
+   "ICMP"
   ],
-  "hints": [
-   "등기 우편. 도착 확인까지 받아서 느리지만 확실함. 웹, 이메일, 파일 전송에 사용"
-  ]
+  "correct": "TCP",
+  "explain": "<p>TCP는 신뢰성 있는 바이트 스트림을 제공한다. UDP는 전달·순서를 보장하지 않으며 IP는 네트워크 계층이다.</p>",
+  "hints": []
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "n-udp",
   "unit": "net",
-  "table": "net:2",
-  "col": "용어",
-  "term": "UDP",
-  "sub": "User Datagram Protocol",
-  "meaning": "연결 없이 그냥 바로 보내는 방식. 도착 확인을 안 해서 빠르지만 중간에 빠져도 모른다.",
-  "short": "연결 없이 그냥 바로 보내는 방식",
-  "segments": [],
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "연결 없이 <b>그냥 바로 보내는</b> 방식. 도착 확인을 안 해서 빠르지만 중간에 빠져도 모른다.",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "전단지 뿌리기. 조금 빠져도 괜찮고 빠른 게 중요한 곳: 영상 스트리밍, 게임, DNS",
-    "hint": true
-   }
+  "title": "실시간 데이터그램",
+  "q": "앱이 재전송 여부를 직접 정하고 전송 계층의 연결 설정 없이 데이터그램을 보내려 한다. 선택은?",
+  "pre": "",
+  "options": [
+   "UDP",
+   "TCP",
+   "IP",
+   "ICMP"
   ],
-  "hints": [
-   "전단지 뿌리기. 조금 빠져도 괜찮고 빠른 게 중요한 곳: 영상 스트리밍, 게임, DNS"
-  ]
+  "correct": "UDP",
+  "explain": "<p>UDP는 연결 설정 없는 전송 계층 데이터그램 서비스다. TCP는 연결과 재전송을 관리한다.</p>",
+  "hints": []
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "n-ip",
   "unit": "net",
-  "table": "net:2",
-  "col": "용어",
-  "term": "IPv4 / IPv6",
-  "sub": "",
-  "meaning": "IPv4 = 32비트, 8비트씩 4덩어리를 점으로 구분 (192.168.0.1). IPv6 = 128비트, 16비트씩 8덩어리를 콜론으로 구분 (2001:db8::1).",
-  "short": "IPv4 = 32비트, 8비트씩 4덩어리를 점으로 구분 (192.168.0.1)",
-  "segments": [
-   {
-    "label": "IPv4",
-    "text": "32비트, 8비트씩 4덩어리를 점으로 구분 (192.168.0.1)"
-   },
-   {
-    "label": "IPv6",
-    "text": "128비트, 16비트씩 8덩어리를 콜론으로 구분 (2001:db8::1)"
-   }
+  "title": "주소 길이",
+  "q": "2001:db8::1처럼 콜론으로 구분한 128비트 주소를 사용하는 인터넷 프로토콜은?",
+  "pre": "",
+  "options": [
+   "IPv6",
+   "IPv4",
+   "ARP",
+   "ICMP"
   ],
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "IPv4 = <mark>32비트</mark>, 8비트씩 4덩어리를 점으로 구분 (192.168.0.1). IPv6 = <mark>128비트</mark>, 16비트씩 8덩어리를 콜론으로 구분 (2001:db8::1).",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "IPv4 주소가 부족해서 IPv6가 나옴. IPv6에는 <b>브로드캐스트가 없고</b> 유니캐스트(1:1)·멀티캐스트(1:그룹)·애니캐스트(1:가장 가까운 하나)가 있음",
-    "hint": true
-   }
-  ],
-  "hints": [
-   "○○ 주소가 부족해서 ○○가 나옴. ○○에는 <b>브로드캐스트가 없고</b> 유니캐스트(1:1)·멀티캐스트(1:그룹)·애니캐스트(1:가장 가까운 하나)가 있음"
-  ]
+  "correct": "IPv6",
+  "explain": "<p>IPv6 주소는 128비트다. IPv4는 32비트이고 ARP는 주소를 변환하기 위한 프로토콜이다.</p>",
+  "hints": []
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "n-arp",
   "unit": "net",
-  "table": "net:2",
-  "col": "용어",
-  "term": "ARP / RARP",
-  "sub": "Address Resolution Protocol",
-  "meaning": "ARP: IP 주소로 MAC 주소를 알아낸다(MAC = 랜카드 고유 번호). RARP: 반대로 MAC 주소로 IP 주소를 알아낸다.",
-  "short": "ARP: IP 주소로 MAC 주소를 알아낸다(MAC = 랜카드 고유 번호)",
-  "segments": [
-   {
-    "label": "ARP",
-    "text": "IP 주소로 MAC 주소를 알아낸다(MAC = 랜카드 고유 번호)"
-   },
-   {
-    "label": "RARP",
-    "text": "반대로 MAC 주소로 IP 주소를 알아낸다"
-   }
+  "title": "같은 LAN의 목적지",
+  "q": "같은 IPv4 LAN의 목적지 IP는 알지만 이더넷 프레임에 넣을 MAC 주소를 모른다. 무엇을 사용할까?",
+  "pre": "",
+  "options": [
+   "ARP",
+   "RARP",
+   "DNS",
+   "DHCP"
   ],
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "<b>ARP</b>: IP 주소로 <b>MAC 주소</b>를 알아낸다(MAC = 랜카드 고유 번호). <b>RARP</b>: 반대로 MAC 주소로 IP 주소를 알아낸다.",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "R = Reverse(거꾸로). ARP = 이름(IP)으로 얼굴(MAC) 찾기",
-    "hint": true
-   }
-  ],
-  "hints": [
-   "R = Reverse(거꾸로). ○○ = 이름(IP)으로 얼굴(MAC) 찾기"
-  ]
+  "correct": "ARP",
+  "explain": "<p>ARP는 IPv4 주소에 대응하는 링크 계층 주소를 알아낸다. DNS는 도메인 이름을 조회하고 DHCP는 주소를 할당한다.</p>",
+  "hints": []
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "n-icmp",
   "unit": "net",
-  "table": "net:2",
-  "col": "용어",
-  "term": "ICMP",
-  "sub": "Internet Control Message Protocol",
-  "meaning": "네트워크에서 오류가 났거나 상태를 알려줄 때 쓰는 메시지 프로토콜. \"목적지에 도달할 수 없음\" 같은 알림.",
-  "short": "네트워크에서 오류가 났거나 상태를 알려줄 때 쓰는 메시지 프로토콜",
-  "segments": [],
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "네트워크에서 <b>오류가 났거나 상태를 알려줄 때</b> 쓰는 메시지 프로토콜. \"목적지에 도달할 수 없음\" 같은 알림.",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "<code>ping</code> 명령어가 ICMP를 씀. Smurf, Ping of Death 공격에도 등장",
-    "hint": true
-   }
+  "title": "네트워크 진단",
+  "q": "ping이 보내는 Echo Request와 받는 Echo Reply에 쓰이는 프로토콜은?",
+  "pre": "",
+  "options": [
+   "ICMP",
+   "TCP",
+   "UDP",
+   "ARP"
   ],
-  "hints": [
-   "<code>ping</code> 명령어가 ○○를 씀. Smurf, Ping of Death 공격에도 등장"
-  ]
+  "correct": "ICMP",
+  "explain": "<p>ping의 에코 메시지는 ICMP를 사용한다. TCP·UDP 포트 번호를 지정해 보내는 요청이 아니다.</p>",
+  "hints": []
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "n-dns",
   "unit": "net",
-  "table": "net:2",
-  "col": "용어",
-  "term": "DNS",
-  "sub": "Domain Name System",
-  "meaning": "도메인 이름(naver.com)을 IP 주소로 바꿔 준다. 사람은 이름을 외우고, 컴퓨터는 IP로 찾아간다.",
-  "short": "도메인 이름(naver.com)을 IP 주소로 바꿔 준다",
-  "segments": [],
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "<b>도메인 이름</b>(naver.com)을 <b>IP 주소</b>로 바꿔 준다. 사람은 이름을 외우고, 컴퓨터는 IP로 찾아간다.",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "전화번호부. 이름을 찾으면 번호가 나옴. 포트 53",
-    "hint": true
-   }
+  "title": "호스트 찾기",
+  "q": "브라우저가 www.example.com에 접속하기 전에 해당 이름의 IP 주소를 조회한다. 사용하는 서비스는?",
+  "pre": "",
+  "options": [
+   "DNS",
+   "DHCP",
+   "ARP",
+   "NAT"
   ],
-  "hints": [
-   "전화번호부. 이름을 찾으면 번호가 나옴. 포트 53"
-  ]
+  "correct": "DNS",
+  "explain": "<p>DNS는 이름에 대응하는 주소 등의 레코드를 조회한다. DHCP는 호스트에 주소 설정을 제공한다.</p>",
+  "hints": []
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "n-dhcp",
   "unit": "net",
-  "table": "net:2",
-  "col": "용어",
-  "term": "DHCP",
-  "sub": "Dynamic Host Configuration Protocol",
-  "meaning": "네트워크에 접속한 기기에 IP 주소를 자동으로 빌려 준다.",
-  "short": "네트워크에 접속한 기기에 IP 주소를 자동으로 빌려 준다",
-  "segments": [],
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "네트워크에 접속한 기기에 <b>IP 주소를 자동으로 빌려 준다</b>.",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "카페 와이파이에 붙으면 IP를 직접 안 넣어도 인터넷이 되는 이유",
-    "hint": true
-   }
+  "title": "새 노트북 연결",
+  "q": "새 노트북이 네트워크에서 IP 주소·서브넷 마스크·기본 게이트웨이를 자동으로 임대받는다. 사용하는 프로토콜은?",
+  "pre": "",
+  "options": [
+   "DHCP",
+   "DNS",
+   "ARP",
+   "ICMP"
   ],
-  "hints": [
-   "카페 와이파이에 붙으면 IP를 직접 안 넣어도 인터넷이 되는 이유"
-  ]
+  "correct": "DHCP",
+  "explain": "<p>DHCP는 네트워크 설정을 임대한다. DNS는 이름 조회, ARP는 같은 링크에서의 주소 해석이다.</p>",
+  "hints": []
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "n-nat",
   "unit": "net",
-  "table": "net:2",
-  "col": "용어",
-  "term": "NAT",
-  "sub": "Network Address Translation",
-  "meaning": "내부에서 쓰는 사설 IP를 인터넷에 나갈 때 공인 IP로 바꿔 준다. 공인 IP 하나로 여러 기기가 인터넷을 쓴다.",
-  "short": "내부에서 쓰는 사설 IP를 인터넷에 나갈 때 공인 IP로 바꿔 준다",
-  "segments": [],
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "내부에서 쓰는 <b>사설 IP</b>를 인터넷에 나갈 때 <b>공인 IP</b>로 바꿔 준다. 공인 IP 하나로 여러 기기가 인터넷을 쓴다.",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "회사 대표번호 하나로 여러 내선 전화를 쓰는 것. 집 공유기가 하는 일",
-    "hint": true
-   }
+  "title": "사설 주소의 외부 접속",
+  "q": "공유기가 외부로 보내는 패킷의 출발지 사설 IP를 공인 IP로 바꾼다. 이 기능은?",
+  "pre": "",
+  "options": [
+   "NAT",
+   "DNS",
+   "DHCP",
+   "ARP"
   ],
-  "hints": [
-   "회사 대표번호 하나로 여러 내선 전화를 쓰는 것. 집 공유기가 하는 일"
-  ]
+  "correct": "NAT",
+  "explain": "<p>네트워크 주소 변환이다. DNS 이름 조회나 DHCP의 주소 임대와는 다르다.</p>",
+  "hints": []
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "n-rip",
   "unit": "net",
-  "table": "net:2",
-  "col": "용어",
-  "term": "RIP / OSPF / BGP",
-  "sub": "",
-  "meaning": "RIP: 거리(거쳐 가는 라우터 수, 홉)로 길을 고름. 최대 15홉, 소규모용. OSPF: 네트워크 전체 지도(링크 상태)를 보고 고름, 대규모용. BGP: 서로 다른 조직 네트워크(AS)끼리 길을 주고받음.",
-  "short": "RIP: 거리(거쳐 가는 라우터 수, 홉)로 길을 고름",
-  "segments": [
-   {
-    "label": "RIP",
-    "text": "거리(거쳐 가는 라우터 수, 홉)로 길을 고름"
-   },
-   {
-    "label": "OSPF",
-    "text": "네트워크 전체 지도(링크 상태)를 보고 고름, 대규모용"
-   },
-   {
-    "label": "BGP",
-    "text": "서로 다른 조직 네트워크(AS)끼리 길을 주고받음"
-   }
+  "title": "라우팅 경로 선택",
+  "q": "같은 AS 안에서 링크 상태를 공유하고 최단 경로를 계산하는 프로토콜은?",
+  "pre": "",
+  "options": [
+   "OSPF",
+   "RIP",
+   "BGP",
+   "정적 라우팅"
   ],
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "<b>RIP</b>: 거리(거쳐 가는 라우터 수, 홉)로 길을 고름. <mark>최대 15홉</mark>, 소규모용. <b>OSPF</b>: 네트워크 전체 지도(링크 상태)를 보고 고름, 대규모용. <b>BGP</b>: 서로 다른 조직 네트워크(AS)끼리 길을 주고받음.",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "RIP = 정거장 수만 셈, OSPF = 지도 앱처럼 전체 상황 보고 판단, BGP = 나라끼리 국경 도로 협의",
-    "hint": true
-   }
-  ],
-  "hints": [
-   "○○ = 정거장 수만 셈, ○○ = 지도 앱처럼 전체 상황 보고 판단, ○○ = 나라끼리 국경 도로 협의"
-  ]
+  "correct": "OSPF",
+  "explain": "<p>OSPF는 링크 상태 기반이다. RIP는 홉 수를 사용하며 BGP는 AS 간 경로 교환에 사용한다.</p>",
+  "hints": []
  },
  {
   "kind": "term",
@@ -3714,308 +3546,155 @@
   ]
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "x-sym",
   "unit": "sec",
-  "table": "sec:5",
-  "col": "용어",
-  "term": "대칭키 암호",
-  "sub": "",
-  "meaning": "암호화할 때와 풀 때 같은 키 하나를 쓴다. 빠르지만 키를 안전하게 나눠 주기가 어렵다. 종류: DES, AES, SEED, ARIA.",
-  "short": "암호화할 때와 풀 때 같은 키 하나를 쓴다",
-  "segments": [],
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "암호화할 때와 풀 때 <b>같은 키 하나</b>를 쓴다. 빠르지만 키를 안전하게 나눠 주기가 어렵다. 종류: <mark>DES, AES, SEED, ARIA</mark>.",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "집 열쇠 하나를 복사해 나눠 갖기. SEED와 ARIA는 한국에서 만든 것",
-    "hint": true
-   }
+  "title": "파일 암호화",
+  "q": "파일을 잠글 때와 풀 때 동일한 비밀키를 사용한다. 방식은?",
+  "pre": "",
+  "options": [
+   "대칭키 암호",
+   "비대칭키 암호",
+   "해시",
+   "전자서명"
   ],
-  "hints": [
-   "집 열쇠 하나를 복사해 나눠 갖기. SEED와 ARIA는 한국에서 만든 것"
-  ]
+  "correct": "대칭키 암호",
+  "explain": "<p>대칭키는 암호화와 복호화에 같은 키를 사용한다. 해시는 원문 복호화를 위한 방식이 아니다.</p>",
+  "hints": []
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "x-asym",
   "unit": "sec",
-  "table": "sec:5",
-  "col": "용어",
-  "term": "비대칭키(공개키) 암호",
-  "sub": "",
-  "meaning": "공개키(누구나 가짐)로 잠그고 개인키(나만 가짐)로 연다. 키 나눠 주기 문제가 없지만 느리다. 종류: RSA, ECC, ElGamal.",
-  "short": "공개키(누구나 가짐)로 잠그고 개인키(나만 가짐)로 연다",
-  "segments": [],
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "<b>공개키</b>(누구나 가짐)로 잠그고 <b>개인키</b>(나만 가짐)로 연다. 키 나눠 주기 문제가 없지만 느리다. 종류: <mark>RSA, ECC, ElGamal</mark>.",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "우체통: 편지는 누구나 넣을 수 있지만(공개키) 꺼내는 건 열쇠 가진 주인만(개인키)",
-    "hint": true
-   }
+  "title": "수신자에게 비밀 전달",
+  "q": "수신자의 공개키로 암호화한 데이터를 수신자의 개인키로 복호화한다. 방식은?",
+  "pre": "",
+  "options": [
+   "비대칭키 암호",
+   "대칭키 암호",
+   "해시",
+   "메시지 인증 코드"
   ],
-  "hints": [
-   "우체통: 편지는 누구나 넣을 수 있지만(공개키) 꺼내는 건 열쇠 가진 주인만(개인키)"
-  ]
+  "correct": "비대칭키 암호",
+  "explain": "<p>공개키와 개인키 쌍을 사용한다. 메시지 인증 코드는 공유 비밀키로 무결성과 인증을 확인하며 암호문을 복호화하는 방식이 아니다.</p>",
+  "hints": []
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "x-hash",
   "unit": "sec",
-  "table": "sec:5",
-  "col": "용어",
-  "term": "해시",
-  "sub": "MD5, SHA",
-  "meaning": "어떤 데이터든 정해진 길이의 값으로 바꾼다. 거꾸로 원래 값을 알아낼 수 없다. 데이터가 바뀌었는지(무결성) 확인할 때 쓴다. 종류: MD5, SHA.",
-  "short": "어떤 데이터든 정해진 길이의 값으로 바꾼다",
-  "segments": [],
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "어떤 데이터든 <b>정해진 길이의 값</b>으로 바꾼다. 거꾸로 원래 값을 알아낼 수 없다. 데이터가 바뀌었는지(무결성) 확인할 때 쓴다. 종류: MD5, SHA.",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "사람의 지문. 지문으로 사람을 되살릴 순 없지만 같은 사람인지는 알 수 있음. 비밀번호도 해시로 저장",
-    "hint": true
-   }
+  "title": "다운로드 검사",
+  "q": "배포자가 공개한 SHA-256 값과 내려받은 파일의 계산값을 비교한다. 주로 확인하는 것은?",
+  "pre": "",
+  "options": [
+   "파일 내용의 무결성",
+   "파일 내용의 기밀성",
+   "송신자의 개인키 보유 여부",
+   "사용자의 접근 권한"
   ],
-  "hints": [
-   "사람의 지문. 지문으로 사람을 되살릴 순 없지만 같은 사람인지는 알 수 있음. 비밀번호도 ○○로 저장"
-  ]
+  "correct": "파일 내용의 무결성",
+  "explain": "<p>신뢰할 수 있는 경로로 받은 해시와 비교하면 내용 변경을 확인할 수 있다. 해시 자체는 암호화나 송신자 서명을 대신하지 않는다.</p>",
+  "hints": []
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "x-mac",
   "unit": "sec",
-  "table": "sec:5",
-  "col": "용어",
-  "term": "MAC / DAC / RBAC",
-  "sub": "",
-  "meaning": "MAC(강제적): 관리자가 정한 보안 등급으로 접근을 강제로 통제. DAC(임의적): 데이터 주인이 누구에게 줄지 마음대로 정함. RBAC(역할 기반): 직급·역할에 따라 권한을 줌.",
-  "short": "MAC(강제적): 관리자가 정한 보안 등급으로 접근을 강제로 통제",
-  "segments": [
-   {
-    "label": "MAC(강제적)",
-    "text": "관리자가 정한 보안 등급으로 접근을 강제로 통제"
-   },
-   {
-    "label": "DAC(임의적)",
-    "text": "데이터 주인이 누구에게 줄지 마음대로 정함"
-   },
-   {
-    "label": "RBAC(역할 기반)",
-    "text": "직급·역할에 따라 권한을 줌"
-   }
+  "title": "인사 이동",
+  "q": "직원이 개발팀에서 회계팀으로 이동하자 역할을 바꿔 회계 시스템 권한을 부여했다. 접근통제 방식은?",
+  "pre": "",
+  "options": [
+   "RBAC",
+   "MAC",
+   "DAC"
   ],
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "<b>MAC</b>(강제적): 관리자가 정한 <b>보안 등급</b>으로 접근을 강제로 통제. <b>DAC</b>(임의적): 데이터 <b>주인</b>이 누구에게 줄지 마음대로 정함. <b>RBAC</b>(역할 기반): <b>직급·역할</b>에 따라 권한을 줌.",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "MAC = 군대 비밀 등급(Mandatory 강제). DAC = 내 구글 드라이브 공유 설정(Discretionary 재량). RBAC = 팀장이면 결재 권한(Role)",
-    "hint": true
-   }
-  ],
-  "hints": [
-   "○○ = 군대 비밀 등급(Mandatory 강제). ○○ = 내 구글 드라이브 공유 설정(Discretionary 재량). ○○ = 팀장이면 결재 권한(Role)"
-  ]
+  "correct": "RBAC",
+  "explain": "<p>역할에 권한을 연결한다. MAC은 보안 등급, DAC은 자원 소유자의 재량을 중심으로 통제한다.</p>",
+  "hints": []
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "x-ids",
   "unit": "sec",
-  "table": "sec:5",
-  "col": "용어",
-  "term": "방화벽 / IDS / IPS",
-  "sub": "",
-  "meaning": "방화벽: 정해 둔 규칙대로 통과·차단. IDS: 침입을 탐지하고 알리기만 함. IPS: 침입을 탐지해서 차단까지 함.",
-  "short": "방화벽: 정해 둔 규칙대로 통과·차단",
-  "segments": [
-   {
-    "label": "방화벽",
-    "text": "정해 둔 규칙대로 통과·차단"
-   },
-   {
-    "label": "IDS",
-    "text": "침입을 탐지하고 알리기만 함"
-   },
-   {
-    "label": "IPS",
-    "text": "침입을 탐지해서 차단까지 함"
-   }
+  "title": "침입 장비 동작",
+  "q": "의심 트래픽을 탐지해 관리자에게 알리지만 직접 차단하지 않는 장비는?",
+  "pre": "",
+  "options": [
+   "IDS",
+   "IPS",
+   "방화벽"
   ],
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "<b>방화벽</b>: 정해 둔 규칙대로 통과·차단. <b>IDS</b>: 침입을 <mark>탐지</mark>하고 알리기만 함. <b>IPS</b>: 침입을 탐지해서 <mark>차단</mark>까지 함.",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "IDS = Detection = CCTV(보고 알림만), IPS = Prevention = 경비원(보고 막음)",
-    "hint": true
-   }
-  ],
-  "hints": [
-   "○○ = Detection = CCTV(보고 알림만), ○○ = Prevention = 경비원(보고 막음)"
-  ]
+  "correct": "IDS",
+  "explain": "<p>IDS는 탐지·알림을 담당한다. IPS는 침입 방지와 차단까지 수행하고 방화벽은 접근 규칙에 따라 트래픽을 제어한다.</p>",
+  "hints": []
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "x-honey",
   "unit": "sec",
-  "table": "sec:5",
-  "col": "용어",
-  "term": "허니팟",
-  "sub": "Honeypot",
-  "meaning": "일부러 허술한 가짜 시스템으로 공격자를 끌어들여 관찰한다. 공격 방법을 기록해 방어에 쓴다.",
-  "short": "일부러 허술한 가짜 시스템으로 공격자를 끌어들여 관찰한다",
-  "segments": [],
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "일부러 <b>허술한 가짜 시스템</b>으로 공격자를 끌어들여 관찰한다. 공격 방법을 기록해 방어에 쓴다.",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "꿀단지(Honey pot)로 벌레를 모으는 함정",
-    "hint": true
-   }
+  "title": "공격자 관찰",
+  "q": "실제 운영 데이터 대신 가짜 자료를 둔 취약한 서버로 공격자를 유도해 행동을 관찰한다. 무엇인가?",
+  "pre": "",
+  "options": [
+   "허니팟",
+   "방화벽",
+   "IDS",
+   "IPS"
   ],
-  "hints": [
-   "꿀단지(Honey pot)로 벌레를 모으는 함정"
-  ]
+  "correct": "허니팟",
+  "explain": "<p>유인용 시스템 자체가 허니팟이다. 탐지 장비나 차단 장비를 설치하는 것과는 목적과 형태가 다르다.</p>",
+  "hints": []
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "x-vpn",
   "unit": "sec",
-  "table": "sec:5",
-  "col": "용어",
-  "term": "VPN / SSO",
-  "sub": "",
-  "meaning": "VPN: 공용망 위에 암호화된 전용 통로를 만들어 사설망처럼 쓴다. SSO: 한 번 로그인으로 여러 서비스를 이어서 쓴다.",
-  "short": "VPN: 공용망 위에 암호화된 전용 통로를 만들어 사설망처럼 쓴다",
-  "segments": [
-   {
-    "label": "VPN",
-    "text": "공용망 위에 암호화된 전용 통로를 만들어 사설망처럼 쓴다"
-   },
-   {
-    "label": "SSO",
-    "text": "한 번 로그인으로 여러 서비스를 이어서 쓴다"
-   }
+  "title": "원격 사내 접속",
+  "q": "외부 직원이 인터넷 위의 암호화된 터널로 사내망에 접속한다. 사용하는 기술은?",
+  "pre": "",
+  "options": [
+   "VPN",
+   "SSO",
+   "NAT",
+   "프록시 캐시"
   ],
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "<b>VPN</b>: 공용망 위에 <b>암호화된 전용 통로</b>를 만들어 사설망처럼 쓴다. <b>SSO</b>: <b>한 번 로그인</b>으로 여러 서비스를 이어서 쓴다.",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "VPN = 공용 도로 위의 전용 터널. SSO = Single Sign-On, 구글 로그인 한 번으로 유튜브·지메일 다 쓰기",
-    "hint": true
-   }
-  ],
-  "hints": [
-   "○○ = 공용 도로 위의 전용 터널. ○○ = Single Sign-On, 구글 로그인 한 번으로 유튜브·지메일 다 쓰기"
-  ]
+  "correct": "VPN",
+  "explain": "<p>VPN은 네트워크 통신 경로를 보호한다. SSO는 로그인 연계이며 통신 터널을 만드는 기능은 아니다.</p>",
+  "hints": []
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "x-proto",
   "unit": "sec",
-  "table": "sec:5",
-  "col": "용어",
-  "term": "SSL/TLS · IPSec",
-  "sub": "",
-  "meaning": "SSL/TLS: 웹 브라우저와 서버 사이 통신을 암호화 (HTTPS). IPSec: IP 계층(3계층)에서 암호화. AH(인증·무결성)와 ESP(암호화까지)로 구성.",
-  "short": "SSL/TLS: 웹 브라우저와 서버 사이 통신을 암호화 (HTTPS)",
-  "segments": [
-   {
-    "label": "SSL/TLS",
-    "text": "웹 브라우저와 서버 사이 통신을 암호화 (HTTPS)"
-   },
-   {
-    "label": "IPSec",
-    "text": "IP 계층(3계층)에서 암호화"
-   }
+  "title": "웹 연결 보호",
+  "q": "브라우저와 웹 서버 사이의 HTTPS 연결을 보호하는 프로토콜은?",
+  "pre": "",
+  "options": [
+   "TLS",
+   "IPSec",
+   "SSH",
+   "S/MIME"
   ],
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "<b>SSL/TLS</b>: 웹 브라우저와 서버 사이 통신을 암호화 (HTTPS). <b>IPSec</b>: IP 계층(3계층)에서 암호화. AH(인증·무결성)와 ESP(암호화까지)로 구성.",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "IPSec 모드 두 가지: 전송 모드(데이터만 보호), 터널 모드(패킷 전체를 보호, VPN에 사용)",
-    "hint": true
-   }
-  ],
-  "hints": [
-   "IPSec 모드 두 가지: 전송 모드(데이터만 보호), 터널 모드(패킷 전체를 보호, VPN에 사용)"
-  ]
+  "correct": "TLS",
+  "explain": "<p>HTTPS는 TLS를 사용한다. IPSec은 IP 계층, SSH는 원격 접속, S/MIME은 전자우편 보호에 사용한다.</p>",
+  "hints": []
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "x-auth",
   "unit": "sec",
-  "table": "sec:5",
-  "col": "용어",
-  "term": "지식 / 소유 / 존재 / 행위",
-  "sub": "인증 유형",
-  "meaning": "지식: 아는 것으로 확인 (비밀번호, PIN). 소유: 가진 것으로 확인 (OTP, 스마트카드). 존재: 내 몸 자체로 확인 (지문, 홍채, 얼굴). 행위: 내 행동으로 확인 (서명, 걸음걸이, 목소리).",
-  "short": "지식: 아는 것으로 확인 (비밀번호, PIN)",
-  "segments": [
-   {
-    "label": "지식",
-    "text": "아는 것으로 확인 (비밀번호, PIN)"
-   },
-   {
-    "label": "소유",
-    "text": "가진 것으로 확인 (OTP, 스마트카드)"
-   },
-   {
-    "label": "존재",
-    "text": "내 몸 자체로 확인 (지문, 홍채, 얼굴)"
-   },
-   {
-    "label": "행위",
-    "text": "내 행동으로 확인 (서명, 걸음걸이, 목소리)"
-   }
+  "title": "인증 수단",
+  "q": "스마트카드나 OTP 기기를 가지고 있는지 확인한다. 인증 요소의 분류는?",
+  "pre": "",
+  "options": [
+   "소유 기반",
+   "지식 기반",
+   "존재 기반",
+   "행위 기반"
   ],
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "<b>지식</b>: 아는 것으로 확인 (비밀번호, PIN). <b>소유</b>: 가진 것으로 확인 (OTP, 스마트카드). <b>존재</b>: 내 몸 자체로 확인 (지문, 홍채, 얼굴). <b>행위</b>: 내 행동으로 확인 (서명, 걸음걸이, 목소리).",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "두 가지 이상을 섞으면 다중 인증(MFA). 예) 비밀번호(지식) + 문자 인증번호(소유)",
-    "hint": true
-   }
-  ],
-  "hints": [
-   "두 가지 이상을 섞으면 다중 인증(MFA). 예) 비밀번호(○○) + 문자 인증번호(○○)"
-  ]
+  "correct": "소유 기반",
+  "explain": "<p>가진 기기로 확인하므로 소유 기반이다. 비밀번호는 지식, 지문은 존재, 서명 동작은 행위에 해당한다.</p>",
+  "hints": []
  },
  {
   "kind": "build",
@@ -4285,111 +3964,54 @@
   ]
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "u-vis",
   "unit": "uml",
-  "table": "uml:1",
-  "col": "기호",
-  "term": "+ / − / # / ~",
-  "sub": "접근 제어자",
-  "meaning": "+: public, 누구나 접근. −: private, 자기 클래스 안에서만. #: protected, 자기와 자식 클래스만. ~: package, 같은 패키지 안에서만.",
-  "short": "+: public, 누구나 접근",
-  "segments": [
-   {
-    "label": "+",
-    "text": "public, 누구나 접근"
-   },
-   {
-    "label": "−",
-    "text": "private, 자기 클래스 안에서만"
-   },
-   {
-    "label": "#",
-    "text": "protected, 자기와 자식 클래스만"
-   },
-   {
-    "label": "~",
-    "text": "package, 같은 패키지 안에서만"
-   }
+  "title": "멤버 접근",
+  "q": "UML 클래스 다이어그램에서 자식 클래스가 접근할 수 있는 protected 멤버의 기호는?",
+  "pre": "",
+  "options": [
+   "#",
+   "+",
+   "−",
+   "~"
   ],
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "<b>+</b>: public, 누구나 접근. <b>−</b>: private, 자기 클래스 안에서만. <b>#</b>: protected, 자기와 자식 클래스만. <b>~</b>: package, 같은 패키지 안에서만.",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "+ 는 열려 있음, − 는 빼서 숨김, # 은 울타리 쳐서 가족(자식)만, ~ 는 동네(패키지)만",
-    "hint": true
-   }
-  ],
-  "hints": [
-   "+ 는 열려 있음, − 는 빼서 숨김, # 은 울타리 쳐서 가족(자식)만, ~ 는 동네(패키지)만"
-  ]
+  "correct": "#",
+  "explain": "<p>#는 protected, +는 public, −는 private, ~는 package 가시성이다.</p>",
+  "hints": []
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "u-inc",
   "unit": "uml",
-  "table": "uml:1",
-  "col": "기호",
-  "term": "<<include>> / <<extend>>",
-  "sub": "",
-  "meaning": "유스케이스 사이 관계. <<include>>: 실행하면 반드시 같이 실행되는 기능(필수). <<extend>>: 조건에 따라 가끔 추가되는 기능(선택).",
-  "short": "유스케이스 사이 관계",
-  "segments": [
-   {
-    "label": "<<include>>",
-    "text": "실행하면 반드시 같이 실행되는 기능(필수)"
-   },
-   {
-    "label": "<<extend>>",
-    "text": "조건에 따라 가끔 추가되는 기능(선택)"
-   }
+  "title": "주문 시 인증",
+  "q": "주문 유스케이스가 실행될 때마다 공통 인증 유스케이스도 반드시 실행한다. 관계는?",
+  "pre": "",
+  "options": [
+   "<<include>>",
+   "<<extend>>",
+   "일반화"
   ],
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "유스케이스 사이 관계. <b>&lt;&lt;include&gt;&gt;</b>: 실행하면 <b>반드시 같이</b> 실행되는 기능(필수). <b>&lt;&lt;extend&gt;&gt;</b>: <b>조건에 따라 가끔</b> 추가되는 기능(선택).",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "\"결제하기\"는 항상 \"로그인\"을 포함(include). \"결제하기\"에 \"쿠폰 적용\"은 원할 때만(extend). include = 포함, extend = 확장(덤)",
-    "hint": true
-   }
-  ],
-  "hints": [
-   "\"결제하기\"는 항상 \"로그인\"을 포함(include). \"결제하기\"에 \"쿠폰 적용\"은 원할 때만(extend). include = 포함, extend = 확장(덤)"
-  ]
+  "correct": "<<include>>",
+  "explain": "<p>반드시 포함하는 공통 동작은 include다. extend는 조건에 따라 기본 유스케이스에 동작을 추가한다.</p>",
+  "hints": []
  },
  {
-  "kind": "term",
+  "kind": "mcq",
   "id": "u-actor",
   "unit": "uml",
-  "table": "uml:1",
-  "col": "기호",
-  "term": "액터 (Actor)",
-  "sub": "",
-  "meaning": "시스템 바깥에서 시스템을 쓰는 사람이나 시스템. 유스케이스 다이어그램에 졸라맨 모양으로 그린다.",
-  "short": "시스템 바깥에서 시스템을 쓰는 사람이나 시스템",
-  "segments": [],
-  "parts": [
-   {
-    "label": "뜻",
-    "html": "시스템 <b>바깥</b>에서 시스템을 쓰는 사람이나 시스템. 유스케이스 다이어그램에 졸라맨 모양으로 그린다.",
-    "hint": false
-   },
-   {
-    "label": "예시 · 외우는 법",
-    "html": "쇼핑몰 시스템에서 고객, 관리자, 외부 결제 시스템이 액터. 시스템 안에 있는 건 액터가 아님",
-    "hint": true
-   }
+  "title": "외부 결제 연동",
+  "q": "쇼핑몰 시스템 경계 밖의 결제 서비스가 쇼핑몰과 상호작용한다. 유스케이스 모델에서 무엇으로 표현할까?",
+  "pre": "",
+  "options": [
+   "액터",
+   "유스케이스",
+   "시스템 경계",
+   "클래스 속성"
   ],
-  "hints": [
-   "쇼핑몰 시스템에서 고객, 관리자, 외부 결제 시스템이 액터. 시스템 안에 있는 건 액터가 아님"
-  ]
+  "correct": "액터",
+  "explain": "<p>액터는 사람뿐 아니라 외부 시스템도 될 수 있다. 유스케이스는 시스템이 제공하는 기능을 나타낸다.</p>",
+  "hints": []
  },
  {
   "kind": "mcq",

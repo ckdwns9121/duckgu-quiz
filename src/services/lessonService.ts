@@ -1,5 +1,5 @@
 import { CARD_BY_ID, COURSE_BY_ID, courseOfCard, courseOfLesson, DEFAULT_COURSE, LESSON_BY_ID } from '../domain/content';
-import { isBuildCorrect, isTypedAnswerCorrect, makeQuestion, shuffle } from '../domain/question';
+import { isBuildCorrect, isTypedAnswerCorrect, joinAnswerTiles, makeQuestion, shuffle } from '../domain/question';
 import { dayKey, lessonXp, nextStreak, visibleStreak } from '../domain/streak';
 import type { Card } from '../domain/types';
 import { router } from '../router';
@@ -32,10 +32,10 @@ export function startLesson(lessonId: string) {
 export const currentCourse = () => COURSE_BY_ID.get(progressStore.getState().course) ?? DEFAULT_COURSE;
 /** 지금 코스의 레슨 지도 주소 */
 export const courseHome = () => `/course/${currentCourse().id}`;
-/** 지금 코스에서 마지막에 틀린 카드 */
+/** 지금 코스에서 아직 해소하지 않은 약점 카드 */
 export const courseWeakIds = () => weakCardIds(progressStore.getState(), new Set(currentCourse().cards.map((c) => c.id)));
 
-/** 마지막에 틀린 카드만 골라 복습 (지금 코스 안에서) */
+/** 해소하지 않은 약점 카드만 골라 복습 (지금 코스 안에서) */
 export function startPractice() {
   const ids = shuffle(courseWeakIds()).slice(0, PRACTICE_SIZE);
   if (!ids.length) return router.push(courseHome(), { replace: true });
@@ -75,7 +75,7 @@ export function check() {
   if (q.type === 'choice' && s.selected !== null) answer(q.options[s.selected] === q.correct);
   if (q.type === 'build' && s.picked.length) answer(isBuildCorrect(s.picked.map((i) => q.tiles[i]), q.answer));
   if (q.type === 'typing' && usesTiles() && s.picked.length) {
-    answer(isTypedAnswerCorrect(s.picked.map((i) => q.tiles[i]).join(' '), q.correct));
+    answer(isTypedAnswerCorrect(joinAnswerTiles(s.picked.map((i) => q.tiles[i]), q.correct), q.correct));
   } else if (q.type === 'typing' && !usesTiles() && s.typed.trim()) answer(isTypedAnswerCorrect(s.typed, q.correct));
 }
 
@@ -86,7 +86,7 @@ export function answer(ok: boolean) {
   const q = currentQuestion(s);
   // 효과를 터뜨릴 위치: 고른 보기 → 입력칸 → 버튼 순서로 찾는다 (렌더 전에 잡아 둔다)
   const origin = document.querySelector('.choice.sel') ?? document.getElementById('answer') ?? document.querySelector('.tile-line') ?? document.querySelector('.check-bar .btn:last-child');
-  progressStore.dispatch({ type: 'RECORD_ANSWER', cardId: q.card.id, ok });
+  progressStore.dispatch({ type: 'RECORD_ANSWER', cardId: q.card.id, ok, resolveWeak: s.lessonId === null && !(q.card.id in s.firstTry) && s.hintsShown === 0 });
   if (ok) {
     sfx.correct();
     celebrateCorrect(origin, s.combo + 1);

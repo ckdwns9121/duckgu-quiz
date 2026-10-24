@@ -8,7 +8,9 @@ nav: C 함정
 blocks:
   - items:
       - id: c1
+        wrong_answers: ["6 5 6","7 6 7"]
         tag: C
+        run: c
         title: a++ 와 ++a
         type: answer
         code: |-
@@ -28,7 +30,9 @@ blocks:
           - "처음: a = 5"
           - "<b>기억할 것</b>: ++가 <mark>뒤에 있으면 나중에</mark> 올리고, <mark>앞에 있으면 먼저</mark> 올린다. 기호 위치 = 올리는 시점."
       - id: c2
+        wrong_answers: ["12 30","30 30"]
         tag: C
+        run: c
         title: "*(p+2) 와 *p+2"
         type: answer
         code: |-
@@ -47,7 +51,9 @@ blocks:
           - <code>p = arr</code> → p는 배열 맨 앞(10이 있는 칸)을 가리킴
           - "<b>기억할 것</b>: <mark>괄호 안에 +가 있으면 칸 이동</mark>, 괄호가 없으면 값에 더하기. <code>*(p+i)</code>는 <code>arr[i]</code>와 같다."
       - id: c3
+        wrong_answers: ["10","2"]
         tag: C
+        run: c
         title: 이중 포인터
         type: answer
         code: |-
@@ -68,7 +74,9 @@ blocks:
           - <code>p = &amp;a</code> → p에는 <b>a의 주소</b>가 들어 있음 (p → a)
           - '<b>기억할 것</b>: <code>&amp;</code>는 "주소 줘", <code>*</code>는 "그 주소로 한 번 가". <mark>*가 두 개면 두 번 따라간다</mark>. 화살표를 그려서 풀면 안 틀린다.'
       - id: c4
+        wrong_answers: ["5","3"]
         tag: C
+        run: c
         title: 2차원 배열 포인터
         type: answer
         code: |-
@@ -86,24 +94,28 @@ blocks:
         hints:
           - "<b>기억할 것</b>: <code>*(*(a+i)+j)</code> = <mark>a[i][j]</mark>. 안쪽 숫자는 행(몇 번째 줄), 바깥 숫자는 열(몇 번째 칸)."
       - id: c5
+        wrong_answers: ["5 5","6 6"]
         tag: C
+        run: c
         title: sizeof 와 strlen
         type: answer
         code: |-
           char s[] = "hello";
-          printf("%d %d", sizeof(s), strlen(s));
+          printf("%zu %zu", sizeof(s), strlen(s));
         q: 출력은?
         answer: 6 5
         steps:
           - <code>"hello"</code>는 실제로 메모리에 <b>h e l l o \0</b> 로 저장됨. 끝의 <code>\0</code>은 "문자열 끝" 표시
           - <code>sizeof(s)</code> → 배열이 차지하는 칸 수. \0까지 셈 → <b>6</b>
           - <code>strlen(s)</code> → 글자 수. \0 앞까지만 셈 → <b>5</b>
-        why: "<b>기억할 것</b>: <mark>sizeof = 칸 수(끝 표시 포함), strlen = 글자 수</mark>. 차이는 항상 1."
+        why: "<b>기억할 것</b>: <mark>sizeof = 칸 수(끝 표시 포함), strlen = 글자 수</mark>. 이 예제는 배열을 문자열 크기에 맞춰 만들었으므로 차이가 1이다. <code>char s[10] = &quot;hello&quot;;</code>라면 sizeof는 10, strlen은 5다."
         hints:
           - <code>"hello"</code>는 실제로 메모리에 <b>h e l l o \0</b> 로 저장됨. 끝의 <code>\0</code>은 "문자열 끝" 표시
-          - "<b>기억할 것</b>: <mark>sizeof = 칸 수(끝 표시 포함), strlen = 글자 수</mark>. 차이는 항상 1."
+          - "<b>기억할 것</b>: <mark>sizeof = 칸 수(끝 표시 포함), strlen = 글자 수</mark>. 이 예제는 배열을 문자열 크기에 맞춰 만들었으므로 차이가 1이다. <code>char s[10] = &quot;hello&quot;;</code>라면 sizeof는 10, strlen은 5다."
       - id: c6
+        wrong_answers: ["111","012"]
         tag: C
+        run: c
         title: static 지역변수
         type: answer
         code: |-
@@ -126,7 +138,9 @@ blocks:
           - "1번째 호출: n은 처음 한 번만 0으로 시작 → n++ → <b>1</b> 반환"
           - "<b>기억할 것</b>: 보통 지역변수는 함수가 끝나면 사라져서 매번 새로 시작한다(그러면 111). <mark>static은 함수가 끝나도 값을 기억</mark>하고, <code>= 0</code> 초기화는 맨 처음 한 번만 한다."
       - id: c7
+        wrong_answers: ["B","BCD"]
         tag: C
+        run: c
         title: switch 에 break 없음
         type: answer
         code: |-
@@ -148,7 +162,9 @@ blocks:
           - n = 2 → <code>case 2</code>로 들어감 → "B" 출력
           - "<b>기억할 것</b>: switch는 맞는 case에서 <mark>시작만</mark> 한다. 끝나는 건 break를 만났을 때뿐. break가 없으면 아래로 줄줄이 흘러내린다(fall-through)."
       - id: c8
+        wrong_answers: ["3 1 -4 2","3 1 -3 1"]
         tag: C
+        run: c
         title: 음수 나눗셈·나머지
         type: answer
         code: |-
@@ -166,7 +182,9 @@ blocks:
           - <code>7/2</code> = 3.5 → 정수끼리 나누면 소수점 버림 → <b>3</b>
           - "<b>기억할 것</b>: <mark>C·Java는 소수점을 그냥 잘라낸다</mark>. Python은 더 작은 쪽으로 내려서 -7//2 = -4가 된다. 언어마다 다르니 문제의 언어부터 확인."
       - id: c9
+        wrong_answers: ["1 7 6 8 6","1 7 6 4 -6"]
         tag: C
+        run: c
         title: 비트 연산
         type: answer
         code: |-
@@ -186,7 +204,9 @@ blocks:
           - "먼저 2진수로 바꿈: 5 = <b>101</b>, 3 = <b>011</b>"
           - "<b>기억할 것</b>: <mark>&lt;&lt; n은 ×2ⁿ, &gt;&gt; n은 ÷2ⁿ, ~x는 -(x+1)</mark>. 나머지는 2진수로 세로로 맞춰 놓고 한 자리씩 비교."
       - id: c10
+        wrong_answers: ["3","4"]
         tag: C
+        run: c
         title: 구조체 포인터 -&gt;
         type: answer
         code: |-

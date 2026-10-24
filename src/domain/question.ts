@@ -32,6 +32,8 @@ function similarLength(pool: string[], correct: string, n: number, rng: Rng): st
 /** 한글 답인데 비슷한 용어가 없을 때 쓰는 보기 */
 const CUSTOM_OPTIONS: Record<string, string[]> = {
   // sep·end 문제: 한 글자씩 조각으로 쪼개면 퍼즐이 되어 버려서 헷갈리는 출력 보기로 낸다
+  'd-q2': ['참조 무결성', '도메인 무결성', '사용자 정의 무결성'],
+  'd-q3': ['개체 무결성', '도메인 무결성', '키 무결성'],
   p9: ['1 2 3!A', '1-2-3!↵A', '1-2-3-!A'],
   s7: ['80만 포함', '90만 포함', '둘 다 포함 안 됨'],
   s8: ['DESC (내림차순)', '입력한 순서 그대로', '무작위 순서'],
@@ -116,40 +118,20 @@ export function answerTokens(answer: string): string[] {
   return [a];
 }
 
-/** 리스트 조각의 헷갈리는 변형: 끝 하나 빼기, 하나 더 붙이기, 뒤집기 ([2, 3] → [2], [2, 3, 4], [3, 2]) */
-function listVariants(token: string): string[] {
-  const m = token.match(/^\[(.*)\]$/);
-  if (!m || /[\[\]]/.test(m[1])) return [];
-  const items = m[1].split(',').map((x) => x.trim()).filter(Boolean);
-  const nums = items.map(Number);
-  const fmt = (xs: (string | number)[]) => `[${xs.join(', ')}]`;
-  const out: string[] = [];
-  if (items.length > 1) out.push(fmt(items.slice(0, -1)));
-  if (nums.every((n) => !Number.isNaN(n)) && items.length >= 2) out.push(fmt([...nums, nums[nums.length - 1] * 2 - nums[nums.length - 2]]));
-  if (items.length > 1) out.push(fmt([...items].reverse()));
-  return out.filter((v) => v !== token);
+/** 정답 및 대표 오답 각각을 만들 수 있는 최소 조각 묶음. 중복 조각도 남긴다. */
+export function answerTileBank(card: AnswerCard): string[] {
+  const counts = new Map<string, number>();
+  for (const value of [card.answer, ...(card.wrongAnswers ?? [])]) {
+    const needed = new Map<string, number>();
+    for (const token of answerTokens(value)) needed.set(token, (needed.get(token) ?? 0) + 1);
+    for (const [token, count] of needed) counts.set(token, Math.max(counts.get(token) ?? 0, count));
+  }
+  return [...counts].flatMap(([token, count]) => Array<string>(count).fill(token));
 }
 
-/** 헷갈리게 섞을 가짜 조각: 숫자는 ±1, true↔false, 한 글자는 옆 글자. 정답 조각과 겹치는 건 뺀다 */
-export function decoyTokens(tokens: string[], rng: Rng = Math.random): string[] {
-  const out: string[] = [];
-  for (const t of tokens) {
-    out.push(...listVariants(t));
-    const n = t.match(/^(\[?)(-?\d+)(\]?,?\]?)$/);
-    if (n) {
-      const v = Number(n[2]);
-      out.push(`${n[1]}${v + 1}${n[3]}`, `${n[1]}${v - 1}${n[3]}`);
-    } else if (t === 'true' || t === 'false') out.push(t === 'true' ? 'false' : 'true');
-    else if (t.length === 1 && /[A-Za-z]/.test(t)) out.push(String.fromCharCode(t.charCodeAt(0) + 1));
-  }
-  const pool = uniq(out).filter((d) => !tokens.includes(d));
-  const want = tokens.length <= 4 ? 3 : 2;
-  const picked = shuffle(pool, rng).slice(0, want);
-  for (const extra of ['0', '1', '-1', 'null']) {
-    if (picked.length >= Math.min(want, 2)) break;
-    if (!tokens.includes(extra) && !picked.includes(extra)) picked.push(extra);
-  }
-  return picked;
+/** 붙여 출력한 값은 조각 사이에 공백을 넣지 않는다. */
+export function joinAnswerTiles(picked: string[], correct: string): string {
+  return picked.join(/\s/.test(correct.trim()) ? ' ' : '');
 }
 
 /** 받침이 있으면 "은", 없으면 "는" */
@@ -169,7 +151,8 @@ export function topicJosa(word: string): string {
 function termQuestion(card: TermCard, all: Card[], rng: Rng): Question {
   const terms = all.filter((c): c is TermCard => c.kind === 'term');
   const sameTable = terms.filter((c) => c.table === card.table && c.id !== card.id);
-  const pool = sameTable.length >= 3 ? sameTable : terms.filter((c) => c.unit === card.unit && c.id !== card.id);
+  // 표 밖의 다른 범주를 끌어와 보기 수를 채우지 않는다.
+  const pool = sameTable;
   const noun = card.parts[0]?.label || '뜻';
   const ask = `${noun}${topicJosa(noun)} 뭘까?`;
   // 다른 카드에서 가져올 오답 후보: 묶음 카드는 이름별 설명까지 후보가 된다
@@ -217,10 +200,9 @@ function termQuestion(card: TermCard, all: Card[], rng: Rng): Question {
 
 function answerQuestion(card: AnswerCard, all: Card[], rng: Rng): Question {
   if (!/[가-힣]/.test(card.answer) && !CUSTOM_OPTIONS[card.id]) {
-    const tokens = answerTokens(card.answer);
     return {
       type: 'typing', card, label: '직접 써 보기', say: '실행 결과를 <b>그대로</b> 써 봐!', correct: card.answer,
-      tiles: shuffle([...tokens, ...decoyTokens(tokens, rng)], rng),
+      tiles: shuffle(answerTileBank(card), rng),
     };
   }
   let wrong = CUSTOM_OPTIONS[card.id];
@@ -237,9 +219,8 @@ function answerQuestion(card: AnswerCard, all: Card[], rng: Rng): Question {
   };
 }
 
-/** 띄어쓰기·따옴표·끝 마침표는 무시한다. 쉼표와 괄호까지 빼고 같아도 정답으로 본다 */
-const normalize = (s: string) => s.toLowerCase().replace(/[\s'"`]/g, '').replace(/[.。]$/, '');
-const loose = (s: string) => normalize(s).replace(/[,[\]{}()]/g, '');
+/** 출력 구조와 대소문자는 보존하고, 공백 폭과 구분자 주변 공백만 허용한다. */
+const normalize = (s: string) => s.trim().replace(/\s+/g, ' ').replace(/\s*([,\[\]{}()])\s*/g, '$1');
 
 /** 조각을 고른 순서가 정답 조각 순서와 똑같은지 */
 export function isBuildCorrect(picked: string[], answer: string[]): boolean {
@@ -247,6 +228,5 @@ export function isBuildCorrect(picked: string[], answer: string[]): boolean {
 }
 
 export function isTypedAnswerCorrect(input: string, correct: string): boolean {
-  if (normalize(input) === normalize(correct)) return true;
-  return loose(input) !== '' && loose(input) === loose(correct);
+  return normalize(input) !== '' && normalize(input) === normalize(correct);
 }

@@ -36,6 +36,8 @@ export interface AnswerCard extends BaseCard {
   pre: string;
   q: string;
   answer: string;
+  /** 실제 착각으로 나오는 출력값. 조각에 필요한 중복 개수도 보존한다. */
+  wrongAnswers?: string[];
   explain: string;
 }
 

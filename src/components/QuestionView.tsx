@@ -11,6 +11,7 @@ export const QuestionView = ({ q, session }: { q: Question; session: LessonSessi
   return (
     <main className="col lesson-body">
       <p className="q-kind">{q.label}</p>
+      {session.lessonId === null && <p className="hint">힌트 없이 첫 시도에 맞히면 약점 목록에서 빠져요.</p>}
       {retried && <p className="hint" style="color:var(--orange);font-weight:700">아까 틀린 문제예요. 다시 도전!</p>}
       <div className="speaker">
         <div><Mascot mood="idle" /></div>
@@ -39,7 +40,7 @@ export const QuestionView = ({ q, session }: { q: Question; session: LessonSessi
               check();
             }}
           />
-          <p className="hint">띄어쓰기와 따옴표는 신경 안 써도 돼요.</p>
+          <p className="hint">공백 개수는 달라도 돼요. 대소문자·괄호·쉼표는 그대로 써 주세요.</p>
           {!session.feedback && <button className="mode-switch" type="button" onClick={() => setInputMode('tiles')}>조각 눌러서 풀기</button>}
         </div>
       )}
@@ -122,7 +123,7 @@ const TileBoard = ({ tiles, session, hasDecoys = false }: { tiles: string[]; ses
           <button className="tile" type="button" disabled={graded} onClick={() => unpickTile(position)}>{tiles[tileIndex]}</button>
         ))}
       </div>
-      {hasDecoys && !graded && <p className="decoy-note">안 쓰는 조각도 섞여 있어요</p>}
+      {hasDecoys && !graded && <p className="decoy-note">조각은 한 번씩만 사용할 수 있어요</p>}
       <div className="tile-bank">
         {tiles.map((tile, i) => {
           const used = session.picked.includes(i);

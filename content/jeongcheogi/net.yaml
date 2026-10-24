@@ -77,12 +77,30 @@ blocks:
         - 예시 · 외우는 법
       rows:
         - id: n-tcp
+          scenario:
+            title: 파일 전송
+            q: 파일의 모든 바이트를 순서대로 전달하고 손실 시 재전송하는 전송 계층 프로토콜은?
+            answer: TCP
+            wrong:
+              - UDP
+              - IP
+              - ICMP
+            explain: <p>TCP는 신뢰성 있는 바이트 스트림을 제공한다. UDP는 전달·순서를 보장하지 않으며 IP는 네트워크 계층이다.</p>
           term: TCP
           sub: Transmission Control Protocol
           desc: <b>연결을 맺고</b>, <b>빠짐없이 순서대로</b> 도착했는지 확인하며 보낸다. 못 받은 건 다시 보낸다.
           hint: 등기 우편. 도착 확인까지 받아서 느리지만 확실함. 웹, 이메일, 파일 전송에 사용
           short: 연결을 맺고, 빠짐없이 순서대로 도착했는지 확인하며 보낸다
         - id: n-udp
+          scenario:
+            title: 실시간 데이터그램
+            q: 앱이 재전송 여부를 직접 정하고 전송 계층의 연결 설정 없이 데이터그램을 보내려 한다. 선택은?
+            answer: UDP
+            wrong:
+              - TCP
+              - IP
+              - ICMP
+            explain: <p>UDP는 연결 설정 없는 전송 계층 데이터그램 서비스다. TCP는 연결과 재전송을 관리한다.</p>
           term: UDP
           sub: User Datagram Protocol
           desc: 연결 없이 <b>그냥 바로 보내는</b> 방식. 도착 확인을 안 해서 빠르지만 중간에 빠져도 모른다.
@@ -94,6 +112,15 @@ blocks:
           hint: '전화: "여보세요?" → "네, 들려요. 제 말도 들려요?" → "네, 들려요." 이후 대화 시작'
           quiz: false
         - id: n-ip
+          scenario:
+            title: 주소 길이
+            q: 2001:db8::1처럼 콜론으로 구분한 128비트 주소를 사용하는 인터넷 프로토콜은?
+            answer: IPv6
+            wrong:
+              - IPv4
+              - ARP
+              - ICMP
+            explain: <p>IPv6 주소는 128비트다. IPv4는 32비트이고 ARP는 주소를 변환하기 위한 프로토콜이다.</p>
           term: IPv4 / IPv6
           desc: IPv4 = <mark>32비트</mark>, 8비트씩 4덩어리를 점으로 구분 (192.168.0.1). IPv6 = <mark>128비트</mark>, 16비트씩 8덩어리를 콜론으로 구분 (2001:db8::1).
           hint: IPv4 주소가 부족해서 IPv6가 나옴. IPv6에는 <b>브로드캐스트가 없고</b> 유니캐스트(1:1)·멀티캐스트(1:그룹)·애니캐스트(1:가장 가까운 하나)가 있음
@@ -104,6 +131,15 @@ blocks:
             - label: IPv6
               text: 128비트, 16비트씩 8덩어리를 콜론으로 구분 (2001:db8::1)
         - id: n-arp
+          scenario:
+            title: 같은 LAN의 목적지
+            q: 같은 IPv4 LAN의 목적지 IP는 알지만 이더넷 프레임에 넣을 MAC 주소를 모른다. 무엇을 사용할까?
+            answer: ARP
+            wrong:
+              - RARP
+              - DNS
+              - DHCP
+            explain: <p>ARP는 IPv4 주소에 대응하는 링크 계층 주소를 알아낸다. DNS는 도메인 이름을 조회하고 DHCP는 주소를 할당한다.</p>
           term: ARP / RARP
           sub: Address Resolution Protocol
           desc: "<b>ARP</b>: IP 주소로 <b>MAC 주소</b>를 알아낸다(MAC = 랜카드 고유 번호). <b>RARP</b>: 반대로 MAC 주소로 IP 주소를 알아낸다."
@@ -115,30 +151,75 @@ blocks:
             - label: RARP
               text: 반대로 MAC 주소로 IP 주소를 알아낸다
         - id: n-icmp
+          scenario:
+            title: 네트워크 진단
+            q: ping이 보내는 Echo Request와 받는 Echo Reply에 쓰이는 프로토콜은?
+            answer: ICMP
+            wrong:
+              - TCP
+              - UDP
+              - ARP
+            explain: <p>ping의 에코 메시지는 ICMP를 사용한다. TCP·UDP 포트 번호를 지정해 보내는 요청이 아니다.</p>
           term: ICMP
           sub: Internet Control Message Protocol
           desc: 네트워크에서 <b>오류가 났거나 상태를 알려줄 때</b> 쓰는 메시지 프로토콜. "목적지에 도달할 수 없음" 같은 알림.
           hint: <code>ping</code> 명령어가 ICMP를 씀. Smurf, Ping of Death 공격에도 등장
           short: 네트워크에서 오류가 났거나 상태를 알려줄 때 쓰는 메시지 프로토콜
         - id: n-dns
+          scenario:
+            title: 호스트 찾기
+            q: 브라우저가 www.example.com에 접속하기 전에 해당 이름의 IP 주소를 조회한다. 사용하는 서비스는?
+            answer: DNS
+            wrong:
+              - DHCP
+              - ARP
+              - NAT
+            explain: <p>DNS는 이름에 대응하는 주소 등의 레코드를 조회한다. DHCP는 호스트에 주소 설정을 제공한다.</p>
           term: DNS
           sub: Domain Name System
           desc: <b>도메인 이름</b>(naver.com)을 <b>IP 주소</b>로 바꿔 준다. 사람은 이름을 외우고, 컴퓨터는 IP로 찾아간다.
           hint: 전화번호부. 이름을 찾으면 번호가 나옴. 포트 53
           short: 도메인 이름(naver.com)을 IP 주소로 바꿔 준다
         - id: n-dhcp
+          scenario:
+            title: 새 노트북 연결
+            q: 새 노트북이 네트워크에서 IP 주소·서브넷 마스크·기본 게이트웨이를 자동으로 임대받는다. 사용하는 프로토콜은?
+            answer: DHCP
+            wrong:
+              - DNS
+              - ARP
+              - ICMP
+            explain: <p>DHCP는 네트워크 설정을 임대한다. DNS는 이름 조회, ARP는 같은 링크에서의 주소 해석이다.</p>
           term: DHCP
           sub: Dynamic Host Configuration Protocol
           desc: 네트워크에 접속한 기기에 <b>IP 주소를 자동으로 빌려 준다</b>.
           hint: 카페 와이파이에 붙으면 IP를 직접 안 넣어도 인터넷이 되는 이유
           short: 네트워크에 접속한 기기에 IP 주소를 자동으로 빌려 준다
         - id: n-nat
+          scenario:
+            title: 사설 주소의 외부 접속
+            q: 공유기가 외부로 보내는 패킷의 출발지 사설 IP를 공인 IP로 바꾼다. 이 기능은?
+            answer: NAT
+            wrong:
+              - DNS
+              - DHCP
+              - ARP
+            explain: <p>네트워크 주소 변환이다. DNS 이름 조회나 DHCP의 주소 임대와는 다르다.</p>
           term: NAT
           sub: Network Address Translation
           desc: 내부에서 쓰는 <b>사설 IP</b>를 인터넷에 나갈 때 <b>공인 IP</b>로 바꿔 준다. 공인 IP 하나로 여러 기기가 인터넷을 쓴다.
           hint: 회사 대표번호 하나로 여러 내선 전화를 쓰는 것. 집 공유기가 하는 일
           short: 내부에서 쓰는 사설 IP를 인터넷에 나갈 때 공인 IP로 바꿔 준다
         - id: n-rip
+          scenario:
+            title: 라우팅 경로 선택
+            q: 같은 AS 안에서 링크 상태를 공유하고 최단 경로를 계산하는 프로토콜은?
+            answer: OSPF
+            wrong:
+              - RIP
+              - BGP
+              - 정적 라우팅
+            explain: <p>OSPF는 링크 상태 기반이다. RIP는 홉 수를 사용하며 BGP는 AS 간 경로 교환에 사용한다.</p>
           term: RIP / OSPF / BGP
           desc: "<b>RIP</b>: 거리(거쳐 가는 라우터 수, 홉)로 길을 고름. <mark>최대 15홉</mark>, 소규모용. <b>OSPF</b>: 네트워크 전체 지도(링크 상태)를 보고 고름, 대규모용. <b>BGP</b>: 서로 다른 조직 네트워크(AS)끼리 길을 주고받음."
           hint: RIP = 정거장 수만 셈, OSPF = 지도 앱처럼 전체 상황 보고 판단, BGP = 나라끼리 국경 도로 협의

@@ -914,7 +914,7 @@ log('sync');</pre>
     <div class="sec-head">
       <span class="sub">PART 5</span>
       <h2>React</h2>
-      <p>상태 업데이트, 렌더링, useEffect, key처럼 React에서 실수가 가장 잦은 부분입니다. React 18 기준입니다.</p>
+      <p>상태 업데이트, 렌더링, useEffect, key처럼 React에서 실수가 가장 잦은 부분입니다. 별도 언급이 없으면 React 19, createRoot, StrictMode와 React Compiler를 끈 환경입니다.</p>
     </div>
     <div class="grid">
       <article class="item" data-id="fe-re-q-batch">
@@ -982,7 +982,7 @@ return (
       <article class="item" data-id="fe-re-q-effect">
         <div class="item-h"><span class="lang">useEffect</span><h3>useEffect 실행 시점</h3><label class="chk"><input type="checkbox" id="k-fe-re-q-effect">외움</label></div>
         <p class="q">useEffect(fn, [])의 fn은 언제 실행될까?</p>
-        <ul class="quiz-opts" hidden data-q="useEffect(fn, [])의 fn은 언제 실행될까?"><li class="ok">처음 화면에 그려진 뒤 한 번</li><li>렌더링할 때마다</li><li>처음 렌더링 직전에 한 번</li><li>state가 바뀔 때마다</li></ul>
+        <ul class="quiz-opts" hidden data-q="useEffect(fn, [])의 fn은 언제 실행될까?"><li class="ok">처음 DOM에 반영된 뒤 한 번</li><li>렌더링할 때마다</li><li>처음 렌더링 직전에 한 번</li><li>state가 바뀔 때마다</li></ul>
         <ul class="quiz-opts" hidden data-q="useEffect(fn, [id])에서 fn이 돌려준 cleanup은 언제 실행될까?"><li class="ok">다음 fn 실행 직전과 언마운트될 때</li><li>컴포넌트가 사라질 때만</li><li>fn이 실행된 바로 직후</li><li>렌더링할 때마다 fn보다 먼저</li></ul>
         <div class="ans"><p>effect는 <b>화면에 반영(커밋)된 뒤</b> 실행된다. 의존성 배열이 []면 마운트 뒤 한 번. cleanup은 <b>의존성이 바뀌어 effect가 다시 실행되기 직전</b>과 <b>언마운트될 때</b> 실행된다.</p></div>
       </article>
@@ -1063,8 +1063,8 @@ const Child = React.memo(
     // ...
   }
 );</pre>
-        <p class="q">Child는 React.memo로 감싸져 있다. Parent가 다시 렌더링되면 Child는?</p>
-        <ul class="quiz-opts" hidden data-q="Child는 React.memo로 감싸져 있다. Parent가 다시 렌더링되면 Child는?"><li class="ok">매번 같이 다시 렌더링된다</li><li>다시 렌더링되지 않는다</li><li>id가 바뀔 때만 다시 렌더링된다</li><li>처음 한 번만 렌더링된다</li></ul>
+        <p class="q">Child는 React.memo로 감쌌다. id가 같아도 Parent와 함께 다시 렌더링되는 이유는?</p>
+        <ul class="quiz-opts" hidden data-q="Child는 React.memo로 감쌌다. id가 같아도 Parent와 함께 다시 렌더링되는 이유는?"><li class="ok">새로운 onSave 함수가 매번 전달돼서</li><li>memo는 부모의 렌더링을 항상 따라가서</li><li>화살표 함수가 렌더링 도중 save를 실행해서</li><li>함수 prop을 받으면 memo가 오류를 던져서</li></ul>
         <ul class="quiz-opts" hidden data-q="Child가 불필요하게 다시 렌더링되지 않게 하려면?"><li class="ok">onSave를 useCallback으로 감싼다</li><li>Child를 useMemo로 감싼다</li><li>save를 state에 넣는다</li><li>Child에 key를 준다</li></ul>
         <div class="ans"><p>화살표 함수는 렌더링할 때마다 <b>새 함수</b>라서, memo가 props를 비교하면 onSave가 매번 바뀐 것으로 보인다. <code>useCallback(() =&gt; save(id), [id])</code>로 같은 함수를 넘기면 id가 바뀔 때만 다시 렌더링된다.</p></div>
       </article>
@@ -1121,8 +1121,8 @@ useEffect(() =&gt; {
 {isA
   ? &lt;Counter label="A" /&gt;
   : &lt;Counter label="B" /&gt;}</pre>
-        <p class="q">A 버튼을 두 번 눌러 A2가 된 뒤 isA를 false로 바꾸면 화면은?</p>
-        <ul class="quiz-opts" hidden data-q="A 버튼을 두 번 눌러 A2가 된 뒤 isA를 false로 바꾸면 화면은?"><li class="ok">B2</li><li>B0</li><li>A2</li><li>A0</li></ul>
+        <p class="q">A 버튼을 두 번 눌러 Counter는 useState(0)의 n을 클릭마다 1씩 올리고 label과 n을 출력한다. A2가 된 뒤 isA를 false로 바꾸면 화면은?</p>
+        <ul class="quiz-opts" hidden data-q="A 버튼을 두 번 눌러 Counter는 useState(0)의 n을 클릭마다 1씩 올리고 label과 n을 출력한다. A2가 된 뒤 isA를 false로 바꾸면 화면은?"><li class="ok">B2</li><li>B0</li><li>A2</li><li>A0</li></ul>
         <div class="ans"><p>React는 state를 컴포넌트가 아니라 <b>트리의 자리</b>에 붙인다. 삼항의 두 쪽이 <b>같은 자리의 같은 타입(Counter)</b>이라 React는 "props만 바뀐 같은 Counter"로 보고 count 2를 유지한다. 서로 다른 Counter로 다루려면 <code>key="A"</code>, <code>key="B"</code>를 준다.</p></div>
       </article>
       <article class="item" data-id="fe-re-q-position2">
@@ -1132,8 +1132,8 @@ useEffect(() =&gt; {
 ) : (
   &lt;section&gt;&lt;Counter label="B" /&gt;&lt;/section&gt;
 )}</pre>
-        <p class="q">A2가 된 뒤 isA를 false로 바꾸면 화면은?</p>
-        <ul class="quiz-opts" hidden data-q="A2가 된 뒤 isA를 false로 바꾸면 화면은?"><li class="ok">B0</li><li>B2</li><li>A2</li><li>A0</li></ul>
+        <p class="q">Counter는 useState(0)의 n을 클릭마다 1씩 올리고 label과 n을 출력한다. A2가 된 뒤 isA를 false로 바꾸면 화면은?</p>
+        <ul class="quiz-opts" hidden data-q="Counter는 useState(0)의 n을 클릭마다 1씩 올리고 label과 n을 출력한다. A2가 된 뒤 isA를 false로 바꾸면 화면은?"><li class="ok">B0</li><li>B2</li><li>A2</li><li>A0</li></ul>
         <div class="ans"><p>이번에는 Counter를 감싼 부모 태그가 <b>div → section으로 타입이 바뀐다</b>. 타입이 다르면 React는 그 아래를 통째로 버리고 새로 만들어서 state가 0으로 돌아간다. 같은 자리·같은 타입일 때만 state가 유지된다.</p></div>
       </article>
       <article class="item" data-id="fe-re-q-inner">
@@ -1189,7 +1189,7 @@ function App() {
   return &lt;Wrapper&gt;&lt;Expensive /&gt;&lt;/Wrapper&gt;;
 }</pre>
         <p class="q">Wrapper의 버튼을 두 번 누르면 Expensive는 모두 몇 번 렌더링될까?</p>
-        <ul class="quiz-opts" hidden data-q="Wrapper의 버튼을 두 번 누르면 Expensive는 모두 몇 번 렌더링될까?"><li class="ok">1번 (처음에만)</li><li>3번 (처음 + 클릭마다)</li><li>memo로 감싸지 않았으니 3번</li><li>0번</li></ul>
+        <ul class="quiz-opts" hidden data-q="Wrapper의 버튼을 두 번 누르면 Expensive는 모두 몇 번 렌더링될까?"><li class="ok">1번 (처음에만)</li><li>3번 (처음 + 클릭마다)</li><li>2번 (클릭할 때만)</li><li>0번</li></ul>
         <div class="ans"><p>Expensive 요소는 <b>App이 만들어서</b> children으로 넘긴 것이다. Wrapper의 state가 바뀌어 Wrapper가 다시 렌더링돼도 children은 App이 만든 <b>같은 요소</b>라 React가 건너뛴다. Wrapper 안에서 <code>&lt;Expensive /&gt;</code>를 직접 쓰면 클릭마다 다시 렌더링된다. memo 없이 렌더링을 줄이는 방법이다.</p></div>
       </article>
       <article class="item" data-id="fe-re-q-context">
@@ -1209,8 +1209,8 @@ function App() {
     &lt;/Ctx.Provider&gt;
   );
 }</pre>
-        <p class="q">App의 버튼을 누를 때마다 memo로 감싼 Child는?</p>
-        <ul class="quiz-opts" hidden data-q="App의 버튼을 누를 때마다 memo로 감싼 Child는?"><li class="ok">매번 다시 렌더링된다</li><li>memo라서 다시 렌더링되지 않는다</li><li>theme 값이 'dark' 그대로라 건너뛴다</li><li>처음 한 번만 렌더링된다</li></ul>
+        <p class="q">App의 버튼을 누르면 Child가 다시 렌더링되는 이유는?</p>
+        <ul class="quiz-opts" hidden data-q="App의 버튼을 누르면 Child가 다시 렌더링되는 이유는?"><li class="ok">매번 새로운 value 객체를 전달해서</li><li>memo는 부모가 렌더링되면 항상 무시돼서</li><li>createContext의 기본값이 매번 초기화돼서</li><li>Context를 읽는 컴포넌트에는 memo를 쓸 수 없어서</li></ul>
         <ul class="quiz-opts" hidden data-q="Child가 불필요하게 다시 렌더링되지 않게 하려면?"><li class="ok">value 객체를 useMemo로 고정한다</li><li>Child를 memo로 한 번 더 감싼다</li><li>Provider에 key를 준다</li><li>createContext의 기본값을 객체로 바꾼다</li></ul>
         <div class="ans"><p>Provider의 value가 <code>{ theme: 'dark' }</code>처럼 <b>렌더링마다 새 객체</b>면, 내용이 같아도 React는 바뀐 것으로 보고(Object.is 비교) 그 context를 쓰는 컴포넌트를 모두 다시 렌더링한다. <b>memo도 context 변경은 막지 못한다</b>. value를 useMemo로 고정하거나 컴포넌트 밖 상수로 둔다.</p></div>
       </article>
@@ -1222,8 +1222,8 @@ function App() {
     setB(1);
   }, 0);
 }</pre>
-        <p class="q">React 18 이상에서 버튼을 누르면, setTimeout 안의 두 set 때문에 다시 렌더링되는 횟수는?</p>
-        <ul class="quiz-opts" hidden data-q="React 18 이상에서 버튼을 누르면, setTimeout 안의 두 set 때문에 다시 렌더링되는 횟수는?"><li class="ok">1번</li><li>2번</li><li>0번</li><li>3번</li></ul>
+        <p class="q">a와 b가 모두 0일 때 버튼을 한 번 누르면, setTimeout 안의 두 set 때문에 다시 렌더링되는 횟수는?</p>
+        <ul class="quiz-opts" hidden data-q="a와 b가 모두 0일 때 버튼을 한 번 누르면, setTimeout 안의 두 set 때문에 다시 렌더링되는 횟수는?"><li class="ok">1번</li><li>2번</li><li>0번</li><li>3번</li></ul>
         <div class="ans"><p>React 18부터는 이벤트 핸들러뿐 아니라 <b>setTimeout, Promise, 네이티브 이벤트 안의 업데이트도 자동으로 묶어서</b>(automatic batching) 한 번만 렌더링한다. React 17에서는 setTimeout 안이면 2번이었다.</p></div>
       </article>
       <article class="item" data-id="fe-re-q-flushsync">

@@ -186,11 +186,29 @@ blocks:
         - 예시 · 외우는 법
       rows:
         - id: x-sym
+          scenario:
+            title: 파일 암호화
+            q: 파일을 잠글 때와 풀 때 동일한 비밀키를 사용한다. 방식은?
+            answer: 대칭키 암호
+            wrong:
+              - 비대칭키 암호
+              - 해시
+              - 전자서명
+            explain: <p>대칭키는 암호화와 복호화에 같은 키를 사용한다. 해시는 원문 복호화를 위한 방식이 아니다.</p>
           term: 대칭키 암호
           desc: "암호화할 때와 풀 때 <b>같은 키 하나</b>를 쓴다. 빠르지만 키를 안전하게 나눠 주기가 어렵다. 종류: <mark>DES, AES, SEED, ARIA</mark>."
           hint: 집 열쇠 하나를 복사해 나눠 갖기. SEED와 ARIA는 한국에서 만든 것
           short: 암호화할 때와 풀 때 같은 키 하나를 쓴다
         - id: x-asym
+          scenario:
+            title: 수신자에게 비밀 전달
+            q: 수신자의 공개키로 암호화한 데이터를 수신자의 개인키로 복호화한다. 방식은?
+            answer: 비대칭키 암호
+            wrong:
+              - 대칭키 암호
+              - 해시
+              - 메시지 인증 코드
+            explain: <p>공개키와 개인키 쌍을 사용한다. 메시지 인증 코드는 공유 비밀키로 무결성과 인증을 확인하며 암호문을 복호화하는 방식이 아니다.</p>
           term: 비대칭키(공개키) 암호
           desc: "<b>공개키</b>(누구나 가짐)로 잠그고 <b>개인키</b>(나만 가짐)로 연다. 키 나눠 주기 문제가 없지만 느리다. 종류: <mark>RSA, ECC, ElGamal</mark>."
           hint: "우체통: 편지는 누구나 넣을 수 있지만(공개키) 꺼내는 건 열쇠 가진 주인만(개인키)"
@@ -201,12 +219,29 @@ blocks:
           hint: 10명이면 대칭키 10×9/2 = 45개, 비대칭키 10×2 = 20개
           quiz: false
         - id: x-hash
+          scenario:
+            title: 다운로드 검사
+            q: 배포자가 공개한 SHA-256 값과 내려받은 파일의 계산값을 비교한다. 주로 확인하는 것은?
+            answer: 파일 내용의 무결성
+            wrong:
+              - 파일 내용의 기밀성
+              - 송신자의 개인키 보유 여부
+              - 사용자의 접근 권한
+            explain: <p>신뢰할 수 있는 경로로 받은 해시와 비교하면 내용 변경을 확인할 수 있다. 해시 자체는 암호화나 송신자 서명을 대신하지 않는다.</p>
           term: 해시
           sub: MD5, SHA
           desc: "어떤 데이터든 <b>정해진 길이의 값</b>으로 바꾼다. 거꾸로 원래 값을 알아낼 수 없다. 데이터가 바뀌었는지(무결성) 확인할 때 쓴다. 종류: MD5, SHA."
           hint: 사람의 지문. 지문으로 사람을 되살릴 순 없지만 같은 사람인지는 알 수 있음. 비밀번호도 해시로 저장
           short: 어떤 데이터든 정해진 길이의 값으로 바꾼다
         - id: x-mac
+          scenario:
+            title: 인사 이동
+            q: 직원이 개발팀에서 회계팀으로 이동하자 역할을 바꿔 회계 시스템 권한을 부여했다. 접근통제 방식은?
+            answer: RBAC
+            wrong:
+              - MAC
+              - DAC
+            explain: <p>역할에 권한을 연결한다. MAC은 보안 등급, DAC은 자원 소유자의 재량을 중심으로 통제한다.</p>
           term: MAC / DAC / RBAC
           desc: "<b>MAC</b>(강제적): 관리자가 정한 <b>보안 등급</b>으로 접근을 강제로 통제. <b>DAC</b>(임의적): 데이터 <b>주인</b>이 누구에게 줄지 마음대로 정함. <b>RBAC</b>(역할 기반): <b>직급·역할</b>에 따라 권한을 줌."
           hint: MAC = 군대 비밀 등급(Mandatory 강제). DAC = 내 구글 드라이브 공유 설정(Discretionary 재량). RBAC = 팀장이면 결재 권한(Role)
@@ -219,6 +254,14 @@ blocks:
             - label: RBAC(역할 기반)
               text: 직급·역할에 따라 권한을 줌
         - id: x-ids
+          scenario:
+            title: 침입 장비 동작
+            q: 의심 트래픽을 탐지해 관리자에게 알리지만 직접 차단하지 않는 장비는?
+            answer: IDS
+            wrong:
+              - IPS
+              - 방화벽
+            explain: <p>IDS는 탐지·알림을 담당한다. IPS는 침입 방지와 차단까지 수행하고 방화벽은 접근 규칙에 따라 트래픽을 제어한다.</p>
           term: 방화벽 / IDS / IPS
           desc: "<b>방화벽</b>: 정해 둔 규칙대로 통과·차단. <b>IDS</b>: 침입을 <mark>탐지</mark>하고 알리기만 함. <b>IPS</b>: 침입을 탐지해서 <mark>차단</mark>까지 함."
           hint: IDS = Detection = CCTV(보고 알림만), IPS = Prevention = 경비원(보고 막음)
@@ -231,12 +274,30 @@ blocks:
             - label: IPS
               text: 침입을 탐지해서 차단까지 함
         - id: x-honey
+          scenario:
+            title: 공격자 관찰
+            q: 실제 운영 데이터 대신 가짜 자료를 둔 취약한 서버로 공격자를 유도해 행동을 관찰한다. 무엇인가?
+            answer: 허니팟
+            wrong:
+              - 방화벽
+              - IDS
+              - IPS
+            explain: <p>유인용 시스템 자체가 허니팟이다. 탐지 장비나 차단 장비를 설치하는 것과는 목적과 형태가 다르다.</p>
           term: 허니팟
           sub: Honeypot
           desc: 일부러 <b>허술한 가짜 시스템</b>으로 공격자를 끌어들여 관찰한다. 공격 방법을 기록해 방어에 쓴다.
           hint: 꿀단지(Honey pot)로 벌레를 모으는 함정
           short: 일부러 허술한 가짜 시스템으로 공격자를 끌어들여 관찰한다
         - id: x-vpn
+          scenario:
+            title: 원격 사내 접속
+            q: 외부 직원이 인터넷 위의 암호화된 터널로 사내망에 접속한다. 사용하는 기술은?
+            answer: VPN
+            wrong:
+              - SSO
+              - NAT
+              - 프록시 캐시
+            explain: <p>VPN은 네트워크 통신 경로를 보호한다. SSO는 로그인 연계이며 통신 터널을 만드는 기능은 아니다.</p>
           term: VPN / SSO
           desc: "<b>VPN</b>: 공용망 위에 <b>암호화된 전용 통로</b>를 만들어 사설망처럼 쓴다. <b>SSO</b>: <b>한 번 로그인</b>으로 여러 서비스를 이어서 쓴다."
           hint: VPN = 공용 도로 위의 전용 터널. SSO = Single Sign-On, 구글 로그인 한 번으로 유튜브·지메일 다 쓰기
@@ -247,6 +308,15 @@ blocks:
             - label: SSO
               text: 한 번 로그인으로 여러 서비스를 이어서 쓴다
         - id: x-proto
+          scenario:
+            title: 웹 연결 보호
+            q: 브라우저와 웹 서버 사이의 HTTPS 연결을 보호하는 프로토콜은?
+            answer: TLS
+            wrong:
+              - IPSec
+              - SSH
+              - S/MIME
+            explain: <p>HTTPS는 TLS를 사용한다. IPSec은 IP 계층, SSH는 원격 접속, S/MIME은 전자우편 보호에 사용한다.</p>
           term: SSL/TLS · IPSec
           desc: "<b>SSL/TLS</b>: 웹 브라우저와 서버 사이 통신을 암호화 (HTTPS). <b>IPSec</b>: IP 계층(3계층)에서 암호화. AH(인증·무결성)와 ESP(암호화까지)로 구성."
           hint: "IPSec 모드 두 가지: 전송 모드(데이터만 보호), 터널 모드(패킷 전체를 보호, VPN에 사용)"
@@ -257,6 +327,15 @@ blocks:
             - label: IPSec
               text: IP 계층(3계층)에서 암호화
         - id: x-auth
+          scenario:
+            title: 인증 수단
+            q: 스마트카드나 OTP 기기를 가지고 있는지 확인한다. 인증 요소의 분류는?
+            answer: 소유 기반
+            wrong:
+              - 지식 기반
+              - 존재 기반
+              - 행위 기반
+            explain: <p>가진 기기로 확인하므로 소유 기반이다. 비밀번호는 지식, 지문은 존재, 서명 동작은 행위에 해당한다.</p>
           term: 지식 / 소유 / 존재 / 행위
           sub: 인증 유형
           desc: "<b>지식</b>: 아는 것으로 확인 (비밀번호, PIN). <b>소유</b>: 가진 것으로 확인 (OTP, 스마트카드). <b>존재</b>: 내 몸 자체로 확인 (지문, 홍채, 얼굴). <b>행위</b>: 내 행동으로 확인 (서명, 걸음걸이, 목소리)."

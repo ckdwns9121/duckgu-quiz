@@ -7,7 +7,9 @@ lede: "슬라이싱은 <mark>[시작 : 끝 : 간격]</mark>, 끝 번호는 포�
 blocks:
   - items:
       - id: p1
+        wrong_answers: ["[2, 3, 4] [4, 5] [1, 3, 5] [5, 4, 3, 2, 1]"]
         tag: Py
+        run: python
         title: 리스트 슬라이싱
         type: answer
         code: |-
@@ -26,7 +28,9 @@ blocks:
           - "번호 매기기: 값 1 2 3 4 5 → 번호 <b>0 1 2 3 4</b> (뒤에서는 -5 -4 -3 -2 -1)"
           - '<b>기억할 것</b>: <mark>[시작 : 끝 : 간격], 끝 번호는 안 들어간다</mark>. 빈칸이면 "처음부터" 또는 "끝까지".'
       - id: p2
+        wrong_answers: ["ell o he","ello o He"]
         tag: Py
+        run: python
         title: 문자열 슬라이싱
         type: answer
         code: |-
@@ -44,7 +48,9 @@ blocks:
           - "번호: H=0, e=1, l=2, l=3, o=4"
           - '<b>기억할 것</b>: 문자열도 리스트와 똑같이 자른다. <mark>[:2]는 "앞에서 2글자"</mark>로 외우면 편하다.'
       - id: p3
+        wrong_answers: ["3 -3 -1 8 3.5"]
         tag: Py
+        run: python
         title: // 와 % 와 **
         type: answer
         code: print(7//2, -7//2, -7%3, 2**3, 7/2)
@@ -61,7 +67,9 @@ blocks:
           - <code>7//2</code> → 3.5를 <b>내림</b> → 3
           - "<b>기억할 것</b>: <mark>Python //는 무조건 아래로(바닥으로) 내린다</mark>. 음수가 나오면 C랑 답이 달라지니 함정 1순위."
       - id: p4
+        wrong_answers: ["[1, 2, 3]"]
         tag: Py
+        run: python
         title: 리스트는 같이 바뀜
         type: answer
         code: |-
@@ -81,7 +89,9 @@ blocks:
           - <code>a = [1, 2, 3]</code> → 리스트 하나를 만들고 a라는 이름표를 붙임
           - "<b>기억할 것</b>: <mark>= 는 복사가 아니라 이름표 하나 더 붙이기</mark>. 따로 쓰려면 <code>b = a[:]</code> 또는 <code>b = a.copy()</code>."
       - id: p5
+        wrong_answers: ["[1, 2, 3, 4] 4 [1, 2, [3, 4]] 3", "[1, 2, 3, 4] 3 [1, 2, 3, 4] 4"]
         tag: Py
+        run: python
         title: append vs extend
         type: answer
         code: |-
@@ -99,7 +109,9 @@ blocks:
           - <code>a.append([3, 4])</code> → [3, 4] <b>리스트 통째로</b>를 한 칸에 넣음 → [1, 2, [3, 4]], 칸 수 3
           - "<b>기억할 것</b>: <mark>append = 상자째 넣기, extend = 상자 풀어서 넣기</mark>."
       - id: p6
+        wrong_answers: ["[0, 1, 2, 3, 4, 5] [1, 4, 7, 10] [5, 3, 1]"]
         tag: Py
+        run: python
         title: range
         type: answer
         code: print(list(range(5)), list(range(1, 10, 3)), list(range(5, 0, -2)))
@@ -114,7 +126,9 @@ blocks:
           - <code>range(5)</code> → 0부터 5 직전까지 → 0~4
           - "<b>기억할 것</b>: <mark>range(시작, 끝, 간격)에서 끝은 절대 안 들어간다</mark>. 숫자를 직접 써 보면서 끝에 닿기 전에 멈추기."
       - id: p7
+        wrong_answers: ["[0, 2, 4]","[0, 2, 4, 6, 8]"]
         tag: Py
+        run: python
         title: 리스트 컴프리헨션
         type: answer
         code: print([x*2 for x in range(5) if x % 2 == 0])
@@ -130,24 +144,27 @@ blocks:
           - "읽는 순서: <b>for → if → 앞의 식</b>"
           - "<b>기억할 것</b>: 리스트 컴프리헨션은 <mark>가운데(for) → 오른쪽(if) → 왼쪽(식)</mark> 순서로 읽는다."
       - id: p8
+        wrong_answers: ["[1] [1, 2, 3, 4] [2, 3]"]
         tag: Py
+        run: python
         title: set 연산
         type: answer
         code: |-
           a = {1, 2, 3}; b = {2, 3, 4}
-          print(a & b, a | b, a - b)
+          print(sorted(a & b), sorted(a | b), sorted(a - b))
         q: 출력은?
-        answer: "{2, 3} {1, 2, 3, 4} {1}"
+        answer: "[2, 3] [1, 2, 3, 4] [1]"
         steps:
-          - "<code>a &amp; b</code> 교집합: 둘 다 있는 것 → {2, 3}"
-          - "<code>a | b</code> 합집합: 하나라도 있는 것 (중복은 한 번만) → {1, 2, 3, 4}"
-          - "<code>a - b</code> 차집합: a에만 있는 것 → {1}"
-        why: "<b>기억할 것</b>: <mark>&amp; = 그리고(둘 다), | = 또는(하나라도), - = 빼기</mark>. set은 중복을 자동으로 없앤다."
+          - "<code>a &amp; b</code> 교집합을 정렬한 리스트 → [2, 3]"
+          - "<code>a | b</code> 합집합을 정렬한 리스트 → [1, 2, 3, 4]"
+          - "<code>a - b</code> 차집합을 정렬한 리스트 → [1]"
+        why: "<b>기억할 것</b>: <mark>&amp; = 그리고(둘 다), | = 또는(하나라도), - = 빼기</mark>. set은 중복을 없애지만 순서는 보장하지 않는다. 이 코드는 sorted로 정렬한 리스트를 출력한다."
         hints:
           - "<code>a &amp; b</code> 교집합: 둘 다 있는 것 → {2, 3}"
           - "<b>기억할 것</b>: <mark>&amp; = 그리고(둘 다), | = 또는(하나라도), - = 빼기</mark>. set은 중복을 자동으로 없앤다."
       - id: p9
         tag: Py
+        run: python
         title: print 의 sep, end
         type: answer
         code: |-
@@ -164,7 +181,9 @@ blocks:
           - <code>sep="-"</code> → 값과 값 <b>사이</b>에 "-"를 넣음 → 1-2-3
           - '<b>기억할 것</b>: <mark>sep = 사이에, end = 끝에</mark>. 기본값은 sep=" "(공백), end="\n"(줄바꿈).'
       - id: p10
+        wrong_answers: ["120","ab"]
         tag: Py
+        run: python
         title: dict 순회
         type: answer
         code: |-

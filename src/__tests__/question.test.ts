@@ -5,12 +5,19 @@ import type { Card } from '../domain/types';
 const byId = (id: string) => CARDS.find((c) => c.id === id) as Card;
 
 describe('직접 입력 채점', () => {
-  it('띄어쓰기와 따옴표는 무시한다', () => {
+  it('공백 폭과 구분자 주변 공백은 허용한다', () => {
     expect(isTypedAnswerCorrect('7  5 7', '7 5 7')).toBe(true);
-    expect(isTypedAnswerCorrect("'ell' o He", 'ell o He')).toBe(true);
+    expect(isTypedAnswerCorrect('[2,3]  [4, 5]', '[2, 3] [4, 5]')).toBe(true);
   });
-  it('쉼표와 괄호를 빼고 써도 정답으로 본다', () => {
-    expect(isTypedAnswerCorrect('2 3 4 5', '[2, 3] [4, 5]')).toBe(true);
+  it('구조와 값 경계를 생략하면 오답이다', () => {
+    expect(isTypedAnswerCorrect('2 3 4 5', '[2, 3] [4, 5]')).toBe(false);
+  });
+  it('중첩 구조·대소문자·숫자 경계를 보존한다', () => {
+    expect(isTypedAnswerCorrect('[1, 2, 3, 4] 3 [1, 2, 3, 4] 4', '[1, 2, [3, 4]] 3 [1, 2, 3, 4] 4')).toBe(false);
+    expect(isTypedAnswerCorrect('ell o he', 'ell o He')).toBe(false);
+    expect(isTypedAnswerCorrect('11 2', '1 12')).toBe(false);
+    expect(isTypedAnswerCorrect('123', '1 2 3')).toBe(false);
+    expect(isTypedAnswerCorrect('3.5', '35')).toBe(false);
   });
   it('숫자가 다르면 오답', () => {
     expect(isTypedAnswerCorrect('7 5 6', '7 5 7')).toBe(false);
@@ -26,7 +33,7 @@ describe('문제 만들기', () => {
 
   it('용어 카드는 정답이 들어 있는 4지선다가 된다', () => {
     for (let i = 0; i < 20; i++) {
-      const q = makeQuestion(byId('n-tcp'), CARDS);
+      const q = makeQuestion(byId('d-rel'), CARDS);
       expect(q.type).toBe('choice');
       if (q.type !== 'choice') return;
       expect(q.options).toHaveLength(4);

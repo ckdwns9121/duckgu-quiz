@@ -7,6 +7,7 @@ lede: ""
 blocks:
   - items:
       - id: s1
+        wrong_answers: ["3, 3","2, 2"]
         tag: SQL
         title: COUNT(*) vs COUNT(열)
         type: answer
@@ -190,7 +191,7 @@ blocks:
         type: build
         mode: order
         join: " → "
-        q: SELECT 문이 실제로 처리되는 순서대로 놓으세요.
+        q: SELECT 문의 논리적 처리 순서대로 놓으세요.
         tokens:
           - FROM
           - WHERE

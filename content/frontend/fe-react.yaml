@@ -3,7 +3,7 @@ name: React
 color: "#00CD9C"
 dark: "#00A47D"
 part: PART 5
-lede: 상태 업데이트, 렌더링, useEffect, key처럼 React에서 실수가 가장 잦은 부분입니다. React 18 기준입니다.
+lede: 상태 업데이트, 렌더링, useEffect, key처럼 React에서 실수가 가장 잦은 부분입니다. 별도 언급이 없으면 React 19, createRoot, StrictMode와 React Compiler를 끈 환경입니다.
 blocks:
   - items:
       - id: fe-re-q-batch
@@ -120,7 +120,7 @@ blocks:
         type: mcq
         quizzes:
           - q: useEffect(fn, [])의 fn은 언제 실행될까?
-            answer: 처음 화면에 그려진 뒤 한 번
+            answer: 처음 DOM에 반영된 뒤 한 번
             wrong:
               - 렌더링할 때마다
               - 처음 렌더링 직전에 한 번
@@ -253,12 +253,12 @@ blocks:
             }
           );
         quizzes:
-          - q: Child는 React.memo로 감싸져 있다. Parent가 다시 렌더링되면 Child는?
-            answer: 매번 같이 다시 렌더링된다
+          - q: Child는 React.memo로 감쌌다. id가 같아도 Parent와 함께 다시 렌더링되는 이유는?
+            answer: 새로운 onSave 함수가 매번 전달돼서
             wrong:
-              - 다시 렌더링되지 않는다
-              - id가 바뀔 때만 다시 렌더링된다
-              - 처음 한 번만 렌더링된다
+              - memo는 부모의 렌더링을 항상 따라가서
+              - 화살표 함수가 렌더링 도중 save를 실행해서
+              - 함수 prop을 받으면 memo가 오류를 던져서
           - q: Child가 불필요하게 다시 렌더링되지 않게 하려면?
             answer: onSave를 useCallback으로 감싼다
             wrong:
@@ -343,7 +343,7 @@ blocks:
             ? <Counter label="A" />
             : <Counter label="B" />}
         quizzes:
-          - q: A 버튼을 두 번 눌러 A2가 된 뒤 isA를 false로 바꾸면 화면은?
+          - q: A 버튼을 두 번 눌러 Counter는 useState(0)의 n을 클릭마다 1씩 올리고 label과 n을 출력한다. A2가 된 뒤 isA를 false로 바꾸면 화면은?
             answer: B2
             wrong:
               - B0
@@ -361,7 +361,7 @@ blocks:
             <section><Counter label="B" /></section>
           )}
         quizzes:
-          - q: A2가 된 뒤 isA를 false로 바꾸면 화면은?
+          - q: Counter는 useState(0)의 n을 클릭마다 1씩 올리고 label과 n을 출력한다. A2가 된 뒤 isA를 false로 바꾸면 화면은?
             answer: B0
             wrong:
               - B2
@@ -447,7 +447,7 @@ blocks:
             answer: 1번 (처음에만)
             wrong:
               - 3번 (처음 + 클릭마다)
-              - memo로 감싸지 않았으니 3번
+              - 2번 (클릭할 때만)
               - 0번
         explain: <p>Expensive 요소는 <b>App이 만들어서</b> children으로 넘긴 것이다. Wrapper의 state가 바뀌어 Wrapper가 다시 렌더링돼도 children은 App이 만든 <b>같은 요소</b>라 React가 건너뛴다. Wrapper 안에서 <code>&lt;Expensive /&gt;</code>를 직접 쓰면 클릭마다 다시 렌더링된다. memo 없이 렌더링을 줄이는 방법이다.</p>
       - id: fe-re-q-context
@@ -471,12 +471,12 @@ blocks:
             );
           }
         quizzes:
-          - q: App의 버튼을 누를 때마다 memo로 감싼 Child는?
-            answer: 매번 다시 렌더링된다
+          - q: App의 버튼을 누르면 Child가 다시 렌더링되는 이유는?
+            answer: 매번 새로운 value 객체를 전달해서
             wrong:
-              - memo라서 다시 렌더링되지 않는다
-              - theme 값이 'dark' 그대로라 건너뛴다
-              - 처음 한 번만 렌더링된다
+              - memo는 부모가 렌더링되면 항상 무시돼서
+              - createContext의 기본값이 매번 초기화돼서
+              - Context를 읽는 컴포넌트에는 memo를 쓸 수 없어서
           - q: Child가 불필요하게 다시 렌더링되지 않게 하려면?
             answer: value 객체를 useMemo로 고정한다
             wrong:
@@ -496,7 +496,7 @@ blocks:
             }, 0);
           }
         quizzes:
-          - q: React 18 이상에서 버튼을 누르면, setTimeout 안의 두 set 때문에 다시 렌더링되는 횟수는?
+          - q: a와 b가 모두 0일 때 버튼을 한 번 누르면, setTimeout 안의 두 set 때문에 다시 렌더링되는 횟수는?
             answer: 1번
             wrong:
               - 2번
