@@ -7,6 +7,8 @@ import { createVNode, renderElement } from '../lib';
 import { QuestionView } from '../components/QuestionView';
 import { CheckBar } from '../components/CheckBar';
 import { selectChoice } from '../services/lessonService';
+import { progressReducer, progressStore } from '../stores/progressStore';
+import { isUnlocked } from '../domain/lessons';
 
 vi.mock('../components/Mascot', () => ({ Mascot: () => null }));
 vi.mock('../services/lessonService', () => ({ usesTiles: () => true, pickTile: vi.fn(), unpickTile: vi.fn(), selectChoice: vi.fn(), setInputMode: vi.fn(), showHint: vi.fn(), typeAnswer: vi.fn(), check: vi.fn() }));
@@ -14,6 +16,8 @@ vi.mock('../services/lessonService', () => ({ usesTiles: () => true, pickTile: v
 const course = COURSE_BY_ID.get('aws-saa')!;
 it('AWS-SAA 320문제를 연결하고 복수 정답 62문제를 전부 정확히 채점한다', () => {
   expect(course.cards).toHaveLength(320);
+  expect(course.cards.every((c) => c.id.startsWith('saa-r2-') && /^Q\d+-\d+$/.test(c.sourceId ?? ''))).toBe(true);
+  expect(course.lessons.every((l) => l.id.startsWith('saa-r2-'))).toBe(true);
   expect(course.cards.filter((c) => c.kind === 'mcq' && c.correctAnswers)).toHaveLength(62);
   expect(new Set(course.lessons.flatMap((l) => l.cardIds)).size).toBe(320);
   for (const card of course.cards) {
@@ -60,4 +64,17 @@ it('서울 자정에 날짜를 바꾸고 같은 날짜에는 항상 같은 오�
   const count = course.lessons.length;
   expect(dailyLessonIndex('2026-11-03', count)).toBe((dailyLessonIndex('2026-11-02', count) + 1) % count);
   expect(() => dailyLessonIndex('bad', count)).toThrow();
+});
+
+it('이전판 완료·오답 기록과 XP를 보존하고 개정판을 이전에 푼 것으로 처리하지 않는다', () => {
+  const old = { ...progressStore.getState(), xp: 75, done: { 'saa-day-15-1': true, 'saa-day-15-2': true, 'code-c-1': true },
+    cards: { 'Q15-01': { ok: 1, ng: 2, last: 'ng' as const, weak: true } } };
+  const next = progressReducer(old, { type: 'SET_COURSE', course: 'aws-saa' });
+  expect(next.xp).toBe(75);
+  expect(next.done).toEqual(old.done);
+  expect(next.cards).toEqual(old.cards);
+  const [first, second] = course.lessons;
+  expect(isUnlocked(first, next.done)).toBe(true);
+  expect(isUnlocked(second, next.done)).toBe(false);
+  expect(next.cards[first.cardIds[0]]).toBeUndefined();
 });

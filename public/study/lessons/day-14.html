@@ -1,5 +1,5 @@
 <!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>14일 차: 컨테이너·분석 파이프라인·머신러닝 서비스</title><style>body{font:17px/1.8 system-ui,sans-serif;max-width:850px;margin:auto;padding:24px;color:#243047}img,svg{max-width:100%;height:auto}table{border-collapse:collapse;display:block;overflow:auto}td,th{border:1px solid #ccd3df;padding:8px}pre{overflow:auto;background:#eef1f5;padding:16px}a{color:#1769bb}</style><body><a href="/course/aws-saa">← AWS-SAA 퀴즈</a><h1 id="14일-차-컨테이너분석-파이프라인머신러닝-서비스">14일 차: 컨테이너·분석 파이프라인·머신러닝 서비스</h1>
-<p><a href="/course/aws-saa">프로젝트 홈</a> · <a href="day-13.html">13일 차</a> · <a href="/course/aws-saa">서비스별 보충 설명</a> · <a href="/course/aws-saa">30일 계획</a></p>
+<p><a href="/course/aws-saa">프로젝트 홈</a> · <a href="day-13.html">13일 차</a> · <a href="service-reference.html">서비스별 보충 설명</a> · <a href="/course/aws-saa">30일 계획</a></p>
 <h2 id="1-이미지-저장컨테이너-배치실행-자원">1. 이미지 저장·컨테이너 배치·실행 자원</h2>
 <p>컨테이너는 애플리케이션 코드와 실행에 필요한 라이브러리를 이미지로 묶어 실행하는 방식이다. 이미지가 같아도 CPU 아키텍처·외부 설정·네트워크·권한·저장소가 맞지 않으면 실행되지 않는다. 컨테이너 이미지를 만들었다고 상태가 자동으로 외부에 보관되거나 여러 AZ에 배치되는 것은 아니다.</p>
 <p>컨테이너 환경에는 이미지 저장소, 실행·배치를 조율하는 계층, 실제 CPU·메모리를 제공하는 계층이 있다. <strong>ECR은 이미지 저장소, ECS·EKS는 오케스트레이션, Fargate·EC2는 실행 자원</strong>으로 읽는다. 이 세 층을 구별하면 “ECR과 Fargate 중 무엇을 선택할까”처럼 서로 다른 역할을 대안으로 비교하는 실수를 줄일 수 있다.</p>
@@ -298,7 +298,7 @@
 <p>S3 원본은 제한된 역할만 쓰도록 하고, Glue가 검증·중복 제거·파티션·Parquet 변환을 수행해 정제 영역에 저장한다. 잘못된 레코드는 버리지 않고 분리해 재처리한다. Catalog에 스키마와 파티션을 등록하고 Athena로 하루 매출을 조회한다. 분석가에게 전화번호 접근을 막고 결과 버킷도 같은 의도로 보호한다. 여러 해의 복잡한 분석을 반복하고 동시 사용자가 많아지면 Redshift 적재·모델링 비용과 Athena 스캔·성능을 비교한다.</p>
 <p>BI 대시보드는 승인된 집계 결과를 표시한다. 송장 문서의 정보 추출에는 Textract, 음성 상담 전사에는 Transcribe처럼 실제 입출력에 맞는 기능을 붙인다. 모델 개발이 필요한 자체 예측만 SageMaker AI로 분리한다. 서비스 이름의 수를 늘리는 것이 아니라 요구되는 처리 경로마다 필요한 역할을 배치한다.</p>
 <p>비용은 Fargate 요청 자원·실행 시간, ALB, DB, 큐·스트림, Firehose, S3 저장·요청, Glue 실행, Athena 스캔, BI 사용자·용량, 로그·NAT·전송을 합산한다. 읽지 않는 원본은 보존 규정에 맞춰 수명 주기를 적용하고, 매 쿼리마다 1년치를 스캔하지 않도록 날짜 조건을 둔다. 운영 데이터는 <a href="day-13.html">13일 차</a>의 백업·복구 목표를 적용하고, 분석 데이터는 원본에서 다시 만들 수 있는 범위와 복구 시간을 따로 정한다.</p>
-<p>이 구조를 설명할 때 사용자 요청, 데이터 저장, 비동기 작업, 분석의 화살표를 구별한다. IAM은 API 권한, 보안 그룹은 네트워크 통신, KMS는 암호화 키 사용, Lake Formation은 데이터 권한을 담당한다. 여러 AZ·오토스케일링·복제·백업은 각각 다른 장애와 부하에 대응한다. 공식 범위의 나머지 서비스별 용도·제약은 <a href="/course/aws-saa">서비스별 보충 설명</a>에서 비교한다.</p>
+<p>이 구조를 설명할 때 사용자 요청, 데이터 저장, 비동기 작업, 분석의 화살표를 구별한다. IAM은 API 권한, 보안 그룹은 네트워크 통신, KMS는 암호화 키 사용, Lake Formation은 데이터 권한을 담당한다. 여러 AZ·오토스케일링·복제·백업은 각각 다른 장애와 부하에 대응한다. 공식 범위의 나머지 서비스별 용도·제약은 <a href="service-reference.html">서비스별 보충 설명</a>에서 비교한다.</p>
 <p>출처: <a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html">트랜잭셔널 아웃박스 패턴</a>, <a href="https://docs.aws.amazon.com/aws-certification/latest/solutions-architect-associate-03/solutions-architect-associate-03.html">SAA-C03 범위와 설계 과제</a></p>
 <p>공식 자료 확인일: 2026-11-02</p>
 <h2 id="관련-문제">관련 문제</h2>

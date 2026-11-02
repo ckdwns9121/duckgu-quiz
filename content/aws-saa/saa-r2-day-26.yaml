@@ -1,0 +1,619 @@
+id: saa-r2-day-26
+name: 혼동하기 쉬운 분야 보충 문제
+part: 26일 차
+color: "#FF9900"
+dark: "#985800"
+blocks:
+  - tip: SAA 시험 범위를 바탕으로 만든 창작 문제입니다. 실제 기출문제가 아닙니다. 복수 정답은 지정한 개수를 모두 맞혀야 합니다.
+  - items:
+      - id: saa-r2-Q26-01
+        source_id: Q26-01
+        type: mcq
+        title: Q26-01 · 혼동하기 쉬운 분야 보충 문제
+        explain: |
+          <p>IPv4 주소를 배정하지 않으면서 OS 운영을 줄여야 한다. DNS64가 A 레코드에서 합성 IPv6 주소를 만들고 NAT Gateway가 NAT64 변환을 수행하도록 더 구체적인 경로를 추가한다. 기존 IPv6 API의 egress-only IGW 경로는 함께 유지할 수 있다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>서브넷에 DNS64를 켜고 기존 egress-only IGW 기본 경로만 유지한다.</td>
+          <td>DNS64는 주소를 합성할 뿐 변환 경로를 만들지 않는다. egress-only IGW는 IPv6와 IPv4를 변환하지 않는다.</td>
+          </tr>
+          <tr>
+          <td>NAT64용 EC2 라우터를 이중화하고 합성 접두사를 해당 라우터로 보낸다.</td>
+          <td>자체 NAT64 라우터는 구성할 수 있지만 패치·장애 조치 등 OS 운영 부담을 남긴다.</td>
+          </tr>
+          <tr>
+          <td>작업자를 dual-stack으로 바꾸고 IPv4 기본 경로를 퍼블릭 NAT Gateway로 보낸다.</td>
+          <td>IPv4 통신 경로는 만들지만 작업자에 IPv4 주소를 추가할 수 없다는 조건을 어긴다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-04.html">4일 차 개념</a> · <a href="/study/lessons/day-05.html">5일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateway-nat64-dns64.html">DNS64와 NAT64</a>
+          SAA 평가 항목: 3.4</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-04.html#ipv6-%EC%A0%84%EC%9A%A9-%EC%95%B1%EC%97%90%EC%84%9C-ipv4-api-%ED%98%B8%EC%B6%9C%ED%95%98%EA%B8%B0">IPv6-only 유지와 IPv4-only 목적지, 변환 OS 운영 최소화를 함께 충족</a></p>
+        quizzes:
+          - q: IPv6-only 서브넷의 작업자는 기존 egress-only IGW 경로로 IPv6 API를 호출한다. 새 공급사의 HTTPS API는
+              A 레코드만 제공해 연결되지 않는다. 작업자에 IPv4 주소를 추가할 수 없고 변환 서버의 OS도 운영하지 않으려
+              한다. NAT64 합성 주소의 접두사가 64:ff9b::/96일 때 어떤 변경이 필요한가?
+            answer: 서브넷에 DNS64를 켜고 합성 접두사를 퍼블릭 NAT Gateway로 라우팅한다.
+            wrong:
+              - 서브넷에 DNS64를 켜고 기존 egress-only IGW 기본 경로만 유지한다.
+              - NAT64용 EC2 라우터를 이중화하고 합성 접두사를 해당 라우터로 보낸다.
+              - 작업자를 dual-stack으로 바꾸고 IPv4 기본 경로를 퍼블릭 NAT Gateway로 보낸다.
+      - id: saa-r2-Q26-02
+        source_id: Q26-02
+        type: mcq
+        title: Q26-02 · 혼동하기 쉬운 분야 보충 문제
+        explain: |
+          <p>대부분의 바이트는 VPC에서 발생하므로 그 경로를 S3 Gateway endpoint로 분리해야 한다. Interface endpoint의 inbound Resolver 전용 private DNS는 사내 질의에 사설 ENI 주소를 주고 VPC 질의는 Gateway 경로를 이용하게 한다. Interface·Resolver 자체 비용은 남는다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>VPC의 이중화 프록시를 통해 두 환경의 요청을 같은 Interface endpoint로 전달한다.</td>
+          <td>프록시 운영 비용을 추가하면서도 데이터는 같은 Interface endpoint를 통과하므로 대량 처리 비용을 없애지 못한다.</td>
+          </tr>
+          <tr>
+          <td>두 환경 모두 Interface endpoint를 사용하고 endpoint ENI를 여러 AZ에 배치한다.</td>
+          <td>여러 AZ 배치는 가용성에 유용하지만 VPC의 대량 전송이 계속 Interface endpoint를 지나므로 처리 요금 원인이 남는다.</td>
+          </tr>
+          <tr>
+          <td>VPC는 Gateway endpoint를 쓰고 온프레미스는 DX public VIF로 S3 공개 주소에 연결한다.</td>
+          <td>VPC 비용은 줄일 수 있으나 온프레미스가 S3 공개 주소를 사용해 사설 주소 접속 조건을 충족하지 못한다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-05.html">5일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints-s3.html">S3 Gateway·Interface 조합의 DNS 비용 최적화</a>
+          SAA 평가 항목: 4.4</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-05.html#%EC%98%A8%ED%94%84%EB%A0%88%EB%AF%B8%EC%8A%A4%EC%9D%98-s3-dns%EC%99%80-%EB%B9%84%EC%9A%A9-%EB%B6%84%EB%A6%AC">VPC 대량 전송 비용 절감과 온프레미스 사설 주소·기존 DNS 유지</a></p>
+        quizzes:
+          - q: VPC 앱은 매달 S3에서 100TB, 온프레미스 앱은 Direct Connect를 통해 1TB를 읽는다. 두 앱 모두 기존 S3 호스트
+              이름을 유지하고 온프레미스는 사설 주소로 접속해야 한다. 현재 모든 질의가 Interface endpoint 주소를
+              반환해 VPC 트래픽에도 처리 요금이 발생한다. 기존 사설 연결을 유지하면서 이 요금을 줄일 구성은?
+            answer: VPC는 Gateway endpoint, 온프레미스는 inbound Resolver 전용 private DNS로 분리한다.
+            wrong:
+              - VPC의 이중화 프록시를 통해 두 환경의 요청을 같은 Interface endpoint로 전달한다.
+              - 두 환경 모두 Interface endpoint를 사용하고 endpoint ENI를 여러 AZ에 배치한다.
+              - VPC는 Gateway endpoint를 쓰고 온프레미스는 DX public VIF로 S3 공개 주소에 연결한다.
+      - id: saa-r2-Q26-03
+        source_id: Q26-03
+        type: mcq
+        title: Q26-03 · 혼동하기 쉬운 분야 보충 문제
+        explain: |
+          <p>문제는 이미 정상인 데이터 경로가 아니라 사내 DNS 질의의 도착점이다. 사내 DNS가 VPC로 질의를 보낼 inbound endpoint와 해당 S3 도메인의 조건부 전달 규칙을 함께 구성해야 기존 서비스 이름이 사설 endpoint 주소로 해석된다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>Resolver outbound endpoint를 만들고 사내 DNS로 질의를 보내는 규칙을 연결한다.</td>
+          <td>outbound는 VPC에서 외부 DNS로 질의를 내보내는 방향이다. 사내에서 VPC로 들어오는 이번 질의를 해결하지 않는다.</td>
+          </tr>
+          <tr>
+          <td>앱의 S3 호스트 이름을 Interface endpoint 전용 DNS 이름으로 변경한다.</td>
+          <td>전용 DNS 이름을 이용할 수는 있지만 앱의 기존 S3 호스트 이름을 유지하라는 요구를 어긴다.</td>
+          </tr>
+          <tr>
+          <td>DX public VIF에 S3 공개 주소 경로를 추가하고 기존 사내 DNS 응답을 유지한다.</td>
+          <td>공개 주소로 접근하는 별도 경로를 추가할 뿐 DNS를 사설 주소로 해석시키지 못한다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-05.html">5일 차 개념</a> · <a href="/study/lessons/day-13.html">13일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/privatelink-interface-endpoints.html">S3 하이브리드 private DNS</a> · <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-forwarding-inbound-queries.html">Resolver inbound endpoint</a>
+          SAA 평가 항목: 3.4</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-05.html#%EC%98%A8%ED%94%84%EB%A0%88%EB%AF%B8%EC%8A%A4%EC%9D%98-s3-dns%EC%99%80-%EB%B9%84%EC%9A%A9-%EB%B6%84%EB%A6%AC">데이터 경로는 정상이며 사내 DNS가 기존 S3 이름을 사설 주소로 해석해야 함</a></p>
+        quizzes:
+          - q: 온프레미스 앱이 기존 리전별 S3 DNS 이름으로 비공개 통신해야 한다. VPC에는 S3 Gateway·Interface endpoint가
+              있으며 inbound Resolver 전용 private DNS 모드도 설정됐다. DX·endpoint SG·S3
+              권한은 정상이나 사내 DNS 응답은 아직 공개 주소다. 앱 코드를 바꾸지 않고 이름 확인을 고칠 조치 두 가지는?
+            answer: Route 53 Resolver inbound endpoint를 만들고 사내 DNS의 질의를 허용한다.
+            wrong:
+              - Resolver outbound endpoint를 만들고 사내 DNS로 질의를 보내는 규칙을 연결한다.
+              - 앱의 S3 호스트 이름을 Interface endpoint 전용 DNS 이름으로 변경한다.
+              - DX public VIF에 S3 공개 주소 경로를 추가하고 기존 사내 DNS 응답을 유지한다.
+            answers:
+              - Route 53 Resolver inbound endpoint를 만들고 사내 DNS의 질의를 허용한다.
+              - 사내 DNS의 리전별 S3 도메인 질의를 Resolver inbound endpoint로 조건부 전달한다.
+            options:
+              - Route 53 Resolver inbound endpoint를 만들고 사내 DNS의 질의를 허용한다.
+              - Resolver outbound endpoint를 만들고 사내 DNS로 질의를 보내는 규칙을 연결한다.
+              - 사내 DNS의 리전별 S3 도메인 질의를 Resolver inbound endpoint로 조건부 전달한다.
+              - 앱의 S3 호스트 이름을 Interface endpoint 전용 DNS 이름으로 변경한다.
+              - DX public VIF에 S3 공개 주소 경로를 추가하고 기존 사내 DNS 응답을 유지한다.
+      - id: saa-r2-Q26-04
+        source_id: Q26-04
+        type: mcq
+        title: Q26-04 · 혼동하기 쉬운 분야 보충 문제
+        explain: |
+          <p>결정적인 조건은 endpoint 이외 경로에 적용되는 명시적 거부다. 허용 정책을 더해도 그 거부를 넘을 수 없으므로 배치 요청을 승인된 endpoint 경로로 보내야 한다. 그 경로에서도 역할·endpoint·버킷의 관련 허용 조건은 충족해야 한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>endpoint 정책에 역할을 허용하되 배치의 NAT 경로와 버킷 정책은 유지한다.</td>
+          <td>현재 요청은 해당 endpoint를 통과하지 않으므로 그 endpoint 정책을 넓혀도 요청 경로 조건이 바뀌지 않는다.</td>
+          </tr>
+          <tr>
+          <td>역할에 S3FullAccess를 추가하고 기존 인터넷 경로로 다시 요청한다.</td>
+          <td>더 넓은 IAM 허용은 명시적 거부를 상쇄하지 못하고 불필요한 권한까지 부여한다.</td>
+          </tr>
+          <tr>
+          <td>버킷 정책에 해당 역할의 GetObject Allow를 추가하고 기존 거부 조건은 유지한다.</td>
+          <td>같은 요청에 명시적 거부가 적용되는 한 리소스 정책의 추가 Allow도 거부를 덮지 못한다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-01.html">1일 차 개념</a> · <a href="/study/lessons/day-05.html">5일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html">IAM 정책 평가</a>
+          SAA 평가 항목: 1.1</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-05.html#endpoint-%EC%A0%95%EC%B1%85%EA%B3%BC-%EB%AA%85%EC%8B%9C%EC%A0%81-%EA%B1%B0%EB%B6%80%EC%9D%98-%EA%B5%90%EC%A7%91%ED%95%A9">명시적 거부 조건 유지와 승인된 endpoint 경로 사용</a></p>
+        quizzes:
+          - q: 운영 역할은 S3 보고서의 GetObject를 허용받았다. 버킷 정책은 승인된 VPC endpoint 이외 경로에서 읽기를 명시적으로
+              거부한다. 새 배치가 NAT 인터넷 경로로 요청하면서 AccessDenied가 발생했다. 기존 보안 기준과 역할의 최소
+              권한을 유지하려면 무엇을 변경해야 하는가?
+            answer: 배치가 승인된 endpoint로 요청하도록 경로를 구성하고 관련 허용 조건을 확인한다.
+            wrong:
+              - endpoint 정책에 역할을 허용하되 배치의 NAT 경로와 버킷 정책은 유지한다.
+              - 역할에 S3FullAccess를 추가하고 기존 인터넷 경로로 다시 요청한다.
+              - 버킷 정책에 해당 역할의 GetObject Allow를 추가하고 기존 거부 조건은 유지한다.
+      - id: saa-r2-Q26-05
+        source_id: Q26-05
+        type: mcq
+        title: Q26-05 · 혼동하기 쉬운 분야 보충 문제
+        explain: |
+          <p>기존 URL을 바꾸지 않고 여러 파일에 만료되는 접근 권한을 전달해야 하므로 경로 범위를 제한한 서명 쿠키가 맞는다. CloudFront는 viewer 서명을 확인하고 원본 접근은 별도의 OAC·버킷 정책으로 보호한다. 원본 비공개만으로 구매자 인증이 생기지는 않는다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>강의별 CloudFront 배포 주소를 발급하고 주소를 구매자에게만 알려 준다.</td>
+          <td>주소를 아는 것만으로 접근하게 하면 구매 여부와 만료를 검증하지 못하며 주소 전달을 통한 접근도 막지 못한다.</td>
+          </tr>
+          <tr>
+          <td>각 파일에 CloudFront 서명 URL을 발급하고 플레이어의 파일 URL을 교체한다.</td>
+          <td>서명 URL은 유효한 접근 방식이지만 파일 URL을 모두 바꿔야 하므로 이번 플레이어 제약에 맞지 않는다.</td>
+          </tr>
+          <tr>
+          <td>S3 presigned URL을 각 파일에 발급하고 플레이어가 S3에서 직접 읽게 한다.</td>
+          <td>S3 직접 접근과 파일 URL 변경을 요구한다. CloudFront에서 기존 경로를 유지하는 조건을 충족하지 못한다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-09.html">9일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-choosing-signed-urls-cookies.html">서명 URL과 서명 쿠키 선택</a>
+          SAA 평가 항목: 1.3</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-09.html#%EA%B5%AC%EB%A7%A4%EC%9E%90-%EA%B6%8C%ED%95%9C%EA%B3%BC-s3-%EC%9B%90%EB%B3%B8-%EA%B6%8C%ED%95%9C">파일 URL 변경 없이 한 강의의 여러 파일에 시간 제한 적용</a></p>
+        quizzes:
+          - q: 유료 강의 플레이어는 같은 경로 아래의 영상 조각·자막·이미지 수백 개를 CloudFront에서 읽는다. 로그인 서버는 브라우저 쿠키를
+              설정할 수 있지만 플레이어가 사용하는 파일 URL은 변경할 수 없다. 구매한 강의 경로에만 2시간 접근을 허용하고 원본
+              버킷은 비공개로 유지하려면 어떤 viewer 접근 방식을 선택해야 하는가?
+            answer: 강의 경로와 만료 조건을 담은 CloudFront 서명 쿠키를 발급한다.
+            wrong:
+              - 강의별 CloudFront 배포 주소를 발급하고 주소를 구매자에게만 알려 준다.
+              - 각 파일에 CloudFront 서명 URL을 발급하고 플레이어의 파일 URL을 교체한다.
+              - S3 presigned URL을 각 파일에 발급하고 플레이어가 S3에서 직접 읽게 한다.
+      - id: saa-r2-Q26-06
+        source_id: Q26-06
+        type: mcq
+        title: Q26-06 · 혼동하기 쉬운 분야 보충 문제
+        explain: |
+          <p>OAC는 S3 REST 버킷 원본에 사용하므로 먼저 원본 유형을 바꾼다. 이어 OAC와 해당 배포의 SourceArn 조건을 가진 버킷 정책을 구성하고 기존 공개 허용을 제거해야 원본 우회를 막을 수 있다. viewer 접근 제한이나 HTTPS 인증서는 다른 구간의 통제다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>CloudFront의 기본 TLS 인증서를 ACM 사용자 지정 인증서로 교체한다.</td>
+          <td>인증서 변경은 HTTPS 연결의 신원을 다룬다. S3 원본의 공개 읽기 권한을 제한하는 조치가 아니다.</td>
+          </tr>
+          <tr>
+          <td>viewer 서명 URL을 적용하고 기존 S3 website 원본과 공개 읽기를 유지한다.</td>
+          <td>viewer 서명은 CloudFront 사용자 접근을 제한하지만 공개된 S3 직접 URL 접근은 남긴다.</td>
+          </tr>
+          <tr>
+          <td>website 원본은 유지하고 버킷의 공개 읽기만 차단한다.</td>
+          <td>website 원본에는 OAC 인증을 적용할 수 없어 공개 읽기만 막으면 CloudFront 원본 읽기도 실패한다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-03.html">3일 차 개념</a> · <a href="/study/lessons/day-09.html">9일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html">S3 OAC와 웹 사이트 endpoint 제한</a>
+          SAA 평가 항목: 1.3</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-09.html#%EA%B5%AC%EB%A7%A4%EC%9E%90-%EA%B6%8C%ED%95%9C%EA%B3%BC-s3-%EC%9B%90%EB%B3%B8-%EA%B6%8C%ED%95%9C">CloudFront URL은 유지하고 website 원본의 공개 S3 우회를 제거</a></p>
+        quizzes:
+          - q: 정적 사이트는 CloudFront의 S3 website 원본과 공개 버킷을 사용한다. 보안 감사에서 S3 직접 URL로 객체를 읽을 수
+              있다는 문제가 나왔다. 사이트의 website 전용 리다이렉트는 사용하지 않으며 CloudFront URL은 유지해야
+              한다. OAC를 사용해 직접 접근을 없애기 위한 조치 두 가지는?
+            answer: CloudFront 원본을 같은 버킷의 일반 S3 REST endpoint로 변경한다.
+            wrong:
+              - CloudFront의 기본 TLS 인증서를 ACM 사용자 지정 인증서로 교체한다.
+              - viewer 서명 URL을 적용하고 기존 S3 website 원본과 공개 읽기를 유지한다.
+              - website 원본은 유지하고 버킷의 공개 읽기만 차단한다.
+            answers:
+              - CloudFront 원본을 같은 버킷의 일반 S3 REST endpoint로 변경한다.
+              - REST 원본에 OAC를 연결하고 공개 읽기 대신 해당 배포만 허용하는 버킷 정책을 적용한다.
+            options:
+              - CloudFront의 기본 TLS 인증서를 ACM 사용자 지정 인증서로 교체한다.
+              - CloudFront 원본을 같은 버킷의 일반 S3 REST endpoint로 변경한다.
+              - viewer 서명 URL을 적용하고 기존 S3 website 원본과 공개 읽기를 유지한다.
+              - REST 원본에 OAC를 연결하고 공개 읽기 대신 해당 배포만 허용하는 버킷 정책을 적용한다.
+              - website 원본은 유지하고 버킷의 공개 읽기만 차단한다.
+      - id: saa-r2-Q26-07
+        source_id: Q26-07
+        type: mcq
+        title: Q26-07 · 혼동하기 쉬운 분야 보충 문제
+        explain: |
+          <p>제시된 대안 가운데 Standard-IA는 낮은 접근 빈도에 맞는 저장 비용과 즉시 읽기, 다중 AZ 보관을 함께 제공한다. One Zone-IA는 즉시 읽을 수 있지만 AZ 손실 조건을 만족하지 않으며 비동기 아카이브는 조회 전 복원이 필요하다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>S3 One Zone-IA로 옮기고 기존 읽기 API를 유지한다.</td>
+          <td>즉시 읽기와 비용 절감에는 맞지만 단일 AZ 저장이므로 재생성할 수 없는 원본의 AZ 손실 요구에 맞지 않는다.</td>
+          </tr>
+          <tr>
+          <td>S3 Glacier Deep Archive로 옮기고 조회 시 복원 요청을 실행한다.</td>
+          <td>장기 보관 비용을 낮추지만 복원 대기가 필요해 즉시 GET 조건을 충족하지 못한다.</td>
+          </tr>
+          <tr>
+          <td>S3 Glacier Flexible Retrieval로 옮기고 조회 시 복원 요청을 실행한다.</td>
+          <td>대규모 장기 보관에 적합할 수 있으나 Flexible Retrieval도 조회 전에 복원 절차가 필요하다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-03.html">3일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html">S3 저장 클래스 비교</a>
+          SAA 평가 항목: 4.1</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-03.html#%EC%A0%80%EC%9E%A5-%ED%81%B4%EB%9E%98%EC%8A%A4%EC%99%80-%EB%B3%B5%EC%9B%90-%EC%8B%9C%EA%B0%84%EC%9D%98-%EC%84%A0%ED%83%9D">즉시 읽기와 AZ 손실 시 원본 접근을 모두 유지</a></p>
+        quizzes:
+          - q: 계약서 원본은 S3에 1년 이상 보관하며 매달 소량만 조회한다. 조회 API는 복원 작업 없이 즉시 객체를 읽어야 하고, AZ 하나가
+              손실돼도 원본을 다른 AZ에서 읽을 수 있어야 한다. 현재 Standard를 사용하며 제시된 대안 중 저장 비용을
+              줄이려 한다. 가장 적합한 변경은?
+            answer: S3 Standard-IA로 옮기고 기존 읽기 API를 유지한다.
+            wrong:
+              - S3 One Zone-IA로 옮기고 기존 읽기 API를 유지한다.
+              - S3 Glacier Deep Archive로 옮기고 조회 시 복원 요청을 실행한다.
+              - S3 Glacier Flexible Retrieval로 옮기고 조회 시 복원 요청을 실행한다.
+      - id: saa-r2-Q26-08
+        source_id: Q26-08
+        type: mcq
+        title: Q26-08 · 혼동하기 쉬운 분야 보충 문제
+        explain: |
+          <p>7년 보관과 매우 드문 조회, 48시간 복원 허용 조건에서는 더 낮은 저장 비용의 Deep Archive를 선택할 수 있다. 선택의 근거는 즉시 조회가 아니라 장기 저장 비용이며 실제 복원 방식·용량은 감사 전에 검증해야 한다. 저장 클래스 변경이 기존 삭제 방지 정책을 대신하지는 않는다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>S3 Glacier Instant Retrieval에 보관하고 감사 때 즉시 읽는다.</td>
+          <td>즉시 조회가 핵심일 때 맞지만 이번 업무는 48시간을 허용하므로 높은 저장 비용을 지불할 이유가 약하다.</td>
+          </tr>
+          <tr>
+          <td>S3 Standard-IA에 보관하고 감사 때 즉시 읽는다.</td>
+          <td>즉시 조회가 가능하지만 사용하지 않는 저지연 읽기 특성에 더 높은 저장 비용을 지불한다.</td>
+          </tr>
+          <tr>
+          <td>S3 Glacier Flexible Retrieval에 보관하고 감사 요청 시 복원한다.</td>
+          <td>수시간 복원이 필요한 경우 경쟁 대안이지만 이번에는 더 긴 대기가 허용돼 Deep Archive의 저장 비용 이점이 있다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-03.html">3일 차 개념</a> · <a href="/study/lessons/day-11.html">11일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html">S3 아카이브 클래스</a>
+          SAA 평가 항목: 4.1</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/exam-supplement/day-26-29.html#%EC%95%84%EC%B9%B4%EC%9D%B4%EB%B8%8C%EC%9D%98-%EC%A0%80%EC%9E%A5-%EB%B9%84%EC%9A%A9%EA%B3%BC-%EB%B3%B5%EC%9B%90-%ED%97%88%EC%9A%A9-%EC%8B%9C%EA%B0%84">장기·희소 조회와 48시간 복원 허용, 저장 요금 우세</a></p>
+        quizzes:
+          - q: 영상 원본은 삭제 방지 정책이 적용된 S3에 7년 보관한다. 감사는 연 1회 정도이며 요청 후 48시간 안에 복원하면 되고, 평소 즉시
+              GET은 필요 없다. 객체가 크고 저장 요금이 총비용의 대부분이다. 원본의 다중 AZ 내구성을 유지하면서 제시된 대안
+              중 비용을 가장 줄일 구성은?
+            answer: S3 Glacier Deep Archive에 보관하고 감사 요청 시 복원한다.
+            wrong:
+              - S3 Glacier Instant Retrieval에 보관하고 감사 때 즉시 읽는다.
+              - S3 Standard-IA에 보관하고 감사 때 즉시 읽는다.
+              - S3 Glacier Flexible Retrieval에 보관하고 감사 요청 시 복원한다.
+      - id: saa-r2-Q26-09
+        source_id: Q26-09
+        type: mcq
+        title: Q26-09 · 혼동하기 쉬운 분야 보충 문제
+        explain: |
+          <p>약정은 각 시간마다 지불하며 미사용 부분을 다음 시간으로 옮기지 않는다. 첫 시간도 10달러, 둘째 시간도 약정 10달러를 지불하고 초과 사용량에는 제시된 온디맨드 8달러가 붙어 합계 28달러다. 할인 요율 사용액과 온디맨드 초과 요금을 같은 단가로 가정하지 않는다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>첫 시간의 남은 약정을 다음 시간에 써서 두 시간 합계 20달러를 지불한다.</td>
+          <td>시간당 약정의 미사용량은 이월되지 않는다. 첫 시간의 빈 약정으로 둘째 시간 초과분을 상쇄할 수 없다.</td>
+          </tr>
+          <tr>
+          <td>실제 할인 요율 사용량만 합산해 두 시간 합계 20달러를 지불한다.</td>
+          <td>실제 사용량만 과금하는 온디맨드와 약정을 혼동했다. 사용하지 않은 첫 시간의 약정도 지불한다.</td>
+          </tr>
+          <tr>
+          <td>첫 시간 5달러와 둘째 시간 약정 10달러·초과분 8달러를 합해 23달러를 지불한다.</td>
+          <td>둘째 시간 계산은 맞지만 첫 시간의 미사용 약정 5달러를 제외했다. 첫 시간 약정은 10달러다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-02.html">2일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/savingsplans/latest/userguide/sp-applying.html">Savings Plans 시간별 적용</a>
+          SAA 평가 항목: 4.2</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/exam-supplement/day-26-29.html#%EC%8B%9C%EA%B0%84%EB%8B%B9-%EC%95%BD%EC%A0%95%EA%B3%BC-%EC%8B%A4%EC%A0%9C-%EC%B2%AD%EA%B5%AC">약정은 시간 단위로 적용되고 미사용분 이월이 없음</a></p>
+        quizzes:
+          - q: Compute Savings Plans 약정은 시간당 10달러다. 연속한 두 시간의 적격 사용량은 해당 할인 요율 기준 각각 5달러와
+              15달러다. 두 번째 시간의 약정 초과분에 적용되는 온디맨드 요금은 8달러로 계산됐다. 다른 비용은 없을 때 이 두
+              시간의 청구를 어떻게 예상해야 하는가?
+            answer: 시간별 약정 20달러와 둘째 시간 초과분 8달러를 합해 28달러를 지불한다.
+            wrong:
+              - 첫 시간의 남은 약정을 다음 시간에 써서 두 시간 합계 20달러를 지불한다.
+              - 실제 할인 요율 사용량만 합산해 두 시간 합계 20달러를 지불한다.
+              - 첫 시간 5달러와 둘째 시간 약정 10달러·초과분 8달러를 합해 23달러를 지불한다.
+      - id: saa-r2-Q26-10
+        source_id: Q26-10
+        type: mcq
+        title: Q26-10 · 혼동하기 쉬운 분야 보충 문제
+        explain: |
+          <p>용량 예약은 AZ와 속성에 묶이므로 A의 예약이 B로 이동하지 않는다. B의 필요한 용량을 먼저 확보하고 전환·복귀 필요성이 해소된 뒤 A의 즉시 사용 예약을 취소해야 미사용 예약 비용을 줄인다. Compute Savings Plans의 할인 적용은 실제 사용의 적격 여부로 따로 판단한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>A 예약을 계속 유지하고 B 인스턴스에 같은 Savings Plans를 적용해 전환을 끝낸다.</td>
+          <td>할인을 적용할 수 있어도 B의 용량 확보가 보장되지 않으며 검증 후에도 불필요한 A 예약 비용이 남는다.</td>
+          </tr>
+          <tr>
+          <td>A 인스턴스만 중지하고 예약을 유지한 채 B에서 일반 온디맨드 시작을 시도한다.</td>
+          <td>인스턴스 중지는 예약 취소가 아니므로 A 예약 비용이 남고 B의 실행 용량도 확보하지 못한다.</td>
+          </tr>
+          <tr>
+          <td>A 예약을 먼저 취소하고 B에서는 Savings Plans를 이용해 일반 온디맨드를 시작한다.</td>
+          <td>Savings Plans는 실행 용량을 예약하지 않는다. A부터 취소하면 복귀 경로도 먼저 잃는다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-02.html">2일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-capacity-reservations.html">용량 예약의 AZ와 매칭 조건</a>
+          SAA 평가 항목: 2.2</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-02.html#%ED%95%A0%EC%9D%B8%EA%B3%BC-%EC%8B%A4%ED%96%89-%EC%9A%A9%EB%9F%89%EC%9D%98-%EB%8F%85%EB%A6%BD%EC%84%B1">B 용량을 먼저 확보하고 복귀 검증 이후 A 미사용 예약을 정리</a></p>
+        quizzes:
+          - q: 앱은 AZ A의 즉시 사용 온디맨드 용량 예약과 별도 Compute Savings Plans를 사용한다. 다음 주 AZ B로 이전하며
+              B에서도 지정한 유형의 실행 용량을 미리 확보해야 한다. 전환 검증 전까지 A의 복귀 경로는 필요하지만 검증 후 미사용
+              예약 비용은 없애려 한다. 적절한 순서는?
+            answer: B의 일치하는 용량 예약과 실행을 검증한 뒤 A 예약을 취소하고 할인 적용은 별도 확인한다.
+            wrong:
+              - A 예약을 계속 유지하고 B 인스턴스에 같은 Savings Plans를 적용해 전환을 끝낸다.
+              - A 인스턴스만 중지하고 예약을 유지한 채 B에서 일반 온디맨드 시작을 시도한다.
+              - A 예약을 먼저 취소하고 B에서는 Savings Plans를 이용해 일반 온디맨드를 시작한다.
+      - id: saa-r2-Q26-11
+        source_id: Q26-11
+        type: mcq
+        title: Q26-11 · 혼동하기 쉬운 분야 보충 문제
+        explain: |
+          <p>현재 운영 DB를 과거로 바꾸면 삭제 이후의 정상 주문도 잃을 수 있다. 남아 있는 수동 스냅샷에서 별도 DB를 복원해 필요한 보고서만 추출·검증하고 현재 데이터와 병합한다. 7일 보존 범위를 지난 로그를 보존 기간 변경으로 되살릴 수는 없다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>스냅샷을 새 DB로 복원한 뒤 운영 앱의 모든 연결을 그 과거 DB로 전환한다.</td>
+          <td>과거 보고서는 얻지만 스냅샷 이후 정상 주문까지 과거 상태로 되돌려 현재 데이터를 유지하라는 조건을 어긴다.</td>
+          </tr>
+          <tr>
+          <td>현재 DB의 읽기 복제본을 만들고 복제본에서 필요한 보고서를 추출한다.</td>
+          <td>현재 복제본은 삭제가 반영된 현재 상태를 복제하므로 과거 보고서를 되살리는 사본이 아니다.</td>
+          </tr>
+          <tr>
+          <td>자동 백업 보존 기간을 30일로 늘린 뒤 20일 전 시점으로 PITR을 요청한다.</td>
+          <td>보존 기간 증가는 이미 사라진 과거 복구 지점을 다시 만들지 않는다. 이번에는 남아 있는 수동 스냅샷이 복구 수단이다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-07.html">7일 차 개념</a> · <a href="/study/lessons/day-13.html">13일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_CommonTasks.BackupRestore.html">RDS 백업과 수동 스냅샷</a>
+          SAA 평가 항목: 2.2</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-07.html#pitr%EA%B3%BC-%EC%8A%A4%EB%83%85%EC%83%B7%EC%97%90%EC%84%9C-%EC%84%9C%EB%B9%84%EC%8A%A4-%EB%B3%B5%EA%B5%AC%EA%B9%8C%EC%A7%80">현재 정상 주문은 유지하고 오래전 삭제된 보고서만 스냅샷에서 추출</a></p>
+        quizzes:
+          - q: 운영 RDS에서 20일 전에 삭제한 보고서만 되찾아야 한다. 자동 백업은 7일 보존하며 삭제 직전의 수동 스냅샷은 남아 있다. 이후 생성된
+              정상 주문은 유지해야 하고 보고서는 스냅샷 시점 값으로 충분하다. 운영 서비스 영향을 가장 작게 하는 복구 방법은?
+            answer: 삭제 전 스냅샷을 새 DB로 복원하고 보고서를 검증·추출해 운영 데이터와 병합한다.
+            wrong:
+              - 스냅샷을 새 DB로 복원한 뒤 운영 앱의 모든 연결을 그 과거 DB로 전환한다.
+              - 현재 DB의 읽기 복제본을 만들고 복제본에서 필요한 보고서를 추출한다.
+              - 자동 백업 보존 기간을 30일로 늘린 뒤 20일 전 시점으로 PITR을 요청한다.
+      - id: saa-r2-Q26-12
+        source_id: Q26-12
+        type: mcq
+        title: Q26-12 · 혼동하기 쉬운 분야 보충 문제
+        explain: |
+          <p>RPO는 장애 시각과 실제로 복구 가능한 최신 데이터 사이의 손실 구간이며 10:00−09:40=20분으로 목표 15분을 넘는다. RTO는 DB 파일 복원이 아니라 업무 재개까지의 시간이므로 35분이고 1시간 목표 안이다. 두 목표는 독립적으로 평가한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>원래 DB 파일을 모두 복원했으므로 실제 RPO는 0분이다.</td>
+          <td>파일 복원이 완전해도 그 파일에 09:40 이후 거래가 없으므로 장애 직전까지 데이터가 보존된 것은 아니다.</td>
+          </tr>
+          <tr>
+          <td>DB 파일 복원이 10분 만에 끝났으므로 실제 RTO는 10분이다.</td>
+          <td>DB 복원은 업무 복구 과정의 일부다. 네트워크·인증·앱 검증을 끝내고 주문을 받을 때까지 포함해야 한다.</td>
+          </tr>
+          <tr>
+          <td>RTO가 목표 이내이므로 이번 복구의 데이터 손실도 허용 범위다.</td>
+          <td>복구 소요 시간과 데이터 손실 구간은 다른 지표이므로 RTO 충족이 RPO 충족을 보장하지 않는다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-13.html">13일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/disaster-recovery-dr-objectives.html">RPO와 RTO 정의</a>
+          SAA 평가 항목: 2.2</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-13.html#%EB%B3%B5%EA%B5%AC-%EC%8B%9C%EA%B0%84%EC%9D%80-%EC%9E%91%EC%97%85-%EC%9D%98%EC%A1%B4-%EA%B4%80%EA%B3%84%EB%A1%9C-%EA%B3%84%EC%82%B0%ED%95%9C%EB%8B%A4">DB 복원 종료와 실제 업무 재개, 최신 데이터 시각을 구별</a></p>
+        quizzes:
+          - q: 복구 훈련에서 서비스는 10:00에 중단됐다. 10:10에 DB 파일 복원이 끝났으나 복원된 최신 거래는 09:40 것이었다.
+              네트워크·인증·앱 검증 후 10:35에 주문 접수를 재개했다. 목표는 RPO 15분 이하, RTO 1시간 이하다. 이
+              훈련 보고서에 포함할 올바른 판단 두 가지는?
+            answer: 장애와 최신 복구 거래의 차이는 20분이므로 RPO 목표를 충족하지 못했다.
+            wrong:
+              - 원래 DB 파일을 모두 복원했으므로 실제 RPO는 0분이다.
+              - DB 파일 복원이 10분 만에 끝났으므로 실제 RTO는 10분이다.
+              - RTO가 목표 이내이므로 이번 복구의 데이터 손실도 허용 범위다.
+            answers:
+              - 장애와 최신 복구 거래의 차이는 20분이므로 RPO 목표를 충족하지 못했다.
+              - 주문 재개까지 35분이므로 RTO 목표는 충족했다.
+            options:
+              - 원래 DB 파일을 모두 복원했으므로 실제 RPO는 0분이다.
+              - 장애와 최신 복구 거래의 차이는 20분이므로 RPO 목표를 충족하지 못했다.
+              - 주문 재개까지 35분이므로 RTO 목표는 충족했다.
+              - DB 파일 복원이 10분 만에 끝났으므로 실제 RTO는 10분이다.
+              - RTO가 목표 이내이므로 이번 복구의 데이터 손실도 허용 범위다.
+      - id: saa-r2-Q26-13
+        source_id: Q26-13
+        type: mcq
+        title: Q26-13 · 혼동하기 쉬운 분야 보충 문제
+        explain: |
+          <p>삭제 대기 중인 원래 키의 삭제 예약을 취소하면 키는 Disabled 상태가 되므로 EnableKey로 활성화해야 암호 연산에 사용할 수 있다. 아직 키 재료가 남아 있는 원래 키를 복구하고 접근 권한·실제 복호화를 확인하는 절차가 필요하다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>새 키를 만들고 기존 별칭을 새 키로 옮긴 뒤 원본 백업을 복원한다.</td>
+          <td>별칭은 키를 가리키는 이름일 뿐이다. 별칭을 옮긴 새 키는 이전 키의 암호문을 복호화하지 못한다.</td>
+          </tr>
+          <tr>
+          <td>기존 키의 삭제 예약만 취소하고 바로 백업 복원을 재시도한다.</td>
+          <td>삭제 취소 직후 키는 Disabled이므로 취소만으로 암호 연산이 재개되지 않는다.</td>
+          </tr>
+          <tr>
+          <td>새 KMS 키를 만들고 백업 복원의 대상 암호화 키로 지정한다.</td>
+          <td>복원 대상의 새 암호화 키를 정해도 원본 백업을 읽을 때 기존 키의 복호화가 필요하므로 장애 원인이 남는다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-11.html">11일 차 개념</a> · <a href="/study/lessons/day-13.html">13일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/kms/latest/developerguide/deleting-keys.html">KMS 삭제 예약 취소</a> · <a href="https://docs.aws.amazon.com/kms/latest/developerguide/deleting-keys-scheduling-key-deletion.html">삭제 취소와 키 활성화</a>
+          SAA 평가 항목: 1.3</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-11.html#%ED%82%A4-%ED%9A%8C%EC%A0%84%EC%9E%AC%EC%95%94%ED%98%B8%ED%99%94%EC%82%AD%EC%A0%9C-%EB%8C%80%EA%B8%B0">원래 키 재료는 남아 있으나 삭제 취소 뒤에도 별도 활성화 필요</a></p>
+        quizzes:
+          - q: 백업 복원 중 KMS 오류를 조사하니 원본 백업을 암호화한 고객 관리형 키가 PendingDeletion이었다. 실제 삭제일까지는 시간이
+              남았고 백업과 키 정책은 정상이다. 새 키로 재암호화할 평문 사본은 없다. 백업을 다시 읽기 위해 관리자가 진행할
+              절차는?
+            answer: 삭제 예약을 취소하고 키를 다시 활성화한 뒤 권한과 백업 복호화를 확인한다.
+            wrong:
+              - 새 키를 만들고 기존 별칭을 새 키로 옮긴 뒤 원본 백업을 복원한다.
+              - 기존 키의 삭제 예약만 취소하고 바로 백업 복원을 재시도한다.
+              - 새 KMS 키를 만들고 백업 복원의 대상 암호화 키로 지정한다.
+      - id: saa-r2-Q26-14
+        source_id: Q26-14
+        type: mcq
+        title: Q26-14 · 혼동하기 쉬운 분야 보충 문제
+        explain: |
+          <p>Lambda의 메모리 증가는 CPU 자원도 늘린다. 이번 실측에서는 메모리×실행 시간이 2×1/3=2/3이므로 요청당 계산 사용량 비용과 지연을 함께 줄일 수 있다. 모든 함수에서 같은 효과가 나는 것은 아니므로 대표 부하·오류·전체 청구를 함께 확인한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>기존 메모리를 유지하고 Provisioned Concurrency를 추가한다.</td>
+          <td>Provisioned Concurrency는 초기화 지연을 줄이는 수단이다. 이번에는 콜드 스타트가 아니라 실행 중 CPU 계산이 병목이고 추가 비용도 생긴다.</td>
+          </tr>
+          <tr>
+          <td>기존 메모리를 유지하고 예약 동시성 상한만 높인다.</td>
+          <td>동시 처리 상한은 병렬 요청 수를 다룬다. 요청 하나의 CPU 처리 시간을 줄인다는 시험 근거가 없다.</td>
+          </tr>
+          <tr>
+          <td>기존 메모리를 유지하고 함수 제한 시간만 세 배 늘린다.</td>
+          <td>타임아웃을 늘리면 실패 시점을 늦출 수 있지만 CPU 계산 시간과 응답 지연의 병목을 줄이지 않는다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-10.html">10일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/lambda/latest/dg/configuration-memory.html">Lambda 메모리와 CPU</a> · <a href="https://aws.amazon.com/lambda/pricing/">Lambda 요금</a>
+          SAA 평가 항목: 2.1</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-10.html#lambda-%EC%8B%A4%ED%96%89-%EC%9E%90%EC%9B%90%EA%B3%BC-%EC%9A%94%EC%B2%AD-%EC%A0%9C%EC%96%B4">콜드 스타트가 아닌 CPU 실행 병목과 메모리 두 배·시간 삼분의 일 실측</a></p>
+        quizzes:
+          - q: CPU 계산이 대부분인 일반 Lambda 함수가 응답 시간 목표를 넘는다. 요청 수·아키텍처·요율은 같으며 콜드 스타트 영향은 작다. 대표
+              부하 시험에서 메모리를 두 배로 늘리자 평균 시간이 기존의 3분의 1이 됐고 오류율도 같았다. 다른 비용 항목이 같을
+              때 성능과 계산 사용량 비용을 함께 개선할 선택은?
+            answer: 시험한 두 배 메모리를 적용하고 메모리×시간 및 실제 지연 지표를 확인한다.
+            wrong:
+              - 기존 메모리를 유지하고 Provisioned Concurrency를 추가한다.
+              - 기존 메모리를 유지하고 예약 동시성 상한만 높인다.
+              - 기존 메모리를 유지하고 함수 제한 시간만 세 배 늘린다.
+      - id: saa-r2-Q26-15
+        source_id: Q26-15
+        type: mcq
+        title: Q26-15 · 혼동하기 쉬운 분야 보충 문제
+        explain: |
+          <p>이번 장애는 연결이나 조회 실패가 아니라 쓰기 실패다. VPC 내부에서 업무 데이터를 오염시키지 않는 합성 쓰기를 실행하고 그 성공 지표의 알람 기준으로 Route 53 상태를 판단하게 해야 한다. 공개 검사기가 private DB를 직접 읽도록 노출할 필요는 없다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>VPC 내부 DB SELECT 검사의 지표·알람을 Route 53 상태 확인에 연결한다.</td>
+          <td>내부 위치로 검사를 옮겨도 SELECT는 성공하므로 동일한 의미상의 감시 공백이 남는다.</td>
+          </tr>
+          <tr>
+          <td>기존 /health의 Route 53 검사 주기를 줄여 실패를 더 빨리 찾는다.</td>
+          <td>검사 빈도를 높여도 항상 성공하는 SELECT 기반 응답의 의미는 바뀌지 않아 이번 장애를 탐지하지 못한다.</td>
+          </tr>
+          <tr>
+          <td>DB CPU 사용률 경보를 Route 53 알람 기반 상태 확인에 연결한다.</td>
+          <td>CPU가 낮거나 정상이어도 DB는 read-only일 수 있다. CPU 경보만으로 주문 쓰기 성공 여부를 대변할 수 없다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-09.html">9일 차 개념</a> · <a href="/study/lessons/day-13.html">13일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/health-checks-types.html">CloudWatch 알람 기반 Route 53 상태 확인</a>
+          SAA 평가 항목: 2.2</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-09.html#%EB%B9%84%EA%B3%B5%EA%B0%9C-db%EC%9D%98-%EC%93%B0%EA%B8%B0-%EC%9E%A5%EC%95%A0%EB%A5%BC-%EA%B4%80%EC%B8%A1%ED%95%98%EA%B8%B0">기존 health 코드 변경 없이 private DB의 실제 쓰기 가능성을 관측</a></p>
+        quizzes:
+          - q: 두 리전 주문 API는 Route 53 failover를 사용한다. 주 ALB의 /health는 DB SELECT만 검사한다. DB가 읽기
+              전용이 된 사고에서 이 경로는 계속 200을 반환했고 주문 쓰기는 실패했다. DB는 비공개이며 기존 /health
+              코드는 당장 바꿀 수 없다. 쓰기 불가를 기준으로 DNS 전환을 시작하려면 무엇을 구성해야 하는가?
+            answer: VPC 내부 합성 쓰기 검사의 지표·알람을 Route 53 상태 확인과 failover에 연결한다.
+            wrong:
+              - VPC 내부 DB SELECT 검사의 지표·알람을 Route 53 상태 확인에 연결한다.
+              - 기존 /health의 Route 53 검사 주기를 줄여 실패를 더 빨리 찾는다.
+              - DB CPU 사용률 경보를 Route 53 알람 기반 상태 확인에 연결한다.

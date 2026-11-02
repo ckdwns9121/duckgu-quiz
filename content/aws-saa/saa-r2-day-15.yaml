@@ -1,0 +1,620 @@
+id: saa-r2-day-15
+name: 보안·IAM
+part: 15일 차
+color: "#FF9900"
+dark: "#985800"
+blocks:
+  - tip: SAA 시험 범위를 바탕으로 만든 창작 문제입니다. 실제 기출문제가 아닙니다. 복수 정답은 지정한 개수를 모두 맞혀야 합니다.
+  - items:
+      - id: saa-r2-Q15-01
+        source_id: Q15-01
+        type: mcq
+        title: Q15-01 · 보안·IAM
+        explain: |
+          <p>대상 계정의 역할 세션을 사용하려면 호출자의 AssumeRole 허용, 대상 역할의 신뢰, 대상 역할의 reports/ 읽기 권한을 함께 구성한다. 교차 계정 역할은 장기 키 없이 세션 권한으로 접근하게 한다. 호출자의 역할 호출 권한, 대상 역할의 신뢰와 보고서 범위 읽기 권한을 함께 구성해야 한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>운영 역할에 reports/ 읽기를 허용하고 신뢰 정책은 운영 계정 주체만 허용한다.</td>
+          <td>역할 권한이 있어도 분석 계정 Analyst를 신뢰하지 않아 역할 전환 단계에서 실패한다.</td>
+          </tr>
+          <tr>
+          <td>Analyst와 운영 버킷 정책에 직접 GetObject를 허용하고 Analyst 자격 증명으로 객체를 읽는다.</td>
+          <td>직접 교차 계정 버킷 공유는 가능한 별도 설계지만 운영 계정 역할의 임시 세션을 사용하고 역할 정책으로 읽기 범위를 관리한다는 요구와 다르다.</td>
+          </tr>
+          <tr>
+          <td>운영 역할은 Analyst를 신뢰하게 하고 S3 권한은 Analyst의 원래 정책에만 부여한다.</td>
+          <td>역할 세션으로 전환한 뒤 원래 Analyst의 S3 권한이 합산되지는 않는다. 대상 역할에 읽기 권한이 필요하다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-01.html">1일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_cross-account-with-roles.html">교차 계정 역할 위임</a>
+          SAA 평가 항목: 1.1</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-01.html#assumerole%EA%B3%BC-%EB%91%90-%EB%B2%88%EC%9D%98-%EA%B6%8C%ED%95%9C-%ED%8C%90%EB%8B%A8">대상 계정의 역할 세션을 사용하려면 호출자의 AssumeRole 허용, 대상 역할의 신뢰, 대상 역할의 reports/ 읽기 권한을 함께 구성한다.</a></p>
+        quizzes:
+          - q: 분석 계정의 Analyst 역할을 사용하는 직원들이 운영 계정의 reports/ 객체만 읽어야 한다. 운영 계정에는 사람별 IAM 사용자를
+              만들 수 없다. 운영 계정이 발급하는 역할 세션으로만 객체에 접근하고, 운영 계정의 역할 정책에서 읽기 범위를 관리해야
+              한다. 다른 명시적 거부는 없다. 어떤 구성이 적절한가?
+            answer: 운영 계정에 읽기 역할을 만들고 Analyst를 신뢰하며 Analyst에 해당 역할의 AssumeRole을 허용한다.
+            wrong:
+              - 운영 역할에 reports/ 읽기를 허용하고 신뢰 정책은 운영 계정 주체만 허용한다.
+              - Analyst와 운영 버킷 정책에 직접 GetObject를 허용하고 Analyst 자격 증명으로 객체를 읽는다.
+              - 운영 역할은 Analyst를 신뢰하게 하고 S3 권한은 Analyst의 원래 정책에만 부여한다.
+      - id: saa-r2-Q15-02
+        source_id: Q15-02
+        type: mcq
+        title: Q15-02 · 보안·IAM
+        explain: |
+          <p>새 역할의 권한 상한과 그 상한을 변경하는 경로를 모두 통제해야 한다. 권한 경계는 신원 정책이 부여할 수 있는 범위의 상한을 정한다. 경계를 필수로 적용하고 제거·교체 경로도 통제해야 관리자 정책 연결로 상한을 우회하지 못한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>개발자 자신의 정책에 승인 서비스만 허용하고 새 배포 역할에는 팀이 선택한 정책을 연결한다.</td>
+          <td>생성자 자신의 권한 상한이 새 역할에 자동 상속되지는 않는다. 생성 역할에도 경계를 강제해야 한다.</td>
+          </tr>
+          <tr>
+          <td>지정 권한 경계를 새 역할에 연결하되 개발자가 그 경계를 제거하고 다시 연결할 수 있게 한다.</td>
+          <td>초기 경계 연결만으로는 충분하지 않다. 경계를 제거하거나 더 넓은 정책으로 교체하면 상한을 우회한다.</td>
+          </tr>
+          <tr>
+          <td>CreateRole을 금지하고 플랫폼 팀이 모든 역할 생성·정책 연결 요청을 대신 처리한다.</td>
+          <td>권한 상승을 통제할 수 있지만 개발자가 역할을 직접 생성해야 한다는 운영 요구를 충족하지 않는다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-01.html">1일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html">IAM 권한 경계</a>
+          SAA 평가 항목: 1.1</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-01.html#%EA%B6%8C%ED%95%9C-%EA%B2%BD%EA%B3%84%EC%99%80-abac%EC%9D%98-%EC%8B%A4%ED%8C%A8-%EA%B2%BD%EB%A1%9C">새 역할의 권한 상한과 그 상한을 변경하는 경로를 모두 통제해야 한다.</a> · <a href="/study/lessons/deep-dive/day-01.html#%EA%B6%8C%ED%95%9C-%EA%B2%BD%EA%B3%84%EC%99%80-abac%EC%9D%98-%EC%8B%A4%ED%8C%A8-%EA%B2%BD%EB%A1%9C">새 역할의 권한 상한과 그 상한을 변경하는 경로를 모두 통제해야 한다.</a></p>
+        quizzes:
+          - q: 개발 팀이 배포 역할을 직접 생성하고 승인된 서비스 안에서 정책을 자유롭게 연결해야 한다. 현재 개발자는 새 역할에 관리자 정책을 연결할
+              수 있다. 보안 팀은 역할 생성 권한을 회수하지 않으면서 새 역할의 권한 상한을 유지하고, 개발자가 그 상한을
+              제거하거나 바꾸는 것도 막으려 한다. 적절한 통제는?
+            answer: 지정 권한 경계를 붙인 역할만 만들게 하고 경계 제거·변경과 경계 정책 자체의 편집을 제한한다.
+            wrong:
+              - 개발자 자신의 정책에 승인 서비스만 허용하고 새 배포 역할에는 팀이 선택한 정책을 연결한다.
+              - 지정 권한 경계를 새 역할에 연결하되 개발자가 그 경계를 제거하고 다시 연결할 수 있게 한다.
+              - CreateRole을 금지하고 플랫폼 팀이 모든 역할 생성·정책 연결 요청을 대신 처리한다.
+      - id: saa-r2-Q15-03
+        source_id: Q15-03
+        type: mcq
+        title: Q15-03 · 보안·IAM
+        explain: |
+          <p>공통 속성 비교 정책과 권한 판단용 태그 변경 통제가 함께 있어야 한다. ABAC는 지원 작업에서 주체와 리소스 속성을 비교해 반복 정책을 줄인다. 그러나 사용자가 권한 판단용 태그를 임의 변경하면 다른 프로젝트로 가장할 수 있으므로 태그 변경도 통제해야 한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>역할의 project 태그는 고정하고 개발자에게 다른 프로젝트 리소스의 project 태그 변경을 허용한다.</td>
+          <td>자신의 태그가 고정돼도 다른 프로젝트 리소스를 자기 태그로 바꿀 수 있다면 접근 격리를 우회한다.</td>
+          </tr>
+          <tr>
+          <td>프로젝트별 역할·리소스 ARN을 나열한 별도 정책을 매번 만들어 태그 조건 없이 적용한다.</td>
+          <td>ARN별 정책은 격리에 사용할 수 있지만 신규 프로젝트마다 정책을 복제하지 않는다는 요구를 충족하지 않는다.</td>
+          </tr>
+          <tr>
+          <td>리소스에 project 태그가 존재하면 값과 관계없이 변경을 허용하는 공통 정책을 사용한다.</td>
+          <td>태그 존재 여부만 확인하면 다른 프로젝트의 값도 통과한다. 주체와 리소스의 값 일치가 필요하다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-01.html">1일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction_attribute-based-access-control.html">IAM 속성 기반 접근 제어</a>
+          SAA 평가 항목: 1.1</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-01.html#%EA%B6%8C%ED%95%9C-%EA%B2%BD%EA%B3%84%EC%99%80-abac%EC%9D%98-%EC%8B%A4%ED%8C%A8-%EA%B2%BD%EB%A1%9C">공통 속성 비교 정책과 권한 판단용 태그 변경 통제가 함께 있어야 한다.</a> · <a href="/study/lessons/deep-dive/day-01.html#%EA%B6%8C%ED%95%9C-%EA%B2%BD%EA%B3%84%EC%99%80-abac%EC%9D%98-%EC%8B%A4%ED%8C%A8-%EA%B2%BD%EB%A1%9C">공통 속성 비교 정책과 권한 판단용 태그 변경 통제가 함께 있어야 한다.</a></p>
+        quizzes:
+          - q: 여러 프로젝트가 같은 AWS 계정을 사용한다. 배포 역할에는 회사가 정한 project 태그가 있고, 각 역할은 값이 같은 태그를 가진
+              기존 리소스만 변경해야 한다. 사용하는 작업은 태그 조건을 지원하며 새 프로젝트마다 정책 복제는 피하려 한다. 개발자가
+              태그를 바꿔 다른 프로젝트에 접근하는 것도 차단해야 한다. 필요한 조치 두 가지는?
+            answer: 권한 판단용 역할·세션·리소스 태그의 생성과 변경을 승인된 경로로 제한한다.
+            wrong:
+              - 역할의 project 태그는 고정하고 개발자에게 다른 프로젝트 리소스의 project 태그 변경을 허용한다.
+              - 프로젝트별 역할·리소스 ARN을 나열한 별도 정책을 매번 만들어 태그 조건 없이 적용한다.
+              - 리소스에 project 태그가 존재하면 값과 관계없이 변경을 허용하는 공통 정책을 사용한다.
+            answers:
+              - 권한 판단용 역할·세션·리소스 태그의 생성과 변경을 승인된 경로로 제한한다.
+              - 주체와 리소스의 project 값이 일치할 때 변경을 허용하는 공통 ABAC 정책을 사용한다.
+            options:
+              - 역할의 project 태그는 고정하고 개발자에게 다른 프로젝트 리소스의 project 태그 변경을 허용한다.
+              - 권한 판단용 역할·세션·리소스 태그의 생성과 변경을 승인된 경로로 제한한다.
+              - 프로젝트별 역할·리소스 ARN을 나열한 별도 정책을 매번 만들어 태그 조건 없이 적용한다.
+              - 리소스에 project 태그가 존재하면 값과 관계없이 변경을 허용하는 공통 정책을 사용한다.
+              - 주체와 리소스의 project 값이 일치할 때 변경을 허용하는 공통 ABAC 정책을 사용한다.
+      - id: saa-r2-Q15-04
+        source_id: Q15-04
+        type: mcq
+        title: Q15-04 · 보안·IAM
+        explain: |
+          <p>예외는 정확한 역할과 시드니 리전의 조합에 한정되어야 하며 실제 권한은 역할의 IAM 정책에서 얻는다. SCP의 명시적 거부는 상위 계층에서 적용되므로 그 거부문 자체의 범위를 좁혀야 한다. 리전과 정확한 역할 ARN을 함께 조건에 사용하면 승인된 조합의 요청만 거부에서 빠지며, 실제 권한은 기존 IAM 정책에서 얻는다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>루트 SCP의 리전 제한에서 서울과 시드니를 함께 제외하고 DRDeploy의 IAM 정책을 유지한다.</td>
+          <td>시드니를 리전 조건에서 공통 제외하면 다른 계정·역할의 시드니 작업에도 제한이 풀린다.</td>
+          </tr>
+          <tr>
+          <td>운영 계정을 별도 OU로 옮기고 해당 OU의 SCP에 시드니 EC2 Allow를 추가한다.</td>
+          <td>루트 SCP의 명시적 거부는 OU로 상속되며 하위 Allow로 상위 Deny를 무효화할 수 없다.</td>
+          </tr>
+          <tr>
+          <td>루트 SCP의 리전 Deny에서 DRDeploy 역할을 모든 리전에 대해 제외한다.</td>
+          <td>역할을 리전 제한 전체에서 제외하면 시드니 이외의 리전까지 예외가 되어 요구보다 넓다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-01.html">1일 차 개념</a> · <a href="/study/lessons/day-12.html">12일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps_syntax.html">SCP 조건과 리전 제한</a> · <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_condition-keys.html">PrincipalArn 역할 ARN</a>
+          SAA 평가 항목: 1.1</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-12.html#scp-%EB%A6%AC%EC%A0%84-%EC%98%88%EC%99%B8%EC%9D%98-%EB%85%BC%EB%A6%AC">예외는 정확한 역할과 시드니 리전의 조합에 한정되어야 하며 실제 권한은 역할의 IAM 정책에서 얻는다.</a> · <a href="/study/lessons/deep-dive/day-12.html#scp-%EB%A6%AC%EC%A0%84-%EC%98%88%EC%99%B8%EC%9D%98-%EB%85%BC%EB%A6%AC">예외는 정확한 역할과 시드니 리전의 조합에 한정되어야 하며 실제 권한은 역할의 IAM 정책에서 얻는다.</a></p>
+        quizzes:
+          - q: 조직 루트 SCP가 서울 외 리전의 EC2 작업을 명시적으로 거부한다. 운영 계정의 DRDeploy 역할만 시드니에서도 복구 서버를
+              배포해야 한다. 이 역할의 IAM 정책은 이미 배포를 허용한다. 다른 계정·역할과 시드니 외 리전의 제한은 그대로
+              유지해야 하며, 다른 SCP 거부는 없다. 가장 좁은 변경은?
+            answer: 기존 Deny에서 운영 계정 DRDeploy의 정확한 역할 ARN이 시드니로 보내는 요청만 제외한다.
+            wrong:
+              - 루트 SCP의 리전 제한에서 서울과 시드니를 함께 제외하고 DRDeploy의 IAM 정책을 유지한다.
+              - 운영 계정을 별도 OU로 옮기고 해당 OU의 SCP에 시드니 EC2 Allow를 추가한다.
+              - 루트 SCP의 리전 Deny에서 DRDeploy 역할을 모든 리전에 대해 제외한다.
+      - id: saa-r2-Q15-05
+        source_id: Q15-05
+        type: mcq
+        title: Q15-05 · 보안·IAM
+        explain: |
+          <p>S3 읽기가 허용되어도 암호화된 객체는 KMS 복호화 권한을 따로 평가한다. 계정 A의 키 정책이 계정 B 분석 역할의 키 사용을 허용하고, B의 역할 IAM 정책도 그 키의 kms:Decrypt를 허용해야 한다. Encrypt·GenerateDataKey나 DescribeKey만 허용해도 기존 암호문을 읽을 수는 없다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>계정 A의 키 정책에서 계정 B 분석 역할에 kms:Encrypt·GenerateDataKey를 허용한다.</td>
+          <td>암호화와 데이터 키 생성은 새 데이터를 쓰는 경로의 권한이다. 이미 암호화된 보고서를 읽으려면 해당 키의 Decrypt 허용이 필요하다.</td>
+          </tr>
+          <tr>
+          <td>계정 B 분석 역할에 kms:DescribeKey를 허용해 계정 A의 키 정보를 조회하게 한다.</td>
+          <td>키 메타데이터 조회는 복호화 권한과 다르므로 Decrypt 실패를 해결하지 못한다.</td>
+          </tr>
+          <tr>
+          <td>계정 A 버킷 정책에서 분석 역할의 GetObject 범위를 reports/에서 버킷 전체로 넓힌다.</td>
+          <td>객체 읽기 권한은 이미 필요한 경로에 있다. 버킷 범위를 넓혀도 별도의 KMS 복호화 권한을 부여하지 못한다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-01.html">1일 차 개념</a> · <a href="/study/lessons/day-11.html">11일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-modifying-external-accounts.html">교차 계정 KMS 키 사용</a>
+          SAA 평가 항목: 1.3</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-11.html#%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%82%A4%EC%9D%98-%EC%83%9D%EC%84%B1%EA%B3%BC-%EA%B5%90%EC%B0%A8-%EA%B3%84%EC%A0%95-%EA%B6%8C%ED%95%9C">교차 계정 KMS 사용은 키 소유 계정의 키 정책과 호출자 계정의 IAM 허용을 함께 충족해야 한다.</a></p>
+        quizzes:
+          - q: 운영 계정 A의 S3 보고서는 A의 고객 관리형 KMS 키로 암호화된다. 계정 B의 분석 역할은 버킷 정책과 역할 정책에서 reports/
+              GetObject를 허용받았고 암호화되지 않은 객체는 읽는다. 같은 경로의 암호화 객체만 KMS
+              AccessDenied로 실패한다. 명시적 거부는 없으며 해당 키의 교차 계정 사용을 새로 구성하려 한다. 필요한 허용
+              두 가지는?
+            answer: 계정 B의 분석 역할 IAM 정책에서 계정 A의 해당 키에 kms:Decrypt를 허용한다.
+            wrong:
+              - 계정 A의 키 정책에서 계정 B 분석 역할에 kms:Encrypt·GenerateDataKey를 허용한다.
+              - 계정 B 분석 역할에 kms:DescribeKey를 허용해 계정 A의 키 정보를 조회하게 한다.
+              - 계정 A 버킷 정책에서 분석 역할의 GetObject 범위를 reports/에서 버킷 전체로 넓힌다.
+            answers:
+              - 계정 B의 분석 역할 IAM 정책에서 계정 A의 해당 키에 kms:Decrypt를 허용한다.
+              - 계정 A의 KMS 키 정책에서 계정 B 분석 역할이 해당 키를 복호화에 사용하도록 허용한다.
+            options:
+              - 계정 B의 분석 역할 IAM 정책에서 계정 A의 해당 키에 kms:Decrypt를 허용한다.
+              - 계정 A의 키 정책에서 계정 B 분석 역할에 kms:Encrypt·GenerateDataKey를 허용한다.
+              - 계정 B 분석 역할에 kms:DescribeKey를 허용해 계정 A의 키 정보를 조회하게 한다.
+              - 계정 A의 KMS 키 정책에서 계정 B 분석 역할이 해당 키를 복호화에 사용하도록 허용한다.
+              - 계정 A 버킷 정책에서 분석 역할의 GetObject 범위를 reports/에서 버킷 전체로 넓힌다.
+      - id: saa-r2-Q15-06
+        source_id: Q15-06
+        type: mcq
+        title: Q15-06 · 보안·IAM
+        explain: |
+          <p>현재 사용자가 유효한 동안 다른 사용자를 회전하고 검증 후 현재 버전을 전환하는 방식이 필요하다. 교대 사용자 회전은 한 사용자의 비밀번호를 바꾸는 동안 다른 사용자의 유효한 자격 증명을 제공한다. DB 권한을 두 사용자에 맞추고 회전용 관리자 비밀을 제공할 수 있으므로 관리형 회전 틀을 활용해 가용성과 코드 운영 축소 요구를 함께 만족한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>단일 사용자 회전을 사용하고 DB 비밀번호 변경 직후의 인증 실패는 앱 재시도로 처리한다.</td>
+          <td>단일 사용자 회전은 DB의 값과 현재 비밀 버전이 바뀌는 사이 신규 인증이 실패할 수 있다. 재시도는 실패 자체를 없애지 않는다.</td>
+          </tr>
+          <tr>
+          <td>SecureString 두 개와 예약 Lambda로 DB 사용자 교대와 활성 비밀값 전환을 직접 구현한다.</td>
+          <td>교대 방식을 구현할 수 있으나 스케줄링·DB 변경·버전 전환 코드를 팀이 운영해야 한다.</td>
+          </tr>
+          <tr>
+          <td>단일 사용자 회전을 배포 시간에 실행하고 비밀번호 전환이 끝날 때까지 신규 연결을 대기시킨다.</td>
+          <td>회전 중 새 연결을 대기시킬 수 없다는 가용성 조건에 맞지 않는다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-11.html">11일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/secretsmanager/latest/userguide/rotation-strategy.html">단일·교대 사용자 회전 전략</a>
+          SAA 평가 항목: 1.3</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-11.html#%EA%B5%90%EB%8C%80-%EC%82%AC%EC%9A%A9%EC%9E%90-%ED%9A%8C%EC%A0%84%EC%9D%98-%EB%84%A4-%EB%8B%A8%EA%B3%84">현재 사용자가 유효한 동안 다른 사용자를 회전하고 검증 후 현재 버전을 전환하는 방식이 필요하다.</a> · <a href="/study/lessons/deep-dive/day-11.html#%EA%B5%90%EB%8C%80-%EC%82%AC%EC%9A%A9%EC%9E%90-%ED%9A%8C%EC%A0%84%EC%9D%98-%EB%84%A4-%EB%8B%A8%EA%B3%84">현재 사용자가 유효한 동안 다른 사용자를 회전하고 검증 후 현재 버전을 전환하는 방식이 필요하다.</a></p>
+        quizzes:
+          - q: RDS MySQL 주문 앱은 연결을 만들 때 Secrets Manager의 현재 비밀값을 읽는다. DB 비밀번호는 30일마다 바꿔야 하며
+              회전 중에도 새 연결을 거부하거나 요청을 대기시킬 수 없다. 동등한 DB 권한을 가진 사용자 두 명과 회전용 관리자
+              비밀을 사용할 수 있다. 자체 스케줄러·버전 전환 코드를 가장 적게 운영할 방법은?
+            answer: 교대 사용자 회전을 사용하고 앱이 현재 버전의 사용자 이름과 비밀번호로 연결하게 한다.
+            wrong:
+              - 단일 사용자 회전을 사용하고 DB 비밀번호 변경 직후의 인증 실패는 앱 재시도로 처리한다.
+              - SecureString 두 개와 예약 Lambda로 DB 사용자 교대와 활성 비밀값 전환을 직접 구현한다.
+              - 단일 사용자 회전을 배포 시간에 실행하고 비밀번호 전환이 끝날 때까지 신규 연결을 대기시킨다.
+      - id: saa-r2-Q15-07
+        source_id: Q15-07
+        type: mcq
+        title: Q15-07 · 보안·IAM
+        explain: |
+          <p>공격과 정상 요청이 같은 HTTPS 경로로 들어오므로 HTTP 요청 계층에서 내용과 속도를 구분해야 한다. WAF는 지원 웹 리소스의 HTTP 요청 조건을 검사하며 관리형 규칙과 속도 기반 규칙으로 해당 공격을 줄일 수 있다. 정상 요청의 오탐 여부도 확인하면서 적용해야 한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>ALB에 Shield Advanced를 적용하고 보안 그룹의 TCP 443 허용 범위를 유지한다.</td>
+          <td>DDoS 보호와 포트 허용만으로 지문이 요구한 HTTP 내용·속도 규칙을 직접 구성한 것이 아니다.</td>
+          </tr>
+          <tr>
+          <td>ALB 접근 로그를 Lambda로 분석해 의심 IP를 NACL 거부 규칙에 자동 등록한다.</td>
+          <td>사후 로그 분석과 네트워크 차단 코드를 운영해야 하며 개별 HTTP 본문의 SQL 패턴을 요청 처리 시점에 검사하는 구성이 아니다.</td>
+          </tr>
+          <tr>
+          <td>ALB의 리스너 고정 응답 규칙으로 주문 API 경로 전체에 일시적으로 403을 반환한다.</td>
+          <td>공격과 함께 정상 사용자의 주문 API도 차단하므로 정상 서비스 유지 요구를 어긴다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-05.html">5일 차 개념</a> · <a href="/study/lessons/day-11.html">11일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/waf/latest/developerguide/what-is-aws-waf.html">AWS WAF</a>
+          SAA 평가 항목: 1.2</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-11.html#waf-%EB%8B%A8%EC%9D%BC-%EA%B7%9C%EC%B9%99-%EC%98%88%EC%99%B8%EC%99%80-%EB%82%98%EB%A8%B8%EC%A7%80-%EB%B3%B4%ED%98%B8">공격과 정상 요청이 같은 HTTPS 경로로 들어오므로 HTTP 요청 계층에서 내용과 속도를 구분해야 한다.</a> · <a href="/study/lessons/deep-dive/day-11.html#waf-%EB%8B%A8%EC%9D%BC-%EA%B7%9C%EC%B9%99-%EC%98%88%EC%99%B8%EC%99%80-%EB%82%98%EB%A8%B8%EC%A7%80-%EB%B3%B4%ED%98%B8">공격과 정상 요청이 같은 HTTPS 경로로 들어오므로 HTTP 요청 계층에서 내용과 속도를 구분해야 한다.</a></p>
+        quizzes:
+          - q: ALB 뒤 주문 API에서 악성 SQL 문자열이 포함된 HTTPS 요청과 한 IP에서 반복되는 대량 요청이 확인됐다. IP는 계속 바뀌며
+              정상 사용자는 같은 API를 계속 써야 한다. 애플리케이션 수정 전까지 관리형 기능으로 요청 내용 검사와 IP별 요청
+              속도 제한을 적용하려 한다. 운영 코드가 가장 적은 구성은?
+            answer: ALB에 WAF 웹 ACL을 연결하고 SQL 인젝션 관리형 규칙과 속도 기반 규칙을 적용한다.
+            wrong:
+              - ALB에 Shield Advanced를 적용하고 보안 그룹의 TCP 443 허용 범위를 유지한다.
+              - ALB 접근 로그를 Lambda로 분석해 의심 IP를 NACL 거부 규칙에 자동 등록한다.
+              - ALB의 리스너 고정 응답 규칙으로 주문 API 경로 전체에 일시적으로 403을 반환한다.
+      - id: saa-r2-Q15-08
+        source_id: Q15-08
+        type: mcq
+        title: Q15-08 · 보안·IAM
+        explain: |
+          <p>로그인 인증 뒤에는 Identity pool의 임시 AWS 자격 증명과 사용자 접두사로 좁힌 역할 권한이 필요하다. 인증된 사용자가 단말에서 직접 AWS 리소스에 접근하려면 Identity pool의 임시 자격 증명과 제한된 역할을 사용할 수 있다. 로그인 인증과 사용자별 S3 인가는 각각 구성해야 한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>소셜 로그인 뒤 백엔드가 객체별 사전 서명 URL을 발급하고 단말은 그 URL로만 업로드한다.</td>
+          <td>중계 없이 업로드하는 가능한 별도 설계지만 사용자별 임시 AWS 자격 증명을 SDK에 발급한다는 요구와 다르다.</td>
+          </tr>
+          <tr>
+          <td>Cognito User pool로 로그인한 모든 사용자에게 공통 읽기·쓰기 IAM 역할을 동일 범위로 배정한다.</td>
+          <td>로그인 자체와 객체별 권한은 다르다. 모든 사용자에게 같은 전체 범위를 주면 사용자 접두사 격리를 충족하지 못한다.</td>
+          </tr>
+          <tr>
+          <td>기존 IAM 사용자 키를 Secrets Manager에 보관하고 로그인한 단말이 그 키를 받아 S3에 서명한다.</td>
+          <td>저장 위치를 바꿔도 단말에 전달되는 값이 장기 공유 키이므로 임시 자격 증명 요구를 충족하지 못한다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-11.html">11일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html">Cognito 사용자·자격 증명 풀</a>
+          SAA 평가 항목: 1.1</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-11.html#%ED%9A%8C%EC%9B%90-%EC%9D%B8%EC%A6%9Daws-%EC%9E%90%EA%B2%A9-%EC%A6%9D%EB%AA%85%EC%A7%81%EC%9B%90-%EB%94%94%EB%A0%89%ED%84%B0%EB%A6%AC">로그인 인증 뒤에는 Identity pool의 임시 AWS 자격 증명과 사용자 접두사로 좁힌 역할 권한이 필요하다.</a></p>
+        quizzes:
+          - q: 사진 앱은 소셜 로그인 후 S3 SDK로 단말에서 직접 업로드한다. 각 사용자는 자기 ID 접두사에만 쓸 수 있어야 하고 장기 AWS 키를
+              단말에 넣을 수 없다. 회사는 사용자마다 S3 요청을 서명할 임시 AWS 자격 증명을 발급하려 하며 업로드 중계 서버는
+              두지 않는다. 적절한 인증·인가 구성은?
+            answer: Cognito Identity pool로 임시 자격 증명을 발급하고 인증 역할의 S3 쓰기를 사용자 접두사로 제한한다.
+            wrong:
+              - 소셜 로그인 뒤 백엔드가 객체별 사전 서명 URL을 발급하고 단말은 그 URL로만 업로드한다.
+              - Cognito User pool로 로그인한 모든 사용자에게 공통 읽기·쓰기 IAM 역할을 동일 범위로 배정한다.
+              - 기존 IAM 사용자 키를 Secrets Manager에 보관하고 로그인한 단말이 그 키를 받아 S3에 서명한다.
+      - id: saa-r2-Q15-09
+        source_id: Q15-09
+        type: mcq
+        title: Q15-09 · 보안·IAM
+        explain: |
+          <p>회사 신원은 IdP에 두고 다중 계정의 그룹·권한 세트 배정을 중앙화하는 기능을 선택해야 한다. IAM Identity Center는 직원의 다중 계정 접근과 권한 세트 배정을 중앙화한다. 회사 신원 공급자와 연동하고 그룹별 계정 권한을 관리하면 사람별 장기 키와 계정별 사용자 복제를 줄일 수 있다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>각 계정의 SAML 역할과 직무 정책을 IdP와 연결하고 계정별 배정 목록을 각각 관리한다.</td>
+          <td>직접 연동으로 접근을 제공할 수 있으나 계정마다 역할·정책·배정을 관리하는 운영 문제는 남는다.</td>
+          </tr>
+          <tr>
+          <td>공유 서비스 계정에 직무별 IAM 사용자를 만들고 각 계정 역할로 전환하도록 장기 키를 배포한다.</td>
+          <td>회사 IdP의 수명 주기와 별도로 IAM 사용자·장기 키를 운영하므로 중앙 관리·기존 로그인 유지 요구에 덜 적합하다.</td>
+          </tr>
+          <tr>
+          <td>Organizations SCP로 각 계정의 서비스 상한을 정하고 직원별 로그인 권한은 계정마다 배정한다.</td>
+          <td>SCP는 권한 상한을 통제하지만 직원 로그인과 그룹별 계정 배정을 중앙화하는 기능을 대신하지 않는다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-01.html">1일 차 개념</a> · <a href="/study/lessons/day-11.html">11일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/singlesignon/latest/userguide/what-is.html">IAM Identity Center</a>
+          SAA 평가 항목: 1.1</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-01.html#%EC%A7%81%EC%9B%90-%EC%A0%91%EA%B7%BC%EA%B3%BC-%EC%99%B8%EB%B6%80-%EA%B3%B5%EA%B8%89%EC%97%85%EC%B2%B4-%EC%9C%84%EC%9E%84">회사 신원은 IdP에 두고 다중 계정의 그룹·권한 세트 배정을 중앙화하는 기능을 선택해야 한다.</a></p>
+        quizzes:
+          - q: 회사의 IdP에서 직원의 부서와 재직 상태를 관리한다. 30개 AWS 계정에 직무별 접근을 제공하려는데 계정마다 IAM 사용자·SAML
+              역할을 직접 맞추는 작업이 늘고 있다. 기존 회사 로그인을 유지하고 그룹별 계정 배정과 권한 변경을 한곳에서 처리해야
+              한다. 운영 부담이 가장 적은 방법은?
+            answer: IAM Identity Center를 IdP와 연결하고 그룹별 권한 세트를 필요한 계정에 배정한다.
+            wrong:
+              - 각 계정의 SAML 역할과 직무 정책을 IdP와 연결하고 계정별 배정 목록을 각각 관리한다.
+              - 공유 서비스 계정에 직무별 IAM 사용자를 만들고 각 계정 역할로 전환하도록 장기 키를 배포한다.
+              - Organizations SCP로 각 계정의 서비스 상한을 정하고 직원별 로그인 권한은 계정마다 배정한다.
+      - id: saa-r2-Q15-10
+        source_id: Q15-10
+        type: mcq
+        title: Q15-10 · 보안·IAM
+        explain: |
+          <p>API 변경 행위자는 CloudTrail 관리 이벤트로, 반복되는 리소스 구성 위반은 Config 규칙으로 구분한다. 변경 주체 감사와 구성 준수 평가는 서로 다른 요구다. CloudTrail에서 API 행위자를 조사하고 Config 기록·규칙으로 보안 그룹 구성의 이력과 지속적인 위반 평가를 수행한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>VPC Flow Logs에서 SSH가 허용된 뒤 연결한 출발지 IP와 트래픽 양을 조사한다.</td>
+          <td>연결의 출발지 IP는 SG 규칙을 바꾼 AWS API 호출자와 다르며 지속적인 구성 준수 평가도 제공하지 않는다.</td>
+          </tr>
+          <tr>
+          <td>CloudTrail 로그를 매일 운영자가 읽고 보안 그룹 공개 여부를 수동 점검한다.</td>
+          <td>행위 조사에는 쓸 수 있지만 수동 검토를 줄이고 관리형 규칙으로 지속 평가한다는 요구를 충족하지 않는다.</td>
+          </tr>
+          <tr>
+          <td>Inspector EC2 패키지 스캔 결과를 Security Hub에 모아 취약점 상태를 평가한다.</td>
+          <td>패키지 취약점 평가와 보안 그룹의 공개 SSH 구성 평가는 다른 대상이다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-12.html">12일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/awscloudtrail/latest/userguide/logging-management-events-with-cloudtrail.html">CloudTrail 이벤트 로깅</a> · <a href="https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html">AWS Config</a>
+          SAA 평가 항목: 1.2</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-12.html#%EC%A7%80%ED%91%9C%EB%A1%9C%EA%B7%B8trace%EA%B5%AC%EC%84%B1-%EC%9D%B4%EB%A0%A5">API 변경 행위자는 CloudTrail 관리 이벤트로, 반복되는 리소스 구성 위반은 Config 규칙으로 구분한다.</a></p>
+        quizzes:
+          - q: 운영 계정의 보안 그룹에서 0.0.0.0/0 대상 SSH 허용이 발견됐다. 보안 팀은 API 변경 주체를 조사하고, 같은 위반이 다시
+              생기면 관리형 규칙으로 지속 평가해야 한다. 수동 로그 검토나 자체 포트 평가 코드는 줄이려 한다. 이 두 요구를 직접
+              충족하는 조치 두 가지는?
+            answer: AWS Config로 보안 그룹 구성을 기록하고 공개 SSH 제한 규칙으로 준수 여부를 평가한다.
+            wrong:
+              - VPC Flow Logs에서 SSH가 허용된 뒤 연결한 출발지 IP와 트래픽 양을 조사한다.
+              - CloudTrail 로그를 매일 운영자가 읽고 보안 그룹 공개 여부를 수동 점검한다.
+              - Inspector EC2 패키지 스캔 결과를 Security Hub에 모아 취약점 상태를 평가한다.
+            answers:
+              - AWS Config로 보안 그룹 구성을 기록하고 공개 SSH 제한 규칙으로 준수 여부를 평가한다.
+              - CloudTrail 관리 이벤트에서 보안 그룹 변경 API의 주체와 시각을 조사한다.
+            options:
+              - VPC Flow Logs에서 SSH가 허용된 뒤 연결한 출발지 IP와 트래픽 양을 조사한다.
+              - AWS Config로 보안 그룹 구성을 기록하고 공개 SSH 제한 규칙으로 준수 여부를 평가한다.
+              - CloudTrail 로그를 매일 운영자가 읽고 보안 그룹 공개 여부를 수동 점검한다.
+              - Inspector EC2 패키지 스캔 결과를 Security Hub에 모아 취약점 상태를 평가한다.
+              - CloudTrail 관리 이벤트에서 보안 그룹 변경 API의 주체와 시각을 조사한다.
+      - id: saa-r2-Q15-11
+        source_id: Q15-11
+        type: mcq
+        title: Q15-11 · 보안·IAM
+        explain: |
+          <p>정해진 기간 동안 관리자도 단축·영구 삭제할 수 없는 버전 보존은 Compliance 모드로 강제한다. Object Lock compliance 보존은 설정 기간 동안 보호된 버전의 영구 삭제를 제한한다. 같은 객체 키의 새 버전 작성과 기존 보호 버전 삭제는 달라 후속 기록 요구와 양립할 수 있다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>S3 Object Lock Governance 모드를 적용하고 보안 관리자에게 보존 우회 권한을 부여한다.</td>
+          <td>Governance는 우회 권한을 가진 관리자가 보존을 우회할 수 있으므로 관리자도 삭제 불가라는 조건에 맞지 않는다.</td>
+          </tr>
+          <tr>
+          <td>S3 Object Lock Legal hold를 적용하고 운영 관리자가 법적 보류를 해제할 수 있게 한다.</td>
+          <td>Legal hold는 해제 권한을 가진 주체가 해제할 수 있어 고정된 7년 보존을 강제하는 Compliance와 다르다.</td>
+          </tr>
+          <tr>
+          <td>버전 관리를 켜고 운영자 역할의 DeleteObject와 DeleteObjectVersion을 IAM 정책에서 거부한다.</td>
+          <td>일반 역할 IAM 정책의 삭제 거부는 상위 관리자나 정책 변경 경로까지 포함한 변경 불가능한 보존을 대신하지 못한다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-11.html">11일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lock.html">S3 Object Lock</a>
+          SAA 평가 항목: 1.3</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-11.html#%EB%B6%88%EB%B3%80-%EB%B3%B4%EA%B4%80%EA%B3%BC-legal-hold">정해진 기간 동안 관리자도 단축·영구 삭제할 수 없는 버전 보존은 Compliance 모드로 강제한다.</a></p>
+        quizzes:
+          - q: 금융사는 S3 감사 기록의 각 버전을 7년간 보관해야 한다. 보관 중에는 루트 사용자를 포함한 운영자가 보존 기간을 줄이거나 보호된 버전을
+              영구 삭제할 수 없어야 한다. 같은 객체 키로 새 기록 버전을 쓰는 것은 허용된다. 이 조건을 직접 강제하는 구성은?
+            answer: S3 Object Lock Compliance 모드로 각 기록 버전에 7년 보존 기간을 적용한다.
+            wrong:
+              - S3 Object Lock Governance 모드를 적용하고 보안 관리자에게 보존 우회 권한을 부여한다.
+              - S3 Object Lock Legal hold를 적용하고 운영 관리자가 법적 보류를 해제할 수 있게 한다.
+              - 버전 관리를 켜고 운영자 역할의 DeleteObject와 DeleteObjectVersion을 IAM 정책에서
+                거부한다.
+      - id: saa-r2-Q15-12
+        source_id: Q15-12
+        type: mcq
+        title: Q15-12 · 보안·IAM
+        explain: |
+          <p>키 ARN과 기존 객체를 유지하는 키 재료 회전은 KMS 자동 회전으로 처리하며 과거 키 재료는 복호화에 필요하다. 자동 회전은 키 재료를 갱신하지만 기존 저장 데이터를 일괄 재암호화하지 않는다. KMS는 기존 암호문을 읽을 수 있도록 이전 키 재료를 관리하므로 별도의 전체 재암호화 요구와 구분해야 한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>현재 KMS 키를 유지하고 S3 Bucket Key를 활성화해 KMS 요청 수를 줄인다.</td>
+          <td>S3 Bucket Key는 KMS 호출 비용을 줄이는 기능이며 고객 관리형 KMS 키 재료를 매년 회전하는 설정을 대신하지 않는다.</td>
+          </tr>
+          <tr>
+          <td>새 KMS 키를 매년 만들고 S3 Batch Operations로 기존 객체를 모두 다시 암호화한다.</td>
+          <td>새 키와 전체 재암호화로 회전할 수 있지만 객체 재작성과 키 ARN 변경 없이 처리한다는 조건에 맞지 않는다.</td>
+          </tr>
+          <tr>
+          <td>키 별칭을 새 KMS 키로 옮긴 뒤 이전 키를 바로 삭제 예약해 과거 키 재료를 정리한다.</td>
+          <td>별칭 변경은 과거 암호문을 새 키로 바꾸지 않는다. 과거 키 삭제는 이전 객체 복호화를 잃게 할 수 있다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-11.html">11일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html">KMS 키 회전</a>
+          SAA 평가 항목: 1.3</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-11.html#%ED%82%A4-%ED%9A%8C%EC%A0%84%EC%9E%AC%EC%95%94%ED%98%B8%ED%99%94%EC%82%AD%EC%A0%9C-%EB%8C%80%EA%B8%B0">키 ARN과 기존 객체를 유지하는 키 재료 회전은 KMS 자동 회전으로 처리하며 과거 키 재료는 복호화에 필요하다.</a></p>
+        quizzes:
+          - q: 회사는 S3 객체를 고객 관리형 대칭 KMS 키로 암호화한다. 보안 정책은 매년 암호화에 사용하는 키 재료를 바꾸되 기존 객체를 다시
+              쓰거나 애플리케이션의 키 ARN을 변경하지 않도록 요구한다. 이전 객체도 계속 읽어야 한다. 요구를 충족하면서 별도
+              데이터 변환 작업이 가장 적은 방법은?
+            answer: 해당 KMS 키의 자동 회전을 켜고 기존 객체는 보존된 이전 키 재료로 계속 복호화한다.
+            wrong:
+              - 현재 KMS 키를 유지하고 S3 Bucket Key를 활성화해 KMS 요청 수를 줄인다.
+              - 새 KMS 키를 매년 만들고 S3 Batch Operations로 기존 객체를 모두 다시 암호화한다.
+              - 키 별칭을 새 KMS 키로 옮긴 뒤 이전 키를 바로 삭제 예약해 과거 키 재료를 정리한다.
+      - id: saa-r2-Q15-13
+        source_id: Q15-13
+        type: mcq
+        title: Q15-13 · 보안·IAM
+        explain: |
+          <p>탐지 종류뿐 아니라 계정·리전·스캔 유형과 신규 계정 자동 적용 범위가 모두 일치해야 한다. GuardDuty와 Inspector는 계정과 리전 범위를 맞춰 조직 관리해야 한다. 사용 중인 두 리전에서 신규 계정의 탐지와 EC2 패키지 스캔을 자동 활성화하면 원천 탐지·평가를 중앙 관리하면서 자체 수집·분석 코드를 줄일 수 있다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>두 리전에 GuardDuty를 조직 구성하고 Inspector의 ECR 이미지 스캔만 조직 전체에 활성화한다.</td>
+          <td>ECR 이미지 스캔과 실행 중인 EC2 호스트 패키지의 취약점 평가는 다른 범위다.</td>
+          </tr>
+          <tr>
+          <td>조직 CloudTrail·VPC 흐름 로그·SSM 패키지 목록을 모아 Lambda로 위협·CVE 분석을 구현한다.</td>
+          <td>구현 가능한 대안이지만 로그 수집·분석 규칙·CVE 대조 코드를 직접 운영해야 하므로 관리형 서비스에 비해 운영 요구에 불리하다.</td>
+          </tr>
+          <tr>
+          <td>서울의 GuardDuty·Inspector를 조직 자동 활성화하고 도쿄 리소스 목록은 Config로 집계한다.</td>
+          <td>Config 집계가 다른 리전의 GuardDuty 탐지와 Inspector EC2 스캔 활성화를 대신하지 않는다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-11.html">11일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_organizations.html">GuardDuty 다중 계정·리전 관리</a> · <a href="https://docs.aws.amazon.com/inspector/latest/user/managing-multiple-accounts.html">Inspector 조직 관리</a> · <a href="https://docs.aws.amazon.com/inspector/latest/user/designating-admin.html">Inspector 리전별 위임 관리자</a> · <a href="https://docs.aws.amazon.com/inspector/latest/user/adding-member-accounts.html">신규 계정 스캔 자동 활성화</a>
+          SAA 평가 항목: 1.2</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-11.html#%EA%B3%84%EC%A0%95%EB%A6%AC%EC%A0%84%EC%8A%A4%EC%BA%94-%EC%9C%A0%ED%98%95%EC%9D%98-coverage">탐지 종류뿐 아니라 계정·리전·스캔 유형과 신규 계정 자동 적용 범위가 모두 일치해야 한다.</a> · <a href="/study/lessons/deep-dive/day-11.html#%EA%B3%84%EC%A0%95%EB%A6%AC%EC%A0%84%EC%8A%A4%EC%BA%94-%EC%9C%A0%ED%98%95%EC%9D%98-coverage">탐지 종류뿐 아니라 계정·리전·스캔 유형과 신규 계정 자동 적용 범위가 모두 일치해야 한다.</a></p>
+        quizzes:
+          - q: 30개 멤버 계정이 서울과 도쿄에서 EC2를 실행한다. 중앙 보안 계정은 의심스러운 자격 증명 사용·악성 통신과 EC2에 설치된 패키지
+              취약점을 모두 확인해야 한다. 새 계정이 들어와도 두 리전에서 동일 범위가 자동 적용되어야 한다. 자체 탐지·수집
+              코드가 가장 적은 구성은?
+            answer: 두 리전에 GuardDuty·Inspector 조직 위임 관리와 신규 계정의 GuardDuty·EC2 스캔 자동 활성화를 둔다.
+            wrong:
+              - 두 리전에 GuardDuty를 조직 구성하고 Inspector의 ECR 이미지 스캔만 조직 전체에 활성화한다.
+              - 조직 CloudTrail·VPC 흐름 로그·SSM 패키지 목록을 모아 Lambda로 위협·CVE 분석을 구현한다.
+              - 서울의 GuardDuty·Inspector를 조직 자동 활성화하고 도쿄 리소스 목록은 Config로 집계한다.
+      - id: saa-r2-Q15-14
+        source_id: Q15-14
+        type: mcq
+        title: Q15-14 · 보안·IAM
+        explain: |
+          <p>형식 일치만으로는 부족하므로 키워드 문맥을 좁히고 허용된 공개 값만 제외해야 한다. 사용자 지정 식별자는 사내 형식의 정규식과 키워드 근접 조건을 조합할 수 있다. 알려진 공개 테스트 값은 허용 목록으로 제외하면 전체 번호 형식을 숨기지 않으면서 분류 정확도를 높이고 자체 검사 코드를 줄일 수 있다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>Macie 식별자에 번호 정규식만 두고 모든 일치 결과를 보안 담당자가 수동 분류한다.</td>
+          <td>정규식만으로는 문맥과 공개 테스트 값의 오탐을 자동 제외하지 못하고 수동 분류 부담이 남는다.</td>
+          </tr>
+          <tr>
+          <td>Macie 허용 목록에 모든 CUST- 번호 형식을 넣고 관리형 식별자로 나머지 정보를 검사한다.</td>
+          <td>모든 번호 형식을 허용 목록에 넣으면 실제 고객 번호도 제외되므로 찾으려는 민감정보를 놓칠 수 있다.</td>
+          </tr>
+          <tr>
+          <td>객체 생성 이벤트로 Lambda를 실행해 번호·문맥·테스트 값 제외를 구현하고 결과를 저장한다.</td>
+          <td>동일 논리를 구현할 수 있지만 자체 분석 코드 없이 관리형 자동 분류를 사용한다는 요구와 다르다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-11.html">11일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/macie/latest/user/custom-data-identifiers.html">사용자 지정 데이터 식별자</a> · <a href="https://docs.aws.amazon.com/macie/latest/user/allow-lists-options.html">Macie 허용 목록</a>
+          SAA 평가 항목: 1.3</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-11.html#macie-%EB%AC%B8%EB%A7%A5%EA%B3%BC-%ED%97%88%EC%9A%A9-%EB%AA%A9%EB%A1%9D%EC%9D%98-%EA%B2%80%EC%A6%9D">형식 일치만으로는 부족하므로 키워드 문맥을 좁히고 허용된 공개 값만 제외해야 한다.</a></p>
+        quizzes:
+          - q: S3의 지원되는 텍스트 파일에 내부 고객 번호가 포함되는지 관리형 서비스로 검사하려 한다. 번호는 CUST- 뒤 숫자 8자리이고 실제
+              문서에는 20자 안에 customer_id가 나온다. 공개 문서에도 같은 형식이 있으며 공개 테스트 번호 목록은 따로
+              유지한다. 자체 분석 코드 없이 오탐을 줄이는 구성은?
+            answer: Macie 식별자에 번호 정규식·키워드 근접 조건을 두고 공개 테스트 번호 허용 목록을 적용한다.
+            wrong:
+              - Macie 식별자에 번호 정규식만 두고 모든 일치 결과를 보안 담당자가 수동 분류한다.
+              - Macie 허용 목록에 모든 CUST- 번호 형식을 넣고 관리형 식별자로 나머지 정보를 검사한다.
+              - 객체 생성 이벤트로 Lambda를 실행해 번호·문맥·테스트 값 제외를 구현하고 결과를 저장한다.
+      - id: saa-r2-Q15-15
+        source_id: Q15-15
+        type: mcq
+        title: Q15-15 · 보안·IAM
+        explain: |
+          <p>역할 연결뿐 아니라 실제 SDK 신원을 확인하고 환경 변수의 장기 키를 제거하며 유출 키를 비활성화·삭제해야 한다. EC2 역할의 임시 자격 증명으로 전환하면 배포 파일에 장기 키를 넣을 필요가 줄어든다. 다만 새 역할 연결만으로 이미 유출된 사용자 키는 폐기되지 않으므로 전환을 검증하고 별도로 비활성화·삭제해야 한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>기존 키를 Secrets Manager로 옮기고 EC2가 조회하게 한 뒤 유출 키의 사용 기간을 연장한다.</td>
+          <td>저장소를 바꿔도 이미 유출된 키가 활성 상태이면 외부 사용은 계속되며 장기 키 운영도 남는다.</td>
+          </tr>
+          <tr>
+          <td>S3 읽기 역할을 EC2에 연결하되 현재 환경 변수의 키와 유출된 키의 활성 상태는 유지한다.</td>
+          <td>SDK가 환경 변수 자격 증명을 먼저 고르면 역할을 연결해도 기존 키를 계속 쓴다. 역할 연결 자체는 유출 키를 폐기하지 않는다.</td>
+          </tr>
+          <tr>
+          <td>새 IAM 사용자 키를 발급해 AMI에 넣고 이전 AMI가 모두 사라질 때까지 유출 키를 유지한다.</td>
+          <td>새 장기 키를 이미지에 배포하면 서버 교체 시 키 배포가 계속되고 유출된 기존 키의 외부 사용도 허용된다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-01.html">1일 차 개념</a> · <a href="/study/lessons/day-02.html">2일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html">IAM 보안 권장 사항</a> · <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html">EC2의 IAM 역할</a>
+          SAA 평가 항목: 1.1</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-01.html#ec2-%EC%97%AD%ED%95%A0%EA%B3%BC-sdk-%EC%9E%90%EA%B2%A9-%EC%A6%9D%EB%AA%85-%EC%A0%9C%EA%B3%B5%EC%9E%90">역할 연결뿐 아니라 실제 SDK 신원을 확인하고 환경 변수의 장기 키를 제거하며 유출 키를 비활성화·삭제해야 한다.</a> · <a href="/study/lessons/deep-dive/day-01.html#ec2-%EC%97%AD%ED%95%A0%EA%B3%BC-sdk-%EC%9E%90%EA%B2%A9-%EC%A6%9D%EB%AA%85-%EC%A0%9C%EA%B3%B5%EC%9E%90">역할 연결뿐 아니라 실제 SDK 신원을 확인하고 환경 변수의 장기 키를 제거하며 유출 키를 비활성화·삭제해야 한다.</a></p>
+        quizzes:
+          - q: 자동 교체되는 EC2 앱은 환경 변수의 IAM 사용자 액세스 키로 S3를 읽는다. 보안 팀이 같은 키가 외부에서도 사용된 흔적을 발견했다.
+              앱은 중단 없이 계속 읽어야 하며 새 서버에 장기 키를 배포하는 작업도 없애야 한다. 가장 적절한 전환·회수 순서는?
+            answer: S3 읽기 역할을 EC2에 연결하고 SDK가 환경 변수 대신 역할을 쓰게 검증한 뒤 유출 키를 폐기한다.
+            wrong:
+              - 기존 키를 Secrets Manager로 옮기고 EC2가 조회하게 한 뒤 유출 키의 사용 기간을 연장한다.
+              - S3 읽기 역할을 EC2에 연결하되 현재 환경 변수의 키와 유출된 키의 활성 상태는 유지한다.
+              - 새 IAM 사용자 키를 발급해 AMI에 넣고 이전 AMI가 모두 사라질 때까지 유출 키를 유지한다.

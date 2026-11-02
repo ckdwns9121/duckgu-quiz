@@ -1,0 +1,178 @@
+<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>추가 서비스 선택 참고</title><style>body{font:17px/1.8 system-ui,sans-serif;max-width:850px;margin:auto;padding:24px;color:#243047}img,svg{max-width:100%;height:auto}table{border-collapse:collapse;display:block;overflow:auto}td,th{border:1px solid #ccd3df;padding:8px}pre{overflow:auto;background:#eef1f5;padding:16px}a{color:#1769bb}</style><body><a href="/course/aws-saa">← AWS-SAA 퀴즈</a><h1 id="추가-서비스-선택-참고">추가 서비스 선택 참고</h1>
+<p>14일 차의 핵심 서비스 설명 뒤에 읽는다. 서비스의 이름보다 요구 조건과 운영 책임을 연결한다. 아래는 본문에서 짧게 다룬 서비스의 용도와 비교다.</p>
+<h2 id="aws-data-exchange">AWS Data Exchange</h2>
+<p>외부 공급자의 데이터를 구독해 분석 입력으로 받는다. 자체 ETL 실행은 Glue가 맡으며, 구독 권한과 이용 조건을 확인한다.</p>
+<p><a href="https://docs.aws.amazon.com/data-exchange/">공식 문서</a> · 연결 학습: <a href="day-14.html">14일 차</a></p>
+<h2 id="aws-data-pipeline">AWS Data Pipeline</h2>
+<p>데이터 이동·처리 작업의 의존성과 일정을 구성하던 서비스다. 스트림 저장소가 아니며 기존 파이프라인을 해석하는 용도로 구분한다.</p>
+<p><a href="https://docs.aws.amazon.com/datapipeline/latest/DeveloperGuide/what-is-datapipeline.html">공식 문서</a> · 연결 학습: <a href="day-14.html">14일 차</a></p>
+<h2 id="amazon-emr">Amazon EMR</h2>
+<p>Spark·Hadoop으로 큰 데이터 집합을 분산 처리한다. Athena의 SQL 조회보다 처리 코드·프레임워크 제어가 필요할 때 적합하며 클러스터 또는 서버리스 자원 비용을 관리한다.</p>
+<p><a href="https://docs.aws.amazon.com/emr/">공식 문서</a> · 연결 학습: <a href="day-14.html">14일 차</a></p>
+<h2 id="aws-lake-formation">AWS Lake Formation</h2>
+<p>데이터 레이크의 테이블·열 접근 권한을 중앙 관리한다. 파일 자체는 S3에 있고 ETL은 Glue가 수행한다. 저장소 권한과 카탈로그 권한을 함께 설계한다.</p>
+<p><a href="https://docs.aws.amazon.com/lake-formation/">공식 문서</a> · 연결 학습: <a href="day-14.html">14일 차</a></p>
+<h2 id="amazon-managed-streaming-for-apache-kafka-amazon-msk">Amazon Managed Streaming for Apache Kafka (Amazon MSK)</h2>
+<p>기존 Kafka 생산자·소비자와 호환되는 관리형 브로커다. Kinesis로 전환하면 API와 운영 방식이 달라지므로 Kafka 호환성이 선택 조건이다.</p>
+<p><a href="https://docs.aws.amazon.com/msk/">공식 문서</a> · 연결 학습: <a href="day-14.html">14일 차</a></p>
+<h2 id="amazon-opensearch-service">Amazon OpenSearch Service</h2>
+<p>로그 검색과 전문 검색에 인덱스를 사용한다. 관계형 주문 원장의 트랜잭션 DB 대신 쓰지 않으며 샤드·보존 기간·인덱스 용량을 관리한다.</p>
+<p><a href="https://docs.aws.amazon.com/opensearch-service/">공식 문서</a> · 연결 학습: <a href="day-14.html">14일 차</a></p>
+<h2 id="amazon-quick">Amazon Quick</h2>
+<p>분석 데이터를 대시보드로 시각화하고 공유한다. 데이터를 변환하는 Glue나 SQL을 실행하는 Athena와 역할이 다르다. Quick Sight의 데이터 접근과 대시보드 열람 권한도 구분한다.</p>
+<p><a href="https://docs.aws.amazon.com/quick/">공식 문서</a> · 연결 학습: <a href="day-14.html">14일 차</a></p>
+<h2 id="amazon-appflow">Amazon AppFlow</h2>
+<p>SaaS와 AWS 사이의 데이터를 관리형 흐름으로 옮긴다. SQS처럼 앱 메시지를 대기시키는 큐가 아니며 지원 커넥터와 전송 주기를 확인한다.</p>
+<p><a href="https://docs.aws.amazon.com/appflow/">공식 문서</a> · 연결 학습: <a href="day-10.html">10일 차</a></p>
+<h2 id="amazon-mq">Amazon MQ</h2>
+<p>ActiveMQ·RabbitMQ 프로토콜을 유지해야 하는 기존 앱에 관리형 브로커를 제공한다. 새 앱의 단순 버퍼는 SQS가 운영 부담이 작지만 기존 프로토콜을 그대로 대체하지는 않는다.</p>
+<p><a href="https://docs.aws.amazon.com/amazon-mq/">공식 문서</a> · 연결 학습: <a href="day-10.html">10일 차</a></p>
+<h2 id="aws-batch">AWS Batch</h2>
+<p>대량의 종료 가능한 작업을 큐에 넣고 필요한 컴퓨팅으로 배치 실행한다. 상시 HTTP API와 다르며 작업 재시도·종속성·Spot 중단 허용 여부를 설계한다.</p>
+<p><a href="https://docs.aws.amazon.com/batch/">공식 문서</a> · 연결 학습: <a href="day-14.html">14일 차</a></p>
+<h2 id="aws-elastic-beanstalk">AWS Elastic Beanstalk</h2>
+<p>애플리케이션 코드를 올리면 EC2·로드 밸런서 등 실행 환경을 구성한다. Lambda와 달리 서버 환경을 사용하는 배포 관리 방식이며 OS·환경 설정 책임을 이해한다.</p>
+<p><a href="https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/Welcome.html">공식 문서</a> · 연결 학습: <a href="day-14.html">14일 차</a></p>
+<h2 id="aws-outposts">AWS Outposts</h2>
+<p>온프레미스에서 AWS 인프라·서비스를 사용해 지연 시간이나 데이터 위치 요구를 맞춘다. 일반 리전 실행보다 현장 시설·용량·연결 조건이 추가된다.</p>
+<p><a href="https://docs.aws.amazon.com/outposts/">공식 문서</a> · 연결 학습: <a href="day-13.html">13일 차</a></p>
+<h2 id="aws-serverless-application-repository">AWS Serverless Application Repository</h2>
+<p>공유된 서버리스 애플리케이션 템플릿을 찾아 배포한다. 함수 실행 엔진은 Lambda이며, 템플릿 권한·출처·배포 리소스 비용을 검토한다.</p>
+<p><a href="https://docs.aws.amazon.com/serverlessrepo/">공식 문서</a> · 연결 학습: <a href="day-14.html">14일 차</a></p>
+<h2 id="vmware-cloud-on-aws">VMware Cloud on AWS</h2>
+<p>기존 vSphere 기반 워크로드를 AWS 인프라에서 운영하는 경로다. 앱을 컨테이너로 재작성하는 방식과 다르며 라이선스·공급 계약·연결 비용을 따져야 한다.</p>
+<p><a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/transitioning-from-vmware-to-the-aws-cloud/introduction.html">공식 문서</a> · 연결 학습: <a href="day-13.html">13일 차</a></p>
+<h2 id="aws-wavelength">AWS Wavelength</h2>
+<p>통신사 네트워크 가장자리에서 모바일 사용자의 지연 시간을 낮추는 배치 방식이다. CloudFront의 콘텐츠 캐시와 달리 컴퓨팅 위치를 바꾸며 지원 지역·통신사 조건이 있다.</p>
+<p><a href="https://docs.aws.amazon.com/wavelength/">공식 문서</a> · 연결 학습: <a href="day-13.html">13일 차</a></p>
+<h2 id="amazon-ecr">Amazon ECR</h2>
+<p>컨테이너 이미지를 저장하고 배포 대상이 가져가도록 하는 레지스트리다. 컨테이너를 실행하는 ECS·EKS와 다르며 이미지 접근 정책과 수명 주기로 보관 비용을 통제한다.</p>
+<p><a href="https://docs.aws.amazon.com/ecr/">공식 문서</a> · 연결 학습: <a href="day-14.html">14일 차</a></p>
+<h2 id="amazon-ecs-anywhere">Amazon ECS Anywhere</h2>
+<p>외부 서버를 ECS 클러스터 작업 대상으로 등록한다. Fargate와 달리 외부 서버의 운영·패치는 고객 책임이며 연결과 지원 기능을 확인한다.</p>
+<p><a href="https://docs.aws.amazon.com/ecs/">공식 문서</a> · 연결 학습: <a href="day-14.html">14일 차</a></p>
+<h2 id="amazon-eks-anywhere">Amazon EKS Anywhere</h2>
+<p>자체 인프라에서 Kubernetes 클러스터를 만들고 운영하는 배포판·도구다. 리전의 관리형 EKS 제어 영역과 운영 책임이 같지 않다.</p>
+<p><a href="https://anywhere.eks.amazonaws.com/docs/">공식 문서</a> · 연결 학습: <a href="day-14.html">14일 차</a></p>
+<h2 id="amazon-eks-distro">Amazon EKS Distro</h2>
+<p>EKS와 같은 기반의 Kubernetes 구성 요소 배포판이다. 배포판만 사용하면 관리형 제어 영역이 생기지 않으며 클러스터 가용성·업그레이드를 직접 운영한다.</p>
+<p><a href="https://docs.aws.amazon.com/eks/">공식 문서</a> · 연결 학습: <a href="day-14.html">14일 차</a></p>
+<h2 id="amazon-documentdb">Amazon DocumentDB</h2>
+<p>문서 형태 데이터와 MongoDB 호환 API가 필요한 앱을 위한 DB다. DynamoDB 키 기반 모델이나 RDS 관계형 모델과 다르며 MongoDB의 모든 기능이 동일하다고 가정하지 않는다.</p>
+<p><a href="https://docs.aws.amazon.com/documentdb/">공식 문서</a> · 연결 학습: <a href="day-08.html">8일 차</a></p>
+<h2 id="amazon-keyspaces">Amazon Keyspaces</h2>
+<p>Cassandra 호환 CQL 워크로드를 관리형으로 실행한다. DynamoDB와 둘 다 비관계형이지만 기존 Cassandra API 유지가 선택 기준이며 지원 CQL 기능을 확인한다.</p>
+<p><a href="https://docs.aws.amazon.com/keyspaces/">공식 문서</a> · 연결 학습: <a href="day-08.html">8일 차</a></p>
+<h2 id="amazon-neptune">Amazon Neptune</h2>
+<p>사용자·상품의 연결 관계를 여러 단계 탐색하는 그래프 DB다. 단순 키 조회는 DynamoDB, 표 조인은 RDS가 더 자연스러우며 그래프 질의·모델이 필요하다.</p>
+<p><a href="https://docs.aws.amazon.com/neptune/">공식 문서</a> · 연결 학습: <a href="day-08.html">8일 차</a></p>
+<h2 id="aws-x-ray">AWS X-Ray</h2>
+<p>분산 요청의 서비스별 지연·오류를 추적한다. CloudWatch의 전체 지표나 CloudTrail의 API 감사와 달리 요청 경로를 찾으며 계측·샘플링이 필요하다.</p>
+<p><a href="https://docs.aws.amazon.com/xray/">공식 문서</a> · 연결 학습: <a href="day-12.html">12일 차</a></p>
+<h2 id="aws-amplify">AWS Amplify</h2>
+<p>프런트엔드 호스팅과 인증·API 등 백엔드 연결의 개발 흐름을 제공한다. API Gateway 자체와 같지 않으며 실제 배포되는 각 서비스의 권한·비용을 따진다.</p>
+<p><a href="https://docs.aws.amazon.com/amplify/">공식 문서</a> · 연결 학습: <a href="day-14.html">14일 차</a></p>
+<h2 id="aws-device-farm">AWS Device Farm</h2>
+<p>실제 모바일 기기와 브라우저에서 앱 테스트를 실행한다. 앱의 운영 트래픽을 처리하는 서비스가 아니며 테스트 기기·시간 비용이 생긴다.</p>
+<p><a href="https://docs.aws.amazon.com/devicefarm/">공식 문서</a> · 연결 학습: <a href="day-14.html">14일 차</a></p>
+<h2 id="amazon-comprehend">Amazon Comprehend</h2>
+<p>문장에서 감정·개체 등 의미를 추출한다. 스캔 이미지의 글자를 먼저 읽는 Textract와 다르며 지원 언어·분석 유형을 확인한다.</p>
+<p><a href="https://docs.aws.amazon.com/comprehend/">공식 문서</a> · 연결 학습: <a href="day-14.html">14일 차</a></p>
+<h2 id="amazon-lex">Amazon Lex</h2>
+<p>음성·텍스트 대화의 의도와 입력 항목을 받아 챗봇 흐름을 만든다. 단순 음성 전사 Transcribe와 달리 대화 상태와 업무 처리를 연결한다.</p>
+<p><a href="https://docs.aws.amazon.com/lex/">공식 문서</a> · 연결 학습: <a href="day-14.html">14일 차</a></p>
+<h2 id="amazon-polly">Amazon Polly</h2>
+<p>문자를 음성으로 합성한다. 음성을 문자로 바꾸는 Transcribe와 방향이 반대이며 음성·언어·출력 형식 요구를 확인한다.</p>
+<p><a href="https://docs.aws.amazon.com/polly/">공식 문서</a> · 연결 학습: <a href="day-14.html">14일 차</a></p>
+<h2 id="amazon-rekognition">Amazon Rekognition</h2>
+<p>사진·영상의 객체·장면 등을 분석한다. 문서의 표·양식 추출은 Textract가 적합하며 인식 결과는 확률적이므로 검증 기준이 필요하다.</p>
+<p><a href="https://docs.aws.amazon.com/rekognition/">공식 문서</a> · 연결 학습: <a href="day-14.html">14일 차</a></p>
+<h2 id="amazon-sagemaker-ai">Amazon SageMaker AI</h2>
+<p>자체 ML 모델의 학습·배포 환경을 제공한다. 미리 학습된 번역 API와 달리 데이터·학습·추론 구성을 선택하고 자원 비용을 관리한다.</p>
+<p><a href="https://docs.aws.amazon.com/sagemaker/">공식 문서</a> · 연결 학습: <a href="day-14.html">14일 차</a></p>
+<h2 id="amazon-textract">Amazon Textract</h2>
+<p>문서 이미지에서 문자·표·양식 데이터를 추출한다. Comprehend의 자연어 의미 분석과 다르며 인식 신뢰도가 낮은 항목의 검토 흐름이 필요하다.</p>
+<p><a href="https://docs.aws.amazon.com/textract/">공식 문서</a> · 연결 학습: <a href="day-14.html">14일 차</a></p>
+<h2 id="amazon-transcribe">Amazon Transcribe</h2>
+<p>음성 녹음을 문자로 전사한다. 번역은 Translate, 음성 합성은 Polly이며 잡음·언어·화자 조건이 정확도에 영향을 준다.</p>
+<p><a href="https://docs.aws.amazon.com/transcribe/">공식 문서</a> · 연결 학습: <a href="day-14.html">14일 차</a></p>
+<h2 id="amazon-translate">Amazon Translate</h2>
+<p>텍스트를 다른 언어로 번역한다. 음성 입력은 먼저 Transcribe로 문자화하며 도메인 용어와 결과 품질을 검토한다.</p>
+<p><a href="https://docs.aws.amazon.com/translate/">공식 문서</a> · 연결 학습: <a href="day-14.html">14일 차</a></p>
+<h2 id="aws-auto-scaling">AWS Auto Scaling</h2>
+<p>여러 지원 서비스의 확장 설정을 관리한다. EC2 Auto Scaling은 EC2 그룹에 초점을 두며, 서비스마다 확장 지표·하한·상한을 별도로 정해야 한다.</p>
+<p><a href="https://docs.aws.amazon.com/autoscaling/">공식 문서</a> · 연결 학습: <a href="day-12.html">12일 차</a></p>
+<h2 id="aws-cli">AWS CLI</h2>
+<p>명령으로 AWS API를 호출해 반복 작업을 자동화한다. 웹 UI인 Console과 접근 방식이 다를 뿐 IAM 권한은 여전히 필요하며 장기 키 대신 역할을 우선한다.</p>
+<p><a href="https://docs.aws.amazon.com/cli/">공식 문서</a> · 연결 학습: <a href="day-12.html">12일 차</a></p>
+<h2 id="aws-compute-optimizer">AWS Compute Optimizer</h2>
+<p>이용률을 분석해 적정 자원 크기를 권고한다. Cost Explorer의 지출 분석과 다르며 과거 이용률이 미래 피크를 대표하는지 검토한 뒤 조정한다.</p>
+<p><a href="https://docs.aws.amazon.com/compute-optimizer/">공식 문서</a> · 연결 학습: <a href="day-12.html">12일 차</a></p>
+<h2 id="aws-health-dashboard">AWS Health Dashboard</h2>
+<p>AWS 서비스 문제와 계정에 영향을 주는 예정 변경을 확인한다. 내 앱의 응답 오류·CPU 감시는 CloudWatch가 맡으며 두 신호를 함께 본다.</p>
+<p><a href="https://docs.aws.amazon.com/health/">공식 문서</a> · 연결 학습: <a href="day-12.html">12일 차</a></p>
+<h2 id="aws-license-manager">AWS License Manager</h2>
+<p>소프트웨어 라이선스 사용 규칙과 소비를 추적한다. Savings Plans의 컴퓨팅 요금 할인과 다르며 공급업체 계약의 실제 허용 범위가 우선이다.</p>
+<p><a href="https://docs.aws.amazon.com/license-manager/">공식 문서</a> · 연결 학습: <a href="day-12.html">12일 차</a></p>
+<h2 id="amazon-managed-grafana">Amazon Managed Grafana</h2>
+<p>여러 데이터 소스의 지표를 대시보드로 시각화한다. Prometheus가 수집·질의한 지표를 표시할 수 있으며 소스 접근 권한과 사용자 인증을 설정한다.</p>
+<p><a href="https://docs.aws.amazon.com/grafana/">공식 문서</a> · 연결 학습: <a href="day-12.html">12일 차</a></p>
+<h2 id="amazon-managed-service-for-prometheus">Amazon Managed Service for Prometheus</h2>
+<p>Prometheus 호환 지표를 수집·저장·질의한다. 로그 검색 도구가 아니며 높은 카디널리티와 수집량이 비용에 영향을 준다.</p>
+<p><a href="https://docs.aws.amazon.com/prometheus/">공식 문서</a> · 연결 학습: <a href="day-12.html">12일 차</a></p>
+<h2 id="aws-management-console">AWS Management Console</h2>
+<p>브라우저로 서비스를 설정·조회하는 UI다. CLI와 동일하게 인증·인가가 필요하며 수동 변경이 CloudFormation 정의와 어긋날 수 있다.</p>
+<p><a href="https://aws.amazon.com/console/">공식 문서</a> · 연결 학습: <a href="day-12.html">12일 차</a></p>
+<h2 id="aws-proton">AWS Proton</h2>
+<p>환경·서비스 템플릿으로 컨테이너·서버리스 배포 표준을 제공하던 서비스다. 실행 중인 컨테이너를 관리하는 ECS와 다르며 신규 설계 선택지로 권하지 않는다.</p>
+<p><a href="https://docs.aws.amazon.com/proton/">공식 문서</a> · 연결 학습: <a href="day-12.html">12일 차</a></p>
+<h2 id="aws-service-catalog">AWS Service Catalog</h2>
+<p>조직에서 승인한 제품 템플릿만 사용자가 배포하도록 제공한다. CloudFormation은 인프라 정의 도구이며 Catalog는 그 정의의 배포 허용·포트폴리오를 관리한다.</p>
+<p><a href="https://docs.aws.amazon.com/servicecatalog/">공식 문서</a> · 연결 학습: <a href="day-12.html">12일 차</a></p>
+<h2 id="aws-systems-manager">AWS Systems Manager</h2>
+<p>서버의 패치·명령 실행·세션 접속·구성 관리 등을 통합한다. SSH 포트를 공개하지 않는 운영에도 쓰며 에이전트·IAM·서비스 연결이 필요하다.</p>
+<p><a href="https://docs.aws.amazon.com/systems-manager/">공식 문서</a> · 연결 학습: <a href="day-12.html">12일 차</a></p>
+<h2 id="aws-well-architected-tool">AWS Well-Architected Tool</h2>
+<p>워크로드를 설계 원칙에 따라 검토하고 개선 항목을 남긴다. 자동 보안 차단이나 부하 테스트를 대신하지 않으며 실제 요구와 검토 근거를 입력한다.</p>
+<p><a href="https://docs.aws.amazon.com/wellarchitected/">공식 문서</a> · 연결 학습: <a href="day-12.html">12일 차</a></p>
+<h2 id="amazon-kinesis-video-streams">Amazon Kinesis Video Streams</h2>
+<p>카메라 영상 스트림을 수집·저장해 재생·분석 소비자에 제공한다. Kinesis Data Streams의 일반 레코드 처리와 매체가 다르며 대역폭·보존 기간을 설계한다.</p>
+<p><a href="https://docs.aws.amazon.com/kinesisvideostreams/latest/dg/what-is-kinesis-video.html">공식 문서</a> · 연결 학습: <a href="day-14.html">14일 차</a></p>
+<h2 id="aws-application-discovery-service">AWS Application Discovery Service</h2>
+<p>기존 서버의 구성·이용률·의존성을 조사해 이관 계획에 쓴다. 실제 서버 복제·전환은 Application Migration Service가 수행한다.</p>
+<p><a href="https://docs.aws.amazon.com/application-discovery/">공식 문서</a> · 연결 학습: <a href="day-13.html">13일 차</a></p>
+<h2 id="aws-application-migration-service">AWS Application Migration Service</h2>
+<p>기존 서버를 복제한 뒤 AWS에서 테스트·전환하는 재호스팅 도구다. DB 데이터의 전체 적재·변경 복제를 수행하는 DMS와 다르며 스키마 변환은 SCT 또는 DMS Schema Conversion의 역할이다. 부팅·네트워크·애플리케이션 검증이 필요하다.</p>
+<p><a href="https://docs.aws.amazon.com/mgn/">공식 문서</a> · 연결 학습: <a href="day-13.html">13일 차</a></p>
+<h2 id="aws-artifact">AWS Artifact</h2>
+<p>AWS의 규정 준수 보고서와 계약 자료를 확인한다. 고객의 워크로드를 자동으로 규정 준수 상태로 만들지는 않으며 고객 통제 증적은 별도로 필요하다.</p>
+<p><a href="https://docs.aws.amazon.com/artifact/">공식 문서</a> · 연결 학습: <a href="day-11.html">11일 차</a></p>
+<h2 id="aws-cloudhsm">AWS CloudHSM</h2>
+<p>전용 HSM에서 암호 키를 통제해야 할 때 사용한다. KMS보다 키 장비 운영·클라이언트 통합 책임이 커지고 가용성을 위한 클러스터 구성이 필요하다.</p>
+<p><a href="https://docs.aws.amazon.com/cloudhsm/">공식 문서</a> · 연결 학습: <a href="day-11.html">11일 차</a></p>
+<h2 id="amazon-detective">Amazon Detective</h2>
+<p>보안 발견 사항의 관련 활동을 연결해 원인을 조사한다. GuardDuty의 위협 탐지와 다르며 탐지 결과를 조사하는 후속 단계에 쓴다.</p>
+<p><a href="https://docs.aws.amazon.com/detective/">공식 문서</a> · 연결 학습: <a href="day-11.html">11일 차</a></p>
+<h2 id="aws-directory-service">AWS Directory Service</h2>
+<p>Active Directory와 AWS 워크로드를 연결하거나 관리형 디렉터리를 제공한다. Cognito의 고객 로그인과 다르며 기존 Windows 도메인·신뢰 관계 요구를 확인한다.</p>
+<p><a href="https://docs.aws.amazon.com/directoryservice/latest/admin-guide/what_is.html">공식 문서</a> · 연결 학습: <a href="day-11.html">11일 차</a></p>
+<h2 id="aws-firewall-manager">AWS Firewall Manager</h2>
+<p>여러 계정의 WAF 등 보안 정책을 중앙 적용한다. 개별 요청을 직접 검사하는 WAF·Network Firewall과 관리 범위가 다르며 Organizations 구성이 필요하다.</p>
+<p><a href="https://docs.aws.amazon.com/waf/">공식 문서</a> · 연결 학습: <a href="day-11.html">11일 차</a></p>
+<h2 id="aws-network-firewall">AWS Network Firewall</h2>
+<p>VPC 트래픽을 상태 기반·규칙 기반으로 검사한다. HTTP 요청을 해석하는 WAF와 다르며 트래픽이 방화벽 엔드포인트를 지나도록 라우팅해야 한다.</p>
+<p><a href="https://docs.aws.amazon.com/network-firewall/">공식 문서</a> · 연결 학습: <a href="day-11.html">11일 차</a></p>
+<h2 id="aws-resource-access-manager-aws-ram">AWS Resource Access Manager (AWS RAM)</h2>
+<p>지원 리소스를 계정 간 공유한다. 예를 들어 공유 서브넷을 여러 계정이 사용해도 각 계정의 IAM 권한을 자동으로 모두 허용하지는 않는다.</p>
+<p><a href="https://docs.aws.amazon.com/ram/">공식 문서</a> · 연결 학습: <a href="day-11.html">11일 차</a></p>
+<h2 id="서비스-이름과-제공-상태">서비스 이름과 제공 상태</h2>
+<p>공식 시험 목록에 남아 있다는 사실은 신규 고객이 지금 사용할 수 있다는 뜻이 아니다. 2026-11-02 확인 기준으로 다음을 구분한다.</p>
+<ul>
+<li>Amazon Quick은 시험 목록 표기다. QuickSight에서 발전했으며 BI 기능은 Quick Sight로 이어진다. <a href="https://docs.aws.amazon.com/quick/latest/userguide/what-is.html">현재 이름과 기능</a>.</li>
+<li>AWS Data Pipeline은 2024-07-25부터 신규 고객이 사용할 수 없다. 기존 파이프라인을 유지하는 상황과 새 워크플로 설계를 구분한다. <a href="https://aws.amazon.com/blogs/big-data/migrate-workloads-from-aws-data-pipeline/">공식 이관 안내</a>.</li>
+<li>AWS Snow Family는 신규 고객의 장비 주문이 불가능하다. 온라인 DataSync와 물리 전송 대안을 비교하며 현재 신규 도입안으로 장비 주문을 제안하지 않는다. <a href="https://docs.aws.amazon.com/snowball/latest/developer-guide/snowball-edge-availability-change.html">공식 제공 변경</a>.</li>
+<li>AWS Proton은 2026-10-07 지원 종료 안내가 있다. 신규 배포 권장안으로 사용하지 않는다. 기존에 배포된 CloudFormation 리소스와 Proton 배포 관리 기능은 별개다. <a href="https://docs.aws.amazon.com/proton/latest/userguide/proton-end-of-support.html">종료 안내</a>.</li>
+<li>VMware Cloud on AWS는 2024-04-30부터 AWS 재판매가 종료되었으며 Broadcom 공급 경로를 확인해야 한다. 서비스 자체가 같은 날 종료되었다는 뜻은 아니다. <a href="https://aws.amazon.com/vmware/vmwarecloudonaws/">AWS 안내</a>.</li>
+</ul>
+<p>공식 자료 확인: 2026-11-02. 다른 서비스도 실제 도입 때 해당 리전·신규 고객 제공 여부를 다시 확인한다.</p>
+</body></html>

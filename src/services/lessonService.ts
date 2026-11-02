@@ -19,6 +19,9 @@ function begin(lessonId: string | null, cards: Card[]) {
 
 /** 레슨 지도에서 누른 레슨 시작 */
 export function startLesson(lessonId: string) {
+  // 기존 알림·북마크는 같은 위치의 개정판 레슨으로 연결한다. 기존 완료 기록은 그대로 둔다.
+  const revisedId = lessonId.replace(/^saa-day-/, 'saa-r2-day-');
+  if (revisedId !== lessonId) return router.push(`/lesson/${revisedId}`, { replace: true });
   const lesson = LESSON_BY_ID.get(lessonId);
   if (!lesson) return router.push('/', { replace: true });
   const course = courseOfLesson(lesson).id;

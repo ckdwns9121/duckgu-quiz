@@ -1,0 +1,620 @@
+id: saa-r2-day-16
+name: VPC·네트워크
+part: 16일 차
+color: "#4385ef"
+dark: "#985800"
+blocks:
+  - tip: SAA 시험 범위를 바탕으로 만든 창작 문제입니다. 실제 기출문제가 아닙니다. 복수 정답은 지정한 개수를 모두 맞혀야 합니다.
+  - items:
+      - id: saa-r2-Q16-01
+        source_id: Q16-01
+        type: mcq
+        title: Q16-01 · VPC·네트워크
+        explain: |
+          <p>앱의 NAT행 경로와 별도로 퍼블릭 NAT 서브넷의 IGW행 기본 경로가 있어야 한다. Zonal 퍼블릭 NAT의 인터넷 연결에는 NAT가 있는 공개 서브넷의 IGW행 경로가 필요하다. 앱에서 NAT까지만 길이 있어도 NAT 이후 인터넷 출구가 없으면 요청은 목적지에 도달하지 못한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>앱과 같은 서브넷에 프라이빗 NAT를 새로 만들고 앱 기본 경로를 그쪽으로 바꾼다.</td>
+          <td>인터넷 출구에는 퍼블릭 NAT와 IGW 경로가 필요하다. 프라이빗 NAT를 추가해도 누락된 IGW 경로를 해결하지 못한다.</td>
+          </tr>
+          <tr>
+          <td>앱에 EIP를 연결하고 현재 앱→NAT 및 NAT 서브넷 local 경로는 유지한다.</td>
+          <td>EIP를 앱에 추가해도 패킷이 향하는 기존 NAT 서브넷에 인터넷 경로가 없다는 원인은 그대로다.</td>
+          </tr>
+          <tr>
+          <td>앱 서브넷의 0.0.0.0/0 대상을 IGW로 바꾸고 앱의 프라이빗 IPv4를 유지한다.</td>
+          <td>사설 IPv4만 가진 앱은 IGW 경로만으로 인터넷의 유효한 출발지 주소를 얻지 못한다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-04.html">4일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateway-scenarios.html">NAT Gateway 사용 사례</a> · <a href="https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html">인터넷 게이트웨이</a>
+          SAA 평가 항목: 1.2</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-04.html#nat-%EB%B3%80%ED%99%98%EA%B3%BC-alb%EC%9D%98-%EB%B3%84%EB%8F%84-%EC%97%B0%EA%B2%B0">앱의 NAT행 경로와 별도로 퍼블릭 NAT 서브넷의 IGW행 기본 경로가 있어야 한다.</a></p>
+        quizzes:
+          - q: 프라이빗 서브넷의 앱이 외부 결제 HTTPS API에 연결하지 못한다. 앱의 0.0.0.0/0 경로는 퍼블릭 Zonal NAT를 가리키고
+              NAT에는 EIP가 있다. NAT 서브넷에는 local 경로만 있으며 VPC에는 IGW가 연결되어 있다.
+              SG·NACL은 왕복 통신을 허용한다. 앱을 공개하지 않고 기존 NAT를 살리는 최소 변경은?
+            answer: NAT 서브넷 라우트 테이블에 0.0.0.0/0→IGW를 추가한다.
+            wrong:
+              - 앱과 같은 서브넷에 프라이빗 NAT를 새로 만들고 앱 기본 경로를 그쪽으로 바꾼다.
+              - 앱에 EIP를 연결하고 현재 앱→NAT 및 NAT 서브넷 local 경로는 유지한다.
+              - 앱 서브넷의 0.0.0.0/0 대상을 IGW로 바꾸고 앱의 프라이빗 IPv4를 유지한다.
+      - id: saa-r2-Q16-02
+        source_id: Q16-02
+        type: mcq
+        title: Q16-02 · VPC·네트워크
+        explain: |
+          <p>Longest prefix match를 이용해 결제 서버 한 대에만 가장 구체적인 /32 경로를 적용해야 한다. 172.16.8.10에는 /32가 /24와 /16보다 우선한다. 나머지 /24 주소는 TGW 검사망을, 일반 인터넷은 NAT를 사용하므로 호스트 하나의 예외를 만들면서 다른 두 경로 요구를 유지한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>172.16.8.0/24 경로를 삭제해 기존 /16→VPN을 사용한다.</td>
+          <td>/24 전체가 VPN으로 가므로 결제 서버 한 대 외의 서버도 검사망을 우회한다.</td>
+          </tr>
+          <tr>
+          <td>172.16.8.0/25→VPN 경로를 추가해 더 구체적인 목적지 범위를 만든다.</td>
+          <td>/25는 해당 주소가 속한 여러 서버를 함께 VPN으로 보내며 한 호스트 예외보다 범위가 넓다.</td>
+          </tr>
+          <tr>
+          <td>0.0.0.0/0→VPN으로 바꾸고 기존 /24 검사 경로를 유지한다.</td>
+          <td>/24 경로가 더 구체적이므로 결제 서버는 계속 TGW로 가고 인터넷 기본 경로까지 바뀐다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-04.html">4일 차 개념</a> · <a href="/study/lessons/day-13.html">13일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/vpc/latest/userguide/route-tables-priority.html">VPC 최장 접두사 경로</a>
+          SAA 평가 항목: 3.4</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-04.html#%EA%B2%BD%EB%A1%9C-%EC%98%88%EC%99%B8%EB%A5%BC-%EC%A0%84%EC%B2%B4-%EC%9A%B0%ED%9A%8C-%EC%97%86%EC%9D%B4-%EB%A7%8C%EB%93%A4%EA%B8%B0">Longest prefix match를 이용해 결제 서버 한 대에만 가장 구체적인 /32 경로를 적용해야 한다.</a></p>
+        quizzes:
+          - q: 앱의 라우트 테이블은 172.16.0.0/16→VPN, 172.16.8.0/24→검사 TGW, 0.0.0.0/0→NAT를 사용한다. 새
+              결제 서버 172.16.8.10만 승인된 예외로 VPN을 사용해야 한다. 같은 /24의 다른 서버는 검사를 계속 거치고
+              인터넷 API는 NAT를 유지해야 한다. 반환 경로와 보안 규칙은 준비됐다. 가장 적은 범위의 변경은?
+            answer: 172.16.8.10/32→VPN 경로를 추가한다.
+            wrong:
+              - 172.16.8.0/24 경로를 삭제해 기존 /16→VPN을 사용한다.
+              - 172.16.8.0/25→VPN 경로를 추가해 더 구체적인 목적지 범위를 만든다.
+              - 0.0.0.0/0→VPN으로 바꾸고 기존 /24 검사 경로를 유지한다.
+      - id: saa-r2-Q16-03
+        source_id: Q16-03
+        type: mcq
+        title: Q16-03 · VPC·네트워크
+        explain: |
+          <p>서버 응답은 클라이언트의 임시 포트를 목적지로 하며 상태 비저장 NACL의 아웃바운드 허용이 따로 필요하다. 응답의 목적지는 클라이언트가 사용한 임시 포트다. NACL은 상태를 추적하지 않으므로 응답 방향도 별도로 허용해야 하며 허용 범위는 실제 클라이언트의 임시 포트 사용 범위에 맞춘다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>서버 NACL 아웃바운드에 클라이언트 CIDR의 목적지 TCP 443을 더 낮은 번호로 추가한다.</td>
+          <td>동일한 목적지 443 허용을 앞에 두어도 응답 목적지 53000과 일치하지 않는다.</td>
+          </tr>
+          <tr>
+          <td>서버 SG 아웃바운드에 목적지 TCP 49152~65535를 추가하고 NACL은 유지한다.</td>
+          <td>SG 허용은 NACL의 별도 아웃바운드 차단을 무효화하지 못한다.</td>
+          </tr>
+          <tr>
+          <td>서버 NACL 인바운드에 클라이언트 CIDR의 목적지 TCP 49152~65535를 추가한다.</td>
+          <td>요청은 이미 인바운드 443을 통과했다. 응답의 목적지 임시 포트는 서버 NACL 아웃바운드에서 평가된다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-05.html">5일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/vpc/latest/userguide/custom-network-acl.html">NACL 반환 임시 포트</a>
+          SAA 평가 항목: 1.2</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-05.html#nacl%EC%97%90%EC%84%9C-%EC%9A%94%EC%B2%AD%EA%B3%BC-%EC%9D%91%EB%8B%B5%EC%9D%98-%EB%AA%A9%EC%A0%81%EC%A7%80-%ED%8F%AC%ED%8A%B8-%EC%B0%BE%EA%B8%B0">서버 응답은 클라이언트의 임시 포트를 목적지로 하며 상태 비저장 NACL의 아웃바운드 허용이 따로 필요하다.</a></p>
+        quizzes:
+          - q: 서버가 HTTPS 요청을 받은 뒤 클라이언트에 응답하지 못한다. 클라이언트는 TCP 53000에서 서버 TCP 443으로 연결했다. 서버
+              서브넷 NACL은 인바운드 목적지 443과 아웃바운드 목적지 443만 허용한다. 클라이언트가 쓰는 임시 포트 범위는
+              49152~65535이며 SG와 경로는 정상이다. 다른 통신 범위를 넓히지 않는 수정은?
+            answer: 서버 NACL 아웃바운드에 클라이언트 CIDR의 목적지 TCP 49152~65535를 허용한다.
+            wrong:
+              - 서버 NACL 아웃바운드에 클라이언트 CIDR의 목적지 TCP 443을 더 낮은 번호로 추가한다.
+              - 서버 SG 아웃바운드에 목적지 TCP 49152~65535를 추가하고 NACL은 유지한다.
+              - 서버 NACL 인바운드에 클라이언트 CIDR의 목적지 TCP 49152~65535를 추가한다.
+      - id: saa-r2-Q16-04
+        source_id: Q16-04
+        type: mcq
+        title: Q16-04 · VPC·네트워크
+        explain: |
+          <p>각 연결을 실제로 시작하는 계층의 SG를 출발지로 참조해야 교체되는 IP와 무관하게 계층 간 최소 허용을 유지한다. SG 참조로 계층별 출발지를 식별하면 인스턴스 교체 시 IP 규칙 변경을 줄일 수 있다. 앱과 DB가 필요한 상위 계층의 SG와 포트만 허용해야 통신 범위를 유지한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>DB SG 인바운드에 ALB SG를 출발지로 TCP 5432를 허용한다.</td>
+          <td>DB 연결은 ALB가 아니라 앱에서 시작하므로 ALB SG 참조로 앱 연결을 허용하지 못한다.</td>
+          </tr>
+          <tr>
+          <td>DB SG 인바운드에 앱 서브넷 CIDR의 TCP 5432를 허용한다.</td>
+          <td>IP 변경에는 강하지만 앱 서브넷의 다른 리소스까지 허용해 앱 SG 구성원만 허용하는 범위보다 넓다.</td>
+          </tr>
+          <tr>
+          <td>앱 SG 인바운드에 ALB가 있는 퍼블릭 서브넷 CIDR의 TCP 8080을 허용한다.</td>
+          <td>ALB 서브넷의 다른 리소스까지 출발지로 허용할 수 있어 ALB만 허용한다는 최소 범위를 넘는다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-05.html">5일 차 개념</a> · <a href="/study/lessons/day-06.html">6일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/vpc/latest/userguide/security-group-rules.html">보안 그룹 규칙</a>
+          SAA 평가 항목: 1.2</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-05.html#sg-%EC%B0%B8%EC%A1%B0%EB%A1%9C-%EA%B3%84%EC%B8%B5%EC%9D%84-%EC%97%B0%EA%B2%B0%ED%95%98%EA%B8%B0">각 연결을 실제로 시작하는 계층의 SG를 출발지로 참조해야 교체되는 IP와 무관하게 계층 간 최소 허용을 유지한다.</a> · <a href="/study/lessons/deep-dive/day-05.html#sg-%EC%B0%B8%EC%A1%B0%EB%A1%9C-%EA%B3%84%EC%B8%B5%EC%9D%84-%EC%97%B0%EA%B2%B0%ED%95%98%EA%B8%B0">각 연결을 실제로 시작하는 계층의 SG를 출발지로 참조해야 교체되는 IP와 무관하게 계층 간 최소 허용을 유지한다.</a></p>
+        quizzes:
+          - q: ALB→앱 TCP 8080→DB TCP 5432 구조에서 ASG 교체로 앱 IP가 자주 바뀐다. ALB·앱·DB의 SG는 같은 VPC에서
+              참조할 수 있고 필요한 아웃바운드는 허용되어 있다. 앱은 ALB만, DB는 앱만 인바운드 출발지로 허용해야 한다. IP
+              변경 시 규칙을 다시 쓰지 않을 조치 두 가지는?
+            answer: 앱 SG 인바운드에 ALB SG를 출발지로 TCP 8080을 허용한다.
+            wrong:
+              - DB SG 인바운드에 ALB SG를 출발지로 TCP 5432를 허용한다.
+              - DB SG 인바운드에 앱 서브넷 CIDR의 TCP 5432를 허용한다.
+              - 앱 SG 인바운드에 ALB가 있는 퍼블릭 서브넷 CIDR의 TCP 8080을 허용한다.
+            answers:
+              - 앱 SG 인바운드에 ALB SG를 출발지로 TCP 8080을 허용한다.
+              - DB SG 인바운드에 앱 SG를 출발지로 TCP 5432를 허용한다.
+            options:
+              - DB SG 인바운드에 ALB SG를 출발지로 TCP 5432를 허용한다.
+              - DB SG 인바운드에 앱 서브넷 CIDR의 TCP 5432를 허용한다.
+              - 앱 SG 인바운드에 ALB SG를 출발지로 TCP 8080을 허용한다.
+              - 앱 SG 인바운드에 ALB가 있는 퍼블릭 서브넷 CIDR의 TCP 8080을 허용한다.
+              - DB SG 인바운드에 앱 SG를 출발지로 TCP 5432를 허용한다.
+      - id: saa-r2-Q16-05
+        source_id: Q16-05
+        type: mcq
+        title: Q16-05 · VPC·네트워크
+        explain: |
+          <p>동일 리전 S3는 Gateway Endpoint 경로로 분리하고 일반 인터넷 API만 기존 NAT를 사용하게 한다. Gateway Endpoint는 같은 리전 S3행 경로를 제공해 해당 트래픽이 NAT를 통과하지 않도록 할 수 있다. 일반 외부 API는 기존 기본 경로를 사용하므로 별도 인터넷 통신도 유지된다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>작업자와 NAT를 한 AZ로 모으고 모든 S3·라이선스 요청을 기존 NAT로 보낸다.</td>
+          <td>교차 AZ 비용을 줄일 여지는 있어도 S3 트래픽이 NAT를 계속 지나므로 S3 NAT 처리 비용은 남는다.</td>
+          </tr>
+          <tr>
+          <td>S3 접근용 프록시 EC2를 퍼블릭 서브넷에 두고 작업자가 프록시를 통해 업로드하게 한다.</td>
+          <td>프록시 서버의 비용·패치·확장 운영이 추가되며 Gateway Endpoint로 해결할 수 있는 경로를 복잡하게 만든다.</td>
+          </tr>
+          <tr>
+          <td>각 AZ에 S3 Interface Endpoint를 두고 모든 S3 요청을 그 ENI로 보낸다.</td>
+          <td>Interface Endpoint는 사설 접속에 사용할 수 있지만 시간당 엔드포인트·데이터 처리 요금이 있어 제시한 비용 조건에 맞지 않는다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-04.html">4일 차 개념</a> · <a href="/study/lessons/day-05.html">5일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/gateway-endpoints.html">Gateway Endpoint</a>
+          SAA 평가 항목: 4.4</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-05.html#gateway-endpoint%EB%8A%94-%EC%84%9C%EB%B9%84%EC%8A%A4%EB%B3%84-%EA%B2%BD%EB%A1%9C%EB%8B%A4">동일 리전 S3는 Gateway Endpoint 경로로 분리하고 일반 인터넷 API만 기존 NAT를 사용하게 한다.</a></p>
+        quizzes:
+          - q: 같은 리전의 프라이빗 EC2 작업자들이 S3에 대용량 결과를 올린다. 인터넷 라이선스 API도 호출하므로 NAT를 제거할 수 없다. S3용
+              시간당 엔드포인트 비용은 추가하지 않고 NAT 데이터 처리 비용을 줄이려 한다. 코드·IAM 권한은 이미 적절하다.
+              적절한 네트워크 구성은?
+            answer: S3 Gateway Endpoint를 작업자 라우트 테이블에 연결하고 인터넷 기본 경로는 NAT로 유지한다.
+            wrong:
+              - 작업자와 NAT를 한 AZ로 모으고 모든 S3·라이선스 요청을 기존 NAT로 보낸다.
+              - S3 접근용 프록시 EC2를 퍼블릭 서브넷에 두고 작업자가 프록시를 통해 업로드하게 한다.
+              - 각 AZ에 S3 Interface Endpoint를 두고 모든 S3 요청을 그 ENI로 보낸다.
+      - id: saa-r2-Q16-06
+        source_id: Q16-06
+        type: mcq
+        title: Q16-06 · VPC·네트워크
+        explain: |
+          <p>기존 이름을 사설 ENI로 해석하는 설정과 앱에서 엔드포인트로 들어오는 TCP 443 허용을 함께 구성한다. 기존 서비스 이름을 사설 ENI로 연결하려면 지원되는 프라이빗 DNS를 사용해야 한다. Interface Endpoint ENI의 SG도 앱의 HTTPS 접속을 허용해야 하며 API 권한은 별도로 유지한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>엔드포인트의 별도 DNS 이름을 앱 설정에 직접 입력해 기존 서비스 이름을 대체한다.</td>
+          <td>개별 엔드포인트 이름을 사용할 수 있지만 앱의 기존 서비스 DNS 이름을 유지한다는 요구를 충족하지 않는다.</td>
+          </tr>
+          <tr>
+          <td>앱 서브넷에 NAT행 기본 경로를 추가해 퍼블릭 Secrets Manager API를 사용한다.</td>
+          <td>퍼블릭 경로 사용은 인터넷 경로 없이 호출한다는 요구와 다르며 누락된 사설 DNS·SG도 해결하지 않는다.</td>
+          </tr>
+          <tr>
+          <td>엔드포인트 정책의 리소스 범위를 전체 비밀값으로 넓히고 DNS·SG는 유지한다.</td>
+          <td>API 권한 범위 변경은 이름 해석이나 ENI에 도달하는 TCP 연결의 차단을 해결하지 못한다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-05.html">5일 차 개념</a> · <a href="/study/lessons/day-11.html">11일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/create-interface-endpoint.html">Interface Endpoint 생성</a>
+          SAA 평가 항목: 1.2</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-05.html#interface-endpoint%EC%97%90%EC%84%9C-dns%EC%99%80-eni%EB%A5%BC-%ED%95%A8%EA%BB%98-%ED%99%95%EC%9D%B8%ED%95%98%EA%B8%B0">기존 이름을 사설 ENI로 해석하는 설정과 앱에서 엔드포인트로 들어오는 TCP 443 허용을 함께 구성한다.</a></p>
+        quizzes:
+          - q: 앱은 NAT와 인터넷 기본 경로가 없는 VPC에서 기존 Secrets Manager 서비스 이름으로 비밀값을 조회해야 한다.
+              Interface Endpoint ENI를 만들었고 VPC DNS 기능과 앱 IAM 권한은 정상이다. 현재 그 서비스
+              이름은 퍼블릭 IP로 해석되며 엔드포인트 SG에는 인바운드가 없다. 필요한 변경 두 가지는?
+            answer: Secrets Manager Interface Endpoint의 프라이빗 DNS를 활성화한다.
+            wrong:
+              - 엔드포인트의 별도 DNS 이름을 앱 설정에 직접 입력해 기존 서비스 이름을 대체한다.
+              - 앱 서브넷에 NAT행 기본 경로를 추가해 퍼블릭 Secrets Manager API를 사용한다.
+              - 엔드포인트 정책의 리소스 범위를 전체 비밀값으로 넓히고 DNS·SG는 유지한다.
+            answers:
+              - Secrets Manager Interface Endpoint의 프라이빗 DNS를 활성화한다.
+              - 엔드포인트 SG에 앱 SG를 출발지로 TCP 443 인바운드를 허용한다.
+            options:
+              - 엔드포인트의 별도 DNS 이름을 앱 설정에 직접 입력해 기존 서비스 이름을 대체한다.
+              - 앱 서브넷에 NAT행 기본 경로를 추가해 퍼블릭 Secrets Manager API를 사용한다.
+              - 엔드포인트 정책의 리소스 범위를 전체 비밀값으로 넓히고 DNS·SG는 유지한다.
+              - Secrets Manager Interface Endpoint의 프라이빗 DNS를 활성화한다.
+              - 엔드포인트 SG에 앱 SG를 출발지로 TCP 443 인바운드를 허용한다.
+      - id: saa-r2-Q16-07
+        source_id: Q16-07
+        type: mcq
+        title: Q16-07 · VPC·네트워크
+        explain: |
+          <p>API 허용은 이미 있으므로 이 요청 경로의 엔드포인트 제한을 필요한 범위만 수정해야 한다. 엔드포인트 정책도 통과 요청의 범위를 제한한다. 필요한 리소스에만 그 경로를 열어야 하며 IAM 허용이 엔드포인트 제한을 무효로 만들지는 않는다. 네트워크 응답을 받았다는 단서도 활용한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>역할에 해당 S3 버킷 전체 작업을 허용하는 관리형 정책을 추가한다.</td>
+          <td>역할 권한을 넓혀도 엔드포인트 정책의 별도 제한을 넘을 수 없으며 최소 권한에도 어긋난다.</td>
+          </tr>
+          <tr>
+          <td>버킷 정책의 해당 역할 GetObject 허용을 전체 주체 허용으로 넓힌다.</td>
+          <td>버킷 허용을 넓혀도 엔드포인트의 허용 대상에 해당 버킷이 없다는 원인을 해결하지 못한다.</td>
+          </tr>
+          <tr>
+          <td>S3 Gateway Endpoint 연결을 해제하고 같은 역할로 NAT 경로를 사용한다.</td>
+          <td>다른 경로로 성공할 수 있어도 기존 엔드포인트를 반드시 사용한다는 경로 조건을 위반한다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-01.html">1일 차 개념</a> · <a href="/study/lessons/day-05.html">5일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints-access.html">엔드포인트 정책</a>
+          SAA 평가 항목: 1.2</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-05.html#endpoint-%EC%A0%95%EC%B1%85%EA%B3%BC-%EB%AA%85%EC%8B%9C%EC%A0%81-%EA%B1%B0%EB%B6%80%EC%9D%98-%EA%B5%90%EC%A7%91%ED%95%A9">API 허용은 이미 있으므로 이 요청 경로의 엔드포인트 제한을 필요한 범위만 수정해야 한다.</a></p>
+        quizzes:
+          - q: EC2 작업자는 S3 Gateway Endpoint를 반드시 사용해 reports/ 객체를 읽어야 한다. 역할과 버킷 정책은 이 읽기를
+              허용하고 KMS·SCP 거부는 없다. 요청은 S3에 도달하지만 AccessDenied다. 엔드포인트 정책을 보니 다른
+              버킷만 허용되어 있다. 기존 경로와 최소 권한을 유지하는 변경은?
+            answer: 엔드포인트 정책에 앱 주체·보고서 객체·GetObject 범위를 추가한다.
+            wrong:
+              - 역할에 해당 S3 버킷 전체 작업을 허용하는 관리형 정책을 추가한다.
+              - 버킷 정책의 해당 역할 GetObject 허용을 전체 주체 허용으로 넓힌다.
+              - S3 Gateway Endpoint 연결을 해제하고 같은 역할로 NAT 경로를 사용한다.
+      - id: saa-r2-Q16-08
+        source_id: Q16-08
+        type: mcq
+        title: Q16-08 · VPC·네트워크
+        explain: |
+          <p>IPv6 간 통신에서 출구 자체를 외부 시작 연결 불가로 만들려면 egress-only IGW를 선택한다. Egress-only IGW는 IPv6에서 내부가 시작한 연결과 응답을 허용하면서 외부가 시작한 연결을 막는 요구에 맞는다. IPv4 기본 경로는 IPv6와 별도이며 NAT64가 필요한 상황도 아니다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>::/0을 일반 IGW로 보내고 서버 SG 인바운드를 업데이트 사이트 IPv6 CIDR로 제한한다.</td>
+          <td>SG 제한과 별개로 일반 IGW는 네트워크 출구 자체가 외부 시작 연결을 막는 egress-only 게이트웨이와 다르다.</td>
+          </tr>
+          <tr>
+          <td>DNS64와 NAT64를 구성하고 모든 업데이트 요청을 합성 IPv6 주소의 NAT 경로로 보낸다.</td>
+          <td>IPv4-only 목적지 변환에 쓰는 구성으로 이번 IPv6 목적지에는 불필요한 NAT 변환 경로와 비용을 더한다.</td>
+          </tr>
+          <tr>
+          <td>0.0.0.0/0을 퍼블릭 NAT로 보내고 기존 IPv6 기본 경로는 만들지 않는다.</td>
+          <td>IPv4 기본 경로는 IPv6 목적지의 경로로 사용되지 않는다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-04.html">4일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/vpc/latest/userguide/egress-only-internet-gateway.html">Egress-only IGW</a>
+          SAA 평가 항목: 3.4</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-04.html#ipv6-%EC%A0%84%EC%9A%A9-%EC%95%B1%EC%97%90%EC%84%9C-ipv4-api-%ED%98%B8%EC%B6%9C%ED%95%98%EA%B8%B0">IPv6 간 통신에서 출구 자체를 외부 시작 연결 불가로 만들려면 egress-only IGW를 선택한다.</a></p>
+        quizzes:
+          - q: IPv6 주소를 가진 서버가 IPv6 업데이트 사이트에 먼저 연결하고 응답을 받아야 한다. 네트워크 출구에서도 인터넷이 먼저 시작하는
+              연결을 허용하지 않아야 한다. 목적지는 IPv6를 지원하므로 IPv4 변환은 필요 없고 NAT 변환 요금도 피하려
+              한다. 알맞은 기본 경로는?
+            answer: ::/0을 egress-only internet gateway로 보내고 필요한 SG·NACL 통신을 허용한다.
+            wrong:
+              - ::/0을 일반 IGW로 보내고 서버 SG 인바운드를 업데이트 사이트 IPv6 CIDR로 제한한다.
+              - DNS64와 NAT64를 구성하고 모든 업데이트 요청을 합성 IPv6 주소의 NAT 경로로 보낸다.
+              - 0.0.0.0/0을 퍼블릭 NAT로 보내고 기존 IPv6 기본 경로는 만들지 않는다.
+      - id: saa-r2-Q16-09
+        source_id: Q16-09
+        type: mcq
+        title: Q16-09 · VPC·네트워크
+        explain: |
+          <p>Zonal NAT의 AZ 장애 범위와 정상 시 경로를 함께 만족하려면 앱 AZ별 출구를 분리해야 한다. 각 AZ에 독립된 출구가 있으면 한 AZ의 중단이 남은 AZ의 NAT 경로를 끊지 않는다. 같은 AZ의 앱과 NAT를 연결하면 평상시 교차 AZ NAT 전송을 피하며 EIP 세 개의 허용 목록 안에 들어간다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>한 AZ에 NAT 세 개를 두고 각 앱 AZ가 서로 다른 NAT를 기본 경로로 사용한다.</td>
+          <td>NAT 개수는 늘었지만 모두 같은 AZ에 있어 해당 AZ 장애가 전체 출구를 끊는다.</td>
+          </tr>
+          <tr>
+          <td>한 AZ의 NAT 하나를 기본으로 쓰고 장애 시 다른 AZ NAT로 바꾸는 자동화를 구성한다.</td>
+          <td>자동화가 있어도 평소 교차 AZ 처리와 장애 시 라우트 변경이 필요하므로 두 조건 모두에 맞지 않는다.</td>
+          </tr>
+          <tr>
+          <td>두 AZ에 NAT를 두고 세 번째 AZ의 앱은 가까운 AZ의 NAT를 기본 경로로 사용한다.</td>
+          <td>세 번째 AZ는 평소 교차 AZ 처리를 하며 사용하는 NAT AZ 장애 시 라우트 변경이 필요하다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-04.html">4일 차 개념</a> · <a href="/study/lessons/day-06.html">6일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateway-basics.html">Zonal NAT 가용성</a>
+          SAA 평가 항목: 2.2</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-04.html#zonal%EA%B3%BC-regional%EC%9D%98-%EC%9E%A5%EC%95%A0-%EB%B2%94%EC%9C%84%EC%99%80-%EB%B9%84%EC%9A%A9">Zonal NAT의 AZ 장애 범위와 정상 시 경로를 함께 만족하려면 앱 AZ별 출구를 분리해야 한다.</a></p>
+        quizzes:
+          - q: 세 AZ의 앱이 고정 출구 주소로 외부 결제 API를 호출한다. 결제사는 EIP 세 개를 허용하며 회사는 승인된 퍼블릭 Zonal NAT만
+              사용한다. 한 AZ가 중단돼도 남은 AZ는 라우트 변경 없이 계속 호출해야 하고 평소 교차 AZ NAT 트래픽을 피해야
+              한다. 적절한 배치는?
+            answer: 각 AZ에 EIP가 있는 NAT를 하나씩 두고 각 앱 서브넷은 같은 AZ NAT를 사용한다.
+            wrong:
+              - 한 AZ에 NAT 세 개를 두고 각 앱 AZ가 서로 다른 NAT를 기본 경로로 사용한다.
+              - 한 AZ의 NAT 하나를 기본으로 쓰고 장애 시 다른 AZ NAT로 바꾸는 자동화를 구성한다.
+              - 두 AZ에 NAT를 두고 세 번째 AZ의 앱은 가까운 AZ의 NAT를 기본 경로로 사용한다.
+      - id: saa-r2-Q16-10
+        source_id: Q16-10
+        type: mcq
+        title: Q16-10 · VPC·네트워크
+        explain: |
+          <p>피어링의 비전이성을 피하면서 중앙 허브 방식으로 확장하려면 Transit Gateway의 경로 제어를 사용한다. VPC Peering은 A–B와 B–C 연결을 A–C 전이 경로로 만들지 않는다. 다수 VPC의 허브형 연결은 TGW 등으로 설계하고 attachment와 VPC 양쪽 라우팅·접근 통제까지 구성해야 한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>모든 VPC 쌍에 피어링을 추가하고 각 피어링의 양방향 경로와 보안 규칙을 구성한다.</td>
+          <td>직접 피어링으로 연결은 만들 수 있지만 VPC마다 중앙 허브 하나에 연결하는 요구와 확장 시 연결 관리 방식에 맞지 않는다.</td>
+          </tr>
+          <tr>
+          <td>기존 피어링은 유지하고 B의 라우트 테이블에 A와 C 목적지의 피어링 경로를 추가한다.</td>
+          <td>VPC 피어링은 전이 연결을 제공하지 않아 B의 정적 경로만으로 A-B-C 통신이 생기지 않는다.</td>
+          </tr>
+          <tr>
+          <td>A·B·C의 기본 경로를 중앙 NAT Gateway로 보내 VPC 간 전이 통신을 처리한다.</td>
+          <td>NAT Gateway는 다수 VPC의 라우트 허브를 대체하지 않으며 제시된 피어링 전이 문제의 해결이 아니다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-05.html">5일 차 개념</a> · <a href="/study/lessons/day-13.html">13일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/vpc/latest/peering/vpc-peering-basics.html">VPC Peering 제한</a> · <a href="https://docs.aws.amazon.com/vpc/latest/tgw/tgw-route-tables.html">Transit Gateway 라우트 테이블</a>
+          SAA 평가 항목: 3.4</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-05.html#%EC%84%9C%EB%B9%84%EC%8A%A4%EB%A7%8C-%EC%97%B0%EA%B2%B0%ED%95%98%EB%8A%94-privatelink">피어링의 비전이성을 피하면서 중앙 허브 방식으로 확장하려면 Transit Gateway의 경로 제어를 사용한다.</a></p>
+        quizzes:
+          - q: 회사에는 CIDR가 겹치지 않는 12개 VPC가 있다. 현재 일부 VPC만 피어링되어 있고 A-B와 B-C 피어링이 있어도 A에서 C로
+              연결되지 않는다. 앞으로 VPC가 늘어도 각 VPC가 하나의 중앙 허브에 연결되도록 운영하고 싶다. 사설 IP 통신과
+              라우트 제어를 제공할 적절한 변경은?
+            answer: 각 VPC를 Transit Gateway에 연결하고 필요한 연결·전파·반환 경로와 보안 규칙을 구성한다.
+            wrong:
+              - 모든 VPC 쌍에 피어링을 추가하고 각 피어링의 양방향 경로와 보안 규칙을 구성한다.
+              - 기존 피어링은 유지하고 B의 라우트 테이블에 A와 C 목적지의 피어링 경로를 추가한다.
+              - A·B·C의 기본 경로를 중앙 NAT Gateway로 보내 VPC 간 전이 통신을 처리한다.
+      - id: saa-r2-Q16-11
+        source_id: Q16-11
+        type: mcq
+        title: Q16-11 · VPC·네트워크
+        explain: |
+          <p>겹치는 CIDR의 전체 네트워크 연결 대신 PrivateLink로 특정 서비스를 사설 노출하면 주소 재설계를 피할 수 있다. 피어링은 CIDR가 겹치는 VPC를 연결하지 못한다. 동일 주소의 목적지를 식별할 수 있도록 주소 계획을 고쳐야 하며 특정 서비스 접근 요구는 PrivateLink 같은 별도 구조로 범위를 좁힐 수 있다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>두 VPC에 더 구체적인 /32 경로를 추가하고 동일 CIDR의 피어링을 다시 만든다.</td>
+          <td>CIDR가 겹치는 피어링 생성 제한은 더 구체적인 서브넷 경로나 호스트 경로를 추가해도 없어지지 않는다.</td>
+          </tr>
+          <tr>
+          <td>두 VPC를 Transit Gateway의 같은 라우트 테이블에 연결하고 중복 /16 경로를 전파한다.</td>
+          <td>TGW가 중복 주소를 자동 변환하지 않으며 중복 라우트 전파로 전체 연결을 해결할 수 없다.</td>
+          </tr>
+          <tr>
+          <td>인수 회사의 보고서 서비스를 인터넷 NLB로 노출하고 본사 앱이 공개 주소로 연결한다.</td>
+          <td>서비스 접근은 가능할 수 있지만 인터넷 노출 없이 사설 서비스만 연결하려는 요구를 충족하지 않는다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-05.html">5일 차 개념</a> · <a href="/study/lessons/day-13.html">13일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/vpc/latest/peering/vpc-peering-basics.html">VPC Peering 제한</a> · <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/what-is-privatelink.html">PrivateLink 서비스 노출</a>
+          SAA 평가 항목: 3.4</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-05.html#%EC%84%9C%EB%B9%84%EC%8A%A4%EB%A7%8C-%EC%97%B0%EA%B2%B0%ED%95%98%EB%8A%94-privatelink">겹치는 CIDR의 전체 네트워크 연결 대신 PrivateLink로 특정 서비스를 사설 노출하면 주소 재설계를 피할 수 있다.</a></p>
+        quizzes:
+          - q: 본사와 인수 회사의 VPC는 모두 10.0.0.0/16을 사용해 피어링을 만들 수 없다. 지금 필요한 것은 인수 회사의 TCP 보고서
+              서비스 하나뿐이며, 본사 앱이 연결을 시작한다. 서비스 제공자는 NLB를 둘 수 있다. 인터넷에 공개하거나 서버 주소를
+              바꾸지 않고 특정 서비스만 연결하는 방법은?
+            answer: 제공자 NLB를 VPC Endpoint Service로 노출하고 본사에 Interface Endpoint를 만든다.
+            wrong:
+              - 두 VPC에 더 구체적인 /32 경로를 추가하고 동일 CIDR의 피어링을 다시 만든다.
+              - 두 VPC를 Transit Gateway의 같은 라우트 테이블에 연결하고 중복 /16 경로를 전파한다.
+              - 인수 회사의 보고서 서비스를 인터넷 NLB로 노출하고 본사 앱이 공개 주소로 연결한다.
+      - id: saa-r2-Q16-12
+        source_id: Q16-12
+        type: mcq
+        title: Q16-12 · VPC·네트워크
+        explain: |
+          <p>AWS가 제공하는 터널의 이중화와 고객 라우터·회선의 이중화는 별도로 구성하고 검증해야 한다. AWS의 두 터널을 모두 설정하면 터널 단위 점검·장애에 대비할 수 있다. 그러나 라우터와 회선 한 개의 장애는 남으므로 네트워크 양 끝의 공통 장애 지점도 분리하고 전환을 검증해야 한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>같은 고객 라우터·회선에서 두 번째 VPN 연결을 만들고 그 연결의 한 터널만 사용한다.</td>
+          <td>연결 수를 늘려도 단일 라우터·회선을 공유하면 해당 장비·회선 장애가 여전히 모든 연결에 영향을 준다.</td>
+          </tr>
+          <tr>
+          <td>같은 라우터에 두 터널을 구성한 뒤 고객 회선의 대역폭만 높인다.</td>
+          <td>터널 이중화는 개선되지만 대역폭 증설이 고객 장비·회선의 단일 장애 지점을 제거하지는 않는다.</td>
+          </tr>
+          <tr>
+          <td>현재 한 터널에 더 긴 재시도 시간을 적용하고 다른 터널은 점검용으로만 남긴다.</td>
+          <td>재시도 시간 연장은 터널 점검과 고객 회선 고장 때 사용할 대체 경로를 만들지 않는다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-13.html">13일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/vpn/latest/s2svpn/VPC_VPN.html">Site-to-Site VPN</a>
+          SAA 평가 항목: 2.2</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-13.html#vpn-%EC%95%94%ED%98%B8%ED%99%94%EC%9D%98-%EC%8B%9C%EC%9E%91%EA%B3%BC-%EB%81%9D">AWS가 제공하는 터널의 이중화와 고객 라우터·회선의 이중화는 별도로 구성하고 검증해야 한다.</a> · <a href="/study/lessons/deep-dive/day-13.html#vpn-%EC%95%94%ED%98%B8%ED%99%94%EC%9D%98-%EC%8B%9C%EC%9E%91%EA%B3%BC-%EB%81%9D">AWS가 제공하는 터널의 이중화와 고객 라우터·회선의 이중화는 별도로 구성하고 검증해야 한다.</a></p>
+        quizzes:
+          - q: 한 데이터센터 라우터가 단일 인터넷 회선으로 AWS Site-to-Site VPN의 터널 하나만 사용한다. AWS 터널 점검뿐 아니라 고객
+              라우터나 회선 고장 때도 연결이 끊긴다. 암호화된 VPN 방식을 유지하면서 서로 다른 장애 범위를 개선하려 한다.
+              필요한 조치 두 가지는?
+            answer: 제공된 두 터널과 경로 전환을 고객 장비에 구성하고 터널별 장애 전환을 시험한다.
+            wrong:
+              - 같은 고객 라우터·회선에서 두 번째 VPN 연결을 만들고 그 연결의 한 터널만 사용한다.
+              - 같은 라우터에 두 터널을 구성한 뒤 고객 회선의 대역폭만 높인다.
+              - 현재 한 터널에 더 긴 재시도 시간을 적용하고 다른 터널은 점검용으로만 남긴다.
+            answers:
+              - 제공된 두 터널과 경로 전환을 고객 장비에 구성하고 터널별 장애 전환을 시험한다.
+              - 독립 고객 라우터·회선과 적절한 VPN 연결을 추가하고 고객 측 장애 전환을 시험한다.
+            options:
+              - 제공된 두 터널과 경로 전환을 고객 장비에 구성하고 터널별 장애 전환을 시험한다.
+              - 같은 고객 라우터·회선에서 두 번째 VPN 연결을 만들고 그 연결의 한 터널만 사용한다.
+              - 독립 고객 라우터·회선과 적절한 VPN 연결을 추가하고 고객 측 장애 전환을 시험한다.
+              - 같은 라우터에 두 터널을 구성한 뒤 고객 회선의 대역폭만 높인다.
+              - 현재 한 터널에 더 긴 재시도 시간을 적용하고 다른 터널은 점검용으로만 남긴다.
+      - id: saa-r2-Q16-13
+        source_id: Q16-13
+        type: mcq
+        title: Q16-13 · VPC·네트워크
+        explain: |
+          <p>앱 트래픽이 기존 Direct Connect 경로를 계속 사용해야 하므로 인터넷 VPN으로 우회하는 설계는 탈락한다. transit VIF·DX gateway·TGW 경로의 Private IP VPN은 TCP·UDP 앱을 변경하지 않고 고객 게이트웨이부터 VPN 종단까지 IPsec을 제공한다. MACsec은 보호하는 계층과 종단 범위가 다르다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>Direct Connect 회선에 MACsec을 적용하고 transit VIF·DX gateway·TGW로 연결한다.</td>
+          <td>MACsec의 링크 계층 암호화 범위는 고객 라우터에서 AWS VPN 종단까지의 IP 계층 암호화 요구와 다르다.</td>
+          </tr>
+          <tr>
+          <td>Direct Connect private VIF를 통해 EC2 TLS 프록시에 연결하고 프록시에서 암호화를 종료한다.</td>
+          <td>TLS 프록시는 지문의 TCP·UDP 원래 프로토콜과 앱 수정 금지 조건을 모두 충족하는 IP 계층 터널을 대신하지 못한다.</td>
+          </tr>
+          <tr>
+          <td>기존 Direct Connect는 백업으로 두고 인터넷 기반 Site-to-Site VPN으로 앱 트래픽을 보낸다.</td>
+          <td>암호화는 가능하지만 앱 트래픽이 기존 Direct Connect 회선을 사용해야 한다는 요구를 충족하지 않는다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-11.html">11일 차 개념</a> · <a href="/study/lessons/day-13.html">13일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/vpn/latest/s2svpn/private-ip-dx.html">Private IP VPN over Direct Connect</a> · <a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/MACsec.html">MACsec 보호 경계</a>
+          SAA 평가 항목: 1.2</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-13.html#vpn-%EC%95%94%ED%98%B8%ED%99%94%EC%9D%98-%EC%8B%9C%EC%9E%91%EA%B3%BC-%EB%81%9D">앱 트래픽이 Direct Connect 경로를 계속 사용하면서 고객 라우터부터 VPN 종단까지 IP 계층 암호화를 제공해야 한다.</a> · <a href="/study/lessons/deep-dive/day-13.html#vpn-%EC%95%94%ED%98%B8%ED%99%94%EC%9D%98-%EC%8B%9C%EC%9E%91%EA%B3%BC-%EB%81%9D">앱 트래픽이 Direct Connect 경로를 계속 사용하면서 고객 라우터부터 VPN 종단까지 IP 계층 암호화를 제공해야 한다.</a></p>
+        quizzes:
+          - q: 고객 라우터에서 TGW 뒤 프라이빗 EC2까지 TCP와 UDP를 전송한다. 이 앱의 트래픽은 기존 Direct Connect 경로를 계속
+              사용해야 하며, DX 교차 연결 뒤를 포함해 AWS VPN 종단까지 IP 계층 암호화가 필요하다. 앱은 수정할 수
+              없으며 대역폭은 VPN 지원 범위 안이다. 어떤 구성이 맞는가?
+            answer: transit VIF·DX gateway·TGW 경로에 Private IP Site-to-Site VPN을 구성한다.
+            wrong:
+              - Direct Connect 회선에 MACsec을 적용하고 transit VIF·DX gateway·TGW로 연결한다.
+              - Direct Connect private VIF를 통해 EC2 TLS 프록시에 연결하고 프록시에서 암호화를 종료한다.
+              - 기존 Direct Connect는 백업으로 두고 인터넷 기반 Site-to-Site VPN으로 앱 트래픽을 보낸다.
+      - id: saa-r2-Q16-14
+        source_id: Q16-14
+        type: mcq
+        title: Q16-14 · VPC·네트워크
+        explain: |
+          <p>attachment의 테이블 연결과 경로 전파를 분리해 각 집단이 볼 수 있는 경로를 제한하고 공유 서비스의반환 경로는 보존해야 한다. TGW의 attachment 연결만으로 환경 격리가 완성되지는 않는다. 테이블별 연결·전파로 원격 목적지 도달 범위를 분리하고 VPC 라우트·보안 규칙과 반환 경로를 함께 맞춰 필요한 공유 통신만 허용한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>TGW 공통 테이블은 유지하고 운영 DB SG에서 운영 앱 SG의 TCP 5432만 허용한다.</td>
+          <td>보안 그룹 통제는 보완책이지만 TGW 라우트 계층의 운영·개발 경로 분리라는 요구는 충족하지 않는다.</td>
+          </tr>
+          <tr>
+          <td>개발 attachment의 라우트 테이블 연결은 유지하고 운영 DB에서 개발로 돌아가는 경로만 제거한다.</td>
+          <td>반환 경로 하나를 없애는 방식은 격리 정책을 체계적으로 배정하지 못하며 필요한 공유 DNS 반환 경로까지 별도 관리해야 한다.</td>
+          </tr>
+          <tr>
+          <td>공통 TGW 테이블에서 개발 VPC의 경로 전파만 끄고 개발의 운영 DB행 경로는 유지한다.</td>
+          <td>개발의 반환 경로만 사라질 수 있고 개발에서 운영으로의 전달 경로는 남는다. 의도한 양방향 경로 분리를 설계한 것이 아니다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-13.html">13일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/vpc/latest/tgw/tgw-route-tables.html">Transit Gateway 라우트 테이블</a>
+          SAA 평가 항목: 3.4</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-13.html#tgw%EC%97%90%EC%84%9C-%EC%97%B0%EA%B2%B0%EA%B3%BC-%ED%97%88%EC%9A%A9-%EA%B2%BD%EB%A1%9C%EB%A5%BC-%EB%B6%84%EB%A6%AC%ED%95%9C%EB%8B%A4">attachment의 테이블 연결과 경로 전파를 분리해 각 집단이 볼 수 있는 경로를 제한하고 공유 서비스의반환 경로는 보존해야 한다.</a></p>
+        quizzes:
+          - q: 운영·개발·공유 DNS VPC가 같은 TGW 라우트 테이블을 사용해 서로의 경로를 학습한다. 개발은 공유 DNS만 사용하고 운영 DB와는
+              직접 통신하지 않아야 한다. 새 VPC에도 같은 분리 원칙을 적용하려 한다. TGW 경로 계층에서 격리를 구현하고
+              필요한 왕복 DNS 통신을 유지할 방법은?
+            answer: 개발·운영의 TGW 테이블을 분리하고 공유 DNS 경로만 연결·전파하며 VPC 경로·SG도 맞춘다.
+            wrong:
+              - TGW 공통 테이블은 유지하고 운영 DB SG에서 운영 앱 SG의 TCP 5432만 허용한다.
+              - 개발 attachment의 라우트 테이블 연결은 유지하고 운영 DB에서 개발로 돌아가는 경로만 제거한다.
+              - 공통 TGW 테이블에서 개발 VPC의 경로 전파만 끄고 개발의 운영 DB행 경로는 유지한다.
+      - id: saa-r2-Q16-15
+        source_id: Q16-15
+        type: mcq
+        title: Q16-15 · VPC·네트워크
+        explain: |
+          <p>확장 동작과 지연을 지문에 제공했으므로 새 AZ 수요를 미리 만들고 확장 완료를 확인하는 준비가 필요하다. 자동 모드는 새 AZ의 ENI 존재를 따라 확장한다. 기존 AZ 경유 처리 구간이 생길 수 있으므로 새 AZ를 사전에 활성화하고 확장이 끝난 상태에서 배치를 시작해야 첫 요청부터 교차 AZ 처리를 피한다. 앱 경로 대상은 같은 NAT ID를 유지한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>내일 배치 시작과 동시에 새 AZ 리소스를 만들고 해당 서브넷을 기존 NAT ID로 라우팅한다.</td>
+          <td>새 AZ 감지 후 확장 시간이 있으므로 배치 시작과 동시에 만들면 첫 요청부터 AZ 로컬 처리를 보장하지 못한다.</td>
+          </tr>
+          <tr>
+          <td>오늘 새 AZ에 Zonal NAT를 만들고 배치의 기본 경로를 새 Zonal NAT ID로 연결한다.</td>
+          <td>미리 로컬 출구를 만들 수 있지만 같은 Regional NAT ID를 유지한다는 요구와 다르다.</td>
+          </tr>
+          <tr>
+          <td>새 AZ 배치의 기본 경로를 준비된 기존 AZ의 Zonal NAT로 연결해 첫 요청을 보낸다.</td>
+          <td>첫 요청은 보낼 수 있어도 기존 AZ의 Zonal NAT까지 교차 AZ 경로를 사용한다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-04.html">4일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateways-regional.html">Regional NAT 자동 AZ 확장</a>
+          SAA 평가 항목: 4.4</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-04.html#zonal%EA%B3%BC-regional%EC%9D%98-%EC%9E%A5%EC%95%A0-%EB%B2%94%EC%9C%84%EC%99%80-%EB%B9%84%EC%9A%A9">확장 동작과 지연을 지문에 제공했으므로 새 AZ 수요를 미리 만들고 확장 완료를 확인하는 준비가 필요하다.</a></p>
+        quizzes:
+          - q: 두 AZ의 앱이 Regional NAT 자동 모드를 사용한다. 내일 새 AZ에서 배치를 시작하며 같은 NAT ID와 그 AZ의 로컬 처리를
+              첫 요청부터 유지해야 한다. 자동 모드는 새 AZ의 ENI 리소스를 감지한 뒤 지원 확장에 최대 60분이 걸릴 수
+              있다. 기존 AZ는 이미 준비됐다. 운영 변경이 가장 적은 준비는?
+            answer: 오늘 새 AZ에 작은 ENI 리소스를 두고 NAT 확장을 확인한 뒤 배치를 기존 NAT ID로 라우팅한다.
+            wrong:
+              - 내일 배치 시작과 동시에 새 AZ 리소스를 만들고 해당 서브넷을 기존 NAT ID로 라우팅한다.
+              - 오늘 새 AZ에 Zonal NAT를 만들고 배치의 기본 경로를 새 Zonal NAT ID로 연결한다.
+              - 새 AZ 배치의 기본 경로를 준비된 기존 AZ의 Zonal NAT로 연결해 첫 요청을 보낸다.

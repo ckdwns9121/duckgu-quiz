@@ -48,7 +48,7 @@ function itemCards(it, unit) {
   switch (it.type) {
     case 'mcq':
       return it.quizzes.map((q, i) => ({
-        kind: 'mcq', id: i ? `${it.id}-${i + 1}` : it.id, unit, title, q: unit === 'fe-react' && !it.id.includes('strict') ? `${q.q} (React 19, StrictMode·Compiler 끔)` : q.q, pre: preOf(it),
+        kind: 'mcq', id: i ? `${it.id}-${i + 1}` : it.id, ...(it.source_id ? { sourceId: it.source_id } : {}), unit, title, q: unit === 'fe-react' && !it.id.includes('strict') ? `${q.q} (React 19, StrictMode·Compiler 끔)` : q.q, pre: preOf(it),
         options: q.options ?? [q.answer, ...q.wrong], correct: q.answer, ...(q.answers ? { correctAnswers: q.answers } : {}), explain: it.explain, hints: q.hints ?? [],
       }));
     case 'build':

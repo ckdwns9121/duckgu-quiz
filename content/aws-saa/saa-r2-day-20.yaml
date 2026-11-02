@@ -1,0 +1,823 @@
+id: saa-r2-day-20
+name: 전체 범위 혼합 문제
+part: 20일 차
+color: "#4385ef"
+dark: "#985800"
+blocks:
+  - tip: SAA 시험 범위를 바탕으로 만든 창작 문제입니다. 실제 기출문제가 아닙니다. 복수 정답은 지정한 개수를 모두 맞혀야 합니다.
+  - items:
+      - id: saa-r2-Q20-01
+        source_id: Q20-01
+        type: mcq
+        title: Q20-01 · 전체 범위 혼합 문제
+        explain: |
+          <p>버킷의 명시적 거부 조건으로 지정 endpoint를 통하지 않은 reports/ 읽기를 막으면 자격 증명만 가진 외부 요청도 차단할 수 있다. EC2 네트워크 규칙은 유출된 키가 다른 환경에서 사용되는 요청을 통제하지 못한다. 이 정책은 콘솔·다른 경로의 운영 접근도 막을 수 있어 문제의 독자 범위를 확인해야 한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>EC2 아웃바운드를 S3 prefix list로 제한하고 버킷은 해당 역할의 읽기를 허용한다.</td>
+          <td>해당 EC2의 통신만 제한하므로 공격자가 인터넷의 다른 컴퓨터에서 자격 증명을 사용하는 경우를 막지 못한다.</td>
+          </tr>
+          <tr>
+          <td>Block Public Access를 켜고 reports/ 객체를 고객 관리형 KMS 키로 암호화한다.</td>
+          <td>공개 접근과 암호화는 보호하지만 이미 허용된 역할의 정상 서명 요청에 endpoint 경로를 강제하지 않는다.</td>
+          </tr>
+          <tr>
+          <td>역할 세션 시간을 줄이고 기존 reports/ 읽기 허용 정책을 유지한다.</td>
+          <td>노출 유효 시간은 줄이지만 남은 세션 동안 인터넷에서 허용된 읽기를 호출하는 경로는 남는다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-01.html">1일 차 개념</a> · <a href="/study/lessons/day-02.html">2일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/example-bucket-policies-vpc-endpoint.html">S3 버킷 정책의 endpoint 경로 제한</a>
+          SAA 평가 항목: 1.1</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-01.html#%EC%A1%B0%EC%A7%81-%ED%86%B5%EC%A0%9C%EC%99%80-%EC%9A%94%EC%B2%AD-%EA%B2%BD%EB%A1%9C">지정 endpoint 이외의 요청을 버킷 정책에서 거부하면 유출된 역할 자격 증명으로도 인터넷 경로의 객체 읽기가 차단된다</a></p>
+        quizzes:
+          - q: 정산 EC2 역할은 reports 버킷의 reports/ 객체만 읽을 수 있다. 같은 접두사의 다른 독자는 없다. 앱은 지정 S3
+              Gateway endpoint를 사용하며 SDK 호출은 유지해야 한다. 보안팀은 임시 자격 증명이 유출돼도 인터넷에서
+              그 파일을 읽을 수 없게 하려 한다. 요청 경로를 강제할 변경은?
+            answer: 버킷 정책에서 reports/ GetObject를 지정 aws:SourceVpce 이외 경로에 명시적 거부한다.
+            wrong:
+              - EC2 아웃바운드를 S3 prefix list로 제한하고 버킷은 해당 역할의 읽기를 허용한다.
+              - Block Public Access를 켜고 reports/ 객체를 고객 관리형 KMS 키로 암호화한다.
+              - 역할 세션 시간을 줄이고 기존 reports/ 읽기 허용 정책을 유지한다.
+      - id: saa-r2-Q20-02
+        source_id: Q20-02
+        type: mcq
+        title: Q20-02 · 전체 범위 혼합 문제
+        explain: |
+          <p>중간 데이터의 AZ 손실을 허용하고 같은 AZ에서만 POSIX 공유 접근하므로 EFS One Zone이 요구에 맞는 관리형 파일 저장 선택이다. EFS Regional도 동작하지만 필요하지 않은 다중 AZ 내구성 비용을 부담한다. 이 선택은 원본 보호와 재생성 절차가 검증되어 있다는 조건에서만 적합하다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>EFS Regional 파일 시스템을 만들고 같은 AZ의 마운트 타깃을 사용한다.</td>
+          <td>같은 POSIX 경로는 제공하지만 허용한 장애 범위보다 높은 다중 AZ 내구성을 구매하므로 비용 절감에 덜 맞는다.</td>
+          </tr>
+          <tr>
+          <td>같은 AZ의 EC2 NFS 서버를 두고 OS 패치와 파일 시스템 백업을 직접 운영한다.</td>
+          <td>동작할 수 있지만 파일 서버의 OS·백업·복구를 직접 운영해야 한다.</td>
+          </tr>
+          <tr>
+          <td>중간 파일도 S3 객체로 저장하고 작업자의 POSIX 파일 코드를 객체 API로 변경한다.</td>
+          <td>저장은 가능하지만 기존 POSIX 파일 API를 유지한다는 조건을 충족하지 못한다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-03.html">3일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/efs/latest/ug/features.html">EFS 파일 시스템 유형</a> · <a href="https://docs.aws.amazon.com/pdfs/efs/latest/ug/efs-ug.pdf">EFS 공식 사용자 안내서: One Zone</a>
+          SAA 평가 항목: 3.1</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-03.html#efs-%EB%A7%88%EC%9A%B4%ED%8A%B8%EC%99%80-%EC%B2%98%EB%A6%AC%EB%9F%89">단일 AZ 배치이고 해당 AZ 상실 시 중간 파일 재생성이 가능하므로 EFS One Zone을 비용 절감 후보로 선택할 수 있다</a> · <a href="/study/lessons/deep-dive/day-03.html#efs-%EB%A7%88%EC%9A%B4%ED%8A%B8%EC%99%80-%EC%B2%98%EB%A6%AC%EB%9F%89">Regional의 다중 AZ 복원력을 포기하는 대신 관리형 POSIX 공유 파일 기능을 사용한다</a></p>
+        quizzes:
+          - q: 한 AZ의 Linux 계산 작업자가 같은 POSIX 경로에서 중간 파일을 공유한다. 원본은 S3에 따로 있고 AZ 전체 장애 시 중간
+              파일을 재생성해도 된다. 객체 API로 앱을 바꾸거나 파일 서버를 패치하지 않으면서 다중 AZ 내구성 저장소보다 저장
+              비용을 줄이려 한다. 어떤 구성이 적합한가?
+            answer: 작업자와 같은 AZ의 EFS One Zone 파일 시스템을 공유 마운트한다.
+            wrong:
+              - EFS Regional 파일 시스템을 만들고 같은 AZ의 마운트 타깃을 사용한다.
+              - 같은 AZ의 EC2 NFS 서버를 두고 OS 패치와 파일 시스템 백업을 직접 운영한다.
+              - 중간 파일도 S3 객체로 저장하고 작업자의 POSIX 파일 코드를 객체 API로 변경한다.
+      - id: saa-r2-Q20-03
+        source_id: Q20-03
+        type: mcq
+        title: Q20-03 · 전체 범위 혼합 문제
+        explain: |
+          <p>대역폭이나 서버 수가 아니라 목적지별 소스 포트 한도가 병목이다. 각 NAT에 보조 IPv4와 EIP를 추가하면 해당 목적지에 사용할 주소별 연결 용량을 늘릴 수 있다. 제시한 값에서는 두 주소가 7만 연결을 수용하며 각 AZ의 자체 출구도 유지한다. NAT 주소 할당 한도와 상대 허용 목록은 함께 확인한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>각 NAT의 주소는 유지하고 앱 ASG의 최대 인스턴스 수만 두 배로 늘린다.</td>
+          <td>서버가 늘어도 같은 NAT의 같은 소스 IP로 같은 목적지에 연결하므로 주소별 포트 고갈은 남는다.</td>
+          </tr>
+          <tr>
+          <td>한 AZ에 NAT를 추가하고 다른 AZ 앱의 트래픽 일부도 그 NAT로 보낸다.</td>
+          <td>용량은 분산할 수 있지만 다른 AZ의 출구에 의존하게 하여 AZ별 장애 격리를 유지하지 못한다.</td>
+          </tr>
+          <tr>
+          <td>한 AZ에 EIP 두 개의 NAT 하나를 두고 두 AZ 트래픽을 모두 그 NAT로 보낸다.</td>
+          <td>주소별 용량은 늘릴 수 있지만 한 NAT의 AZ 장애가 양쪽 AZ의 출구에 영향을 주는 구조가 된다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-04.html">4일 차 개념</a> · <a href="/study/lessons/day-06.html">6일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateway-working-with.html">NAT 보조 주소와 연결 한도</a>
+          SAA 평가 항목: 2.2</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-04.html#nat%EC%9D%98-%EC%97%B0%EA%B2%B0-%EC%88%98%EC%99%80-%EB%8C%80%EC%97%AD%ED%8F%AD%EC%9D%80-%EB%8B%A4%EB%A5%B8-%ED%95%9C%EB%8F%84%EB%8B%A4">NAT Gateway는 IPv4 주소 하나당 동일 목적지 IP·포트·프로토콜에 약 55,000개 동시 연결을 지원한다</a> · <a href="/study/lessons/deep-dive/day-04.html#nat%EC%9D%98-%EC%97%B0%EA%B2%B0-%EC%88%98%EC%99%80-%EB%8C%80%EC%97%AD%ED%8F%AD%EC%9D%80-%EB%8B%A4%EB%A5%B8-%ED%95%9C%EB%8F%84%EB%8B%A4">외부 허용 목록에는 새 EIP도 반영해야 한다</a></p>
+        quizzes:
+          - q: 두 AZ의 앱은 AZ별 공개 Zonal NAT Gateway로 같은 결제 IPv4:443에 연결한다. NAT마다 EIP 하나가 있고 각
+              AZ에서 동시 TCP 연결 7만 개가 필요하다. EIP당 이 대상의 연결 한도는 5만5천이며 대역폭은 충분한데
+              ErrorPortAllocation이 증가한다. 결제사는 EIP 추가 등록을 허용한다. AZ별 출구를 유지할 변경은?
+            answer: 각 AZ NAT에 보조 IPv4·EIP를 추가하고 결제 서버의 허용 목록을 갱신한다.
+            wrong:
+              - 각 NAT의 주소는 유지하고 앱 ASG의 최대 인스턴스 수만 두 배로 늘린다.
+              - 한 AZ에 NAT를 추가하고 다른 AZ 앱의 트래픽 일부도 그 NAT로 보낸다.
+              - 한 AZ에 EIP 두 개의 NAT 하나를 두고 두 AZ 트래픽을 모두 그 NAT로 보낸다.
+      - id: saa-r2-Q20-04
+        source_id: Q20-04
+        type: mcq
+        title: Q20-04 · 전체 범위 혼합 문제
+        explain: |
+          <p>NACL은 낮은 규칙 번호부터 평가하고 처음 일치한 규칙의 동작을 적용한다. 따라서 넓은 거부 100보다 앞선 90에서 파트너 /24의 443만 허용해야 한다. 예외의 평가 순서와 주소 범위를 모두 맞추어야 나머지 /16 차단을 유지할 수 있다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>아웃바운드 90: 10.20.8.0/24의 응답용 임시 포트 허용</td>
+          <td>응답 경로는 이미 정상이고 신규 연결의 인바운드 거부가 남아 있으므로 문제 지점을 바꾸지 못한다.</td>
+          </tr>
+          <tr>
+          <td>인바운드 150: 10.20.8.0/24의 TCP 443 허용</td>
+          <td>파트너 요청이 먼저 거부 100과 일치하므로 뒤의 허용 150에는 도달하지 않는다.</td>
+          </tr>
+          <tr>
+          <td>인바운드 90: 10.20.0.0/16의 TCP 443 허용</td>
+          <td>거부보다 먼저 적용되지만 파트너 이외의 /16 주소까지 HTTPS를 허용한다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-05.html">5일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/vpc/latest/userguide/nacl-rules.html">NACL 규칙 평가 순서</a>
+          SAA 평가 항목: 1.2</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-05.html#nacl%EC%97%90%EC%84%9C-%EC%9A%94%EC%B2%AD%EA%B3%BC-%EC%9D%91%EB%8B%B5%EC%9D%98-%EB%AA%A9%EC%A0%81%EC%A7%80-%ED%8F%AC%ED%8A%B8-%EC%B0%BE%EA%B8%B0">NACL은 낮은 번호부터 검사하며 첫 일치 규칙을 적용한다</a> · <a href="/study/lessons/deep-dive/day-05.html#nacl%EC%97%90%EC%84%9C-%EC%9A%94%EC%B2%AD%EA%B3%BC-%EC%9D%91%EB%8B%B5%EC%9D%98-%EB%AA%A9%EC%A0%81%EC%A7%80-%ED%8F%AC%ED%8A%B8-%EC%B0%BE%EA%B8%B0">이 문제의 장애는 반환 포트가 아니라 인바운드 규칙 순서다</a></p>
+        quizzes:
+          - q: 웹 서브넷 NACL 인바운드 100은 10.20.0.0/16 전체를 거부하고 200은 모든 주소의 TCP 443을 허용한다. 응답용
+              아웃바운드와 SG는 정상이다. 새 파트너 10.20.8.0/24만 HTTPS를 허용하고 나머지 /16 차단은 유지해야
+              한다. 기존 규칙을 유지하면서 어떤 규칙을 추가할 것인가?
+            answer: "인바운드 90: 10.20.8.0/24의 TCP 443 허용"
+            wrong:
+              - "아웃바운드 90: 10.20.8.0/24의 응답용 임시 포트 허용"
+              - "인바운드 150: 10.20.8.0/24의 TCP 443 허용"
+              - "인바운드 90: 10.20.0.0/16의 TCP 443 허용"
+      - id: saa-r2-Q20-05
+        source_id: Q20-05
+        type: mcq
+        title: Q20-05 · 전체 범위 혼합 문제
+        explain: |
+          <p>가중 target group은 요청을 비율로 나누지만 한 그룹의 모든 대상이 unhealthy일 때 다른 가중 그룹으로 자동 장애 조치하지 않는다. 초기 90:10 분할과 별도로 신규 그룹의 가중치를 0으로 바꾸는 알람 기반 자동화가 필요하다. 상태 평가·자동화 지연은 장애 시험에서 확인해야 한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>/orders/beta를 신규 그룹에 연결하고 기존 /orders는 기존 그룹으로 전달한다.</td>
+          <td>경로 분리는 가능하지만 같은 /orders 요청의 약 10%를 자동 분할하는 구성이 아니다.</td>
+          </tr>
+          <tr>
+          <td>배포 때 /orders를 신규 그룹으로 바꾸고 비정상 알람으로 기존 그룹에 복귀한다.</td>
+          <td>장애 복귀는 가능하지만 초기부터 신규 버전에 모든 요청을 보내므로 10% 카나리 조건을 지키지 못한다.</td>
+          </tr>
+          <tr>
+          <td>ALB 90:10 가중 전달과 두 그룹의 대상 상태 확인을 설정한다.</td>
+          <td>초기 분할은 가능하지만 가중 그룹 사이의 자동 장애 조치를 상태 확인만으로 얻을 수 없다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-06.html">6일 차 개념</a> · <a href="/study/lessons/day-09.html">9일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/rule-action-types.html">ALB 가중치 대상 그룹 동작</a>
+          SAA 평가 항목: 3.4</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-06.html#%EA%B0%80%EC%A4%91%EC%B9%98-%EB%B6%84%ED%95%A0%EA%B3%BC-%EC%9E%A5%EC%95%A0-%EC%A0%84%ED%99%98%EC%9D%80-%EB%B3%84%EB%8F%84%EB%8B%A4">가중치 전달은 실제 요청을 두 그룹에 나눌 수 있다</a> · <a href="/study/lessons/deep-dive/day-06.html#alb-%EA%B7%9C%EC%B9%99%EC%9D%80-%EB%82%AE%EC%9D%80-%EB%B2%88%ED%98%B8%EB%B6%80%ED%84%B0-%EC%B2%98%EC%9D%8C-%EC%9D%BC%EC%B9%98%ED%95%9C-%EA%B2%83%EC%9D%84-%EC%A0%81%EC%9A%A9%ED%95%9C%EB%8B%A4">하지만 ALB는 한 가중치 그룹에 정상 대상이 없다고 다른 그룹으로 자동 재분배하지 않는다</a> · <a href="/study/lessons/deep-dive/day-06.html#%EA%B0%80%EC%A4%91%EC%B9%98-%EB%B6%84%ED%95%A0%EA%B3%BC-%EC%9E%A5%EC%95%A0-%EC%A0%84%ED%99%98%EC%9D%80-%EB%B3%84%EB%8F%84%EB%8B%A4">알람 기반으로 규칙 가중치를 바꾸는 자동화가 추가로 필요하다</a></p>
+        quizzes:
+          - q: ALB의 /orders를 기존·신규 대상 그룹으로 분리해 새 요청 약 10%를 신규 버전으로 보내려 한다. 신규 그룹 전체가
+              unhealthy가 되면 신규로 가는 요청을 없애야 한다. 세션 고정은 사용하지 않고 앱 프록시는 운영하지 않는다.
+              초기 분할과 장애 시 복귀를 모두 포함한 계획은?
+            answer: ALB 90:10 가중 전달과 신규 그룹 비정상 알람에 따른 가중치 0 변경 자동화를 구성한다.
+            wrong:
+              - /orders/beta를 신규 그룹에 연결하고 기존 /orders는 기존 그룹으로 전달한다.
+              - 배포 때 /orders를 신규 그룹으로 바꾸고 비정상 알람으로 기존 그룹에 복귀한다.
+              - ALB 90:10 가중 전달과 두 그룹의 대상 상태 확인을 설정한다.
+      - id: saa-r2-Q20-06
+        source_id: Q20-06
+        type: mcq
+        title: Q20-06 · 전체 범위 혼합 문제
+        explain: |
+          <p>호환되는 Spot 용량 풀을 여러 유형·AZ로 넓히고 capacity-optimized로 가용 용량 중심의 풀을 선택하면 한 풀 집중에 따른 중단 위험을 줄일 수 있다. Capacity Rebalancing은 위험 신호를 받은 인스턴스를 선제 교체하는 데 도움을 준다. 중단이 없어지는 것은 아니므로 체크포인트·재시도는 유지한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>여러 유형·AZ를 열되 lowest-price 할당으로 가장 싼 풀부터 채운다.</td>
+          <td>풀 다양성은 늘지만 순간 가격 우선은 제시한 가용 용량·재처리 감소 우선순위와 다르다.</td>
+          </tr>
+          <tr>
+          <td>현재 유형을 세 AZ의 온디맨드로 배치하고 Capacity Reservations를 구매한다.</td>
+          <td>용량 예약은 검토할 수 있지만 온디맨드 중심으로 바뀌어 Spot 비중을 유지한다는 비용 조건을 충족하지 못한다.</td>
+          </tr>
+          <tr>
+          <td>현재 한 유형·AZ의 Spot 최대 대수를 늘리고 작업자의 재시도 간격을 줄인다.</td>
+          <td>같은 풀에 대한 수요만 늘고 호환 대체 풀이 생기지 않아 해당 풀의 용량 부족과 중단 위험은 남는다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-02.html">2일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/allocation-strategies.html">Spot 할당 전략</a> · <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-capacity-rebalancing.html">Capacity Rebalancing</a>
+          SAA 평가 항목: 4.2</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-02.html#spot-%EC%A4%91%EB%8B%A8%EA%B3%BC-%EC%9A%A9%EB%9F%89-%ED%92%80">여러 용량 풀과 capacity-optimized 전략은 가용 용량이 더 풍부한 풀을 선택하는 데 초점을 둔다</a> · <a href="/study/lessons/deep-dive/day-02.html#spot-%EC%A4%91%EB%8B%A8%EA%B3%BC-%EC%9A%A9%EB%9F%89-%ED%92%80">중단이 사라지는 보장은 없으므로 체크포인트·재시도는 계속 필요하다</a></p>
+        quizzes:
+          - q: S3 체크포인트로 재시작 가능한 Spot 배치 ASG가 한 인스턴스 유형과 AZ에 집중돼 중단·대기가 늘었다. 여러 유형과 AZ에서 같은
+              바이너리를 검증했고 일정하지 않은 작업량 때문에 장기 약정은 피하려 한다. Spot 비중을 유지하면서 순간 최저가보다
+              재처리 감소를 우선할 정책은?
+            answer: 여러 유형·AZ의 Spot 풀에 capacity-optimized 할당과 Capacity Rebalancing을 적용한다.
+            wrong:
+              - 여러 유형·AZ를 열되 lowest-price 할당으로 가장 싼 풀부터 채운다.
+              - 현재 유형을 세 AZ의 온디맨드로 배치하고 Capacity Reservations를 구매한다.
+              - 현재 한 유형·AZ의 Spot 최대 대수를 늘리고 작업자의 재시도 간격을 줄인다.
+      - id: saa-r2-Q20-07
+        source_id: Q20-07
+        type: mcq
+        title: Q20-07 · 전체 범위 혼합 문제
+        explain: |
+          <p>필요한 것은 읽기 확장이 아니라 AZ 장애의 관리형 장애 조치다. Multi-AZ DB instance는 다른 AZ의 standby로 전환하고 DB 엔드포인트를 통해 앱이 재연결하게 한다. 애플리케이션 재시도와 일시 연결 오류 처리는 여전히 필요하며 무중단 요청 성공을 보장하는 것은 아니다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>더 큰 DB 인스턴스로 변경하고 현재 단일 AZ 배치를 유지한다.</td>
+          <td>처리 자원은 늘지만 같은 AZ 장애에 대한 별도 standby·자동 전환 경로는 생기지 않는다.</td>
+          </tr>
+          <tr>
+          <td>자동 백업 보존을 늘리고 장애 때 새 DB로 복원하는 런북을 준비한다.</td>
+          <td>백업은 데이터 복구 수단이지만 장애 후 새 DB 복원과 전환을 운영자가 수행해야 한다.</td>
+          </tr>
+          <tr>
+          <td>다른 AZ에 읽기 복제본을 만들고 장애 때 운영자가 승격한다.</td>
+          <td>읽기 분리는 가능하나 일반 읽기 복제본의 수동 승격은 요구한 관리형 자동 장애 조치와 다르다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-07.html">7일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html">RDS Multi-AZ 배포 구분</a>
+          SAA 평가 항목: 2.2</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-07.html#%EA%B0%80%EC%9A%A9%EC%84%B1-%EC%9D%BD%EA%B8%B0-%ED%99%95%EC%9E%A5%EA%B3%BC-%EC%97%B0%EA%B2%B0-%EC%88%98">Multi-AZ DB 인스턴스 배포는 다른 AZ의 대기 DB와 관리형 장애 조치를 제공한다</a></p>
+        quizzes:
+          - q: 단일 AZ의 RDS MySQL에서 주문을 처리하며 현재 읽기·쓰기 성능은 충분하다. AZ 장애 후에도 수동 DB 복원·승격 없이 복구해야
+              하고 앱은 같은 DB 엔드포인트로 재연결할 수 있다. 새 보고서나 다중 리전 요구는 없다. 가장 직접적인 변경은?
+            answer: 일반 Multi-AZ DB instance로 전환해 다른 AZ의 standby를 유지한다.
+            wrong:
+              - 더 큰 DB 인스턴스로 변경하고 현재 단일 AZ 배치를 유지한다.
+              - 자동 백업 보존을 늘리고 장애 때 새 DB로 복원하는 런북을 준비한다.
+              - 다른 AZ에 읽기 복제본을 만들고 장애 때 운영자가 승격한다.
+      - id: saa-r2-Q20-08
+        source_id: Q20-08
+        type: mcq
+        title: Q20-08 · 전체 범위 혼합 문제
+        explain: |
+          <p>조건부 UpdateItem은 현재 재고 조건을 검사하고 감소를 한 원자적 작업으로 처리한다. 강력한 읽기라도 읽은 뒤 다른 요청이 재고를 바꿀 수 있어 후속 조건 없는 쓰기는 충분하지 않다. 트랜잭션도 주문량 이상이라는 조건 없이 감소만 원자적으로 실행하면 음수 재고를 막지 못한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>GetItem으로 읽은 수량에서 주문량을 빼고 조건 없는 PutItem으로 덮어쓴다.</td>
+          <td>여러 요청이 같은 값을 읽어 계산한 결과로 덮어쓰면 갱신 손실과 잘못된 판매 승인이 생길 수 있다.</td>
+          </tr>
+          <tr>
+          <td>강력한 GetItem으로 최신 재고를 읽고 조건 없는 UpdateItem으로 주문량을 뺀다.</td>
+          <td>읽기는 최신이어도 이후 쓰기와 원자적으로 묶이지 않아 여러 요청이 같은 잔여 수량을 함께 승인할 수 있다.</td>
+          </tr>
+          <tr>
+          <td>재고 조건 없이 TransactWriteItems에 감소 Update 작업만 넣어 실행한다.</td>
+          <td>트랜잭션은 감소를 원자적으로 수행하지만 재고 조건이 없으면 부족한 수량까지 차감할 수 있다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-08.html">8일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.ConditionExpressions.html">DynamoDB 조건부 업데이트</a>
+          SAA 평가 항목: 3.3</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-08.html#%EC%A1%B0%EA%B1%B4%EB%B6%80-%EA%B0%B1%EC%8B%A0%EA%B3%BC-%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98">재고 조건과 감소를 하나의 조건부 업데이트로 평가하면 여러 요청이 동시에 도착해도 허용 조건을 만족하는 변경만 반영할 수 있다</a></p>
+        quizzes:
+          - q: DynamoDB의 한정 상품 재고에 수백 구매 요청이 동시에 도착한다. 각 요청은 주문 수량만큼 원자적으로 차감하되 수량이 부족하면
+              실패해야 한다. 재고는 음수가 되면 안 되고 읽은 뒤 다시 계산하는 앱의 경쟁 제어 코드는 줄이려 한다. 어떤 쓰기
+              방식을 선택할 것인가?
+            answer: 재고가 주문량 이상이라는 조건을 둔 UpdateItem으로 수량을 원자적으로 감소시킨다.
+            wrong:
+              - GetItem으로 읽은 수량에서 주문량을 빼고 조건 없는 PutItem으로 덮어쓴다.
+              - 강력한 GetItem으로 최신 재고를 읽고 조건 없는 UpdateItem으로 주문량을 뺀다.
+              - 재고 조건 없이 TransactWriteItems에 감소 Update 작업만 넣어 실행한다.
+      - id: saa-r2-Q20-09
+        source_id: Q20-09
+        type: mcq
+        title: Q20-09 · 전체 범위 혼합 문제
+        explain: |
+          <p>일반 객체는 읽히고 SSE-KMS만 실패하므로 S3 읽기와 별개인 KMS 복호화 권한을 확인해야 한다. 고객 관리형 키 정책에 CloudFront 서비스 주체와 배포 조건을 맞추고, 원본 공개 읽기를 제거해 버킷 정책도 해당 배포의 OAC 요청으로 제한한다. viewer 인증이나 캐시 무효화는 원본 암호화 키의 허용을 만들지 않는다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>원본 정책은 유지하고 CloudFront에서 실패한 객체의 캐시만 무효화한다.</td>
+          <td>캐시된 오류를 갱신할 수는 있지만 원본에서 필요한 KMS 권한과 공개 읽기 문제는 남는다.</td>
+          </tr>
+          <tr>
+          <td>원본·키 정책은 유지하고 구매자에게 새 CloudFront 서명 URL을 발급한다.</td>
+          <td>구매자 인증은 이미 정상이며 서명 URL 재발급은 CloudFront의 원본 KMS 권한을 바꾸지 않는다.</td>
+          </tr>
+          <tr>
+          <td>객체 암호화를 SSE-S3로 바꾸고 OAC의 기존 S3 읽기 권한을 유지한다.</td>
+          <td>다른 암호화로 읽기 문제를 피할 수 있어도 고객 관리형 KMS 키가 필수라는 보안 조건을 어긴다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-09.html">9일 차 개념</a> · <a href="/study/lessons/day-11.html">11일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html">OAC의 SSE-KMS 키 정책과 버킷 정책</a>
+          SAA 평가 항목: 1.3</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-09.html#%EA%B5%AC%EB%A7%A4%EC%9E%90-%EA%B6%8C%ED%95%9C%EA%B3%BC-s3-%EC%9B%90%EB%B3%B8-%EA%B6%8C%ED%95%9C">Viewer 인증과 원본 읽기·키 사용 권한은 별개다</a></p>
+        quizzes:
+          - q: CloudFront가 OAC로 연결한 S3 일반 버킷에서 SSE-KMS 객체만 403을 반환한다. 고객 관리형 KMS 키 사용은 필수이고
+              viewer 인증은 정상이다. 기존 공개 읽기도 제거해 특정 CloudFront 배포만 원본을 읽게 해야 한다. 필요한
+              조치 두 가지는?
+            answer: KMS 키 정책에 해당 CloudFront 배포 조건으로 필요한 복호화 권한을 허용한다.
+            wrong:
+              - 원본 정책은 유지하고 CloudFront에서 실패한 객체의 캐시만 무효화한다.
+              - 원본·키 정책은 유지하고 구매자에게 새 CloudFront 서명 URL을 발급한다.
+              - 객체 암호화를 SSE-S3로 바꾸고 OAC의 기존 S3 읽기 권한을 유지한다.
+            answers:
+              - KMS 키 정책에 해당 CloudFront 배포 조건으로 필요한 복호화 권한을 허용한다.
+              - 공개 읽기를 차단하고 버킷 정책의 OAC 읽기를 해당 CloudFront 배포로 제한한다.
+            options:
+              - KMS 키 정책에 해당 CloudFront 배포 조건으로 필요한 복호화 권한을 허용한다.
+              - 원본 정책은 유지하고 CloudFront에서 실패한 객체의 캐시만 무효화한다.
+              - 공개 읽기를 차단하고 버킷 정책의 OAC 읽기를 해당 CloudFront 배포로 제한한다.
+              - 원본·키 정책은 유지하고 구매자에게 새 CloudFront 서명 URL을 발급한다.
+              - 객체 암호화를 SSE-S3로 바꾸고 OAC의 기존 S3 읽기 권한을 유지한다.
+      - id: saa-r2-Q20-10
+        source_id: Q20-10
+        type: mcq
+        title: Q20-10 · 전체 범위 혼합 문제
+        explain: |
+          <p>지연 시간 기반 라우팅은 지원 리전별 지연 정보를 사용해 DNS 응답을 선택한다. 상태 확인을 연결하면 비정상 엔드포인트를 피하는 동작도 설계할 수 있다. 가중치는 비율, 지리 위치는 사용자 위치 정책, 장애 조치는 기본·대기 목적이므로 활성 두 리전의 지연 선택과 다르다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>상태 확인을 연결한 가중치 라우팅으로 두 리전의 비율을 50:50으로 둔다.</td>
+          <td>건강한 리전 사이의 비율은 조정하지만 AWS 지연 측정으로 더 적절한 리전을 선택하지 않는다.</td>
+          </tr>
+          <tr>
+          <td>상태 확인을 연결한 장애 조치 라우팅으로 서울을 기본·프랑크푸르트를 대기로 둔다.</td>
+          <td>기본 리전이 건강한 동안 그 리전을 우선하므로 두 활성 리전의 지연 기반 선택이 아니다.</td>
+          </tr>
+          <tr>
+          <td>상태 확인을 연결한 지리 위치 라우팅으로 사용자 국가별 리전을 지정한다.</td>
+          <td>국가별 정책은 구현할 수 있지만 국가를 고정 기준으로 삼지 않는다는 요구와 다르다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-09.html">9일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-policy.html">Route 53 라우팅 정책</a>
+          SAA 평가 항목: 3.4</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-09.html#dns-%EC%A0%95%EC%B1%85%EA%B3%BC-%EC%A0%84%ED%99%98-%EC%8B%9C%EA%B0%84">두 리전이 동시에 서비스하고 선택 기준이 사용자에게 더 나은 네트워크 지연이므로 지연 시간 기반 라우팅이 적합하다</a></p>
+        quizzes:
+          - q: 서울과 프랑크푸르트의 같은 API가 모두 정상 트래픽을 처리한다. 회사는 사용자의 국가별 고정 배정 대신 AWS가 측정한 네트워크 지연을
+              기준으로 응답 리전을 선택하고 비정상 리전은 피하려 한다. 별도 전역 프록시를 도입하지 않을 때 어떤 Route 53
+              정책이 적합한가?
+            answer: 상태 확인을 연결한 지연 시간 기반 라우팅으로 리전별 레코드를 구성한다.
+            wrong:
+              - 상태 확인을 연결한 가중치 라우팅으로 두 리전의 비율을 50:50으로 둔다.
+              - 상태 확인을 연결한 장애 조치 라우팅으로 서울을 기본·프랑크푸르트를 대기로 둔다.
+              - 상태 확인을 연결한 지리 위치 라우팅으로 사용자 국가별 리전을 지정한다.
+      - id: saa-r2-Q20-11
+        source_id: Q20-11
+        type: mcq
+        title: Q20-11 · 전체 범위 혼합 문제
+        explain: |
+          <p>문제는 처리 중 성능이나 최대 동시 실행이 아니라 요청 전 초기화다. Provisioned concurrency를 호출하는 버전·별칭에 준비하면 예상 범위의 요청이 초기화된 환경을 사용할 수 있다. 준비 용량 초과와 규모 변경에는 초기화 지연이 다시 생길 수 있어 예상량과 실제 지표를 비교한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>함수 제한 시간을 늘리고 기존 동시 실행·초기화 방식을 유지한다.</td>
+          <td>허용 대기 시간을 늘려도 초기화 시간이 줄어들지 않아 사용자 응답 목표를 직접 개선하지 못한다.</td>
+          </tr>
+          <tr>
+          <td>계정 동시 실행 한도를 올리고 모든 실행 환경을 기존 온디맨드로 생성한다.</td>
+          <td>실행 가능한 총량은 늘지만 요청 전에 환경이 초기화되지 않아 첫 요청 지연이 남는다.</td>
+          </tr>
+          <tr>
+          <td>Reserved concurrency를 40으로 설정하고 요청이 올 때 실행 환경을 초기화한다.</td>
+          <td>함수의 동시 실행 몫과 상한을 설정하지만 환경을 미리 초기화하는 기능은 아니다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-10.html">10일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/lambda/latest/dg/lambda-concurrency.html">Lambda 동시 실행 설정</a>
+          SAA 평가 항목: 3.2</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-10.html#lambda-%EC%8B%A4%ED%96%89-%EC%9E%90%EC%9B%90%EA%B3%BC-%EC%9A%94%EC%B2%AD-%EC%A0%9C%EC%96%B4">Provisioned concurrency는 실행 환경을 미리 초기화해 준비하므로 예측 가능한 트래픽의 시작 지연을 줄이는 데 적합하다</a></p>
+        quizzes:
+          - q: 검색 Lambda의 업무 시간 동시 요청은 약 40개로 안정적이다. 새 실행 환경의 초기화가 길어 첫 요청 지연이 목표를 넘지만 초기화
+              후에는 목표를 만족한다. 추가 준비 비용은 허용하며 서비스는 버전 별칭으로 호출한다. 업무 시간에 필요한 환경을 미리
+              준비할 가장 직접적인 설정은?
+            answer: 호출하는 버전 별칭에 Provisioned concurrency 40을 구성한다.
+            wrong:
+              - 함수 제한 시간을 늘리고 기존 동시 실행·초기화 방식을 유지한다.
+              - 계정 동시 실행 한도를 올리고 모든 실행 환경을 기존 온디맨드로 생성한다.
+              - Reserved concurrency를 40으로 설정하고 요청이 올 때 실행 환경을 초기화한다.
+      - id: saa-r2-Q20-12
+        source_id: Q20-12
+        type: mcq
+        title: Q20-12 · 전체 범위 혼합 문제
+        explain: |
+          <p>정상 처리보다 짧은 visibility timeout은 처리 중 다른 작업자에게 메시지를 다시 보이게 한다. 최장 시간과 여유를 반영한 숨김 시간으로 이를 줄이고, 적절한 maxReceiveCount와 DLQ로 반복 실패를 분리해야 한다. 업무 중복 효과는 멱등 처리로 추가 방어하며 격리 후 원인 수정·재처리도 운영한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>visibility timeout은 유지하고 maxReceiveCount를 1로 설정해 바로 DLQ로 보낸다.</td>
+          <td>20초 설정이 남아 정상 2분 작업도 조기에 재수신되고 한 번의 일시 오류도 격리할 수 있다.</td>
+          </tr>
+          <tr>
+          <td>visibility timeout을 하루로 늘리고 실패 메시지는 계속 원본 큐에서 재시도한다.</td>
+          <td>재수신 간격만 크게 늘릴 뿐 영구 실패를 별도로 격리하지 않아 조사 경로가 분리되지 않는다.</td>
+          </tr>
+          <tr>
+          <td>메시지를 받은 즉시 삭제하고 변환 오류는 로그에서 확인한다.</td>
+          <td>작업자가 삭제 뒤 실패하면 큐의 재시도 경로를 잃고 오류 항목을 DLQ에서 재처리할 수 없다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-10.html">10일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html">SQS DLQ</a> · <a href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html">Visibility timeout</a>
+          SAA 평가 항목: 2.1</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-10.html#sqs-%EC%88%98%EC%8B%A0%EC%8B%A4%ED%8C%A8%EC%82%AD%EC%A0%9C-%ED%9D%90%EB%A6%84">처리보다 짧은 숨김 시간은 실행 중 재수신을 늘릴 수 있으므로 실제 처리 시간에 맞춘다</a> · <a href="/study/lessons/deep-dive/day-10.html#sqs-%EC%88%98%EC%8B%A0%EC%8B%A4%ED%8C%A8%EC%82%AD%EC%A0%9C-%ED%9D%90%EB%A6%84">반복 실패는 수신 횟수 기준으로 DLQ에 분리하고 알림·조사·재처리 절차를 연결하면 정상 작업의 낭비를 줄인다</a></p>
+        quizzes:
+          - q: SQS Standard 파일 변환은 관측된 최장 정상 시간이 2분이고 현재 visibility timeout은 20초다. 정상 파일의 중복
+              실행과 변환 불가능한 한 파일의 반복 수신이 함께 증가했다. 일시 오류에는 몇 차례 재시도하되 영구 실패는 별도
+              격리·조사해야 한다. 어떤 조합이 적합한가?
+            answer: 처리 시간과 여유에 맞는 visibility timeout 및 수신 횟수 기준 DLQ·조사 알림을 둔다.
+            wrong:
+              - visibility timeout은 유지하고 maxReceiveCount를 1로 설정해 바로 DLQ로 보낸다.
+              - visibility timeout을 하루로 늘리고 실패 메시지는 계속 원본 큐에서 재시도한다.
+              - 메시지를 받은 즉시 삭제하고 변환 오류는 로그에서 확인한다.
+      - id: saa-r2-Q20-13
+        source_id: Q20-13
+        type: mcq
+        title: Q20-13 · 전체 범위 혼합 문제
+        explain: |
+          <p>EventBridge replay는 아카이브의 지정 시간 범위를 원래 버스에 다시 보내며 대상 규칙을 선택할 수 있다. 복구 규칙만 지정하면 그 패턴에 맞는 이벤트를 복구 소비자에 보내면서 배송·회계의 기존 실시간 규칙을 유지할 수 있다. 복구 소비자도 중복 실행에 안전해야 한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>기존 회계 규칙 대상을 복구 Lambda로 바꾼 뒤 어제 구간을 모든 규칙으로 replay한다.</td>
+          <td>기존 실시간 회계 대상이 바뀌고 모든 규칙 replay로 배송도 재실행되어 두 조건을 어긴다.</td>
+          </tr>
+          <tr>
+          <td>어제 구간을 모든 규칙으로 replay하고 기존 회계 소비자를 새 버전으로 교체한다.</td>
+          <td>모든 규칙에 전달하면 배송 규칙에도 과거 이벤트가 들어가 배송 작업이 재실행될 수 있다.</td>
+          </tr>
+          <tr>
+          <td>배송 규칙을 끄고 어제 구간을 replay한 뒤 완료하면 배송 규칙을 다시 켠다.</td>
+          <td>배송 재실행은 피할 수 있지만 비활성화 동안 실시간 배송 규칙 처리를 유지하지 못한다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-10.html">10일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-replay-archived-event.html">아카이브 replay의 특정 규칙 지정</a>
+          SAA 평가 항목: 2.1</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-10.html#%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EC%9E%AC%EB%B6%84%EB%B0%B0%EC%99%80-%EC%84%A0%ED%83%9D%ED%95%9C-%EA%B7%9C%EC%B9%99%EC%9D%98-replay">EventBridge replay는 아카이브를 만든 원래 버스로 반환하며 특정 규칙만 대상으로 지정할 수 있다</a> · <a href="/study/lessons/deep-dive/day-10.html#%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EC%9E%AC%EB%B6%84%EB%B0%B0%EC%99%80-%EC%84%A0%ED%83%9D%ED%95%9C-%EA%B7%9C%EC%B9%99%EC%9D%98-replay">어제 구간과 복구 규칙을 함께 제한하면 배송 규칙의 실시간 동작을 유지하면서 과거 결제 이벤트를 복구 대상으로만 전달한다</a></p>
+        quizzes:
+          - q: EventBridge 버스의 배송·회계 규칙은 실시간 이벤트를 계속 처리해야 한다. 지난 30일 아카이브에서 회계 버그가 있었던 어제 결제
+              완료 이벤트만 다시 계산하되 배송은 재실행되면 안 된다. 복구 Lambda를 연결한 결제 완료 패턴 규칙을 같은 버스에
+              추가했다. 가장 적절한 replay 계획은?
+            answer: 어제 구간을 원래 버스로 replay하면서 대상 규칙을 복구 규칙으로 지정한다.
+            wrong:
+              - 기존 회계 규칙 대상을 복구 Lambda로 바꾼 뒤 어제 구간을 모든 규칙으로 replay한다.
+              - 어제 구간을 모든 규칙으로 replay하고 기존 회계 소비자를 새 버전으로 교체한다.
+              - 배송 규칙을 끄고 어제 구간을 replay한 뒤 완료하면 배송 규칙을 다시 켠다.
+      - id: saa-r2-Q20-14
+        source_id: Q20-14
+        type: mcq
+        title: Q20-14 · 전체 범위 혼합 문제
+        explain: |
+          <p>ViaService는 S3가 해당 역할을 대신해 사용하는 경로를 제한하고, 암호화 컨텍스트의 S3 객체 ARN은 reports 버킷의 객체 범위를 제한한다. 두 조건이 있어야 직접 KMS 호출과 다른 버킷 사용을 함께 구분한다. Bucket Key를 사용하면 컨텍스트 ARN 범위가 달라질 수 있어 문제에서 비활성화를 명시했다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>kms:CallerAccount를 B 계정 ID로 제한한다.</td>
+          <td>호출 계정은 좁힐 수 있지만 같은 계정 역할의 직접 KMS 호출과 다른 버킷 접근을 구분하지 못한다.</td>
+          </tr>
+          <tr>
+          <td>aws:RequestedRegion을 reports 버킷의 리전으로 제한한다.</td>
+          <td>리전은 제한하지만 그 리전 안의 직접 KMS 호출과 다른 버킷 사용을 구분하지 못한다.</td>
+          </tr>
+          <tr>
+          <td>kms:EncryptionAlgorithm을 SYMMETRIC_DEFAULT로 제한한다.</td>
+          <td>암호화 알고리즘을 제한할 뿐 호출 서비스와 S3 객체 범위를 제한하지 못한다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-11.html">11일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/kms/latest/developerguide/conditions-kms.html#conditions-kms-via-service">KMS ViaService 조건</a> · <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingKMSEncryption.html">S3 KMS 암호화 컨텍스트</a>
+          SAA 평가 항목: 1.3</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-11.html#%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%82%A4%EC%9D%98-%EC%83%9D%EC%84%B1%EA%B3%BC-%EA%B5%90%EC%B0%A8-%EA%B3%84%EC%A0%95-%EA%B6%8C%ED%95%9C">ViaService는 S3가 역할을 대신해 사용하는 경로를 제한하고 S3 암호화 컨텍스트의 객체 ARN은 대상 버킷을 제한한다</a></p>
+        quizzes:
+          - q: A 계정의 reports 버킷은 고객 관리형 KMS 키로 암호화하며 S3 Bucket Key는 꺼져 있다. B 계정 역할의 S3·KMS
+              권한과 교차 계정 허용은 정상이다. 역할의 키 사용은 이 버킷의 S3 복호화에만 허용하고 직접 KMS 호출·다른 버킷
+              사용을 제한해야 한다. 기존 키 허용문에 추가할 조건 두 가지는?
+            answer: kms:ViaService를 버킷 리전의 S3 서비스로 제한한다.
+            wrong:
+              - kms:CallerAccount를 B 계정 ID로 제한한다.
+              - aws:RequestedRegion을 reports 버킷의 리전으로 제한한다.
+              - kms:EncryptionAlgorithm을 SYMMETRIC_DEFAULT로 제한한다.
+            answers:
+              - kms:ViaService를 버킷 리전의 S3 서비스로 제한한다.
+              - kms:EncryptionContext:aws:s3:arn을 arn:aws:s3:::reports/*로 제한한다.
+            options:
+              - kms:CallerAccount를 B 계정 ID로 제한한다.
+              - aws:RequestedRegion을 reports 버킷의 리전으로 제한한다.
+              - kms:EncryptionAlgorithm을 SYMMETRIC_DEFAULT로 제한한다.
+              - kms:ViaService를 버킷 리전의 S3 서비스로 제한한다.
+              - kms:EncryptionContext:aws:s3:arn을 arn:aws:s3:::reports/*로 제한한다.
+      - id: saa-r2-Q20-15
+        source_id: Q20-15
+        type: mcq
+        title: Q20-15 · 전체 범위 혼합 문제
+        explain: |
+          <p>규칙 하나의 Count override는 그 SQLi 일치가 평가를 끝내지 않게 하면서 나머지 관리형 규칙을 계속 적용한다. 뒤에서 해당 label이 있고 경로가 /articles가 아닌 요청을 Block하면 다른 경로의 SQLi 차단을 되살릴 수 있다. 그룹 전체나 IP 단위 예외는 필요한 범위보다 넓다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>정상 게시자 IP의 Allow 규칙을 관리형 그룹보다 앞에 두고 나머지는 유지한다.</td>
+          <td>앞의 Allow는 종료 동작이므로 해당 IP의 요청이 나머지 관리형 검사도 건너뛸 수 있다.</td>
+          </tr>
+          <tr>
+          <td>관리형 그룹 scope-down에서 /articles를 제외하고 그룹의 Block 동작은 유지한다.</td>
+          <td>해당 경로가 그룹의 모든 검사를 건너뛰므로 /articles의 나머지 관리형 보호도 사라진다.</td>
+          </tr>
+          <tr>
+          <td>관리형 그룹 전체를 Count로 바꾸고 /admin에 별도 SQLi Block을 추가한다.</td>
+          <td>그룹 전체 차단이 없어지고 /admin 이외 경로의 SQLi 보호까지 약해질 수 있다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-11.html">11일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/waf/latest/developerguide/waf-rule-label-overview.html">WAF label과 후속 규칙 평가</a> · <a href="https://docs.aws.amazon.com/waf/latest/developerguide/web-acl-rule-group-override-options.html">규칙 action override</a>
+          SAA 평가 항목: 1.2</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-11.html#waf-%EB%8B%A8%EC%9D%BC-%EA%B7%9C%EC%B9%99-%EC%98%88%EC%99%B8%EC%99%80-%EB%82%98%EB%A8%B8%EC%A7%80-%EB%B3%B4%ED%98%B8">개별 규칙 Count override로 즉시 차단을 멈추되 label을 남길 수 있다</a></p>
+        quizzes:
+          - q: ALB의 WAF 관리형 그룹에서 SQLi 규칙 하나가 /articles의 정상 HTML을 차단한다. /articles의 다른 보호와 다른
+              경로의 SQLi 차단은 유지해야 한다. 해당 규칙은 일치 label을 붙이고 Count는 뒤 규칙 평가를 계속한다. 앱
+              수정 전 이 예외만 좁게 허용할 구성은?
+            answer: 해당 SQLi만 Count로 바꾸고 뒤 규칙에서 그 label과 /articles 이외 경로를 함께 Block한다.
+            wrong:
+              - 정상 게시자 IP의 Allow 규칙을 관리형 그룹보다 앞에 두고 나머지는 유지한다.
+              - 관리형 그룹 scope-down에서 /articles를 제외하고 그룹의 Block 동작은 유지한다.
+              - 관리형 그룹 전체를 Count로 바꾸고 /admin에 별도 SQLi Block을 추가한다.
+      - id: saa-r2-Q20-16
+        source_id: Q20-16
+        type: mcq
+        title: Q20-16 · 전체 범위 혼합 문제
+        explain: |
+          <p>CloudTrail 관리 이벤트는 리소스를 변경한 API와 호출 신원을 조사하는 근거다. AWS Config의 구성 이력은 변경 전후의 리소스 설정 상태를 확인하는 근거다. 네트워크 연결 허용 여부나 객체 읽기 기록은 제어 영역 변경의 신원과 이전 리소스 구성을 직접 제공하지 않는다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>AWS Config에서 현재 구성만 새로 조회한 스냅샷</td>
+          <td>현재 상태만 보면 어제의 변경 이전 구성을 확인할 수 없어 전후 비교에 부족하다.</td>
+          </tr>
+          <tr>
+          <td>VPC Flow Logs에서 SSH 트래픽의 ACCEPT·REJECT를 집계한 기록</td>
+          <td>통신 허용·거부를 볼 수 있지만 어떤 주체가 어떤 API로 규칙을 바꿨는지는 알 수 없다.</td>
+          </tr>
+          <tr>
+          <td>CloudTrail의 해당 S3 버킷 객체 읽기 데이터 이벤트</td>
+          <td>S3 객체 데이터 이벤트는 객체 접근을 기록하며 보안 그룹 변경 API의 근거가 아니다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-12.html">12일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html">CloudTrail 감사</a> · <a href="https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html">Config 구성 이력</a>
+          SAA 평가 항목: 1.2</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-12.html#%EC%A7%80%ED%91%9C%EB%A1%9C%EA%B7%B8trace%EA%B5%AC%EC%84%B1-%EC%9D%B4%EB%A0%A5">CloudTrail은 변경 작업의 API 호출 주체·시각 등의 감사 근거를 제공하고 Config는 리소스의 과거·현재 구성과 관계를 확인하는 데 사용한다</a> · <a href="/study/lessons/deep-dive/day-12.html#%EC%A7%80%ED%91%9C%EB%A1%9C%EA%B7%B8trace%EA%B5%AC%EC%84%B1-%EC%9D%B4%EB%A0%A5">두 기록을 결합해야 누가 무엇을 바꿨는지 연결하기 쉽다</a></p>
+        quizzes:
+          - q: 보안 그룹에 인터넷 전체의 SSH 접근이 어제 추가됐다. 감사자는 누가 어떤 API로 바꿨는지와 변경 전후 리소스 구성을 각각 확보해야
+              한다. CloudTrail 관리 이벤트와 AWS Config 기록은 당시 활성화되어 있었다. 요구를 직접 충족하는 자료
+              두 가지는?
+            answer: CloudTrail에서 보안 그룹 변경 API의 호출 주체·시각·요청 정보를 확인한 기록
+            wrong:
+              - AWS Config에서 현재 구성만 새로 조회한 스냅샷
+              - VPC Flow Logs에서 SSH 트래픽의 ACCEPT·REJECT를 집계한 기록
+              - CloudTrail의 해당 S3 버킷 객체 읽기 데이터 이벤트
+            answers:
+              - CloudTrail에서 보안 그룹 변경 API의 호출 주체·시각·요청 정보를 확인한 기록
+              - AWS Config의 해당 보안 그룹 구성 항목과 변경 이력
+            options:
+              - CloudTrail에서 보안 그룹 변경 API의 호출 주체·시각·요청 정보를 확인한 기록
+              - AWS Config에서 현재 구성만 새로 조회한 스냅샷
+              - AWS Config의 해당 보안 그룹 구성 항목과 변경 이력
+              - VPC Flow Logs에서 SSH 트래픽의 ACCEPT·REJECT를 집계한 기록
+              - CloudTrail의 해당 S3 버킷 객체 읽기 데이터 이벤트
+      - id: saa-r2-Q20-17
+        source_id: Q20-17
+        type: mcq
+        title: Q20-17 · 전체 범위 혼합 문제
+        explain: |
+          <p>프로젝트 필터와 선결제 비용의 상각 관점을 모두 맞춘 예산이 필요하다. AWS Budgets의 실제·예측 알림으로 두 조건을 구성할 수 있다. 이상 탐지는 평소와 다른 지출을 찾는 용도이며 주어진 월 예산 임계 조건과 같지 않다. 비용 집계와 알림은 지연될 수 있어 실시간 강제 한도로 사용하지 않는다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>Project=A 필터의 unblended cost 예산에 실제·예측 비용 알림을 구성한다.</td>
+          <td>범위와 알림은 맞지만 선결제액의 기간 배분 관점을 원한 조건과 비용 유형이 다르다.</td>
+          </tr>
+          <tr>
+          <td>계정 전체 amortized cost 예산에 실제·예측 비용 알림을 구성한다.</td>
+          <td>상각 관점은 맞지만 다른 프로젝트까지 합산해 Project=A의 월별 계획과 직접 비교하지 못한다.</td>
+          </tr>
+          <tr>
+          <td>Project=A의 Cost Anomaly Detection에 영향 비용 기준 이메일 구독을 구성한다.</td>
+          <td>이상 지출 영향은 탐지할 수 있지만 주어진 실제 누적액·월말 예측액의 예산 임계 알림과 다르다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-12.html">12일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-create.html">Budgets 비용 예산과 필터</a> · <a href="https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_CostTypes.html">Budgets 비용 종류</a>
+          SAA 평가 항목: 4.2</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-12.html#%EB%B9%84%EC%9A%A9-%EC%9B%90%EC%9E%A5%EC%83%81%EA%B0%81%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%84%88-%EB%B0%B0%EB%B6%84">프로젝트 범위 필터와 약정 선결제의 상각 관점을 모두 맞춘 예산이어야 한다</a></p>
+        quizzes:
+          - q: Project=A 컴퓨팅 비용을 월별 계획과 비교한다. Savings Plans 선결제액이 구매월에 몰린 관점보다 약정 기간에 나눈 비용을
+              보고 싶다. 실제 누적액이나 월말 예측액이 한도를 넘으면 이메일을 받아야 하고 비용 할당 태그는 활성화됐다. 직접 집계
+              코드를 줄일 설정은?
+            answer: Project=A 필터의 amortized cost 예산에 실제·예측 비용 알림을 구성한다.
+            wrong:
+              - Project=A 필터의 unblended cost 예산에 실제·예측 비용 알림을 구성한다.
+              - 계정 전체 amortized cost 예산에 실제·예측 비용 알림을 구성한다.
+              - Project=A의 Cost Anomaly Detection에 영향 비용 기준 이메일 구독을 구성한다.
+      - id: saa-r2-Q20-18
+        source_id: Q20-18
+        type: mcq
+        title: Q20-18 · 전체 범위 혼합 문제
+        explain: |
+          <p>복구 목표 실패의 주된 시간은 앱·DB 준비가 아니라 승인과 전환에 있다. 기존 축소 환경의 장애 판단·승인·DNS 변경을 자동화하고 캐시 영향을 포함한 전체 경로로 재시험해야 한다. RPO 개선이나 상시 용량 증설은 측정된 제어 절차의 지연을 직접 해결하지 않는다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>대기 리전의 서버를 전체 운영 크기로 늘리고 같은 수동 승인·DNS 전환을 사용한다.</td>
+          <td>준비 시간을 일부 줄일 수 있지만 상시 비용 제약을 어기고 긴 수동 전환 절차도 남는다.</td>
+          </tr>
+          <tr>
+          <td>DB 백업 간격을 더 짧게 하고 기존 승인·DNS 전환 순서를 유지한다.</td>
+          <td>데이터 손실 폭 개선에는 도움이 될 수 있지만 이미 충족한 RPO와 별개인 승인·전환 지연은 남는다.</td>
+          </tr>
+          <tr>
+          <td>DNS TTL만 낮추고 담당자 승인·수동 전환은 기존 방식으로 수행한다.</td>
+          <td>DNS 캐시 지연은 줄일 수 있지만 주된 승인·수동 변경 시간을 그대로 두어 전체 목표 충족이 보장되지 않는다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-09.html">9일 차 개념</a> · <a href="/study/lessons/day-13.html">13일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html">DR 계획 시험과 전환</a>
+          SAA 평가 항목: 2.2</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-13.html#%EB%B3%B5%EA%B5%AC-%EC%8B%9C%EA%B0%84%EC%9D%80-%EC%9E%91%EC%97%85-%EC%9D%98%EC%A1%B4-%EA%B4%80%EA%B3%84%EB%A1%9C-%EA%B3%84%EC%82%B0%ED%95%9C%EB%8B%A4">측정된 병목은 데이터 복원이나 앱 용량보다 승인·전환 절차다</a> · <a href="/study/lessons/deep-dive/day-13.html#%EB%B3%B5%EA%B5%AC-%EC%8B%9C%EA%B0%84%EC%9D%80-%EC%9E%91%EC%97%85-%EC%9D%98%EC%A1%B4-%EA%B4%80%EA%B3%84%EB%A1%9C-%EA%B3%84%EC%82%B0%ED%95%9C%EB%8B%A4">상시 비용 제약을 유지하면서 장애 판단·검증·DNS 전환을 런북으로 개선하고 캐시·승인 시간을 포함한 전체 복구 시험으로 목표 충족을 확인해야 한다</a></p>
+        quizzes:
+          - q: 회사는 다른 리전에 축소된 웹 환경과 DB 복제를 유지한다. 훈련에서 앱·DB 준비는 20분인데 담당자 승인과 수동 DNS 전환까지
+              90분이 걸려 RTO 1시간을 넘겼다. 상시 비용을 더 늘릴 수 없으며 RPO는 이미 만족한다. 측정된 실패 원인을
+              가장 직접적으로 줄일 개선은?
+            answer: 장애 판단·DNS 전환 런북을 자동화하고 승인·캐시 시간을 포함해 전체 복구를 재시험한다.
+            wrong:
+              - 대기 리전의 서버를 전체 운영 크기로 늘리고 같은 수동 승인·DNS 전환을 사용한다.
+              - DB 백업 간격을 더 짧게 하고 기존 승인·DNS 전환 순서를 유지한다.
+              - DNS TTL만 낮추고 담당자 승인·수동 전환은 기존 방식으로 수행한다.
+      - id: saa-r2-Q20-19
+        source_id: Q20-19
+        type: mcq
+        title: Q20-19 · 전체 범위 혼합 문제
+        explain: |
+          <p>전체 로드는 기존 데이터를 옮기고 CDC는 원본이 계속 받는 변경을 대상에 반영한다. 따라잡기 상태와 데이터 검증 후 최종 쓰기를 잠깐 멈추고 차이를 반영해 전환하면 장시간 전체 복사와 짧은 최종 중단 요구를 분리할 수 있다. DMS 사용만으로 스키마·로그·검증·전환 절차가 자동 완성되는 것은 아니다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>빈 대상에 CDC만 시작하고 시작 이전의 기존 데이터는 최종 전환 뒤 별도 복사한다.</td>
+          <td>CDC 시작 이전의 기존 행이 빈 대상에 준비되지 않아 바로 운영 전환할 수 없다.</td>
+          </tr>
+          <tr>
+          <td>pg_dump를 복원하고 복사 시작부터 최종 전환까지 원본 쓰기를 중지한다.</td>
+          <td>일관된 덤프를 만들 수 있지만 며칠 동안 원본 쓰기가 멈춰 복사 중 서비스 유지 조건을 어긴다.</td>
+          </tr>
+          <tr>
+          <td>DMS 전체 로드로만 복사하고 복사가 끝나면 최신 원본과의 비교 없이 연결을 바꾼다.</td>
+          <td>전체 로드 이후의 원본 변경이 지속 반영되지 않아 최신 주문을 누락할 수 있다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-13.html">13일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Tasks.html">DMS 마이그레이션 작업</a>
+          SAA 평가 항목: 3.5</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-13.html#%ED%8C%8C%EC%9D%BC-%EC%A0%91%EC%86%8D-%EA%B3%84%EC%B8%B5%EA%B3%BC-db-%EB%B3%80%EA%B2%BD-%EB%B3%B5%EC%A0%9C%EB%A5%BC-%EA%B5%AC%EB%B3%84%ED%95%9C%EB%8B%A4">전체 로드로 기존 데이터를 옮기는 동안 CDC로 원본 변경을 따라가면 최종 전환 때 처리할 차이를 줄일 수 있다</a> · <a href="/study/lessons/deep-dive/day-13.html#%ED%8C%8C%EC%9D%BC-%EC%A0%91%EC%86%8D-%EA%B3%84%EC%B8%B5%EA%B3%BC-db-%EB%B3%80%EA%B2%BD-%EB%B3%B5%EC%A0%9C%EB%A5%BC-%EA%B5%AC%EB%B3%84%ED%95%9C%EB%8B%A4">대상 스키마·로그 전제와 복제 지연·검증·최종 쓰기 전환 절차는 별도로 관리해야 한다</a></p>
+        quizzes:
+          - q: 온프레미스 PostgreSQL을 RDS PostgreSQL로 이관한다. 초기 데이터 복사에는 며칠이 걸리며 그동안 원본 주문 쓰기는
+              계속되어야 한다. 최종 전환의 쓰기 중단을 짧게 해야 하고 대상 스키마·로그 설정·연결은 준비돼 있다. 적절한 데이터
+              이동과 전환 계획은?
+            answer: DMS 전체 로드와 CDC로 변경을 따라간 뒤 지연·데이터를 검증하고 쓰기를 전환한다.
+            wrong:
+              - 빈 대상에 CDC만 시작하고 시작 이전의 기존 데이터는 최종 전환 뒤 별도 복사한다.
+              - pg_dump를 복원하고 복사 시작부터 최종 전환까지 원본 쓰기를 중지한다.
+              - DMS 전체 로드로만 복사하고 복사가 끝나면 최신 원본과의 비교 없이 연결을 바꾼다.
+      - id: saa-r2-Q20-20
+        source_id: Q20-20
+        type: mcq
+        title: Q20-20 · 전체 범위 혼합 문제
+        explain: |
+          <p>ECS Fargate는 컨테이너 오케스트레이션을 사용하면서 EC2 호스트 OS의 패치와 서버 용량 운영을 줄이는 선택이다. 앱 코드의 AWS API 호출은 task role의 권한으로 수행하고 이미지 가져오기·로그 등 실행 준비에 쓰는 task execution role과 구분한다. 버킷·객체 범위의 최소 권한도 역할 정책에 반영한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>S3 읽기용 IAM 사용자 키를 Secrets Manager에 저장하고 작업 시작 시 컨테이너에 주입한다.</td>
+          <td>앱에 S3 권한을 줄 수는 있지만 장기 IAM 사용자 키를 컨테이너에 배포하므로 역할 기반 임시 권한 조건을 어긴다.</td>
+          </tr>
+          <tr>
+          <td>ECR·로그용 task execution role에만 앱의 S3 읽기를 추가한다.</td>
+          <td>execution role은 실행 준비 주체의 권한이며 앱 코드가 사용하는 task role의 S3 권한을 대신하지 않는다.</td>
+          </tr>
+          <tr>
+          <td>ECS EC2 실행 방식으로 배포하고 팀이 호스트 AMI의 패치·교체를 운영한다.</td>
+          <td>컨테이너를 운영할 수 있지만 호스트 패치와 교체 책임이 남아 제시한 운영 부담 감소 목표에 덜 맞는다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-14.html">14일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html">ECS task role</a> · <a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/AWS_Fargate.html">Fargate</a>
+          SAA 평가 항목: 3.2</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-14.html#ecs%EC%99%80-eks%EB%A5%BC-%EB%A8%BC%EC%A0%80-%EA%B3%A0%EB%A5%B4%EA%B3%A0-%EC%8B%A4%ED%96%89-%EC%9E%90%EC%9B%90%EC%9D%84-%EB%B9%84%EA%B5%90%ED%95%9C%EB%8B%A4">ECS와 Fargate는 Kubernetes가 필요 없는 컨테이너에서 호스트 운영 부담을 줄인다</a> · <a href="/study/lessons/deep-dive/day-14.html#%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%84%88%EA%B0%80-%EC%8B%9C%EC%9E%91%EB%90%A0-%EB%95%8C%EC%99%80-%EC%95%B1%EC%9D%B4-api%EB%A5%BC-%ED%98%B8%EC%B6%9C%ED%95%A0-%EB%95%8C">컨테이너 앱의 AWS API 권한은 task role에 부여하며 이미지·로그 등 실행 준비용 execution role과 구분해야 한다</a></p>
+        quizzes:
+          - q: Docker API를 AWS로 옮기는 팀은 Kubernetes API 호환이 필요 없고 EC2 호스트의 OS 패치·용량 운영을 줄이려
+              한다. 컨테이너 이미지는 ECR에 있고 앱 코드가 특정 S3 버킷을 읽어야 한다. 장기 액세스 키를 배포하지 않으면서
+              최소 권한을 유지할 실행 방식과 앱 권한 구성 두 가지는?
+            answer: ECS 서비스를 Fargate 실행 방식으로 배포한다.
+            wrong:
+              - S3 읽기용 IAM 사용자 키를 Secrets Manager에 저장하고 작업 시작 시 컨테이너에 주입한다.
+              - ECR·로그용 task execution role에만 앱의 S3 읽기를 추가한다.
+              - ECS EC2 실행 방식으로 배포하고 팀이 호스트 AMI의 패치·교체를 운영한다.
+            answers:
+              - ECS 서비스를 Fargate 실행 방식으로 배포한다.
+              - 컨테이너에 할당한 task role에 필요한 S3 읽기 권한을 부여한다.
+            options:
+              - S3 읽기용 IAM 사용자 키를 Secrets Manager에 저장하고 작업 시작 시 컨테이너에 주입한다.
+              - ECS 서비스를 Fargate 실행 방식으로 배포한다.
+              - ECR·로그용 task execution role에만 앱의 S3 읽기를 추가한다.
+              - 컨테이너에 할당한 task role에 필요한 S3 읽기 권한을 부여한다.
+              - ECS EC2 실행 방식으로 배포하고 팀이 호스트 AMI의 패치·교체를 운영한다.

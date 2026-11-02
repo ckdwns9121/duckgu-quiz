@@ -1,0 +1,621 @@
+id: saa-r2-day-18
+name: 저장소·데이터베이스
+part: 18일 차
+color: "#13a87b"
+dark: "#985800"
+blocks:
+  - tip: SAA 시험 범위를 바탕으로 만든 창작 문제입니다. 실제 기출문제가 아닙니다. 복수 정답은 지정한 개수를 모두 맞혀야 합니다.
+  - items:
+      - id: saa-r2-Q18-01
+        source_id: Q18-01
+        type: mcq
+        title: Q18-01 · 저장소·데이터베이스
+        explain: |
+          <p>핵심은 접근 빈도에 맞춘 자동 조정과 밀리초 접근을 함께 유지하는 것이다. Intelligent-Tiering의 즉시 접근 계층은 접근 패턴에 따라 이동하며, 복원 요청이 필요한 선택적 아카이브 계층은 이 요구에서 제외한다. 고정 일수의 수명 주기는 인기 회복을 판단하지 않으며 실제 비용에는 모니터링·조회 비용도 포함한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>Standard-IA에 저장하고 인기 영상만 운영자가 Standard로 다시 복사한다.</td>
+          <td>읽기는 가능하지만 인기 판단과 복사 작업을 운영자가 맡아 파일별 운영을 줄이는 조건에 불리하다.</td>
+          </tr>
+          <tr>
+          <td>Standard에서 일정 일수 후 Standard-IA로 이동하는 수명 주기 규칙을 적용한다.</td>
+          <td>일수 기반 전환은 사용할 수 있지만 실제 접근 빈도의 변화에 따라 계층을 자동 조정하지 않는다.</td>
+          </tr>
+          <tr>
+          <td>Glacier Flexible Retrieval로 이동하고 재생 요청 시 임시 복원을 시작한다.</td>
+          <td>복원이 필요한 아카이브는 요청 즉시 읽어야 하는 원본의 접근 조건을 충족하지 못한다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-03.html">3일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-intelligent-tiering.html">AWS 공식 기능 문서</a>
+          SAA 평가 항목: 4.1</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-03.html#%EC%A0%80%EC%9E%A5-%ED%81%B4%EB%9E%98%EC%8A%A4%EC%99%80-%EB%B3%B5%EC%9B%90-%EC%8B%9C%EA%B0%84%EC%9D%98-%EC%84%A0%ED%83%9D">접근 빈도를 예측하기 어렵고 즉시 접근을 유지해야 하므로 자동 접근 계층 이동을 사용하되 복원 대기가 필요한 선택적 아카이브 계층을 제외한다</a> · <a href="/study/lessons/deep-dive/day-03.html#%EC%A0%80%EC%9E%A5-%ED%81%B4%EB%9E%98%EC%8A%A4%EC%99%80-%EB%B3%B5%EC%9B%90-%EC%8B%9C%EA%B0%84%EC%9D%98-%EC%84%A0%ED%83%9D">모니터링 비용도 비교 대상이다</a></p>
+        quizzes:
+          - q: 미디어 서비스는 S3 영상 원본을 수년간 보관한다. 출시 직후 읽기가 많지만 이후 인기와 재조회 시점은 달라진다. 모든 원본은 사전 복원
+              없이 밀리초 단위로 읽을 수 있어야 한다. 접근 변화에 따라 저장 계층을 자동 조정하고 파일별 이동 일정 관리는 줄이려
+              한다. 어떤 구성이 적합한가?
+            answer: Intelligent-Tiering을 사용하고 선택적 Archive Access·Deep Archive Access는 끈다.
+            wrong:
+              - Standard-IA에 저장하고 인기 영상만 운영자가 Standard로 다시 복사한다.
+              - Standard에서 일정 일수 후 Standard-IA로 이동하는 수명 주기 규칙을 적용한다.
+              - Glacier Flexible Retrieval로 이동하고 재생 요청 시 임시 복원을 시작한다.
+      - id: saa-r2-Q18-02
+        source_id: Q18-02
+        type: mcq
+        title: Q18-02 · 저장소·데이터베이스
+        explain: |
+          <p>EFS Regional은 여러 AZ에 걸친 관리형 공유 파일 저장소다. 각 AZ의 마운트 타깃에 NFS 통신을 허용하면 인스턴스의 증감과 별개로 같은 파일 경로를 사용할 수 있다. One Zone과 백업 복원은 AZ 장애 때 남은 서버가 같은 파일을 계속 읽는 경로를 제공하지 않는다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>S3에 업로드를 저장하고 각 서버의 파일 읽기·쓰기 코드를 객체 API로 변경한다.</td>
+          <td>내구성 있는 객체 저장은 가능하지만 기존 POSIX 파일 API를 객체 API로 바꿔야 한다.</td>
+          </tr>
+          <tr>
+          <td>한 AZ의 EFS One Zone을 마운트하고 다른 AZ에는 정기 백업으로 복원한다.</td>
+          <td>One Zone은 한 AZ에 저장하며 다른 AZ에서 백업을 복원하는 절차가 있어야 하므로 연속 접근 요구와 다르다.</td>
+          </tr>
+          <tr>
+          <td>두 AZ의 EC2에 NFS 서버를 구성하고 복제·장애 조치·OS 패치를 직접 운영한다.</td>
+          <td>공유 파일 제공은 가능하지만 복제·장애 조치와 OS 패치를 팀이 운영해야 한다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-03.html">3일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/efs/latest/ug/whatisefs.html">AWS 공식 기능 문서</a>
+          SAA 평가 항목: 3.1</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-03.html#efs-%EB%A7%88%EC%9A%B4%ED%8A%B8%EC%99%80-%EC%B2%98%EB%A6%AC%EB%9F%89">EFS Regional은 여러 AZ의 서버가 공통 파일 시스템에 접근하는 요구에 맞는다</a></p>
+        quizzes:
+          - q: 두 AZ의 Linux EC2에서 실행되는 웹 앱이 같은 업로드 디렉터리를 POSIX 파일 경로로 읽고 쓴다. 인스턴스는 자동 확장으로
+              교체되며 한 AZ가 중단돼도 남은 서버의 파일 접근을 유지해야 한다. 애플리케이션 파일 API 변경과 파일 서버 패치
+              작업을 최소화할 설계는?
+            answer: EFS Regional을 사용하고 두 AZ에 마운트 타깃과 필요한 NFS 통신을 구성한다.
+            wrong:
+              - S3에 업로드를 저장하고 각 서버의 파일 읽기·쓰기 코드를 객체 API로 변경한다.
+              - 한 AZ의 EFS One Zone을 마운트하고 다른 AZ에는 정기 백업으로 복원한다.
+              - 두 AZ의 EC2에 NFS 서버를 구성하고 복제·장애 조치·OS 패치를 직접 운영한다.
+      - id: saa-r2-Q18-03
+        source_id: Q18-03
+        type: mcq
+        title: Q18-03 · 저장소·데이터베이스
+        explain: |
+          <p>관측된 병목은 용량 부족이나 CPU가 아니라 지속적인 스토리지 I/O다. 현재 범용 구성의 제공 한도에 닿았으므로 DB 인스턴스·볼륨의 지원 한도를 확인하고 Provisioned IOPS로 필요한 IOPS와 처리량을 확보한다. 새 복제본도 앱의 조회를 그쪽으로 보내지 않으면 현재 경로의 부하를 줄이지 못한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>스토리지 자동 확장 상한을 높이고 디스크 사용량이 임계치에 닿기를 기다린다.</td>
+          <td>자동 확장은 디스크 공간 사용량을 기준으로 동작하므로 I/O 포화만으로 적시에 확장된다고 볼 수 없다.</td>
+          </tr>
+          <tr>
+          <td>읽기 복제본을 추가하고 기존 거래 앱의 연결은 기본 DB 엔드포인트로 유지한다.</td>
+          <td>읽기 복제본은 읽기를 분리할 때 유용하지만 기존 앱의 연결을 유지하면 해당 거래 부하가 복제본으로 이동하지 않는다.</td>
+          </tr>
+          <tr>
+          <td>메모리가 큰 DB 인스턴스로 바꾸고 기존 스토리지 IOPS 설정을 유지한다.</td>
+          <td>메모리 증설이 캐시 적중률에 도움이 될 수 있지만 제공된 지표의 지속 IOPS 한도를 직접 조정하지 않는다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-07.html">7일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Storage.html">AWS 공식 기능 문서</a>
+          SAA 평가 항목: 3.3</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-07.html#%EC%A4%91%EC%A7%80%EC%99%80-%EC%B6%95%EC%86%8C%EC%9D%98-%EB%B9%84%EC%9A%A9-%EA%B2%BD%EA%B3%84">관측된 병목이 저장소 I/O이므로 필요한 IOPS와 처리량에 맞춰 스토리지 구성을 조정한다</a></p>
+        quizzes:
+          - q: RDS 주문 DB에서 디스크 대기 시간이 높지만 CPU와 메모리에는 여유가 있다. 인덱스와 실행 계획은 점검했고 작업 집합은 버퍼 캐시보다
+              크다. 현재 범용 SSD 구성에서 제공 가능한 IOPS를 계속 소진하며 거래 앱의 쿼리 경로는 바꾸기 어렵다. 지속
+              I/O 성능을 높이는 가장 직접적인 변경은?
+            answer: 지원 한도와 측정된 IOPS·처리량에 맞춰 Provisioned IOPS 스토리지를 구성한다.
+            wrong:
+              - 스토리지 자동 확장 상한을 높이고 디스크 사용량이 임계치에 닿기를 기다린다.
+              - 읽기 복제본을 추가하고 기존 거래 앱의 연결은 기본 DB 엔드포인트로 유지한다.
+              - 메모리가 큰 DB 인스턴스로 바꾸고 기존 스토리지 IOPS 설정을 유지한다.
+      - id: saa-r2-Q18-04
+        source_id: Q18-04
+        type: mcq
+        title: Q18-04 · 저장소·데이터베이스
+        explain: |
+          <p>일반 Multi-AZ DB instance의 standby는 자동 장애 조치용이며 보고서 읽기를 처리하지 않는다. 따라서 Multi-AZ로 관리형 AZ 복구를 구성하고 별도 비동기 읽기 복제본으로 보고서 조회를 보내야 한다. 수분 지연 허용은 비동기 복제의 적용 조건이며 연결 전환과 복제 지연은 따로 관찰한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>Multi-AZ를 구성하고 보고서와 주문의 연결을 모두 기본 DB 엔드포인트로 유지한다.</td>
+          <td>장애 복구는 개선되지만 모든 조회가 기본 DB에 남으므로 보고서의 부하 분리가 이루어지지 않는다.</td>
+          </tr>
+          <tr>
+          <td>일일 스냅샷을 다른 AZ에서 복원하는 절차로 기존 단일 AZ DB를 보호한다.</td>
+          <td>백업 복원은 데이터 복구 수단이며 관리형 자동 장애 조치와 상시 보고서 분리를 대신하지 못한다.</td>
+          </tr>
+          <tr>
+          <td>다른 AZ에 읽기 복제본을 만들고 장애 시 운영자가 승격하는 절차를 마련한다.</td>
+          <td>읽기 복제본을 수동 승격하면 복구할 수는 있지만 AZ 장애 때 관리형 자동 장애 조치라는 요구를 충족하지 못한다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-07.html">7일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html">AWS 공식 기능 문서</a>
+          SAA 평가 항목: 2.1</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-07.html#%EA%B0%80%EC%9A%A9%EC%84%B1-%EC%9D%BD%EA%B8%B0-%ED%99%95%EC%9E%A5%EA%B3%BC-%EC%97%B0%EA%B2%B0-%EC%88%98">DB instance Multi-AZ는 장애 대응을, 일반 읽기 복제본은 비동기 읽기 분리를 담당한다</a></p>
+        quizzes:
+          - q: 쇼핑몰의 RDS PostgreSQL은 단일 AZ에서 주문 쓰기와 월별 보고서를 함께 처리한다. AZ 장애 때 앱의 재연결만으로 관리형
+              복구가 필요하고, 보고서의 무거운 조회는 주문 DB에서 분리해야 한다. 보고서는 수분 지연을 허용한다. 일반
+              Multi-AZ DB instance 방식을 사용할 때 필요한 조치 두 가지는?
+            answer: 별도 읽기 복제본을 만들고 보고서 연결을 그 복제본의 엔드포인트로 보낸다.
+            wrong:
+              - Multi-AZ를 구성하고 보고서와 주문의 연결을 모두 기본 DB 엔드포인트로 유지한다.
+              - 일일 스냅샷을 다른 AZ에서 복원하는 절차로 기존 단일 AZ DB를 보호한다.
+              - 다른 AZ에 읽기 복제본을 만들고 장애 시 운영자가 승격하는 절차를 마련한다.
+            answers:
+              - 별도 읽기 복제본을 만들고 보고서 연결을 그 복제본의 엔드포인트로 보낸다.
+              - Multi-AZ DB instance로 전환해 다른 AZ의 standby와 자동 장애 조치를 구성한다.
+            options:
+              - 별도 읽기 복제본을 만들고 보고서 연결을 그 복제본의 엔드포인트로 보낸다.
+              - Multi-AZ를 구성하고 보고서와 주문의 연결을 모두 기본 DB 엔드포인트로 유지한다.
+              - 일일 스냅샷을 다른 AZ에서 복원하는 절차로 기존 단일 AZ DB를 보호한다.
+              - Multi-AZ DB instance로 전환해 다른 AZ의 standby와 자동 장애 조치를 구성한다.
+              - 다른 AZ에 읽기 복제본을 만들고 장애 시 운영자가 승격하는 절차를 마련한다.
+      - id: saa-r2-Q18-05
+        source_id: Q18-05
+        type: mcq
+        title: Q18-05 · 저장소·데이터베이스
+        explain: |
+          <p>PITR은 선택한 과거 시점의 새 DB를 만든다. 삭제 전 복원본으로 누락된 주문을 확인하면서 운영 DB의 이후 정상 쓰기를 보존할 병합·전환 절차가 필요하다. 이미 삭제가 반영된 복제본을 승격하거나 운영 연결을 과거 데이터로 즉시 바꾸면 요구를 충족하지 못한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>Multi-AZ 장애 조치를 실행한 후 기본 엔드포인트로 재연결한다.</td>
+          <td>standby에도 삭제가 반영됐으므로 장애 조치는 논리적 삭제를 되돌리지 않는다.</td>
+          </tr>
+          <tr>
+          <td>전날 수동 스냅샷을 새 DB로 복원하고 모든 앱 연결을 즉시 전환한다.</td>
+          <td>전날 상태로 즉시 전환하면 스냅샷 이후의 정상 주문을 새 운영 DB에서 잃는다.</td>
+          </tr>
+          <tr>
+          <td>읽기 복제본을 승격한 후 애플리케이션을 승격된 DB로 전환한다.</td>
+          <td>삭제가 이미 읽기 복제본에 반영되어 승격만으로 삭제 주문이 되살아나지 않는다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-07.html">7일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_PIT.html">AWS 공식 기능 문서</a>
+          SAA 평가 항목: 2.1</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-07.html#pitr%EA%B3%BC-%EC%8A%A4%EB%83%85%EC%83%B7%EC%97%90%EC%84%9C-%EC%84%9C%EB%B9%84%EC%8A%A4-%EB%B3%B5%EA%B5%AC%EA%B9%8C%EC%A7%80">PITR은 과거 시점의 새 DB를 만든다</a> · <a href="/study/lessons/deep-dive/day-07.html#%EA%B0%80%EC%9A%A9%EC%84%B1-%EC%9D%BD%EA%B8%B0-%ED%99%95%EC%9E%A5%EA%B3%BC-%EC%97%B0%EA%B2%B0-%EC%88%98">삭제가 복제된 상태에서는 replica 전환으로 해결되지 않으며 이후 정상 쓰기를 잃지 않도록 복원본 검증과 데이터 병합 또는 연결 전환을 별도 설계해야 한다</a></p>
+        quizzes:
+          - q: 주문 DB에서 10:05의 잘못된 SQL이 일부 주문을 삭제했고 Multi-AZ standby와 읽기 복제본에도 반영됐다. 자동 백업으로
+              10:04까지 복원할 수 있으며 운영 DB에는 10:05 이후 정상 주문이 계속 들어온다. 삭제 주문을 복구하면서 이후
+              정상 주문 손실을 피할 방법은?
+            answer: 10:04로 새 DB를 PITR 복원·검증하고 삭제 주문의 병합·안전한 전환을 계획한다.
+            wrong:
+              - Multi-AZ 장애 조치를 실행한 후 기본 엔드포인트로 재연결한다.
+              - 전날 수동 스냅샷을 새 DB로 복원하고 모든 앱 연결을 즉시 전환한다.
+              - 읽기 복제본을 승격한 후 애플리케이션을 승격된 DB로 전환한다.
+      - id: saa-r2-Q18-06
+        source_id: Q18-06
+        type: mcq
+        title: Q18-06 · 저장소·데이터베이스
+        explain: |
+          <p>Aurora reader endpoint는 새 연결을 reader 사이에 분산하며 이미 열린 한 연결 안의 쿼리를 매번 재배치하지 않는다. 여유 reader를 활용하려면 여러 연결을 사용하고 필요에 따라 연결을 갱신하는 풀 전략이 필요하다. reader 수나 DNS TTL만 바꿔도 기존 연결은 같은 대상에 남을 수 있다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>현재 포화된 reader의 instance endpoint에 같은 장기 연결을 고정한다.</td>
+          <td>instance endpoint는 특정 reader에 연결하므로 기존 편중을 해소하지 못한다.</td>
+          </tr>
+          <tr>
+          <td>reader endpoint의 DNS TTL만 짧게 하고 연결은 끊지 않은 채 재사용한다.</td>
+          <td>DNS TTL은 다음 조회의 캐시 수명이며 이미 맺은 DB 연결을 다른 reader로 이동시키지 않는다.</td>
+          </tr>
+          <tr>
+          <td>reader 한 대를 더 추가하고 기존 장기 연결과 앱의 연결 수를 유지한다.</td>
+          <td>추가 용량은 생기지만 기존 연결 하나가 자동으로 여러 reader에 나뉘지 않는다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-07.html">7일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Endpoints.Reader.html">AWS 공식 기능 문서</a>
+          SAA 평가 항목: 3.3</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-07.html#aurora%EC%9D%98-%EA%B3%B5%EC%9C%A0-%EC%A0%80%EC%9E%A5%EC%86%8C%EC%99%80-%EC%97%B0%EA%B2%B0-%EB%B6%84%EC%82%B0">Aurora reader endpoint는 연결을 reader에 분산하며 같은 연결의 SQL을 매번 다른 reader로 보내지 않는다</a></p>
+        quizzes:
+          - q: Aurora에 같은 크기의 reader 세 대가 있다. 랭킹 앱은 reader endpoint에 긴 연결 하나를 열어 다수의 읽기 쿼리를
+              보내며 한 reader만 포화된다. 나머지 reader에는 여유가 있고 DB 사양을 높이지 않으려 한다. 기존
+              reader endpoint를 유지하면서 가장 직접적으로 읽기 부하를 분산할 방법은?
+            answer: reader endpoint로 여러 읽기 연결을 열고 연결 풀의 수명·재사용을 조정한다.
+            wrong:
+              - 현재 포화된 reader의 instance endpoint에 같은 장기 연결을 고정한다.
+              - reader endpoint의 DNS TTL만 짧게 하고 연결은 끊지 않은 채 재사용한다.
+              - reader 한 대를 더 추가하고 기존 장기 연결과 앱의 연결 수를 유지한다.
+      - id: saa-r2-Q18-07
+        source_id: Q18-07
+        type: mcq
+        title: Q18-07 · 저장소·데이터베이스
+        explain: |
+          <p>전체 테이블이 아니라 한 키의 쓰기가 집중된 상황이다. 분산 접미사로 논리적 고객의 쓰기를 여러 파티션 키에 나누면 핫 키를 완화할 수 있다. 대신 고객별 조회에서 여러 구간을 조회·병합해야 하므로 그 변경과 비용을 수용할 수 있다는 조건이 중요하다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>고객 ID는 유지한 채 Provisioned 모드로 돌아가 테이블 전체 쓰기 용량을 늘린다.</td>
+          <td>테이블 전체 용량을 늘려도 한 파티션 키에 집중되는 쓰기의 한도를 직접 분산하지 못한다.</td>
+          </tr>
+          <tr>
+          <td>고객 ID를 같은 파티션 키로 사용하는 GSI를 추가하고 쓰기를 기본 테이블에 보낸다.</td>
+          <td>같은 키의 GSI를 추가해도 기본 테이블의 핫 키에 쓰기가 계속 집중된다.</td>
+          </tr>
+          <tr>
+          <td>DAX를 도입해 읽기 캐시를 사용하고 모든 쓰기는 기존 고객 ID로 계속 전송한다.</td>
+          <td>DAX의 읽기 캐시는 반복 조회를 줄일 수 있지만 기본 테이블의 쓰기 키를 분산하지 않는다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-08.html">8일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-partition-key-sharding.html">AWS 공식 기능 문서</a>
+          SAA 평가 항목: 3.3</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-08.html#%EB%8B%A4%EC%A4%91-%EB%A6%AC%EC%A0%84-%EC%9D%BC%EA%B4%80%EC%84%B1%EA%B3%BC-%EC%BA%90%EC%8B%9C">한 키에 집중된 쓰기는 전체 용량 모드만 바꿔 해결된다고 볼 수 없다</a> · <a href="/study/lessons/deep-dive/day-08.html#hot-key%EC%99%80-lsi-item-collection">분산 접미사나 시간 구간 등으로 쓰기를 나누되 고객 조회에서 여러 키를 읽고 합치는 비용도 함께 평가해야 한다</a></p>
+        quizzes:
+          - q: DynamoDB 주문 테이블의 파티션 키는 고객 ID다. 한 대형 고객이 쓰기 대부분을 발생시켜 해당 키가 포화되고 다른 고객의 처리량은
+              안정적이다. On-demand 전환 후에도 현상이 같으며 이 고객의 조회를 여러 키에서 읽어 합치는 앱 변경은
+              허용된다. 가장 적절한 개선은?
+            answer: 고객 ID에 분산 접미사를 추가하고 고객별 조회에서 필요한 키 구간을 병합한다.
+            wrong:
+              - 고객 ID는 유지한 채 Provisioned 모드로 돌아가 테이블 전체 쓰기 용량을 늘린다.
+              - 고객 ID를 같은 파티션 키로 사용하는 GSI를 추가하고 쓰기를 기본 테이블에 보낸다.
+              - DAX를 도입해 읽기 캐시를 사용하고 모든 쓰기는 기존 고객 ID로 계속 전송한다.
+      - id: saa-r2-Q18-08
+        source_id: Q18-08
+        type: mcq
+        title: Q18-08 · 저장소·데이터베이스
+        explain: |
+          <p>GSI와 Streams의 읽기는 최종 일관성이므로 쓰기 직후 최신 상태를 반드시 반환하는 경로로 사용할 수 없다. 주문 키를 아는 완료 화면에서는 기본 테이블의 강력한 일관성 읽기를 사용하고, 지연을 허용하는 목록만 GSI에 남긴다. 짧은 재시도나 캐시는 최신성 보장을 대체하지 않는다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>DAX의 캐시된 읽기로 완료 화면과 상태별 목록을 모두 제공한다.</td>
+          <td>DAX 캐시의 읽기로는 쓰기 직후 캐시에 반영되지 않은 최신 항목을 항상 보장할 수 없다.</td>
+          </tr>
+          <tr>
+          <td>완료 화면도 GSI로 조회하되 100ms 간격으로 세 번 재시도한다.</td>
+          <td>일정 횟수 재시도로 전파될 가능성은 높일 수 있지만 정해진 짧은 시간 안의 최신 값을 보장하지 않는다.</td>
+          </tr>
+          <tr>
+          <td>DynamoDB Streams로 별도 완료 화면용 캐시를 갱신해 그 캐시만 조회한다.</td>
+          <td>Streams 기반 캐시는 비동기 갱신되므로 완료 화면에서 요구한 즉시 최신성 경로가 아니다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-08.html">8일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadConsistency.html">AWS 공식 기능 문서</a>
+          SAA 평가 항목: 3.3</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-08.html#%EC%A0%91%EA%B7%BC-%ED%8C%A8%ED%84%B4%EA%B3%BC-%EC%9D%B8%EB%8D%B1%EC%8A%A4%EC%9D%98-%EC%8B%A4%EC%A0%9C-%EA%B5%AC%EC%84%B1">GSI는 최종 일관성만 지원한다</a> · <a href="/study/lessons/deep-dive/day-08.html#%EC%A0%91%EA%B7%BC-%ED%8C%A8%ED%84%B4%EA%B3%BC-%EC%9D%B8%EB%8D%B1%EC%8A%A4%EC%9D%98-%EC%8B%A4%EC%A0%9C-%EA%B5%AC%EC%84%B1">쓰기 직후 특정 주문의 최신 저장 여부는 기본 테이블의 강력한 읽기로 확인하고 상태별 목록에는 지연을 허용하도록 화면의 일관성 요구를 분리한다</a></p>
+        quizzes:
+          - q: DynamoDB 배송 앱이 주문 저장 성공 직후 상태별 GSI를 조회하면 방금 저장한 주문이 잠깐 누락된다. 완료 화면에는 주문 키가 이미
+              있고 쓰기 성공 직전까지의 최신 값을 즉시 보여야 한다. 상태별 목록은 짧은 지연을 허용한다. 가장 적절한 읽기
+              경로는?
+            answer: 완료 화면은 주문 키로 기본 테이블을 강력하게 읽고 목록은 기존 GSI를 사용한다.
+            wrong:
+              - DAX의 캐시된 읽기로 완료 화면과 상태별 목록을 모두 제공한다.
+              - 완료 화면도 GSI로 조회하되 100ms 간격으로 세 번 재시도한다.
+              - DynamoDB Streams로 별도 완료 화면용 캐시를 갱신해 그 캐시만 조회한다.
+      - id: saa-r2-Q18-09
+        source_id: Q18-09
+        type: mcq
+        title: Q18-09 · 저장소·데이터베이스
+        explain: |
+          <p>인가에는 만료 시각과 미사용 상태를 한 조건부 쓰기에서 검사·갱신해야 한다. 먼저 읽고 나중에 조건 없이 쓰면 두 요청이 함께 통과할 수 있다. TTL은 숫자형 epoch 초를 기준으로 비동기 삭제하므로 승인 유효성 검사는 따로 해야 하며, 며칠 내 정리를 허용한다는 조건에서 자체 스캔 코드를 줄인다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>강력한 GetItem으로 토큰을 읽고 유효하면 조건 없는 UpdateItem으로 사용 처리한다.</td>
+          <td>강력한 읽기도 이후 쓰기와 묶이지 않으면 두 요청이 같은 미사용 상태를 읽는 경쟁을 막지 못한다.</td>
+          </tr>
+          <tr>
+          <td>상태 GSI에서 미사용 토큰을 읽고 별도 비동기 작업으로 사용 여부를 갱신한다.</td>
+          <td>GSI와 비동기 사용 처리는 승인 시점의 원자성을 제공하지 못한다.</td>
+          </tr>
+          <tr>
+          <td>매시간 전체 테이블을 Scan하는 Lambda로 만료 토큰을 찾아 삭제한다.</td>
+          <td>삭제 기능은 구현할 수 있지만 주기적 전체 스캔 코드를 운영하지 않는다는 조건에 맞지 않는다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-08.html">8일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TTL.html">DynamoDB TTL 형식·비동기 삭제</a> · <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.ConditionExpressions.html">조건부 쓰기</a>
+          SAA 평가 항목: 1.3</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-08.html#%EC%A1%B0%EA%B1%B4%EB%B6%80-%EA%B0%B1%EC%8B%A0%EA%B3%BC-%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98">조건부 쓰기는 만료와 미사용 상태를 한 작업에서 검사·변경해 동시에 두 요청이 승인되는 경쟁을 막는다</a> · <a href="/study/lessons/deep-dive/day-08.html#%EC%A1%B0%EA%B1%B4%EB%B6%80-%EA%B0%B1%EC%8B%A0%EA%B3%BC-%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98">TTL은 초 단위 숫자 타임스탬프로 비동기 정리를 제공한다</a></p>
+        quizzes:
+          - q: DynamoDB에 저장된 다운로드 토큰은 발급 후 10분 동안 한 번만 쓸 수 있다. 동시에 같은 토큰을 제출해도 하나만 승인해야 한다.
+              사용 여부는 used, 만료 시각은 expireAt에 저장한다. 만료 항목은 며칠 내 제거해도 되지만 전체 테이블을
+              주기적으로 스캔하는 코드는 운영하지 않으려 한다. 필요한 조치 두 가지는?
+            answer: used=false·expireAt>현재를 조건으로 원자적 UpdateItem을 실행해 used=true로 바꾼다.
+            wrong:
+              - 강력한 GetItem으로 토큰을 읽고 유효하면 조건 없는 UpdateItem으로 사용 처리한다.
+              - 상태 GSI에서 미사용 토큰을 읽고 별도 비동기 작업으로 사용 여부를 갱신한다.
+              - 매시간 전체 테이블을 Scan하는 Lambda로 만료 토큰을 찾아 삭제한다.
+            answers:
+              - used=false·expireAt>현재를 조건으로 원자적 UpdateItem을 실행해 used=true로 바꾼다.
+              - expireAt을 숫자형 epoch 초로 저장하고 테이블 TTL 속성으로 설정한다.
+            options:
+              - 강력한 GetItem으로 토큰을 읽고 유효하면 조건 없는 UpdateItem으로 사용 처리한다.
+              - 상태 GSI에서 미사용 토큰을 읽고 별도 비동기 작업으로 사용 여부를 갱신한다.
+              - 매시간 전체 테이블을 Scan하는 Lambda로 만료 토큰을 찾아 삭제한다.
+              - used=false·expireAt>현재를 조건으로 원자적 UpdateItem을 실행해 used=true로 바꾼다.
+              - expireAt을 숫자형 epoch 초로 저장하고 테이블 TTL 속성으로 설정한다.
+      - id: saa-r2-Q18-10
+        source_id: Q18-10
+        type: mcq
+        title: Q18-10 · 저장소·데이터베이스
+        explain: |
+          <p>일반적인 쓰기 후 무효화가 빠른 반영을 돕고 짧은 TTL이 무효화 누락과 동시 캐시 채우기 경쟁의 오래된 값을 제한한다. 제시한 읽기·채우기 시간에서 60초 TTL은 5분 허용 범위 안이며 hit마다 DB를 읽지 않는다. 1시간 TTL이나 캐시 우선 무효화만으로는 앱 종료 시 오래된 값을 충분히 빨리 제거할 수 없다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>DB 커밋 뒤 캐시를 무효화하고 새로 채우는 모든 항목에 1시간 TTL을 둔다.</td>
+          <td>커밋 직후 앱이 종료되면 무효화가 누락되어 이전 값이 1시간 남을 수 있다.</td>
+          </tr>
+          <tr>
+          <td>캐시 hit마다 DB의 현재 버전을 읽어 값이 다르면 캐시를 교체한다.</td>
+          <td>최신성 확인은 가능하지만 hit에서 DB를 조회하지 않는다는 조건을 어긴다.</td>
+          </tr>
+          <tr>
+          <td>캐시를 먼저 무효화한 뒤 DB를 커밋하고 새 항목에 1시간 TTL을 둔다.</td>
+          <td>무효화와 커밋 사이 읽기가 이전 DB 값을 다시 채울 수 있고 1시간 TTL이 이를 오래 유지한다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-08.html">8일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/Strategies.html">캐시 채우기·무효화와 TTL</a>
+          SAA 평가 항목: 3.3</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-08.html#cache-aside%EC%9D%98-%EC%8B%A4%ED%8C%A8-%EA%B2%BD%EB%A1%9C%EC%99%80-%EC%8B%A0%EC%84%A0%EB%8F%84">커밋 후 무효화는 일반 변경을 빠르게 반영하고, 60초 TTL은 커밋 후 앱 종료나 동시 캐시 채우기로 무효화가 놓친 오래된 값을 제한한다</a> · <a href="/study/lessons/deep-dive/day-08.html#cache-aside%EC%9D%98-%EC%8B%A4%ED%8C%A8-%EA%B2%BD%EB%A1%9C%EC%99%80-%EC%8B%A0%EC%84%A0%EB%8F%84">읽기·채우기 1초 조건에서도 5분 허용 범위 안이며 hit는 DB 조회 없이 처리한다</a></p>
+        quizzes:
+          - q: 상품 설명 API는 RDS 앞에 cache-aside ElastiCache를 사용한다. DB 읽기와 캐시 채우기는 1초 이내이며 변경된
+              설명은 5분 안에 보여야 한다. 캐시 hit에서 DB 조회는 금지하고 별도 동기화 워커도 두지 않는다. 쓰기 앱이 DB
+              커밋 직후 종료돼 후속 작업을 못 할 수 있다. 어떤 전략이 요구를 만족하는가?
+            answer: DB 커밋 뒤 캐시를 무효화하고 새로 채우는 모든 항목에 60초 TTL을 둔다.
+            wrong:
+              - DB 커밋 뒤 캐시를 무효화하고 새로 채우는 모든 항목에 1시간 TTL을 둔다.
+              - 캐시 hit마다 DB의 현재 버전을 읽어 값이 다르면 캐시를 교체한다.
+              - 캐시를 먼저 무효화한 뒤 DB를 커밋하고 새 항목에 1시간 TTL을 둔다.
+      - id: saa-r2-Q18-11
+        source_id: Q18-11
+        type: mcq
+        title: Q18-11 · 저장소·데이터베이스
+        explain: |
+          <p>두 샤드로 나누면 샤드당 데이터 약 90GB와 초당 8만 쓰기가 되어 제시한 노드 한도에 들어간다. 각 primary에 다른 AZ의 replica가 하나씩 있어야 AZ 장애 때 승격할 수 있으므로 최소 네 대가 필요하다. 읽기 복제본 수만 늘리면 데이터 분할과 primary 쓰기 부하 분할이 이루어지지 않는다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>한 샤드에 primary 한 대와 서로 다른 AZ의 replica 세 대를 배치한다.</td>
+          <td>노드 네 대라도 한 샤드의 primary가 데이터 180GB와 초당 16만 쓰기를 맡아 각 한도를 넘는다.</td>
+          </tr>
+          <tr>
+          <td>두 샤드의 primary를 각각 다른 AZ에 배치하고 replica 없이 운영한다.</td>
+          <td>두 샤드로 용량은 맞출 수 있지만 각 샤드에 승격 가능한 replica가 없다.</td>
+          </tr>
+          <tr>
+          <td>세 샤드에 primary 한 대와 다른 AZ의 replica 한 대씩 배치한다.</td>
+          <td>요구를 충족하지만 여섯 노드가 필요해 네 노드 구성보다 비용이 높다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-08.html">8일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/Shards.html">Valkey 샤드와 복제 노드</a>
+          SAA 평가 항목: 3.3</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-08.html#%EC%84%B8%EC%85%98%EC%9D%98-%EC%83%A4%EB%93%9C%EC%99%80-%EB%B3%B5%EC%A0%9C%EB%B3%B8">두 샤드로 분할하면 샤드당 약 90GB와 초당 8만 쓰기로 한도 안에 들어간다</a></p>
+        quizzes:
+          - q: ElastiCache for Valkey에 세션 180GB를 저장하며 균등 분포한 단일 키 쓰기가 초당 16만 건이다. 선택 가능한
+              노드마다 데이터 100GB·초당 10만 쓰기를 감당하며 더 큰 노드는 없다. 앱은 cluster mode를 지원한다.
+              한 AZ가 중단돼도 각 샤드의 승격 대상이 필요하다. 노드 단가가 같을 때 최소 구성을 선택하라.
+            answer: 두 샤드에 primary 한 대와 다른 AZ의 replica 한 대씩 배치한다.
+            wrong:
+              - 한 샤드에 primary 한 대와 서로 다른 AZ의 replica 세 대를 배치한다.
+              - 두 샤드의 primary를 각각 다른 AZ에 배치하고 replica 없이 운영한다.
+              - 세 샤드에 primary 한 대와 다른 AZ의 replica 한 대씩 배치한다.
+      - id: saa-r2-Q18-12
+        source_id: Q18-12
+        type: mcq
+        title: Q18-12 · 저장소·데이터베이스
+        explain: |
+          <p>사용료는 피크 검증을 통과한 사양으로 축소해 줄이고, 백업 저장료는 더 이상 보존할 필요가 없는 테스트 수동 스냅샷을 삭제해 줄인다. 사양 변경에 따른 재시작은 지문이 허용한 점검 창에 반영한다. 수동 스냅샷은 원래 DB를 삭제해도 남을 수 있다. 점검 외의 상시 서비스·30일 PITR·90일 법적 보존은 유지한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>밤마다 DB를 중지하고 업무 시작 전에 자동으로 다시 시작한다.</td>
+          <td>사양 변경의 짧은 점검 재시작은 허용됐지만 밤마다 서비스를 중지하는 것은 점검 외 상시 운영 조건을 어긴다.</td>
+          </tr>
+          <tr>
+          <td>자동 백업을 7일로 줄이고 월별 법적 스냅샷 90일은 유지한다.</td>
+          <td>7일 자동 백업은 30일 PITR 정책을 충족하지 못한다.</td>
+          </tr>
+          <tr>
+          <td>자동 백업은 30일로 두고 30일이 지난 모든 수동 스냅샷을 삭제한다.</td>
+          <td>30일을 넘긴 모든 수동 스냅샷을 지우면 90일 보존 대상인 월별 스냅샷도 사라진다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-07.html">7일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithAutomatedBackups.html">RDS 자동·수동 백업 보존</a> · <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_CreateSnapshot.html">RDS 수동 스냅샷</a> · <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.DBInstance.Modifying.html">RDS DB 인스턴스 변경과 가동 중지 영향</a>
+          SAA 평가 항목: 4.3</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-07.html#%EC%A4%91%EC%A7%80%EC%99%80-%EC%B6%95%EC%86%8C%EC%9D%98-%EB%B9%84%EC%9A%A9-%EA%B2%BD%EA%B3%84">피크 부하 시험을 통과한 사양 축소는 현재 사용량의 낭비를 줄인다</a> · <a href="/study/lessons/deep-dive/day-07.html#pitr%EA%B3%BC-%EC%8A%A4%EB%83%85%EC%83%B7%EC%97%90%EC%84%9C-%EC%84%9C%EB%B9%84%EC%8A%A4-%EB%B3%B5%EA%B5%AC%EA%B9%8C%EC%A7%80">DB를 삭제해도 수동 스냅샷은 남을 수 있으므로 필요 없는 테스트 사본을 별도 정리해야 한다</a> · <a href="/study/lessons/deep-dive/day-07.html#pitr%EA%B3%BC-%EC%8A%A4%EB%83%85%EC%83%B7%EC%97%90%EC%84%9C-%EC%84%9C%EB%B9%84%EC%8A%A4-%EB%B3%B5%EA%B5%AC%EA%B9%8C%EC%A7%80">두 조치는 서로 다른 비용을 줄이며 30일 PITR·90일 법적 보존을 유지한다</a></p>
+        quizzes:
+          - q: RDS 운영 DB는 상시 서비스를 제공하지만 승인된 점검 창에서 사양 변경에 따른 짧은 재시작은 허용한다. 최근 피크 부하 시험에서 한
+              단계 작은 사양도 응답 목표를 충족했다. 정책은 PITR 30일과 법적 보존 월별 스냅샷 90일이다. 삭제된 테스트
+              DB의 만료된 수동 스냅샷도 요금에 남아 있다. 이 운영 조건과 보존 정책을 지키며 사용료·백업 비용을 각각 줄일 조치
+              두 가지는?
+            answer: 승인된 점검 창에 검증한 작은 DB 사양으로 변경하고 성능 지표를 관찰한다.
+            wrong:
+              - 밤마다 DB를 중지하고 업무 시작 전에 자동으로 다시 시작한다.
+              - 자동 백업을 7일로 줄이고 월별 법적 스냅샷 90일은 유지한다.
+              - 자동 백업은 30일로 두고 30일이 지난 모든 수동 스냅샷을 삭제한다.
+            answers:
+              - 승인된 점검 창에 검증한 작은 DB 사양으로 변경하고 성능 지표를 관찰한다.
+              - 복구·법적 보존 사본은 유지하고 만료된 테스트 DB의 수동 스냅샷만 삭제한다.
+            options:
+              - 승인된 점검 창에 검증한 작은 DB 사양으로 변경하고 성능 지표를 관찰한다.
+              - 밤마다 DB를 중지하고 업무 시작 전에 자동으로 다시 시작한다.
+              - 자동 백업을 7일로 줄이고 월별 법적 스냅샷 90일은 유지한다.
+              - 자동 백업은 30일로 두고 30일이 지난 모든 수동 스냅샷을 삭제한다.
+              - 복구·법적 보존 사본은 유지하고 만료된 테스트 DB의 수동 스냅샷만 삭제한다.
+      - id: saa-r2-Q18-13
+        source_id: Q18-13
+        type: mcq
+        title: Q18-13 · 저장소·데이터베이스
+        explain: |
+          <p>온라인 거래와 분석 부하를 분리하고, 변화하는 조인·필터와 필요한 열 중심의 반복 대규모 집계에 맞는 분석 엔진을 선택해야 한다. Redshift는 열 지향 데이터 웨어하우스로 이 요구를 지원한다. 적재 지연을 허용하므로 주문 DB와 분석 데이터 사이의 갱신 경로를 따로 설계할 수 있다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>DynamoDB에 거래를 복제하고 분석마다 Scan 결과를 앱에서 조인한다.</td>
+          <td>DynamoDB의 키 기반 접근 장점보다 전체 Scan·앱 조인을 반복하게 되어 제시한 SQL 분석에 덜 맞는다.</td>
+          </tr>
+          <tr>
+          <td>ElastiCache에 미리 계산한 정해진 보고서만 저장하고 새 필터도 캐시에서 처리한다.</td>
+          <td>고정 보고서 캐시는 반복 결과에 유용하지만 새 필터와 조인의 원본 계산을 대신하는 분석 엔진은 아니다.</td>
+          </tr>
+          <tr>
+          <td>주문 DB의 크기를 늘리고 운영 DB에서 거래 쓰기와 모든 분석을 계속 실행한다.</td>
+          <td>사양 증설은 일부 성능을 개선할 수 있지만 온라인 주문과 분석의 자원 경합을 분리하지 않는다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-08.html">8일 차 개념</a> · <a href="/study/lessons/day-14.html">14일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/redshift/latest/dg/c_columnar_storage_disk_mem_mgmnt.html">AWS 공식 기능 문서</a>
+          SAA 평가 항목: 3.1</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-14.html#spark-%EB%B3%80%ED%99%98%EA%B3%BC-redshift-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%9D%B4%EB%8F%99">대규모 이력 집계와 온라인 트랜잭션을 분리하려는 조건에는 분석용 데이터 웨어하우스가 맞는다</a> · <a href="/study/lessons/deep-dive/day-08.html#%EB%AA%A9%EC%A0%81%EB%B3%84-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EB%AA%A8%EB%8D%B8%EC%9D%98-%EB%8F%99%EC%9E%91">Redshift의 열 지향 구조는 필요한 열 중심의 집계에 유리하며 적재·갱신 지연을 별도로 설계한다</a></p>
+        quizzes:
+          - q: 금융팀은 주문 RDS에 쌓인 수년치 수십억 거래를 여러 테이블과 조인해 하루 종일 반복 집계한다. 조회마다 필요한 열과 필터가 바뀌며 수분
+              정도의 적재 지연은 허용한다. 온라인 주문의 처리량을 보호하고 필요한 열 중심의 대규모 SQL 분석을 운영하려면 어떤
+              구성이 가장 적합한가?
+            answer: 분석 데이터를 Redshift에 적재하고 열 지향 데이터 웨어하우스에서 SQL을 실행한다.
+            wrong:
+              - DynamoDB에 거래를 복제하고 분석마다 Scan 결과를 앱에서 조인한다.
+              - ElastiCache에 미리 계산한 정해진 보고서만 저장하고 새 필터도 캐시에서 처리한다.
+              - 주문 DB의 크기를 늘리고 운영 DB에서 거래 쓰기와 모든 분석을 계속 실행한다.
+      - id: saa-r2-Q18-14
+        source_id: Q18-14
+        type: mcq
+        title: Q18-14 · 저장소·데이터베이스
+        explain: |
+          <p>Neptune은 관계를 노드와 간선으로 모델링하고 다단계 경로를 쿼리로 탐색하는 관리형 그래프 DB다. 현재 관계를 직접 탐색하면서 앱의 단계별 조회·경로 조합과 DB 서버 패치를 줄이는 요구에 맞는다. 응답 지연은 모델과 부하 시험으로 검증해야 하며 서비스 이름만으로 보장되지 않는다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>DynamoDB에 인접 ID를 저장하고 Lambda가 단계별 BatchGetItem 결과를 결합한다.</td>
+          <td>경로를 계산할 수 있지만 앱이 여러 차례 읽고 합치는 기존 코드의 책임이 남는다.</td>
+          </tr>
+          <tr>
+          <td>Redshift에 관계를 적재하고 야간 배치로 만든 경로 테이블을 조회한다.</td>
+          <td>분석은 가능하지만 야간에 계산된 경로는 지속 갱신되는 현재 관계를 반환하지 않는다.</td>
+          </tr>
+          <tr>
+          <td>EC2에 그래프 DB를 설치하고 컨테이너 이미지·DB 패치를 배포 파이프라인으로 운영한다.</td>
+          <td>그래프 쿼리는 가능하지만 EC2와 DB 패치를 팀이 운영해야 한다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-08.html">8일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/neptune/latest/userguide/intro.html">Neptune 그래프 엔진과 관리 책임</a>
+          SAA 평가 항목: 3.1</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-08.html#%EB%AA%A9%EC%A0%81%EB%B3%84-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EB%AA%A8%EB%8D%B8%EC%9D%98-%EB%8F%99%EC%9E%91">Neptune의 관리형 그래프 엔진은 관계를 간선으로 저장하고 여러 단계 경로를 쿼리로 표현한다</a> · <a href="/study/lessons/deep-dive/day-08.html#%EB%AA%A9%EC%A0%81%EB%B3%84-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EB%AA%A8%EB%8D%B8%EC%9D%98-%EB%8F%99%EC%9E%91">구체 지연 목표는 실제 모델·부하로 검증한다</a></p>
+        quizzes:
+          - q: 사기 조사 앱은 계정·기기·결제 수단의 관계가 추가될 때마다 현재 데이터로 2~6단계 연결 경로를 반환한다. 앱에서 여러 차례 ID를 읽어
+              경로를 조합하는 코드가 커지고 있다. 어제 계산한 경로로는 조사할 수 없으며 DB 서버 패치도 맡지 않으려 한다. 관계
+              탐색 쿼리로 앱 코드를 줄일 구성은?
+            answer: Neptune에 노드·간선을 저장하고 Gremlin 또는 openCypher로 경로를 탐색한다.
+            wrong:
+              - DynamoDB에 인접 ID를 저장하고 Lambda가 단계별 BatchGetItem 결과를 결합한다.
+              - Redshift에 관계를 적재하고 야간 배치로 만든 경로 테이블을 조회한다.
+              - EC2에 그래프 DB를 설치하고 컨테이너 이미지·DB 패치를 배포 파이프라인으로 운영한다.
+      - id: saa-r2-Q18-15
+        source_id: Q18-15
+        type: mcq
+        title: Q18-15 · 저장소·데이터베이스
+        explain: |
+          <p>Versioning은 같은 객체 키의 이전 버전과 삭제 마커를 남겨 실수로 한 덮어쓰기·일반 삭제에서 복구할 수 있게 한다. 비현재 버전의 수명 주기로 보존 비용을 관리한다. 리전 간 복제나 배치 사본 없이 이 요구를 충족하지만 DeleteObjectVersion 권한을 가진 주체의 영구 삭제를 막는 규제 보존은 별도 문제다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>원본을 Glacier Deep Archive로 이동하고 다운로드 시 복원한다.</td>
+          <td>아카이브는 즉시 다운로드 조건을 만족하지 않으며 저장 클래스 변경만으로 객체 버전 이력을 만들지 않는다.</td>
+          </tr>
+          <tr>
+          <td>매일 밤 다른 버킷에 현재 객체를 동기화하고 같은 삭제도 반영한다.</td>
+          <td>하루 사이의 변경이 사본에 없고 삭제까지 동기화하면 직전 상태 보호가 충분하지 않다.</td>
+          </tr>
+          <tr>
+          <td>다른 리전의 버킷에 복제하고 양쪽 버킷의 비현재 버전을 보존한다.</td>
+          <td>추가 내구성은 얻을 수 있지만 필요하지 않은 다른 리전의 저장·전송 비용을 부담한다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-03.html">3일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html">AWS 공식 기능 문서</a> · <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication-what-is-isnot-replicated.html">S3 복제 대상과 제외 항목</a>
+          SAA 평가 항목: 2.1</p>
+          <p>선택지를 가르는 개념: <a href="/study/lessons/deep-dive/day-03.html#%EA%B0%9D%EC%B2%B4-api%EC%99%80-%EB%B2%84%EC%A0%84%EB%B3%84-%EC%82%AD%EC%A0%9C">Versioning은 덮어쓰기 전 버전과 삭제 마커를 통해 잘못된 변경에서 복구할 수 있게 한다</a> · <a href="/study/lessons/deep-dive/day-03.html#lifecycle%EA%B3%BC-%EC%9A%A9%EB%9F%89-%EC%82%B0%EC%A0%95">이전 버전에도 저장 비용이 발생하므로 비현재 버전의 보존 기간과 Lifecycle을 함께 설계해야 한다</a></p>
+        quizzes:
+          - q: 사진 서비스는 S3 원본을 잘못 덮어쓰거나 삭제했을 때 직전 상태를 복구해야 한다. 삭제 직전 업로드도 보호 대상이고 즉시 다운로드를
+              유지한다. 다른 리전 재해 복구나 관리자도 삭제할 수 없는 규제 보존은 요구하지 않는다. 별도 복사 배치와 리전 간
+              전송을 최소화할 기본 보호는?
+            answer: 버킷 Versioning을 켜고 비현재 버전의 보존 기간·수명 주기를 설정한다.
+            wrong:
+              - 원본을 Glacier Deep Archive로 이동하고 다운로드 시 복원한다.
+              - 매일 밤 다른 버킷에 현재 객체를 동기화하고 같은 삭제도 반영한다.
+              - 다른 리전의 버킷에 복제하고 양쪽 버킷의 비현재 버전을 보존한다.

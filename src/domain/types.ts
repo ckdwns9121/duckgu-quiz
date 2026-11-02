@@ -3,6 +3,8 @@ export type UnitId = string;
 
 interface BaseCard {
   id: string;
+  /** 개정판의 저장 ID와 구분하는 원본 문제 번호. */
+  sourceId?: string;
   unit: UnitId;
   /** 한 단계씩 여는 힌트 (정답은 가려져 있다) */
   hints: string[];

@@ -6,7 +6,7 @@ export const DailyQuiz = () => {
   const s = pushStore.getState();
   return <section className="daily-quiz" aria-label="AWS-SAA 아침 퀴즈">
     <b>덕구랑 매일 AWS-SAA</b>
-    <p>매일 다른 레슨을 풀고, 틀린 문제는 다시 확인해요.</p>
+    <p>공식 샘플 유형을 참고한 개정 2판. 매일 다른 레슨을 풀어요.</p>
     <button className="btn blue" type="button" onClick={() => router.push('/daily')}>오늘의 퀴즈 풀기</button>
     <p className="hint">한국 시간 오전 8시쯤 · 이 기기에서 알림 받기</p>
     {s.publicKey && <div className="daily-actions">

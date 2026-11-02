@@ -1,0 +1,38 @@
+<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>26·29일 차 문제의 추가 비교</title><style>body{font:17px/1.8 system-ui,sans-serif;max-width:850px;margin:auto;padding:24px;color:#243047}img,svg{max-width:100%;height:auto}table{border-collapse:collapse;display:block;overflow:auto}td,th{border:1px solid #ccd3df;padding:8px}pre{overflow:auto;background:#eef1f5;padding:16px}a{color:#1769bb}</style><body><a href="/course/aws-saa">← AWS-SAA 퀴즈</a><h1 id="2629일-차-문제의-추가-비교">26·29일 차 문제의 추가 비교</h1>
+<h2 id="시간당-약정과-실제-청구">시간당 약정과 실제 청구</h2>
+<p>Savings Plans의 시간당 약정은 사용량이 적어도 지불한다. 한 시간의 미사용 약정을 다음 시간으로 넘길 수 없고, 해당 시간의 약정을 넘는 적격 사용에는 온디맨드 요금이 적용된다. 할인 요율로 계산한 사용 금액과 초과분의 온디맨드 금액을 같은 단가로 합산하지 않는다.</p>
+<p>시간당 약정이 10달러이고 첫 시간의 할인 요율 사용액이 5달러라면 첫 시간에도 10달러를 지불한다. 다음 시간의 적격 사용액이 할인 요율 기준 15달러이고 약정 초과분의 온디맨드 요금이 8달러라면 둘째 시간 청구는 18달러다. 두 시간 합계는 28달러다. 첫 시간의 남은 5달러로 다음 시간의 초과분을 상쇄할 수 없다. 이 숫자는 실제 서비스 가격이 아니라 시간 단위 적용 방식을 설명하는 가정이다.</p>
+<p>공식 근거: <a href="https://docs.aws.amazon.com/savingsplans/latest/userguide/sp-applying.html">Savings Plans 적용</a></p>
+<h2 id="아카이브의-저장-비용과-복원-허용-시간">아카이브의 저장 비용과 복원 허용 시간</h2>
+<p>장기간 거의 읽지 않는 대형 객체에서 저장 요금이 비용 대부분이고 수십 시간의 복원이 허용되면 Glacier Deep Archive를 비교한다. 수시간 내 복원이나 즉시 GET이 필요하면 더 빠른 계층을 검토한다. 가장 싼 저장 단가만 고르지 말고 요청·검색량·최소 보관 기간·복원 사본 비용을 함께 본다. 복원 시간은 일반적인 처리 특성으로, 모든 데이터 양과 요청 수에 대한 완료 SLA로 단정하지 않는다.</p>
+<table>
+<thead>
+<tr>
+<th>조건</th>
+<th>비교할 계층</th>
+<th>탈락하기 쉬운 대안</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>드문 읽기·즉시 GET·다중 AZ 원본</td>
+<td>Standard-IA 등 즉시 접근 다중 AZ 계층</td>
+<td>One Zone-IA는 AZ 전체 손실 범위가 다름</td>
+</tr>
+<tr>
+<td>수년 보관·매우 드문 읽기·긴 복원 대기</td>
+<td>Glacier Deep Archive</td>
+<td>즉시 조회 계층은 이번 업무가 쓰지 않는 읽기 특성의 비용을 부담</td>
+</tr>
+<tr>
+<td>수시간 복원 허용</td>
+<td>Glacier Flexible Retrieval</td>
+<td>Deep Archive의 일반 표준 복원은 더 오래 걸림</td>
+</tr>
+</tbody></table>
+<p>공식 근거: <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html">S3 저장 클래스</a>, <a href="https://aws.amazon.com/s3/storage-classes/glacier/">Glacier 계층</a></p>
+<h2 id="waf-규칙과-조직-배포">WAF 규칙과 조직 배포</h2>
+<p>AWS WAF의 rule group과 web ACL은 어떤 HTTP 요청을 검사하고 허용·차단할지 정의한다. Firewall Manager는 Organizations의 대상 계정과 지원 리소스에 보호 정책을 중앙 적용하고, 새 계정이나 새 리소스에도 해당 정책이 적용되도록 관리한다. 중앙 적용을 하려면 서비스의 사전 조건, 정책 범위와 자동 복구 설정을 준비하고 예외·미준수 결과를 확인해야 한다.</p>
+<p>WAF 규칙이 있어도 각 앱 운영자가 수동으로 연결하면 신규 리소스 적용 누락이 남는다. 반대로 SCP에서 WAF API 사용 권한만 제한해도 web ACL이 리소스에 배포되지는 않는다. Shield의 DDoS 보호와 앱의 취약점 패치도 HTTP 검사 정책의 조직 배포를 대신하지 않는다.</p>
+<p>공식 근거: <a href="https://docs.aws.amazon.com/waf/latest/developerguide/fms-chapter.html">Firewall Manager</a></p>
+<p>공식 자료 확인일: 2026-11-02</p>
+</body></html>
