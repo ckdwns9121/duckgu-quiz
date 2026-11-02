@@ -1,0 +1,27 @@
+id: aws-saa
+name: AWS-SAA
+icon: SAA
+desc: 보안·네트워크·컴퓨팅·저장소·서버리스와 모의고사 · 창작 320문제
+color: "#FF9900"
+dark: "#CC7A00"
+notes:
+  file: notes-aws-saa.html
+  title: AWS-SAA 해설 · 덕구 퀴즈
+  h1: AWS-SAA 문제와 해설
+  lede: 실제 기출문제가 아닌 창작 320문제입니다. 공식 자료와 개념 학습자료를 해설에 연결했습니다. 문제를 먼저 풀려면 퀴즈 모드로 답을
+    가리세요.
+  back_label: ← AWS-SAA 레슨으로
+  footer: SAA 시험 범위에 맞춰 만든 창작 문제이며 AWS 공식 모의고사는 아닙니다.
+  storage_key: duckgu-saa-notes-v1
+units:
+  - saa-day-15
+  - saa-day-16
+  - saa-day-17
+  - saa-day-18
+  - saa-day-19
+  - saa-day-20
+  - saa-day-22
+  - saa-day-24
+  - saa-day-26
+  - saa-day-27
+  - saa-day-29

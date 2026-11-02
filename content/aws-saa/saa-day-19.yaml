@@ -1,0 +1,598 @@
+id: saa-day-19
+name: 서버리스·메시징·콘텐츠 전송
+part: 19일 차
+color: "#FF9900"
+dark: "#985800"
+blocks:
+  - tip: SAA 시험 범위를 바탕으로 만든 창작 문제입니다. 실제 기출문제가 아닙니다. 복수 정답은 지정한 개수를 모두 맞혀야 합니다.
+  - items:
+      - id: Q19-01
+        type: mcq
+        title: Q19-01 · 서버리스·메시징·콘텐츠 전송
+        explain: |
+          <p>7일 보존 큐는 72시간 처리 중단 후에도 작업을 보유한다. API는 큐 저장 성공을 확인한 뒤 응답하고 작업자는 복구 뒤 계속 소비할 수 있다. 보존 기간 안에 적체를 처리할 용량과 재시도·멱등성을 함께 운영한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>EventBridge 규칙의 대상 이벤트 최대 수명을 24시간으로 설정하고 이메일 처리 API로 재시도한다.</td>
+          <td>대상 재시도는 접수를 분리하지만 최대 수명 24시간이 72시간보다 짧다. 주어진 설정으로는 복구 뒤 자동 처리할 작업을 보존하지 못한다.</td>
+          </tr>
+          <tr>
+          <td>SQS Standard의 보존을 1일로 설정하고 작업자를 분리해 복구 후 큐를 소비한다.</td>
+          <td>구조는 적합하지만 1일 보존은 최대 중단 72시간보다 짧아 오래된 작업이 복구 전에 만료될 수 있다.</td>
+          </tr>
+          <tr>
+          <td>Lambda 비동기 호출의 최대 이벤트 수명을 6시간으로 설정하고 이메일 처리를 함수에서 실행한다.</td>
+          <td>비동기 호출은 빠른 접수를 제공하지만 설정한 최대 수명 6시간이 72시간 중단보다 짧아 복구 전에 이벤트가 만료될 수 있다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-10.html">10일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-configure-queue-parameters.html">SQS 메시지 보존</a> · <a href="https://docs.aws.amazon.com/lambda/latest/dg/invocation-async-configuring.html">Lambda 비동기 수명</a> · <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-rule-retry-policy.html">EventBridge 대상 재시도</a>
+          SAA 평가 항목: 3.5</p>
+        quizzes:
+          - q: 주문 API는 후속 이메일 작업 접수 후 빠르게 응답해야 한다. 이메일 제공사의 점검으로 소비 처리가 최대 72시간 중단될 수 있으며,
+              복구 후 별도 수동 재발행 없이 남은 작업을 처리해야 한다. 작업은 멱등하게 처리한다. 아래 설정 중 자체 보관 코드를
+              가장 적게 운영하면서 중단 기간을 견디는 구성은?
+            answer: SQS Standard의 보존을 7일로 설정하고 작업자를 분리해 복구 후 큐를 소비한다.
+            wrong:
+              - EventBridge 규칙의 대상 이벤트 최대 수명을 24시간으로 설정하고 이메일 처리 API로 재시도한다.
+              - SQS Standard의 보존을 1일로 설정하고 작업자를 분리해 복구 후 큐를 소비한다.
+              - Lambda 비동기 호출의 최대 이벤트 수명을 6시간으로 설정하고 이메일 처리를 함수에서 실행한다.
+      - id: Q19-02
+        type: mcq
+        title: Q19-02 · 서버리스·메시징·콘텐츠 전송
+        explain: |
+          <p>Visibility timeout은 처리 중 재노출을 줄이지만 Standard 전달의 중복 가능성을 없애지 않는다. 처리 시간에 맞는 비가시성 관리와 업무 식별자 기반 멱등 처리를 함께 적용해야 한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>메시지 보존 기간을 줄이면 전달 의미가 정확히 한 번으로 바뀐다</td>
+          <td>보존 기간은 저장 가능 기간이며 전달 횟수 보장을 정확히 한 번으로 바꾸지 않는다.</td>
+          </tr>
+          <tr>
+          <td>visibility timeout을 늘렸으므로 업무 중복 처리는 불필요하다고 판단한다</td>
+          <td>timeout 조정만으로 모든 중복 전달과 성공 후 삭제 실패를 제거할 수 없다.</td>
+          </tr>
+          <tr>
+          <td>수신하자마자 메시지를 삭제해 실패한 작업도 재시도되지 않게 한다</td>
+          <td>성공 전에 삭제하면 작업자 실패 시 작업을 잃을 수 있다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-10.html">10일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html">AWS 공식 기능 문서</a>
+          SAA 평가 항목: 2.2</p>
+        quizzes:
+          - q: SQS Standard 작업자는 파일 변환에 평소보다 오래 걸리는 경우가 있다. 처리 중 같은 작업을 다른 작업자가 다시 받는 사례와 처리
+              후 중복 전달 모두를 안전하게 다루어야 한다. 필요한 조치 두 가지는?
+            answer: 최대 처리 시간에 맞게 visibility timeout을 정하고 필요하면 처리 중 연장한다
+            wrong:
+              - 메시지 보존 기간을 줄이면 전달 의미가 정확히 한 번으로 바뀐다
+              - visibility timeout을 늘렸으므로 업무 중복 처리는 불필요하다고 판단한다
+              - 수신하자마자 메시지를 삭제해 실패한 작업도 재시도되지 않게 한다
+            answers:
+              - 최대 처리 시간에 맞게 visibility timeout을 정하고 필요하면 처리 중 연장한다
+              - 작업 식별자로 이미 완료한 결과를 확인하고 중복 실행 효과를 방지한다
+            options:
+              - 메시지 보존 기간을 줄이면 전달 의미가 정확히 한 번으로 바뀐다
+              - visibility timeout을 늘렸으므로 업무 중복 처리는 불필요하다고 판단한다
+              - 최대 처리 시간에 맞게 visibility timeout을 정하고 필요하면 처리 중 연장한다
+              - 수신하자마자 메시지를 삭제해 실패한 작업도 재시도되지 않게 한다
+              - 작업 식별자로 이미 완료한 결과를 확인하고 중복 실행 효과를 방지한다
+      - id: Q19-03
+        type: mcq
+        title: Q19-03 · 서버리스·메시징·콘텐츠 전송
+        explain: |
+          <p>SNS와 서비스별 SQS를 조합하면 하나의 발행을 각 소비자의 내구성 있는 큐로 fanout할 수 있다. 서비스들은 자기 큐에서 독립적으로 대기·재시도하므로 다른 소비자의 장애와 처리 속도를 분리한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>SNS 토픽의 모든 이벤트를 분석 서비스 하나만 읽고 메모리로 나머지에 중계한다</td>
+          <td>단일 중계자의 메모리에 의존하면 독립 보관과 장애 격리 요구를 만족하지 못한다.</td>
+          </tr>
+          <tr>
+          <td>SQS 큐 하나를 세 서비스가 경쟁적으로 읽는다</td>
+          <td>한 큐의 경쟁 소비는 작업을 나누어 받으며 모든 서비스에 각 이벤트를 전달하는 방송이 아니다.</td>
+          </tr>
+          <tr>
+          <td>생산자가 세 서비스를 동기 호출하고 전체 완료를 기다린다</td>
+          <td>동기 다중 호출은 생산자의 지연과 가용성을 모든 소비자에 결합한다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-10.html">10일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/sns/latest/dg/sns-sqs-as-subscriber.html">AWS 공식 기능 문서</a>
+          SAA 평가 항목: 2.2</p>
+        quizzes:
+          - q: 결제 완료 이벤트를 이메일·재고·분석 서비스가 각각 빠짐없이 받아야 한다. 각 서비스의 처리 속도와 장애는 독립적이어야 한다. 이벤트
+              생산자는 소비자 목록을 직접 관리하지 않으려 한다. 가장 적절한 구조는?
+            answer: SNS 토픽에 서비스별 SQS 큐를 구독시키고 각 서비스가 자기 큐를 읽는다
+            wrong:
+              - SNS 토픽의 모든 이벤트를 분석 서비스 하나만 읽고 메모리로 나머지에 중계한다
+              - SQS 큐 하나를 세 서비스가 경쟁적으로 읽는다
+              - 생산자가 세 서비스를 동기 호출하고 전체 완료를 기다린다
+      - id: Q19-04
+        type: mcq
+        title: Q19-04 · 서버리스·메시징·콘텐츠 전송
+        explain: |
+          <p>EventBridge의 AWS 서비스 이벤트 통합, 내용 기반 규칙, 아카이브와 원본 버스 replay를 함께 사용하면 요구한 흐름을 적은 연결 코드로 구성한다. Replay 시 대상 규칙 범위를 선택해 새 소비자로 전달할 수 있으며 업무 중복 효과는 소비자에서 관리한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>SNS FIFO 토픽의 본문 필터와 30일 아카이브를 구성하고 AWS 서비스 이벤트를 토픽에 넣는 Lambda 어댑터를 운영한다.</td>
+          <td>SNS FIFO도 필터·아카이브·replay를 제공한다. 다만 주어진 AWS 서비스 이벤트를 토픽에 연결하는 어댑터와 대상 연동을 추가 운영하므로 기본 이벤트 통합 요구에서는 EventBridge가 더 직접적이다.</td>
+          </tr>
+          <tr>
+          <td>Kinesis Data Streams에 30일 보존을 설정하고 Lambda에서 국가·상태별 라우팅과 시간 구간 재읽기를 구현한다.</td>
+          <td>보존·시간 재읽기는 가능하지만 라우팅·소비 위치·재전달 코드를 팀이 유지해야 한다. 중앙 관리형 규칙과 replay를 조합하는 선택보다 코드 부담이 크다.</td>
+          </tr>
+          <tr>
+          <td>이벤트를 S3에 30일 보존하고 Lambda로 소스 연결·필터·대상 호출과 시간대별 재전달 작업을 구현한다.</td>
+          <td>장기 보존은 가능하지만 연결·필터·대상 호출·시간 선택·재전달 제어를 대부분 직접 구현해야 해 코드 운영 축소 목표에 불리하다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-10.html">10일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-event-patterns.html">EventBridge 이벤트 패턴</a> · <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-replay-archived-event.html">아카이브 replay</a> · <a href="https://docs.aws.amazon.com/sns/latest/dg/message-archiving-and-replay-subscriber.html">SNS FIFO 아카이브와 replay</a>
+          SAA 평가 항목: 3.5</p>
+        quizzes:
+          - q: S3 등 AWS 서비스의 기본 이벤트와 자체 주문 이벤트를 중앙에서 연결한다. 주문 국가·결제 상태에 따라 대상 워크플로를 고르고 최근
+              30일 중 특정 시간대 이벤트를 새 소비자에 재전달해야 한다. 생산자는 소비자 목록을 몰라야 하며 소스
+              연결·라우팅·재전달용 코드를 가장 적게 유지하려 한다. 적절한 구성은?
+            answer: EventBridge 버스의 이벤트 패턴 규칙과 30일 아카이브를 구성하고 필요한 기간을 원본 버스에 replay한다.
+            wrong:
+              - SNS FIFO 토픽의 본문 필터와 30일 아카이브를 구성하고 AWS 서비스 이벤트를 토픽에 넣는 Lambda
+                어댑터를 운영한다.
+              - Kinesis Data Streams에 30일 보존을 설정하고 Lambda에서 국가·상태별 라우팅과 시간 구간
+                재읽기를 구현한다.
+              - 이벤트를 S3에 30일 보존하고 Lambda로 소스 연결·필터·대상 호출과 시간대별 재전달 작업을 구현한다.
+      - id: Q19-05
+        type: mcq
+        title: Q19-05 · 서버리스·메시징·콘텐츠 전송
+        explain: |
+          <p>Standard 워크플로의 task token은 외부 콜백을 기다리는 동안 단계를 유지할 수 있다. 20분 결제 대기를 조회 API 호출 없이 처리하고 Retry·Catch와 보상 작업을 상태 머신에 표현해 직접 조정할 코드를 줄인다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>Step Functions Standard에서 5초 Wait와 결제 상태 조회를 반복하고 최종 실패 분기에 좌석 반환을 연결한다.</td>
+          <td>폴링으로 상태를 추적할 수 있지만 5초 간격은 예약당 분당 한 번인 조회 제한을 넘는다.</td>
+          </tr>
+          <tr>
+          <td>Step Functions Standard의 콜백 작업 제한 시간을 300초로 정하고 시간 초과 Catch에서 좌석을 반환한다.</td>
+          <td>콜백 방식은 적합하지만 제한 시간이 5분이라 정상 승인에 최대 20분 걸리는 예약도 조기 실패·반환할 수 있다.</td>
+          </tr>
+          <tr>
+          <td>SQS·DynamoDB에 예약 상태와 다음 실행 시각을 저장하고 워커가 콜백·재시도·좌석 반환을 조정한다.</td>
+          <td>요구를 구현할 수 있으나 상태 전이·대기·재시도·콜백 경쟁·보상 조정을 팀이 직접 유지해야 한다. 관리형 워크플로보다 코드 부담이 크다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-10.html">10일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/step-functions/latest/dg/connect-to-resource.html">Step Functions 콜백 패턴</a> · <a href="https://docs.aws.amazon.com/step-functions/latest/dg/concepts-error-handling.html">Retry와 Catch</a>
+          SAA 평가 항목: 2.2</p>
+        quizzes:
+          - q: 여행 예약은 좌석 확보 뒤 외부 결제 승인을 최대 20분 기다린다. 결제사는 완료 시 콜백을 보내며 상태 조회 API는 예약당 분당 한
+              번만 허용한다. 일시 오류는 제한 재시도하고 최종 실패 시 좌석을 반환해야 한다. 예약·결제 API는 멱등하다. 상태
+              보관·재시도 코드를 줄일 구성은?
+            answer: Step Functions Standard의 task token 콜백으로 결제를 기다리고 Retry·Catch에 좌석 반환을
+              연결한다.
+            wrong:
+              - Step Functions Standard에서 5초 Wait와 결제 상태 조회를 반복하고 최종 실패 분기에 좌석
+                반환을 연결한다.
+              - Step Functions Standard의 콜백 작업 제한 시간을 300초로 정하고 시간 초과 Catch에서
+                좌석을 반환한다.
+              - SQS·DynamoDB에 예약 상태와 다음 실행 시각을 저장하고 워커가 콜백·재시도·좌석 반환을 조정한다.
+      - id: Q19-06
+        type: mcq
+        title: Q19-06 · 서버리스·메시징·콘텐츠 전송
+        explain: |
+          <p>부분 배치 응답은 실패한 레코드만 재시도하도록 해 불필요한 성공 작업 반복을 줄인다. 계속 실패하는 메시지는 DLQ로 격리하고 원인 수정과 안전한 재처리 절차를 마련해야 한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>모든 메시지를 보관 기간 끝까지 계속 재시도한다</td>
+          <td>영구 오류의 무한 반복은 정상 처리 자원과 비용을 계속 소모한다.</td>
+          </tr>
+          <tr>
+          <td>배치 크기를 줄이고 실패한 메시지는 별도 DLQ 없이 원래 큐에서 계속 재시도한다</td>
+          <td>배치 축소는 실패 시 함께 반복되는 성공 레코드 수를 줄일 수 있지만 영구 형식 오류를 격리하지 못하므로 두 요구를 함께 충족하는 대응이 아니다.</td>
+          </tr>
+          <tr>
+          <td>항상 성공 응답을 보내 잘못된 메시지까지 제거한다</td>
+          <td>형식 오류도 성공 처리하면 필요한 업무를 수행하지 않고 메시지를 잃는다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-10.html">10일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/lambda/latest/dg/services-sqs-errorhandling.html">AWS 공식 기능 문서</a>
+          SAA 평가 항목: 3.3</p>
+        quizzes:
+          - q: SQS를 읽는 Lambda가 열 개씩 메시지를 처리한다. 한 메시지의 잘못된 형식 때문에 성공한 나머지까지 반복 실행되어 비용이 증가한다.
+              성공 작업 중복을 줄이고 영구 오류를 격리할 조치 두 가지는?
+            answer: 적절한 수신 횟수 뒤 DLQ로 분리하고 알림·수정·재처리를 운영한다
+            wrong:
+              - 모든 메시지를 보관 기간 끝까지 계속 재시도한다
+              - 배치 크기를 줄이고 실패한 메시지는 별도 DLQ 없이 원래 큐에서 계속 재시도한다
+              - 항상 성공 응답을 보내 잘못된 메시지까지 제거한다
+            answers:
+              - 적절한 수신 횟수 뒤 DLQ로 분리하고 알림·수정·재처리를 운영한다
+              - 부분 배치 실패 응답을 활성화하고 실패한 메시지 식별자만 반환한다
+            options:
+              - 모든 메시지를 보관 기간 끝까지 계속 재시도한다
+              - 적절한 수신 횟수 뒤 DLQ로 분리하고 알림·수정·재처리를 운영한다
+              - 배치 크기를 줄이고 실패한 메시지는 별도 DLQ 없이 원래 큐에서 계속 재시도한다
+              - 부분 배치 실패 응답을 활성화하고 실패한 메시지 식별자만 반환한다
+              - 항상 성공 응답을 보내 잘못된 메시지까지 제거한다
+      - id: Q19-07
+        type: mcq
+        title: Q19-07 · 서버리스·메시징·콘텐츠 전송
+        explain: |
+          <p>Reserved concurrency는 함수에 동시 실행 몫을 배정하면서 상한도 정한다. DB를 보호할 수 있으나 처리량 감소에 따른 스로틀링과 대기·재시도도 설계해야 하며 연결 풀 보완도 별도로 검토한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>Lambda 메모리를 최소화하면 최대 동시 실행 수도 자동 제한된다</td>
+          <td>메모리 설정은 CPU·메모리와 실행 비용을 바꾸며 명시적인 동시 실행 제한을 대신하지 않는다.</td>
+          </tr>
+          <tr>
+          <td>API Gateway의 요청률 제한만 적용하고 함수 실행 시간이 길어져도 같은 설정을 유지한다</td>
+          <td>요청률과 동시 실행 수는 다르며 실행 시간이 늘면 같은 요청률에서도 DB 연결을 사용하는 동시 호출이 늘 수 있다.</td>
+          </tr>
+          <tr>
+          <td>Provisioned concurrency만 늘려 DB 연결 수 상한을 정한다</td>
+          <td>Provisioned concurrency는 미리 초기화할 용량이며 함수 전체 실행의 상한과 같은 설정이 아니다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-10.html">10일 차 개념</a> · <a href="/study/lessons/day-07.html">7일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/lambda/latest/dg/configuration-concurrency.html">AWS 공식 기능 문서</a>
+          SAA 평가 항목: 3.3</p>
+        quizzes:
+          - q: 재고 DB의 허용 연결 수가 작다. 트래픽 증가 때 Lambda가 지나치게 확장해 연결 오류가 발생한다. 시작 지연보다 DB 보호가
+              우선이며 함수의 최대 동시 처리량을 제한하고 싶다. 가장 직접적인 설정은?
+            answer: Reserved concurrency로 함수의 동시 실행 상한을 정하고 재시도·적체를 관찰한다
+            wrong:
+              - Lambda 메모리를 최소화하면 최대 동시 실행 수도 자동 제한된다
+              - API Gateway의 요청률 제한만 적용하고 함수 실행 시간이 길어져도 같은 설정을 유지한다
+              - Provisioned concurrency만 늘려 DB 연결 수 상한을 정한다
+      - id: Q19-08
+        type: mcq
+        title: Q19-08 · 서버리스·메시징·콘텐츠 전송
+        explain: |
+          <p>지연 조건을 충족하는 설정은 2048MB와 4096MB다. 요청당 계산 사용량은 각각 2GB×0.2초=0.4GB-초, 4GB×0.16초=0.64GB-초이므로 같은 단위 요금에서는 2048MB가 저렴하다. 가장 빠른 설정과 가장 싼 적합 설정은 다르다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>1024MB 설정으로 배포한다.</td>
+          <td>1GB×0.6초=0.6GB-초이며 지연 600ms가 250ms 목표를 넘는다.</td>
+          </tr>
+          <tr>
+          <td>1536MB 설정으로 배포한다.</td>
+          <td>1.5GB×0.34초=0.51GB-초이며 지연 340ms가 목표를 넘는다.</td>
+          </tr>
+          <tr>
+          <td>4096MB 설정으로 배포한다.</td>
+          <td>160ms로 목표는 충족하지만 0.64GB-초는 2048MB의 0.4GB-초보다 크다. 추가 속도에 더 많은 계산 비용을 사용한다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-10.html">10일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/lambda/latest/dg/configuration-memory.html">Lambda 메모리·CPU 할당</a> · <a href="https://aws.amazon.com/lambda/pricing/">Lambda 계산 요금</a>
+          SAA 평가 항목: 4.2</p>
+        quizzes:
+          - q: 동일 아키텍처의 Lambda를 네 메모리 크기로 시험했다. 각 설정의 과금 실행 시간은 요청마다 각각 1024MB=600ms,
+              1536MB=340ms, 2048MB=200ms, 4096MB=160ms다. 각 설정의 지연도 이 값과 같고 목표는
+              250ms 이하다. 요청 수·정확성·메모리 단위당 요금과 다른 비용은 동일하다. 컴퓨팅 비용이 가장 낮으면서 지연
+              목표를 충족하는 설정은?
+            answer: 2048MB 설정으로 배포한다.
+            wrong:
+              - 1024MB 설정으로 배포한다.
+              - 1536MB 설정으로 배포한다.
+              - 4096MB 설정으로 배포한다.
+      - id: Q19-09
+        type: mcq
+        title: Q19-09 · 서버리스·메시징·콘텐츠 전송
+        explain: |
+          <p>개인화 응답을 경로만으로 공유하면 다른 사용자에게 노출될 수 있다. 해당 경로 캐시를 끄고 원본에 인증 정보를 올바르게 전달하는 것이 단순하고 안전한 초기 대응이며 별도 인증·인가도 유지한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>사용자 식별 쿠키는 키에서 빼고 언어 헤더만 캐시 키에 추가한다</td>
+          <td>언어 구분은 사용자별 개인정보 구분을 제공하지 못하므로 동일 언어 사용자끼리 응답을 공유할 위험이 남는다.</td>
+          </tr>
+          <tr>
+          <td>쿠키를 원본에만 전달하고 경로 기반 공유 캐시는 그대로 둔다</td>
+          <td>원본 전달만으로 공유 캐시 키가 달라지지 않아 이전 사용자 응답을 재사용할 위험이 남는다.</td>
+          </tr>
+          <tr>
+          <td>모든 계정 응답의 TTL을 길게 늘려 원본 인증 부하를 줄인다</td>
+          <td>긴 TTL은 잘못 공유된 개인정보의 노출 시간을 늘린다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-09.html">9일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/controlling-the-cache-key.html">AWS 공식 기능 문서</a>
+          SAA 평가 항목: 1.3</p>
+        quizzes:
+          - q: CloudFront 뒤 계정 API가 로그인 쿠키에 따라 서로 다른 개인정보를 반환한다. 현재 캐시 키는 경로뿐이며 두 사용자가 같은
+              경로를 호출한다. 안전성을 우선해 즉시 적용할 가장 적절한 변경은?
+            answer: 계정 경로의 캐시를 비활성화하고 필요한 인증 정보가 원본에 전달되도록 구성한다
+            wrong:
+              - 사용자 식별 쿠키는 키에서 빼고 언어 헤더만 캐시 키에 추가한다
+              - 쿠키를 원본에만 전달하고 경로 기반 공유 캐시는 그대로 둔다
+              - 모든 계정 응답의 TTL을 길게 늘려 원본 인증 부하를 줄인다
+      - id: Q19-10
+        type: mcq
+        title: Q19-10 · 서버리스·메시징·콘텐츠 전송
+        explain: |
+          <p>구매자 접근은 CloudFront 서명으로 제한하고 원본 우회는 비공개 S3와 OAC·배포 조건 버킷 정책으로 막는다. 사용자 접근과 CloudFront의 원본 접근은 별도 권한 경계이므로 둘 다 구성해야 한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>S3 website endpoint에 OAC를 붙여 같은 비공개 원본 인증을 구현한다</td>
+          <td>website endpoint는 custom origin이며 OAC를 지원하지 않는다.</td>
+          </tr>
+          <tr>
+          <td>OAC가 구매 내역을 검증하므로 CloudFront 사용자 접근 검증은 생략한다</td>
+          <td>OAC는 CloudFront 원본 요청 인증이며 고객 구매 내역을 판단하지 않는다.</td>
+          </tr>
+          <tr>
+          <td>S3를 public read로 두고 CloudFront 캐시 TTL만 짧게 설정한다</td>
+          <td>공개 S3는 CloudFront 사용자 접근 검증을 우회하는 직접 다운로드 경로를 남긴다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-09.html">9일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html">AWS 공식 기능 문서</a>
+          SAA 평가 항목: 1.3</p>
+        quizzes:
+          - q: 유료 강의 영상은 S3에 저장되어 있다. 구매자만 CloudFront에서 재생해야 하고 S3 주소를 알아도 원본을 직접 다운로드할 수
+              없어야 한다. 필요한 조치 두 가지는?
+            answer: CloudFront 서명 URL 또는 서명 쿠키를 구매 권한 확인 후 발급한다
+            wrong:
+              - S3 website endpoint에 OAC를 붙여 같은 비공개 원본 인증을 구현한다
+              - OAC가 구매 내역을 검증하므로 CloudFront 사용자 접근 검증은 생략한다
+              - S3를 public read로 두고 CloudFront 캐시 TTL만 짧게 설정한다
+            answers:
+              - CloudFront 서명 URL 또는 서명 쿠키를 구매 권한 확인 후 발급한다
+              - S3 REST 원본을 비공개로 두고 OAC와 특정 배포를 제한하는 버킷 정책을 구성한다
+            options:
+              - CloudFront 서명 URL 또는 서명 쿠키를 구매 권한 확인 후 발급한다
+              - S3 website endpoint에 OAC를 붙여 같은 비공개 원본 인증을 구현한다
+              - OAC가 구매 내역을 검증하므로 CloudFront 사용자 접근 검증은 생략한다
+              - S3를 public read로 두고 CloudFront 캐시 TTL만 짧게 설정한다
+              - S3 REST 원본을 비공개로 두고 OAC와 특정 배포를 제한하는 버킷 정책을 구성한다
+      - id: Q19-11
+        type: mcq
+        title: Q19-11 · 서버리스·메시징·콘텐츠 전송
+        explain: |
+          <p>Standard accelerator는 고정 진입 IP를 유지하면서 정상 endpoint로 신규 흐름을 유도한다. NLB endpoint group에 리전을 추가해도 고객이 사용하는 accelerator IP는 유지된다. Custom routing과 달리 목적지 매핑·장애 우회를 자체 서버가 조정할 필요가 없다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>Global Accelerator custom routing accelerator에 두 리전 EC2 서브넷과 포트 매핑을 구성한다.</td>
+          <td>Custom routing은 특정 EC2와 포트로 결정적으로 매핑하는 용도다. Endpoint 상태 확인과 정상 대상 자동 failover를 제공하지 않아 목적지 선택·장애 처리 요구를 팀이 추가 구현해야 한다.</td>
+          </tr>
+          <tr>
+          <td>Route 53 latency·상태 확인으로 두 리전 NLB 주소를 응답하고 각 NLB의 EIP를 고객에게 등록한다.</td>
+          <td>지역별 NLB 주소와 상태 기반 DNS 선택은 가능하지만 새 리전 NLB의 주소를 고객 허용 목록에 추가해야 하며 전역 진입 IP 두 개의 지속 사용과 다르다.</td>
+          </tr>
+          <tr>
+          <td>한 리전의 NLB에 고정 EIP 두 개를 두고 그 리전 앱이 다른 리전의 정상 매치 서버로 접수를 중계한다.</td>
+          <td>고정 주소와 자체 중계는 가능하지만 진입 NLB가 놓인 한 리전 전체가 중단되면 다른 리전의 정상 앱으로 접근할 전역 진입 경로가 없다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-09.html">9일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/global-accelerator/latest/dg/introduction-how-it-works.html">Standard와 custom routing 차이</a> · <a href="https://docs.aws.amazon.com/global-accelerator/latest/dg/about-custom-routing-guidelines.html">Custom routing 상태 확인 제한</a>
+          SAA 평가 항목: 3.2</p>
+        quizzes:
+          - q: UDP 매치 접수 서비스를 두 리전의 NLB 뒤에 배치한다. 접수 요청은 어느 정상 리전에서도 처리할 수 있다. 기업 고객은 고정 진입
+              IP 두 개를 허용 목록에 등록하며 향후 리전 추가 때 목록을 바꾸기 어렵다. 서비스는 목적지를 지정하는 자체 매핑
+              서버 없이 정상 리전으로 자동 유도해야 한다. 적절한 구성은?
+            answer: Global Accelerator 표준 가속기에 UDP 리스너와 두 리전 NLB 엔드포인트 그룹을 구성한다.
+            wrong:
+              - Global Accelerator custom routing accelerator에 두 리전 EC2 서브넷과 포트
+                매핑을 구성한다.
+              - Route 53 latency·상태 확인으로 두 리전 NLB 주소를 응답하고 각 NLB의 EIP를 고객에게 등록한다.
+              - 한 리전의 NLB에 고정 EIP 두 개를 두고 그 리전 앱이 다른 리전의 정상 매치 서버로 접수를 중계한다.
+      - id: Q19-12
+        type: mcq
+        title: Q19-12 · 서버리스·메시징·콘텐츠 전송
+        explain: |
+          <p>기존 3600초 캐시가 전환 전에 만료될 시간을 주고 새 응답의 TTL을 60초로 줄여야 한다. DNS는 기존 연결을 옮기지 않으므로 30초 무응답 감지 후 재연결도 필요하다. 주어진 TTL 준수·재조회 조건에서 두 경계를 함께 줄여 5분 목표에 대응한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>전환 2시간 전부터 weighted 레코드로 새 리전 비중을 늘리고 TTL 3600초와 30초 heartbeat를 적용한다.</td>
+          <td>Weighted는 새 DNS 응답의 상대 비중을 조정한다. 전환 직전 구 리전 응답을 받은 클라이언트에는 3600초 캐시가 남을 수 있어 5분 목표를 보장하지 못한다.</td>
+          </tr>
+          <tr>
+          <td>전환 시점에 TTL을 60초로 바꾸고 클라이언트에 30초 무응답 후 재연결하는 heartbeat를 적용한다.</td>
+          <td>전환 직전에 TTL을 낮춰도 직전 캐시의 3600초 유효 시간이 소급 변경되지 않는다. Heartbeat가 끊긴 연결을 감지해도 재조회가 옛 캐시를 사용할 수 있다.</td>
+          </tr>
+          <tr>
+          <td>전환 2시간 전에 TTL을 60초로 낮추고 클라이언트의 WebSocket 대기 제한을 24시간으로 설정한다.</td>
+          <td>DNS 전환은 준비되지만 기존 연결이 응답 중단을 24시간 기다리면 5분 재연결 목표를 충족하지 못한다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-09.html">9일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/best-practices-dns.html">Route 53 DNS 변경과 TTL 권장</a> · <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resource-record-sets-values-basic.html">Route 53 TTL과 변경 준비</a> · <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover.html">DNS 장애 조치</a>
+          SAA 평가 항목: 2.1</p>
+        quizzes:
+          - q: 회사는 내일 09시에 두 리전 웹 서비스의 계획 전환을 한다. 현재 Route 53 레코드 TTL은 3600초이고 기존 WebSocket
+              연결은 최대 24시간 유지된다. 회사 클라이언트는 DNS TTL을 준수하며 재연결할 때 DNS를 다시 조회한다. 전환
+              때 구 리전 응답이 끊겨도 5분 안에 새 리전으로 재연결해야 한다. 적절한 사전 설정은?
+            answer: 전환 2시간 전에 TTL을 60초로 낮추고 클라이언트에 30초 무응답 후 재연결하는 heartbeat를 적용한다.
+            wrong:
+              - 전환 2시간 전부터 weighted 레코드로 새 리전 비중을 늘리고 TTL 3600초와 30초 heartbeat를
+                적용한다.
+              - 전환 시점에 TTL을 60초로 바꾸고 클라이언트에 30초 무응답 후 재연결하는 heartbeat를 적용한다.
+              - 전환 2시간 전에 TTL을 60초로 낮추고 클라이언트의 WebSocket 대기 제한을 24시간으로 설정한다.
+      - id: Q19-13
+        type: mcq
+        title: Q19-13 · 서버리스·메시징·콘텐츠 전송
+        explain: |
+          <p>원본 응답에 영향을 주지 않는 추적 값은 캐시 키에서 빼 같은 이미지를 재사용할 수 있다. 원본 전달 정책은 캐시 키와 별도로 검토하며 실제 응답 차이를 만드는 값은 보존해야 한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>TTL을 0으로 정해 매번 원본의 같은 이미지를 받는다</td>
+          <td>매번 원본을 읽으면 반복 요청과 전송량을 줄이려는 목표에 반한다.</td>
+          </tr>
+          <tr>
+          <td>원본 인스턴스만 더 크게 바꾸고 캐시 키는 유지한다</td>
+          <td>원본 사양 증가는 잘못 분할된 캐시 키와 불필요한 원본 요청의 원인을 해결하지 않는다.</td>
+          </tr>
+          <tr>
+          <td>모든 쿠키까지 캐시 키에 추가해 이미지 사본을 더 많이 구분한다</td>
+          <td>불필요한 쿠키는 키 종류를 더 늘려 동일 객체의 재사용을 낮출 수 있다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-09.html">9일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/controlling-the-cache-key.html">AWS 공식 기능 문서</a>
+          SAA 평가 항목: 4.4</p>
+        quizzes:
+          - q: CloudFront로 배포하는 동일 이미지에 광고 추적 쿼리 값이 사용자마다 달라진다. 원본은 이 값을 무시하지만 캐시 키에는 전부
+              포함되어 적중률이 낮다. 원본 전송과 요청 비용을 줄이는 방법은?
+            answer: 추적 값을 캐시 키에서 빼고 원본 전달 여부를 따로 정한다
+            wrong:
+              - TTL을 0으로 정해 매번 원본의 같은 이미지를 받는다
+              - 원본 인스턴스만 더 크게 바꾸고 캐시 키는 유지한다
+              - 모든 쿠키까지 캐시 키에 추가해 이미지 사본을 더 많이 구분한다
+      - id: Q19-14
+        type: mcq
+        title: Q19-14 · 서버리스·메시징·콘텐츠 전송
+        explain: |
+          <p>생산자가 같은 주문의 이벤트를 생성 순서로 전송한다는 전제에서 FIFO 그룹별 전송 순서 보장을 활용할 수 있다. 주문별 그룹은 주문 간 병렬성을 허용하지만 외부 결제까지 원자화하지 않으므로 업무 멱등성도 필요하다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>FIFO를 쓰므로 외부 결제의 멱등성 기록을 제거한다</td>
+          <td>소비자 성공 뒤 삭제 실패 등 재시도가 있어 외부 결제의 중복 방지는 여전히 필요하다.</td>
+          </tr>
+          <tr>
+          <td>Standard 큐의 도착 순서를 주문별 확정 순서로 간주한다</td>
+          <td>Standard는 엄격한 주문별 순서를 보장하지 않는다.</td>
+          </tr>
+          <tr>
+          <td>모든 주문에 같은 FIFO MessageGroupId를 써서 주문 간 병렬성도 최대화한다</td>
+          <td>같은 그룹 하나는 모든 주문을 직렬화하므로 주문 간 병렬성을 최대화하지 못한다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-10.html">10일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/FIFO-queues-understanding-logic.html">AWS 공식 기능 문서</a>
+          SAA 평가 항목: 3.5</p>
+        quizzes:
+          - q: 생산자는 같은 주문의 상태 변경 이벤트를 업무 생성 순서대로 하나씩 SQS에 전송한다. 소비자도 주문별 큐 도착 순서를 유지해야 하지만
+              서로 다른 주문은 병렬 처리하고 싶다. 재전달에도 외부 결제가 중복되면 안 된다. 적절한 두 가지 선택은?
+            answer: 결제 요청 식별자로 중복 효과를 막고 성공 후 메시지를 안전하게 삭제한다
+            wrong:
+              - FIFO를 쓰므로 외부 결제의 멱등성 기록을 제거한다
+              - Standard 큐의 도착 순서를 주문별 확정 순서로 간주한다
+              - 모든 주문에 같은 FIFO MessageGroupId를 써서 주문 간 병렬성도 최대화한다
+            answers:
+              - 결제 요청 식별자로 중복 효과를 막고 성공 후 메시지를 안전하게 삭제한다
+              - 주문 ID를 FIFO MessageGroupId로 사용해 같은 주문의 순서를 유지한다
+            options:
+              - FIFO를 쓰므로 외부 결제의 멱등성 기록을 제거한다
+              - 결제 요청 식별자로 중복 효과를 막고 성공 후 메시지를 안전하게 삭제한다
+              - Standard 큐의 도착 순서를 주문별 확정 순서로 간주한다
+              - 모든 주문에 같은 FIFO MessageGroupId를 써서 주문 간 병렬성도 최대화한다
+              - 주문 ID를 FIFO MessageGroupId로 사용해 같은 주문의 순서를 유지한다
+      - id: Q19-15
+        type: mcq
+        title: Q19-15 · 서버리스·메시징·콘텐츠 전송
+        explain: |
+          <p>기존 RabbitMQ 프로토콜과 API 의존을 유지하며 운영 부담을 줄이려면 관리형 브로커인 Amazon MQ를 먼저 검토한다. 무조건 완전 호환으로 가정하지 않고 버전·기능·용량·고가용성을 확인한다.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>오답</th>
+          <th>틀린 이유</th>
+          </tr>
+          </thead>
+          <tbody><tr>
+          <td>SQS로 이전하면서 AMQP 호출과 기존 브로커 확인 응답 로직을 AWS API에 맞춰 재작성한다</td>
+          <td>SQS도 대안이지만 API와 전달 모델 재작성이 필요하므로 단기간에 큰 변경을 피하려는 조건에서는 관리형 호환 브로커보다 부담이 크다.</td>
+          </tr>
+          <tr>
+          <td>EventBridge로 이전하고 기존 소비자의 브로커 연결을 이벤트 대상 호출 방식으로 바꾼다</td>
+          <td>이벤트 버스 방식은 기존 브로커 세션·소비·확인 응답 계약의 변경이 필요하므로 최소 재작성 요구에 맞지 않는다.</td>
+          </tr>
+          <tr>
+          <td>SNS와 SQS로 새 fanout 구조를 만들고 기존 RabbitMQ 라우팅·확인 응답을 새 모델에 맞춰 변경한다</td>
+          <td>신규 구조는 가능하지만 기존 RabbitMQ 기능과 클라이언트 재작성 범위가 커질 수 있어 호환성을 유지하며 운영 부담을 줄이려는 우선 조건과 맞지 않는다.</td>
+          </tr>
+          </tbody></table>
+          <p>관련 개념: <a href="/study/lessons/day-10.html">10일 차 개념</a>
+          공식 근거: <a href="https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/welcome.html">AWS 공식 기능 문서</a>
+          SAA 평가 항목: 3.5</p>
+        quizzes:
+          - q: 기존 결제 앱은 RabbitMQ의 AMQP 연동과 브로커 동작에 의존한다. 팀은 서버 패치 부담을 줄이되 단기간에 메시징 API를 크게
+              재작성할 수 없다. 기능 호환성 검토와 함께 우선 고려할 선택은?
+            answer: Amazon MQ for RabbitMQ의 엔진 호환성과 고가용성·용량 구성을 검토한다
+            wrong:
+              - SQS로 이전하면서 AMQP 호출과 기존 브로커 확인 응답 로직을 AWS API에 맞춰 재작성한다
+              - EventBridge로 이전하고 기존 소비자의 브로커 연결을 이벤트 대상 호출 방식으로 바꾼다
+              - SNS와 SQS로 새 fanout 구조를 만들고 기존 RabbitMQ 라우팅·확인 응답을 새 모델에 맞춰 변경한다

@@ -2,7 +2,7 @@ import { defineConfig } from 'vitest/config';
 
 // GitHub Pages 주소가 https://ckdwns9121.github.io/duckgu-quiz/ 라서 배포 빌드만 하위 경로를 쓴다
 export default defineConfig(({ command, isPreview }) => ({
-  base: command === 'build' || isPreview ? '/duckgu-quiz/' : '/',
+  base: process.env.VERCEL ? '/' : command === 'build' || isPreview ? '/duckgu-quiz/' : '/',
   esbuild: {
     jsxFactory: 'createVNode',
     jsxFragment: 'Fragment',

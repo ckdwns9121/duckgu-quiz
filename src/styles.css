@@ -296,3 +296,11 @@ svg .hollow{fill:#fff} svg .solid{fill:currentColor}
 @media (max-width: 480px) {
   .lesson-body pre{font-size:12.5px;white-space:pre-wrap;overflow-wrap:anywhere}
 }
+/* 긴 SAA 시나리오도 작은 화면에서 선택지 문장을 자르지 않는다. */
+.daily-quiz { background:#fff6df;border:2px solid #f1ca67;border-radius:18px;padding:18px;display:grid;gap:10px;margin:12px 0; }
+.daily-quiz p { margin:0; }
+.daily-actions { display:flex;gap:8px;flex-wrap:wrap; }
+.choice { min-width:0;overflow-wrap:anywhere; }
+.explain table { display:block;overflow-x:auto;max-width:100%; }
+.explain td,.explain th { padding:8px;vertical-align:top; }
+.explain a { color:var(--blue,#1769bb);text-decoration:underline; }

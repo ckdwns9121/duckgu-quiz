@@ -71,10 +71,10 @@ const Choices = ({ q, session }: { q: Extract<Question, { type: 'choice' }>; ses
     <div className="choices">
       {q.options.map((option, i) => {
         const state = graded
-          ? option === q.correct ? ' right' : i === session.selected ? ' wrong' : ''
-          : i === session.selected ? ' sel' : '';
+          ? (q.correctAnswers ?? [q.correct]).includes(option) ? ' right' : session.selectedChoices.includes(i) ? ' wrong' : ''
+          : session.selectedChoices.includes(i) ? ' sel' : '';
         return (
-          <button className={`choice${state}`} type="button" disabled={graded} onClick={() => selectChoice(i)}>
+          <button className={`choice${state}`} type="button" aria-pressed={session.selectedChoices.includes(i)} disabled={graded} onClick={() => selectChoice(i)}>
             <span className="k">{i + 1}</span><span>{option}</span>
           </button>
         );

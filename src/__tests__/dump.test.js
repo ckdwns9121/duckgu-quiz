@@ -17,7 +17,7 @@ function describeQ(q) {
   const code = c.pre ? `\n  코드: ${text(c.pre).slice(0, 200)}` : '';
   if (q.type === 'choice') {
     const prompt = text(q.promptHtml ?? q.prompt);
-    return `${head}${prompt ? `\n  질문: ${prompt}` : ''}${code}\n  보기: ${q.options.map((o) => (o === q.correct ? `✔ ${o}` : o)).join(' | ')}`;
+    return `${head}${prompt ? `\n  질문: ${prompt}` : ''}${code}\n  보기: ${q.options.map((o) => ((q.correctAnswers ?? [q.correct]).includes(o) ? `✔ ${o}` : o)).join(' | ')}`;
   }
   if (q.type === 'recall') return head;
   return `${head}${code}\n  정답: ${q.correct}\n  조각: ${q.tiles.join(' | ')}`;

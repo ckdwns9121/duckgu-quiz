@@ -3,6 +3,7 @@ import type { Course } from '../domain/types';
 import { afterRender, createVNode } from '../lib';
 import { InstallBanner, IosInstallGuide } from '../components/InstallBanner';
 import { TopBar } from '../components/TopBar';
+import { DailyQuiz } from '../components/DailyQuiz';
 import { router } from '../router';
 import { progressStore } from '../stores/progressStore';
 import { resetHomeScroll } from './CoursePage';
@@ -44,6 +45,7 @@ export const CoursesPage = () => {
       <TopBar />
       <main className="col courses">
         <InstallBanner />
+        <DailyQuiz />
         <h2 className="courses-h">어떤 코스를 풀까요?</h2>
         {COURSES.map((course) => <CourseCard course={course} done={progress.done} last={course.id === progress.course} />)}
         <h3 className="courses-sub">준비 중</h3>

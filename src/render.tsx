@@ -6,6 +6,8 @@ import { IntroPage } from './pages/IntroPage';
 import { LessonPage } from './pages/LessonPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { ResultPage } from './pages/ResultPage';
+import { DailyPage } from './pages/DailyPage';
+import { pushStore } from './services/push';
 import { router } from './router';
 import { lessonStore } from './stores/lessonStore';
 import { installStore } from './stores/installStore';
@@ -17,6 +19,7 @@ router.addRoute('/intro', IntroPage);
 router.addRoute('/lesson/:id', LessonPage);
 router.addRoute('/practice', LessonPage);
 router.addRoute('/result', ResultPage);
+router.addRoute('/daily', DailyPage);
 router.addRoute('*', NotFoundPage);
 
 let lastPath: string | undefined;
@@ -42,4 +45,5 @@ export function initRender() {
   lessonStore.subscribe(render);
   progressStore.subscribe(render);
   installStore.subscribe(render);
+  pushStore.subscribe(render);
 }

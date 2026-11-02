@@ -1,0 +1,79 @@
+<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>EC2 성능과 수명 주기·구매 약정</title><style>body{font:17px/1.8 system-ui,sans-serif;max-width:850px;margin:auto;padding:24px;color:#243047}img,svg{max-width:100%;height:auto}table{border-collapse:collapse;display:block;overflow:auto}td,th{border:1px solid #ccd3df;padding:8px}pre{overflow:auto;background:#eef1f5;padding:16px}a{color:#1769bb}</style><body><a href="/course/aws-saa">← AWS-SAA 퀴즈</a><h1 id="ec2-성능과-수명-주기구매-약정">EC2 성능과 수명 주기·구매 약정</h1>
+<p><a href="../day-02.html">2일 차 본문</a> · <a href="../day-03.html">3일 차 저장소</a></p>
+<h2 id="ami와-인스턴스-유형의-조합">AMI와 인스턴스 유형의 조합</h2>
+<p>AMI(Amazon Machine Image)는 OS·부팅용 데이터·소프트웨어 구성을 가진 실행 템플릿이다. 인스턴스 유형은 vCPU·메모리·네트워크·EBS·로컬 디스크 성능의 조합이다. 같은 AMI라도 유형을 바꾸면 성능이 달라지고 같은 유형이라도 AMI에 설치된 프로그램과 설정은 다를 수 있다. AMI는 리전 단위이므로 다른 리전에서는 복사하거나 해당 리전 이미지를 선택한다. AMI에 사용자 데이터·별도 데이터 볼륨의 최신 데이터가 모두 자동 포함되는 것으로 생각하지 않는다.</p>
+<p>HVM은 하드웨어 가상화 방식, x86_64·arm64는 CPU 명령어 아키텍처다. HVM이라고 Arm·x86 프로그램을 서로 그대로 실행하는 것은 아니다. Graviton 계열은 Arm용 AMI와 라이브러리·상용 모듈 호환성을 확인한다. Nitro 지원 인스턴스는 네트워크 ENA·EBS NVMe 드라이버와 OS 지원도 맞춰야 한다. CPU만 보고 유형을 고르면 부팅 실패나 드라이버 문제를 놓칠 수 있다.</p>
+<p>c 계열은 CPU 중심, r 계열은 메모리 중심, m 계열은 균형형, GPU 계열은 가속기를 쓰는 작업의 후보이다. 이는 선택의 출발점이며 동일 입력의 처리 시간과 작업당 비용으로 검증한다. 사례: CPU 95%, RAM 20%인 x86 상용 배치가 25분 내 끝나야 한다. c형 20분·비용 10, m형 23분·비용 16, Arm형 18분·비용 8이라도 Arm 모듈 출시가 3개월 뒤라면 당장 사용할 후보가 아니다. 현재 모듈을 지원하는 c형이 요구를 만족하는 최소 비용이다.</p>
+<p>출처: <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html">AMI</a>, <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ComponentsAMIs.html">가상화 유형</a>, <a href="https://docs.aws.amazon.com/ec2/latest/instancetypes/instance-types.html">인스턴스 유형</a>, <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/migrating-latest-types.html">Nitro 요구사항</a>.</p>
+<h2 id="cpu-크레딧과-전체-io-경로">CPU 크레딧과 전체 I/O 경로</h2>
+<p>T 계열은 baseline이라는 지속 CPU 기준을 두고 여유 시간에 크레딧을 적립해 그 이상의 짧은 부하에 쓴다. 1크레딧은 vCPU 한 개를 100%로 1분 쓰는 양이다. 2 vCPU가 50%로 10분 실행하면 소비량은 2×0.5×10=10크레딧이며 해당 시간의 적립도 함께 계산한다. Standard에서 잔액이 없으면 baseline으로 제한되고 Unlimited에서는 평균 사용이 적립량을 넘는 조건에서 잉여 크레딧 요금이 발생한다. 크레딧은 CPU이며 네트워크·EBS 성능을 자동으로 늘리는 화폐가 아니다.</p>
+<p>종일 CPU가 높은 서버에는 T를 큰 약정으로 할인하기 전에 지속 성능 계열의 처리량·비용을 비교한다. CPUCreditBalance, CPUCreditUsage와 Unlimited의 surplus 지표를 함께 본다. 잠깐 CPU가 올라간다는 이유만으로 Unlimited의 추가 요금이 매번 즉시 발생한다고 단정하지 않는다.</p>
+<p><img src="../../assets/deep-dive/day-02/performance-path.svg" alt="애플리케이션의 I/O가 인스턴스와 볼륨 한도를 함께 통과하는 구조"></p>
+<p>IOPS는 초당 I/O 개수, 처리량은 초당 바이트 수, 지연은 I/O 한 번의 대기 시간이다. 16KiB I/O가 초당 10,000회면 약 156.25MiB/s다. 볼륨 12,000 IOPS·250MiB/s와 인스턴스 16,000 IOPS·1,000MiB/s라면 두 한도 모두 수치상 통과한다. 반대로 인스턴스 한도가 8,000 IOPS이면 볼륨을 20,000으로 올려도 해결되지 않는다. 여러 EBS가 같은 인스턴스의 총 한도를 공유한다. CPU가 낮은데 DB가 느리면 디스크 큐·지연·IOPS, EBS 대역폭을 조사하고 네트워크 전송 병목과도 구별한다.</p>
+<p>출처: <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/burstable-credits-baseline-concepts.html">CPU 크레딧</a>, <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/burstable-performance-instances-unlimited-mode.html">Unlimited</a>, <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-optimized.html">EBS 최적화</a>.</p>
+<h2 id="중지최대-절전종료와-데이터">중지·최대 절전·종료와 데이터</h2>
+<table>
+<thead>
+<tr>
+<th>상태 변경</th>
+<th>RAM</th>
+<th>EBS</th>
+<th>인스턴스 스토어</th>
+<th>주소·비용</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>재부팅</td>
+<td>다시 초기화</td>
+<td>유지</td>
+<td>유지</td>
+<td>보통 기존 주소 유지, 실행 과금 지속</td>
+</tr>
+<tr>
+<td>중지 후 시작</td>
+<td>사라짐</td>
+<td>유지</td>
+<td>사라짐</td>
+<td>자동 공인 IPv4는 바뀔 수 있음</td>
+</tr>
+<tr>
+<td>최대 절전 후 재개</td>
+<td>지원 조건에서 EBS에 저장 후 복원</td>
+<td>유지·RAM 저장 공간 필요</td>
+<td>사라짐</td>
+<td>stopped 상태 컴퓨팅 중지, 저장 비용 유지</td>
+</tr>
+<tr>
+<td>종료</td>
+<td>사라짐</td>
+<td>DeleteOnTermination에 따름</td>
+<td>사라짐</td>
+<td>인스턴스 자체를 다시 시작할 수 없음</td>
+</tr>
+</tbody></table>
+<p>EBS는 네트워크 블록 장치이므로 인스턴스와 별개 수명 주기를 가진다. 루트 EBS는 기본 종료 시 삭제되는 경우가 많고 데이터 볼륨도 실제 플래그를 확인해야 한다. 인스턴스 스토어는 호스트 로컬 임시 디스크라 백업 없이 영구 원본을 두지 않는다. 중지 상태에 계산 비용이 멈춰도 프로비저닝한 EBS 용량, 스냅샷, 약정, 공인 IPv4 등 비용은 남는다. 최대 절전은 RAM을 쓰는 stopping 구간 동안 과금되는 점도 일반 중지와 다르다.</p>
+<p>사례: 낮에만 쓰는 개발 서버는 RAM 복구가 필요 없으면 밤에 중지한다. 외부 허용 목록이 고정 IPv4를 요구하면 Elastic IP(EIP)를 연결한다. EIP는 계정에 할당하는 고정 공인 IPv4이므로 중지·시작 후 다시 사용할 수 있지만 주소 자체의 과금이 남는다. 자동 할당 공인 IP를 문자열로 적어 두는 것만으로는 다음 시작의 고정 주소가 되지 않는다. RAM의 긴 계산 상태까지 복구해야 한다면 지원되는 최대 절전을 검토한다.</p>
+<p>최대 절전은 EBS 기반·지원 OS/인스턴스·암호화된 충분한 루트 볼륨·미리 활성화한 구성 등 조건이 필요하다. 모든 인스턴스에서 중지 메뉴 대신 임의로 켤 수 있는 기능이 아니다. 장기 최대 절전의 지원 기간도 확인한다. 종료는 RAM 보존이나 다음 날 재개 요구의 대안이 아니다.</p>
+<p>출처: <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-lifecycle.html">상태 수명 주기</a>, <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/hibernating-prerequisites.html">최대 절전 조건</a>, <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html">EIP</a>, <a href="https://aws.amazon.com/vpc/pricing/">공인 IPv4 가격</a>.</p>
+<h2 id="할인과-실행-용량의-독립성">할인과 실행 용량의 독립성</h2>
+<p><img src="../../assets/deep-dive/day-02/discount-capacity.svg" alt="할인 약정과 특정 AZ의 용량 확보를 별도로 고르는 구조"></p>
+<p>온디맨드는 장기 사용 약정 없이 실행한 사용량을 지불한다. 시작 요청의 용량이 언제나 보장되는 것은 아니다. On-Demand Capacity Reservation은 특정 AZ·유형·플랫폼·테넌시 등 일치 조건의 실행 용량을 확보한다. 계정 한도와 subnet IP도 따로 충분해야 한다. 유휴 예약도 과금되므로 사용 중인 예약과 미사용 용량을 함께 본다.</p>
+<p>Savings Plans는 1년 또는 3년의 <strong>시간당 금액</strong> 약정이다. Compute Savings Plans는 적격 EC2의 패밀리·크기·리전 변화와 Fargate·Lambda 사용에 폭넓게 적용된다. EC2 Instance Savings Plans는 지정 패밀리·리전으로 더 좁다. 어느 상품도 그 자체로 AZ 용량을 보장하지 않는다. 필요한 용량 예약과 할인을 조합할 수 있지만 같은 사용을 두 번 할인하는 것은 아니다.</p>
+<p>가상 견적에서 적정 사양의 기본 부하가 매시간 약정 요율로 1.20을 소비하고 하루 두 시간 추가 배치가 있다면 24시간 기본 1.20 범위부터 약정한다. 피크를 하루 종일 약정하면 유휴 시간도 지불한다. 한 시간 약정 1.20 중 0.60만 소비해도 1.20을 지불하고 남은 0.60은 다음 시간으로 이월되지 않는다. 다음 시간 초과 사용은 별도 요율로 계산한다. 온디맨드 금액을 약정 요율 금액으로 착각해 그대로 약정하지 않는다.</p>
+<p>RI(Reserved Instance)는 일정 속성의 EC2 사용에 적용되는 할인 약정이다. Regional RI는 용량 예약이 없고 AZ 이동에 유연하다. 지원되는 Linux/UNIX·기본 테넌시의 같은 패밀리에는 크기 유연성도 있다. 정규화 단위에서 large=4, xlarge=8이므로 large 4대와 xlarge 2대는 모두 16이다. 같은 리전·패밀리의 적격 사용이면 할인량을 이어 쓸 수 있다. Windows, 다른 테넌시·플랫폼·패밀리까지 무조건 크기 유연성이 있는 것은 아니다. Zonal RI는 특정 AZ의 일치하는 조건에서 용량 예약을 포함하지만 같은 방식의 크기 유연성은 없다.</p>
+<p>사례: DR을 AZ A에서 B로 옮기면 A의 용량 예약이 자동 이동하지 않는다. B의 조건에 맞는 예약과 실제 실행 가능성을 확인한 뒤 A의 미사용 예약을 취소한다. Compute Savings Plans의 할인 유연성과 용량 예약의 AZ 경계는 별개다. “Savings Plans를 샀으니 부족 용량이 해결된다”는 추론은 실패한다.</p>
+<p>출처: <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-purchasing-options.html">구매 옵션</a>, <a href="https://docs.aws.amazon.com/savingsplans/latest/userguide/plan-types.html">Savings Plans 종류</a>, <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-capacity-reservations.html">용량 예약</a>, <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/apply_ri.html">RI 할인 적용</a>, <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/reserved-instances-scope.html">RI 범위</a>.</p>
+<h2 id="spot-중단과-용량-풀">Spot 중단과 용량 풀</h2>
+<p>Spot은 남는 EC2 용량을 할인받지만 AWS가 회수할 수 있다. 유형과 AZ 조합이 다르면 서로 다른 용량 풀이므로 한 풀에만 집중하면 같은 용량 부족에 영향을 받기 쉽다. 실행 바이너리가 호환되는 여러 유형·AZ를 사용하고 결과·체크포인트를 S3에 저장한다. 배치 큐의 파일 단위를 재실행 가능하게 설계하면 중단의 손실을 줄일 수 있다.</p>
+<p>capacity-optimized는 풍부한 가용 용량을 우선하고 price-capacity-optimized는 용량과 가격을 함께 고려한다. lowest-price만 고르면 재처리로 총비용이 오를 수 있다. ASG의 Capacity Rebalancing은 rebalance recommendation을 받으면 교체를 일찍 시도하지만 새 용량 확보나 무중단을 보장하지 않는다. 중단 알림은 일반적으로 2분이지만 최대 절전은 즉시 시작될 수 있고 알림도 최선 노력이다. 알림 때 처음부터 거대한 결과를 저장하려 하기보다 주기적으로 체크포인트를 남긴다.</p>
+<p>마감이 유연한 대량 이미지와 회수로 지연되면 안 되는 긴급 이미지는 큐·구매 방식을 나눈다. 전자는 Spot 재시도, 후자는 온디맨드 등 중단 회수 없는 실행이 후보이다. 매달 일주일만 쓰는 배치를 최대량으로 3년 약정하면 나머지 기간의 미사용이 할인 효과를 삼킬 수 있다.</p>
+<p>출처: <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/how-spot-instances-work.html">Spot 동작</a>, <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/allocation-strategies.html">Spot 할당 전략</a>, <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-capacity-rebalancing.html">Capacity Rebalancing</a>.</p>
+<h2 id="배치-그룹과-dedicated-host">배치 그룹과 Dedicated Host</h2>
+<p>Cluster placement group은 한 AZ에서 노드를 가까이 배치해 긴밀한 노드 간 통신을 돕는다. 같은 AZ 장애를 공유하므로 재실행 가능한 HPC에 어울린다. Spread는 소수 중요 인스턴스를 서로 다른 하드웨어에 분산하고, Partition은 큰 분산 시스템을 파티션별 하드웨어 그룹으로 분리한다. 장애 분산 전략이 낮은 노드 간 지연을 자동 보장하는 것은 아니다. ENA, 지원 유형과 EFA 같은 기능도 워크로드·드라이버에 맞춰 확인한다.</p>
+<p>Dedicated Instance는 다른 고객과 호스트를 공유하지 않는 격리이지만 물리 소켓·코어 식별과 배치 통제를 모두 제공하는 Dedicated Host와 다르다. Host는 BYOL이 특정 물리 서버에 묶이는 계약의 후보이다. 신규 실행의 <code>HostId</code>는 대상 호스트, host affinity는 중지 후 같은 호스트로 돌아갈 관계, auto-placement는 HostId를 지정하지 않은 실행을 자동으로 받을지 결정한다. 등록한 두 호스트만 써야 한다면 HostId를 지정하고 affinity를 host로 두며 해당 호스트 auto-placement를 끈다. 여유 용량·호스트 장애·라이선스 계약 조건은 별도 충족해야 한다.</p>
+<p>출처: <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/placement-groups.html">배치 그룹</a>, <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/dedicated-hosts-understanding.html">호스트 배치·affinity</a>.</p>
+<h2 id="imdsv2와-자격-증명의-경계">IMDSv2와 자격 증명의 경계</h2>
+<p>IMDS는 인스턴스 내부에서 메타데이터와 역할 임시 자격 증명을 가져오는 서비스다. IMDSv2는 먼저 PUT으로 메타데이터 세션 토큰을 얻고 후속 요청 헤더에 그 토큰을 넣는다. 이 토큰은 AWS API에 서명하는 STS SessionToken과 다른 토큰이다. IMDSv2 필수 설정은 일부 SSRF 경로를 줄이지만 앱의 모든 취약점이나 유출된 AWS 키의 외부 사용을 막는 만능 통제는 아니다. 프로파일과 SDK 제공자의 동작은 <a href="day-01.html#ec2-%EC%97%AD%ED%95%A0%EA%B3%BC-sdk-%EC%9E%90%EA%B2%A9-%EC%A6%9D%EB%AA%85-%EC%A0%9C%EA%B3%B5%EC%9E%90">1일 차 심화</a>에서 이어진다.</p>
+<p>출처: <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-service.html">IMDSv2 동작</a>.</p>
+<p>공식 자료 확인일: 2026-11-02. Host affinity·정규화 세부는 구성 학습 보충이며 실제 출제 빈도를 보장하지 않는다.</p>
+</body></html>

@@ -13,7 +13,7 @@ const PRAISE = ['정답이에요!', '좋아요!', '완벽해요!', '잘했어요
 export const FeedbackSheet = ({ session }: { session: LessonSession }) => {
   const fb = session.feedback;
   const q = fb?.question;
-  const correct = q && q.type !== 'recall' ? q.correct : '';
+  const correct = q && q.type !== 'recall' ? q.type === 'choice' && q.correctAnswers ? q.correctAnswers.join(' / ') : q.correct : '';
   const title = fb ? (fb.ok ? PRAISE[session.solved % PRAISE.length] : '아쉬워요') : '';
   return (
     <div>
@@ -26,7 +26,7 @@ export const FeedbackSheet = ({ session }: { session: LessonSession }) => {
           </div>
           {fb?.ok && session.combo >= 2 && <span className="combo"><FireIcon />{session.combo}연속 정답!</span>}
           {fb && !fb.ok && <p className="correct">정답: <code>{correct}</code></p>}
-          <div className="explain" innerHTML={q ? q.card.kind === 'term' ? termExplain(q.card.parts) : q.card.explain : ''} />
+          <div className="explain" innerHTML={q ? (q.card.kind === 'term' ? termExplain(q.card.parts) : q.card.explain).replaceAll('href="/study/', `href="${import.meta.env.BASE_URL}study/`) : ''} />
           <button className={`btn${fb && !fb.ok ? ' red' : ''}`} id="continue-btn" type="button" onClick={continueLesson}>계속</button>
         </div>
       </div>

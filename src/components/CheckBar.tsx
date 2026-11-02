@@ -20,7 +20,7 @@ export const CheckBar = ({ q, session }: { q: Question; session: LessonSession }
     );
   }
   const ready =
-    q.type === 'choice' ? session.selected !== null
+    q.type === 'choice' ? session.selectedChoices.length === (q.correctAnswers?.length ?? 1)
       : q.type === 'build' || usesTiles() ? session.picked.length > 0
         : session.typed.trim() !== '';
   return (

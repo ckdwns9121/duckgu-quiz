@@ -11,6 +11,10 @@
 
 ### [👉 지금 풀어 보기](https://ckdwns9121.github.io/duckgu-quiz/)
 
+### [AWS-SAA 320문제 · 매일 아침 퀴즈](https://duckgu-quiz.vercel.app/course/aws-saa)
+
+AWS-SAA 창작 320문제와 기본·심화 공부자료 28편을 추가했어요. 매일 오전 8시쯤 퀴즈 알림을 받을 수 있어요. 앱에서 **아침 알림 켜기**를 누르세요. 아이폰은 먼저 홈 화면에 추가해야 해요. [알림 설정·운영 방법](docs/aws-saa.md)
+
 <img src="docs/screenshots/18-courses.png" width="240" alt="코스 고르기"> <img src="docs/screenshots/02-home.png" width="240" alt="레슨 지도"> <img src="docs/screenshots/06-result.png" width="240" alt="레슨 완료 화면">
 
 </div>

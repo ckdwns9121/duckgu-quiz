@@ -1,0 +1,88 @@
+<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>암호 키·회전·탐지 정책의 구성</title><style>body{font:17px/1.8 system-ui,sans-serif;max-width:850px;margin:auto;padding:24px;color:#243047}img,svg{max-width:100%;height:auto}table{border-collapse:collapse;display:block;overflow:auto}td,th{border:1px solid #ccd3df;padding:8px}pre{overflow:auto;background:#eef1f5;padding:16px}a{color:#1769bb}</style><body><a href="/course/aws-saa">← AWS-SAA 퀴즈</a><h1 id="암호-키회전탐지-정책의-구성">암호 키·회전·탐지 정책의 구성</h1>
+<p><a href="../day-11.html">11일 차 본문</a></p>
+<h2 id="데이터-키의-생성과-교차-계정-권한">데이터 키의 생성과 교차 계정 권한</h2>
+<p>GenerateDataKey는 평문 데이터 키와 KMS 키로 감싼 암호화 데이터 키를 함께 반환한다. 앱은 평문 키로 파일을 로컬 암호화하고 평문 키를 메모리에서 지운 뒤 암호화 데이터 키·알고리즘·필요 메타데이터를 암호문 옆에 저장한다. 읽을 때 KMS Decrypt로 데이터 키를 얻고 로컬 복호화한다. 대용량 파일 전체를 KMS Encrypt에 전송하는 방식과 다르다. encryption context는 암호 연산에 결합하는 비밀이 아닌 추가 인증 데이터이며 복호화에 같은 값이 필요하다. 민감값을 context에 넣으면 감사 로그에 노출될 수 있다.</p>
+<p>A 계정 reports 객체를 B 분석 역할이 읽으면 (1) B 역할과 A 버킷의 S3 허용 (2) A 키 정책의 B 역할 키 사용 허용 (3) B 역할 IAM의 A 키 ARN에 대한 kms:Decrypt 허용을 각각 통과해야 한다. 명시적 Deny가 있으면 Allow 추가로 우회하지 못한다. 같은 계정에서도 키 정책이 IAM 사용을 위임하는지 또는 역할을 직접 허용하는지 확인한다. 버킷 정책에 kms:Decrypt를 쓰는 것은 KMS 키 정책의 대체가 아니다. CloudFront OAC로 SSE-KMS 원본을 읽는 경우도 S3의 배포 SourceArn 제한과 CloudFront 서비스 주체에 대한 키 정책 경계를 별도로 검사한다.</p>
+<p>특정 버킷의 S3 경유 복호화만 허용하는 기존 키 사용 Allow에는 다음 조건을 결합할 수 있다. 이것은 전체 키 정책이 아닌 해당 권한문의 조건 조각이다.</p>
+<pre><code class="language-json">{
+  &quot;StringEquals&quot;: {
+    &quot;kms:ViaService&quot;: &quot;s3.ap-northeast-2.amazonaws.com&quot;
+  },
+  &quot;StringLike&quot;: {
+    &quot;kms:EncryptionContext:aws:s3:arn&quot;: &quot;arn:aws:s3:::reports/*&quot;
+  }
+}
+</code></pre>
+<p>ViaService는 직접 KMS 호출을 제외하고 S3가 호출자 대신 사용하는 경로로 좁힌다. context는 다른 버킷을 제외한다. Bucket Key를 쓰지 않는 S3 객체 context는 객체 ARN이지만 Bucket Key 사용 시 버킷 ARN이 되므로 위 객체 패턴이 맞지 않는다. 리전·버킷·키 ARN은 실제 구성과 일치시킨다. 다른 넓은 Allow가 남으면 이 조건이 우회될 수 있으므로 전체 정책·grant·IAM 허용을 함께 검토한다.</p>
+<p>출처: <a href="https://docs.aws.amazon.com/kms/latest/developerguide/data-keys.html">데이터 키</a>, <a href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-modifying-external-accounts.html">교차 계정 KMS</a>, <a href="https://docs.aws.amazon.com/kms/latest/developerguide/conditions-kms.html">KMS 조건 키</a>, <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingKMSEncryption.html">S3 context</a>, <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html">OAC KMS</a>.</p>
+<h2 id="키-회전재암호화삭제-대기">키 회전·재암호화·삭제 대기</h2>
+<p>자동 회전은 같은 KMS 키 식별자의 새 키 재료를 이후 암호화에 사용한다. 기존 암호문에는 필요한 이전 재료를 유지하므로 복호화가 계속된다. 기존 객체를 별도 키 K2로 바꾸는 것은 회전과 다르다. 예를 들어 200만 개·100MB 객체를 K1에서 K2로 옮기고 쓰기를 잠시 멈출 수 있으면 Inventory/manifest와 S3 Batch Operations Copy로 같은 객체 키에 K2 암호화 새 현재 버전을 만든다. 서비스의 Copy 크기 제한·작업 권한·K1 Decrypt·K2 GenerateDataKey·결과 보고서를 검증한다. 버전 관리의 이전 버전은 K1로 남으므로 복원 요구가 있으면 K1 권한을 즉시 없애지 않는다. 기본 암호화·키 별칭만 바꾸면 기존 객체가 바뀌지 않는다. 객체 크기와 버전 manifest의 상세 조건은 <a href="day-03.html#%EA%B8%B0%EC%A1%B4-%EA%B0%9D%EC%B2%B4%EC%9D%98-%EC%95%94%ED%98%B8%ED%99%94-%EB%B3%80%EA%B2%BD">기존 객체의 암호화 변경</a>에 연결한다.</p>
+<p>ScheduleKeyDeletion은 즉시 파괴가 아니라 기본 30일, 설정 가능한 7~30일 대기다. PendingDeletion 동안 키는 암호 연산에 사용할 수 없다. 대기 중 CancelKeyDeletion으로 취소하면 Disabled 상태가 되므로 EnableKey와 정책·데이터 검증이 필요하다. 대기 끝 실제 삭제 후 암호문만으로 키를 복구할 수 없다. CloudTrail·알람과 삭제 승인 분리를 갖춘다. 보관 데이터·백업의 최대 수명까지 확인한다.</p>
+<p>다중 리전 KMS 키는 관련 primary/replica가 같은 키 재료·key ID를 공유해 지원 클라이언트 측 암호문을 다른 리전의 관련 키로 복호화할 수 있다. 리전별 ARN·정책·grant·활성 상태는 따로 관리한다. 동일 별칭으로 독립 키 둘을 만드는 것과 다르며 S3 CRR·애플리케이션 데이터 복제를 자동 수행하지 않는다.</p>
+<p>출처: <a href="https://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html">회전</a>, <a href="https://docs.aws.amazon.com/kms/latest/developerguide/deleting-keys.html">키 삭제</a>, <a href="https://docs.aws.amazon.com/kms/latest/developerguide/deleting-keys-scheduling-key-deletion.html">삭제 취소</a>, <a href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">다중 리전 키</a>, <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/batch-ops-copy-object.html">Batch Copy</a>.</p>
+<h2 id="교대-사용자-회전의-네-단계">교대 사용자 회전의 네 단계</h2>
+<p>DB의 공통 접근 역할 orders_access에 필요한 테이블 SELECT/INSERT 권한을 주고 app_a와 app_b가 동등하게 이 역할을 사용하도록 설계한다. 테이블 소유권이 사용자에 결합되는 DB라면 복제만으로 권한이 같아지지 않으므로 지원 템플릿과 DB 권한 모델을 확인한다. 앱 secret에는 현재 username/password와 접속 정보를, 별도 관리자 secret에는 사용자 생성·비밀번호 변경에 필요한 관리자 자격 증명을 둔다. 앱은 관리자 secret을 읽지 못하며 회전 Lambda만 필요한 두 secret·KMS·DB 네트워크에 접근한다.</p>
+<table>
+<thead>
+<tr>
+<th>단계</th>
+<th>정상 동작</th>
+<th>실패 시 확인</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>createSecret</td>
+<td>요청 token에 연결한 새 버전을 AWSPENDING으로 생성</td>
+<td>같은 token 재시도가 새 비밀번호를 무한 생성하지 않게 함</td>
+</tr>
+<tr>
+<td>setSecret</td>
+<td>관리자 자격 증명으로 비활성 쪽 사용자를 갱신</td>
+<td>DB host/username이 예상 대상인지 검증, DB 도달·권한 확인</td>
+</tr>
+<tr>
+<td>testSecret</td>
+<td>pending 사용자로 접속·업무 권한 시험</td>
+<td>읽기만 되는 사용자로 쓰기 앱을 전환하지 않음</td>
+</tr>
+<tr>
+<td>finishSecret</td>
+<td>AWSCURRENT를 검증한 버전으로 이동</td>
+<td>DB 검증 전 라벨만 옮기지 않음</td>
+</tr>
+</tbody></table>
+<p>현재 app_a를 쓰는 동안 app_b를 바꾸므로 라벨 전환 전 조회도 app_a의 유효한 자격 증명을 받는다. 전환 후 새 조회는 app_b를 받는다. 다음 주기 app_a를 갱신하면 너무 오래 캐시한 app_a 연결 생성이 실패할 수 있다. 앱은 TTL과 인증 오류 시 현재 secret 재조회·연결 풀 갱신을 구현한다. 기존 열린 DB 연결의 생존 여부는 엔진에 따르므로 새 연결과 따로 시험한다.</p>
+<p>단일 사용자는 같은 username의 DB 비밀번호를 바꾼 뒤 테스트·라벨 전환하므로 DB 변경~라벨 전환 창에 이전 현재 값이 신규 인증에 실패할 수 있다. 두 사용자 허용이 없으면 이를 앱 재시도·짧은 캐시·점검 창으로 다룬다. 교대는 가용성에 이점이 있지만 관리자 secret 보호·권한 동기화 부담이 늘어난다. SecureString은 암호화 저장으로 이 변경 순서를 자동 완성하지 않는다.</p>
+<p>출처: <a href="https://docs.aws.amazon.com/secretsmanager/latest/userguide/rotation-strategy.html">전략</a>, <a href="https://docs.aws.amazon.com/secretsmanager/latest/userguide/rotate-secrets_lambda-functions.html">네 단계</a>, <a href="https://docs.aws.amazon.com/secretsmanager/latest/userguide/tutorials_rotation-alternating.html">교대 설정</a>, <a href="https://docs.aws.amazon.com/secretsmanager/latest/userguide/troubleshoot_rotation.html">회전 문제 해결</a>.</p>
+<h2 id="인증서와-tls의-두-구간">인증서와 TLS의 두 구간</h2>
+<p>ACM에서 발급한 적격 public 인증서는 관리형 갱신을 지원한다. DNS 검증 레코드와 사용/내보내기 등 갱신 조건을 유지하고 만료 경보를 둔다. 가져온(imported) 인증서는 ACM이 자체 갱신하지 않으므로 외부 발급·재가져오기 절차가 필요하다. 자체 서명(self-signed)은 발급 주체의 종류이며 ACM에 가져왔다고 공인 신뢰나 관리형 갱신을 얻지 않는다. Private CA의 private 인증서는 사설 신뢰 체계와 지원 갱신 경로가 별도다.</p>
+<p>사용자→ALB의 HTTPS listener와 ALB→target의 HTTPS target group은 다른 TLS 연결이다. 앞 인증서만 설치하고 target protocol=HTTP이면 뒤 구간은 평문이다. ALB는 HTTPS target의 인증서를 검증하지 않으므로 대상 인증서가 self-signed이거나 만료되어도 전송 암호화는 가능하다. 공인 인증서 검증에 의존한 target 신원 검증을 ALB가 수행한다고 주장하지 않는다. SG·대상 등록·VPC 경계로 대상 접근을 좁히고 엄격한 신원 검증 요구는 실제 검증 경로를 따로 설계한다.</p>
+<p>출처: <a href="https://docs.aws.amazon.com/acm/latest/userguide/managed-renewal.html">ACM 갱신</a>, <a href="https://docs.aws.amazon.com/acm/latest/userguide/import-certificate.html">가져온 인증서</a>, <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-groups.html">ALB HTTPS 대상</a>.</p>
+<h2 id="회원-인증aws-자격-증명직원-디렉터리">회원 인증·AWS 자격 증명·직원 디렉터리</h2>
+<p>Cognito User pool은 회원 디렉터리·가입·로그인·SAML/OIDC 연동과 JWT 발급을 제공한다. 백엔드가 JWT를 검증하고 자기 역할로 DB를 쓰면 Identity pool이 필요하지 않다. JWT 검증에는 서명·issuer·audience/client·만료·토큰 용도를 확인하고 앱은 주문 소유권을 따로 판단한다.</p>
+<p>Identity pool은 신뢰한 인증 결과를 AWS 임시 자격 증명으로 바꾼다. 모바일이 직접 S3를 쓰면 authenticated role의 신뢰 조건에서 해당 identity pool과 인증 상태를 제한하고 정책에서 사용자 identity별 prefix만 허용한다. 소셜 로그인은 버킷 전체 권한을 뜻하지 않는다. 장기 키를 앱에 넣지 않는다.</p>
+<p>직원 300명의 입사·퇴사·부서 이동은 Identity Center에 외부 IdP를 연동하고 그룹→AWS 계정→permission set 배정으로 관리한다. Directory Service의 Managed Microsoft AD는 관리형 AD 디렉터리, AD Connector는 기존 온프레미스 AD로 인증 요청을 연결하는 게이트웨이다. AD를 새로 운영해야 하는 앱과 단순 연동 요구를 구분한다. 소비자 회원 가입을 직원 계정 배정 구조로 바꾸지 않는다.</p>
+<p>출처: <a href="https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html">Cognito 개념</a>, <a href="https://docs.aws.amazon.com/cognito/latest/developerguide/iam-roles.html">Identity pool 역할</a>, <a href="https://docs.aws.amazon.com/singlesignon/latest/userguide/what-is.html">Identity Center</a>, <a href="https://docs.aws.amazon.com/directoryservice/latest/admin-guide/what_is.html">Directory Service</a>.</p>
+<h2 id="waf-단일-규칙-예외와-나머지-보호">WAF 단일 규칙 예외와 나머지 보호</h2>
+<p>관리형 그룹의 특정 SQLi 규칙이 /articles의 정상 HTML을 차단한다면 그 <strong>규칙만</strong> RuleActionOverrides로 Count로 바꾼다. 관리형 규칙은 계속 평가·label을 생성하고 뒤의 custom rule이 해당 label AND NOT(uri가 /articles)일 때 Block한다. /articles에서는 그 SQLi 차단만 예외가 되고 그룹의 다른 차단은 남는다. 뒤 규칙은 label 생성 뒤 priority에 둔다. label namespace와 정확한 규칙 이름을 샘플 요청·로그로 확인한다. 이 예외는 /articles 입력의 안전을 보장하지 않으므로 앱의 SQL 매개변수화·입력 검증을 유지한다.</p>
+<p>그룹 전체를 Count로 바꾸면 다른 보호까지 중단한다. 앞에서 /articles를 Allow로 종료시키면 뒤 보호를 건너뛸 수 있다. group scope-down으로 /articles 자체를 제외하면 해당 그룹의 모든 규칙을 놓친다. 규칙별 action override와 그룹 결과 override는 평가 영향이 다르다. rate-based rule은 IP 등 aggregation key별 과도한 HTTP 요청을 근사 속도로 제한하며 앱 사용자 인증이나 정확한 거래 quota는 별도다.</p>
+<p>Shield는 DDoS 가용성, WAF는 HTTP 내용·속도, Network Firewall은 라우팅되는 VPC 트래픽 검사다. SG 443 허용만으로 TLS 안 SQLi를 검사하지 못한다. Firewall Manager는 여러 계정에 지원 WAF 기준을 배포하고 Inspector는 패키지 CVE를 평가한다. Security Hub findings 집계가 두 작업을 대신하지 않는다.</p>
+<p>출처: <a href="https://docs.aws.amazon.com/waf/latest/developerguide/web-acl-rule-group-override-options.html">규칙 action override</a>, <a href="https://docs.aws.amazon.com/waf/latest/developerguide/waf-rule-statement-type-label-match.html">label matching</a>, <a href="https://docs.aws.amazon.com/waf/latest/developerguide/waf-rule-statement-type-rate-based.html">rate 규칙</a>, <a href="https://docs.aws.amazon.com/waf/latest/developerguide/fms-chapter.html">Firewall Manager</a>.</p>
+<h2 id="계정리전스캔-유형의-coverage">계정·리전·스캔 유형의 coverage</h2>
+<p>GuardDuty 위임 관리자를 지정한 다음 서울·도쿄 각각에서 기존 계정과 보호 계획을 활성화한다. ALL이면 기존·신규 계정에 적용하고 NEW이면 이후 가입한 계정만 자동 활성화한다. NONE 전환은 기존 활성 계정 해제가 아니다. 기능별 지원·리전 opt-in·적용 지연을 확인한다. GuardDuty Malware Protection for S3처럼 같은 조직 auto-enable 옵션이 그대로 적용되지 않는 기능도 있어 필요한 탐지 계획을 명시한다.</p>
+<p>Inspector에서는 위임 관리자 등록 후 각 리전의 기존 멤버에 EC2/ECR/Lambda standard/Lambda code 스캔을 필요에 따라 활성화하고 신규 멤버 자동 활성화에 같은 유형을 지정한다. Lambda code는 standard 선행 활성화가 필요하다. 자동 활성화를 나중에 켠 것이 과거 모든 멤버의 모든 유형까지 해결했다는 뜻은 아니다. 현재 Organizations Inspector 정책 방식은 중앙 적용·신규 계정 포함을 관리하는 대안이다. 어떤 경로든 eligible resource 수와 covered/미스캔 사유를 계정×리전×유형 표로 검사한다.</p>
+<p>예를 들어 GuardDuty는 정상인데 EC2 CVE 보고가 비어 있으면 “취약점 없음”을 먼저 결론 내리지 않고 Inspector EC2 활성화·노드 지원·수집 상태를 확인한다. Inspector 패키지 발견이 없어도 의심 계정 사용은 GuardDuty의 별도 조사 대상이다.</p>
+<p>출처: <a href="https://docs.aws.amazon.com/guardduty/latest/ug/set-guardduty-auto-enable-preferences.html">GuardDuty 설정</a>, <a href="https://docs.aws.amazon.com/inspector/latest/user/adding-member-accounts.html">Inspector 기존·신규 멤버</a>, <a href="https://docs.aws.amazon.com/inspector/latest/user/activate-scans.html">스캔 유형</a>.</p>
+<h2 id="macie-문맥과-허용-목록의-검증">Macie 문맥과 허용 목록의 검증</h2>
+<p>지원 텍스트에서 regex=<code>CUST-[0-9]{8}</code>, keyword=<code>customer_id</code>, distance=20을 사용한다. 비정형 텍스트에서는 완전한 keyword가 일치 문자열보다 앞에 있고 keyword 끝~일치 문자열 끝 거리가 20 이하여야 한다. <code>customer_id: CUST-12345678</code>의 거리는 15이며 포함된다. <code>customer_id: long-description CUST-12345678</code>은 거리가 길어 제외될 수 있다. 값 앞 20자 안이라는 자연어 요구를 구현할 때는 번호 13자도 거리에 포함된다는 점을 확인해 실제 예시로 조정한다. 번호 바로 앞의 간격을 최대 20자로 허용하는 요구라면 번호 길이 13자를 포함해 distance를 최대 33자로 계산하는 등 위치 정의에 맞춰 조정한다. distance=20을 고정하면 그 범위를 모두 포함하지 못한다. 키워드는 대소문자를 구분하지 않는다.</p>
+<p>공개 테스트값 <code>CUST-00000000</code>을 정확한 allow list 항목으로 제공하면 identifier가 일치해도 해당 출현을 결과에서 제외한다. 전체 고객 번호 패턴을 allow list에 넣으면 진짜 데이터도 숨길 수 있다. CSV 같은 구조화 컬럼에서는 keyword가 필드/컬럼명에 있는 경우와 값 안에 있는 경우의 처리 차이를 실제 파일로 확인한다. 번호 패턴은 개인정보 여부의 증거일 뿐 소유자·업무 문맥 검토가 필요하다.</p>
+<p>Macie가 SSE-KMS CSV 내용을 읽을 때 실제 호출 주체는 Macie 서비스 연결 역할 AWSServiceRoleForAmazonMacie다. 키 정책이 앱 역할만 허용한다면 Macie 역할에 필요한 키 사용 경로를 추가해야 한다. 분석가에게 Decrypt를 주는 것은 Macie에 전달되지 않는다. 암호화를 제거할 필요는 없다. GuardDuty S3 Protection은 GetObject 등 객체 수준 CloudTrail 데이터 이벤트의 의심 활동을 탐지한다. 기본 관리 이벤트 탐지만 켜고 이 계획을 끄면 그 범위를 충족하지 않는다. 이 탐지용으로 고객이 CloudTrail 데이터 이벤트 trail을 별도 활성화할 필요는 없으며 독립 감사 보관 목적의 trail 설정과 구분한다.</p>
+<p>출처: <a href="https://docs.aws.amazon.com/macie/latest/user/discovery-supported-encryption-types.html">Macie 암호화 객체 권한</a>, <a href="https://docs.aws.amazon.com/guardduty/latest/ug/s3-protection.html">S3 Protection</a>.</p>
+<p>Macie는 S3의 지원 객체 내용을 분석하며 모든 파일·저장 클래스·암호화 방식·크기를 읽는 것은 아니다. KMS·S3 권한 부족과 미지원 파일은 검사 누락으로 추적한다. 샘플링 기반 자동 발견이 버킷의 모든 객체 완전 검사와 같지 않으므로 전체 대상 요구에는 대상·주기·필터를 지정한 job과 coverage를 검토한다. findings와 상세 discovery result의 저장 리전도 상주 정책에 포함한다. eu-west-1과 eu-central-1만 허용하면 원본·CRR·분류 결과를 그 안에 두고 기존 객체는 별도 Batch Replication 등으로 이관해야 한다. 암호화가 금지 리전 복사를 허용해주지 않는다.</p>
+<p>출처: <a href="https://docs.aws.amazon.com/macie/latest/user/cdis-options.html">식별자 옵션</a>, <a href="https://docs.aws.amazon.com/macie/latest/user/allow-lists-options.html">허용 목록</a>, <a href="https://docs.aws.amazon.com/macie/latest/user/discovery-supported-storage.html">지원 형식</a>, <a href="https://docs.aws.amazon.com/macie/latest/user/discovery-jobs.html">민감정보 job</a>.</p>
+<h2 id="불변-보관과-legal-hold">불변 보관과 legal hold</h2>
+<p>Object Lock은 버전 관리된 객체 <strong>버전</strong>의 삭제를 제어한다. Compliance 보존은 기간 중 root도 보호 버전을 삭제하거나 기간을 줄일 수 없다. Governance는 s3:BypassGovernanceRetention 권한과 명시적인 우회 요청을 갖춘 주체가 우회할 수 있어 관리자까지 못 지우는 요구와 다르다. Legal hold는 정해진 만료 없이 on/off하는 별도 통제이며 s3:PutObjectLegalHold 권한으로 해제한다.</p>
+<p>보존 기간이 끝나도 legal hold가 on이면 삭제할 수 없다. hold를 꺼도 compliance 기간이 남으면 삭제할 수 없다. 두 통제를 모두 통과해야 영구 삭제할 수 있다. 같은 키에 새 버전을 쓰거나 delete marker를 추가하는 것과 보호된 과거 버전 영구 삭제는 다르다. 잘못 긴 compliance 보존의 비용·삭제 의무 충돌을 미리 검토한다. 데이터 분류는 소유자·민감도·보관/삭제·허용 리전을 정하고 복제·백업·로그에도 같은 규칙을 적용하는 출발점이다.</p>
+<p>출처: <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lock.html">Object Lock</a>, <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lock-managing.html">보존 모드</a>, <a href="https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/data-classification.html">데이터 분류</a>.</p>
+<p>공식 자료 확인일: 2026-11-02. 정책은 범위 설명용이며 배포하지 않는다.</p>
+</body></html>

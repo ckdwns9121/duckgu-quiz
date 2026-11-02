@@ -1,5 +1,6 @@
 import courseConfig from '../data/courses.json';
 import awsCards from '../data/cards/aws.json';
+import saaCards from '../data/cards/aws-saa.json';
 import dockerK8sCards from '../data/cards/docker-k8s.json';
 import frontendCards from '../data/cards/frontend.json';
 import jeongcheogiCards from '../data/cards/jeongcheogi.json';
@@ -8,6 +9,7 @@ import type { Card, Course, Lesson } from './types';
 
 // 코스를 늘리면 content/<코스>/에 문제를 쓰고 `pnpm content`로 만든 카드를 여기 이어 준다
 const CARDS_BY_COURSE: Record<string, Card[]> = {
+  'aws-saa': saaCards as Card[],
   jeongcheogi: jeongcheogiCards as Card[],
   frontend: frontendCards as Card[],
   aws: awsCards as Card[],

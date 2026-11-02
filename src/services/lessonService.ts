@@ -1,5 +1,5 @@
 import { CARD_BY_ID, COURSE_BY_ID, courseOfCard, courseOfLesson, DEFAULT_COURSE, LESSON_BY_ID } from '../domain/content';
-import { isBuildCorrect, isTypedAnswerCorrect, joinAnswerTiles, makeQuestion, shuffle } from '../domain/question';
+import { isBuildCorrect, isChoiceCorrect, isTypedAnswerCorrect, joinAnswerTiles, makeQuestion, shuffle } from '../domain/question';
 import { dayKey, lessonXp, nextStreak, visibleStreak } from '../domain/streak';
 import type { Card } from '../domain/types';
 import { router } from '../router';
@@ -72,7 +72,7 @@ export function check() {
   const q = currentQuestion(s);
   // 폰 키보드를 닫아야 해설 시트가 키보드에 가리지 않는다
   (document.activeElement as HTMLElement | null)?.blur?.();
-  if (q.type === 'choice' && s.selected !== null) answer(q.options[s.selected] === q.correct);
+  if (q.type === 'choice' && s.selectedChoices.length === (q.correctAnswers?.length ?? 1)) answer(isChoiceCorrect(q, s.selectedChoices));
   if (q.type === 'build' && s.picked.length) answer(isBuildCorrect(s.picked.map((i) => q.tiles[i]), q.answer));
   if (q.type === 'typing' && usesTiles() && s.picked.length) {
     answer(isTypedAnswerCorrect(joinAnswerTiles(s.picked.map((i) => q.tiles[i]), q.correct), q.correct));

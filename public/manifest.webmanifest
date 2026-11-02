@@ -1,7 +1,7 @@
 {
   "name": "출근길 IT 퀴즈",
   "short_name": "출근길 IT 퀴즈",
-  "description": "출근길에 한 레슨씩 푸는 IT 퀴즈: 정보처리기사 실기, 프론트엔드",
+  "description": "덕구와 매일 푸는 AWS-SAA·정보처리기사·프론트엔드 IT 퀴즈",
   "lang": "ko",
   "start_url": "./",
   "scope": "./",

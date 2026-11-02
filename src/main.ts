@@ -6,6 +6,7 @@ import { resizeRiveMascots } from './components/riveMascot';
 import { setupAnalytics } from './services/analytics';
 import { setupInstall } from './services/install';
 import { setupViewport } from './services/viewport';
+import { setupPush } from './services/push';
 import { currentQuestion, lessonStore } from './stores/lessonStore';
 
 /** 레슨 키보드 단축키: 1~4 보기 선택, Enter 확인·계속 */
@@ -22,7 +23,7 @@ function setupKeyboard() {
       return;
     }
     const q = currentQuestion(s);
-    if (q.type === 'choice' && /^[1-4]$/.test(e.key)) selectChoice(Number(e.key) - 1);
+    if (q.type === 'choice' && /^[1-9]$/.test(e.key)) selectChoice(Number(e.key) - 1);
     if (q.type === 'choice' && e.key === 'Enter') check();
     const tileMode = q.type === 'build' || (q.type === 'typing' && usesTiles());
     if (tileMode && e.key === 'Enter') check();
@@ -51,3 +52,4 @@ setupKeyboard();
 window.addEventListener('resize', resizeRiveMascots);
 registerServiceWorker();
 router.start();
+void setupPush();

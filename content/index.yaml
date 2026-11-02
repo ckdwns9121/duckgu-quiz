@@ -3,6 +3,7 @@ courses:
   - jeongcheogi
   - frontend
   - aws
+  - aws-saa
   - docker-k8s
 soon:
   - name: 백엔드

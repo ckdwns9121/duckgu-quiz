@@ -5,6 +5,7 @@ import { HeartIcon } from '../components/Icons';
 import { InstallBanner, IosInstallGuide } from '../components/InstallBanner';
 import { UnitSection } from '../components/LessonPath';
 import { TopBar } from '../components/TopBar';
+import { DailyQuiz } from '../components/DailyQuiz';
 import { router } from '../router';
 import { courseWeakIds, startPractice } from '../services/lessonService';
 import { progressStore } from '../stores/progressStore';
@@ -42,6 +43,7 @@ export const CoursePage = () => {
       <TopBar course={course} />
       <main className="col path">
         <InstallBanner />
+        {course.id === 'aws-saa' && <DailyQuiz />}
         {course.units.map((unit, i) => (
           <UnitSection
             unit={unit} index={i} lessons={course.lessons.filter((l) => l.unit.id === unit.id)} done={done}

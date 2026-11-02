@@ -5,16 +5,20 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/build-content.mjs --check && tsc --noEmit && vite build && cp dist/index.html dist/404.html",
+    "build": "node scripts/build-content.mjs --check && pnpm typecheck && vite build && cp dist/index.html dist/404.html",
     "preview": "vite preview",
     "content": "node scripts/build-content.mjs",
     "verify:answers": "node scripts/verify-answers.mjs",
     "test": "vitest",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.server.json",
     "build:riv": "node scripts/build-mascot-riv.mjs"
   },
   "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/web-push": "^3.6.4",
+    "@vercel/node": "^29.0.1",
     "jsdom": "^26.1.0",
+    "marked": "^18.1.2",
     "rive-mcp-server": "0.6.1",
     "typescript": "^5.9.2",
     "vite": "^7.1.5",
@@ -22,6 +26,8 @@
     "yaml": "^2.9.1"
   },
   "dependencies": {
-    "@rive-app/canvas-lite": "^2.43.0"
+    "@rive-app/canvas-lite": "^2.43.0",
+    "@vercel/blob": "^2.8.2",
+    "web-push": "^3.6.7"
   }
 }

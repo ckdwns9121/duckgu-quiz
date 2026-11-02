@@ -77,7 +77,7 @@ export function makeQuestion(card: Card, all: Card[], rng: Rng = Math.random): Q
     case 'build':
       return buildQuestion(card, rng);
     case 'mcq':
-      return { type: 'choice', card, label: '정답 고르기', say: escapeText(card.q), options: shuffle(card.options, rng), correct: card.correct };
+      return { type: 'choice', card, label: card.correctAnswers ? `${card.correctAnswers.length}개 선택` : '정답 고르기', say: escapeText(card.q), options: shuffle(card.options, rng), correct: card.correct, correctAnswers: card.correctAnswers };
   }
 }
 
@@ -229,4 +229,11 @@ export function isBuildCorrect(picked: string[], answer: string[]): boolean {
 
 export function isTypedAnswerCorrect(input: string, correct: string): boolean {
   return normalize(input) !== '' && normalize(input) === normalize(correct);
+}
+
+/** 복수 정답은 순서와 무관하게 전부 일치해야 한다. */
+export function isChoiceCorrect(q: Extract<Question, { type: 'choice' }>, selected: number[]): boolean {
+  const answers = q.correctAnswers ?? [q.correct];
+  return new Set(selected).size === answers.length && selected.length === answers.length
+    && selected.every((i) => answers.includes(q.options[i]));
 }

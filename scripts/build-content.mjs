@@ -49,7 +49,7 @@ function itemCards(it, unit) {
     case 'mcq':
       return it.quizzes.map((q, i) => ({
         kind: 'mcq', id: i ? `${it.id}-${i + 1}` : it.id, unit, title, q: unit === 'fe-react' && !it.id.includes('strict') ? `${q.q} (React 19, StrictMode·Compiler 끔)` : q.q, pre: preOf(it),
-        options: [q.answer, ...q.wrong], correct: q.answer, explain: it.explain, hints: q.hints ?? [],
+        options: q.options ?? [q.answer, ...q.wrong], correct: q.answer, ...(q.answers ? { correctAnswers: q.answers } : {}), explain: it.explain, hints: q.hints ?? [],
       }));
     case 'build':
       return [{ kind: 'build', id: it.id, unit, mode: it.mode, join: it.join ?? ' ', title, q: it.q, tokens: it.tokens, decoys: it.decoys ?? [], explain: buildExplain(it), hints: it.hints ?? [] }];
@@ -72,7 +72,7 @@ function renderItem(it) {
   const pre = preOf(it);
   let body;
   if (it.type === 'mcq') {
-    const uls = it.quizzes.map((q) => `<ul class="quiz-opts" hidden data-q="${escAttr(q.q)}"><li class="ok">${esc(q.answer)}</li>${q.wrong.map((w) => `<li>${esc(w)}</li>`).join('')}</ul>`).join('\n        ');
+    const uls = it.quizzes.map((q) => `<ul class="quiz-opts" hidden data-q="${escAttr(q.q)}">${(q.options ?? [q.answer, ...q.wrong]).map((o) => `<li${(q.answers ?? [q.answer]).includes(o) ? ' class="ok"' : ''}>${esc(o)}</li>`).join('')}</ul>`).join('\n        ');
     body = `${head}${pre ? `\n${pre}` : ''}\n        <p class="q">${it.note_q ?? esc(it.quizzes[0].q)}</p>\n        ${uls}\n        <div class="ans">${it.explain}</div>`;
   } else if (it.type === 'build') {
     body = `${head}\n        <p class="q">${esc(it.q)}</p>\n        <div class="ans">${buildExplain(it)}</div>`;

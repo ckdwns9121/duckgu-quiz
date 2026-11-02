@@ -80,13 +80,14 @@ export interface McqCard extends BaseCard {
   pre: string;
   options: string[];
   correct: string;
+  correctAnswers?: string[];
   explain: string;
 }
 
 export type Card = TermCard | AnswerCard | RelCard | RecallCard | BuildCard | McqCard;
 
 export type Question =
-  | { type: 'choice'; card: Card; label: string; say: string; prompt?: string; promptHtml?: string; options: string[]; correct: string }
+  | { type: 'choice'; card: Card; label: string; say: string; prompt?: string; promptHtml?: string; options: string[]; correct: string; correctAnswers?: string[] }
   /** tiles: 폰에서 키보드 대신 누르는 답 조각 (정답 조각 + 가짜 조각을 섞은 것) */
   | { type: 'typing'; card: AnswerCard; label: string; say: string; correct: string; tiles: string[] }
   | { type: 'build'; card: BuildCard; label: string; say: string; correct: string; answer: string[]; tiles: string[] }

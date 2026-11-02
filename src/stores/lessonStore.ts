@@ -25,6 +25,7 @@ export interface LessonSession {
   /** 카드별 첫 시도 결과. 정확도는 이것으로 계산한다 (다시 맞힌 건 치지 않는다) */
   firstTry: Record<string, boolean>;
   selected: number | null;
+  selectedChoices: number[];
   typed: string;
   /** 답 조각 문제에서 고른 조각 (tiles의 번호, 누른 순서대로) */
   picked: number[];
@@ -51,15 +52,24 @@ export function lessonReducer(state: LessonSession | null, action: LessonAction)
   if (action.type === 'START') {
     return {
       lessonId: action.lessonId, queue: action.queue, total: action.queue.length, solved: 0,
-      lives: MAX_LIVES, mistakes: 0, combo: 0, firstTry: {}, selected: null, typed: '', picked: [], recallShown: false, hintsShown: 0,
+      lives: MAX_LIVES, mistakes: 0, combo: 0, firstTry: {}, selected: null, selectedChoices: [], typed: '', picked: [], recallShown: false, hintsShown: 0,
       feedback: null, outcome: null,
     };
   }
   if (!state) return state;
 
   switch (action.type) {
-    case 'SELECT':
-      return state.feedback ? state : { ...state, selected: action.index };
+    case 'SELECT': {
+      if (state.feedback) return state;
+      const q = state.queue[0];
+      if (q?.type !== 'choice' || action.index < 0 || action.index >= q.options.length) return state;
+      const selectedChoices = q.correctAnswers
+        ? state.selectedChoices.includes(action.index)
+          ? state.selectedChoices.filter((i) => i !== action.index)
+          : state.selectedChoices.length < q.correctAnswers.length ? [...state.selectedChoices, action.index] : state.selectedChoices
+        : [action.index];
+      return { ...state, selected: selectedChoices.at(-1) ?? null, selectedChoices };
+    }
     case 'TYPE':
       return { ...state, typed: action.text };
     case 'PICK':
@@ -91,6 +101,7 @@ export function lessonReducer(state: LessonSession | null, action: LessonAction)
         combo: action.ok ? state.combo + 1 : 0,
         feedback: action.withSheet ? { ok: action.ok, question: current } : null,
         selected: action.withSheet ? state.selected : null,
+        selectedChoices: action.withSheet ? state.selectedChoices : [],
         typed: action.withSheet ? state.typed : '',
         picked: action.withSheet ? state.picked : [],
         recallShown: false,
@@ -98,7 +109,7 @@ export function lessonReducer(state: LessonSession | null, action: LessonAction)
       };
     }
     case 'CLOSE_SHEET':
-      return { ...state, feedback: null, selected: null, typed: '', picked: [], hintsShown: 0 };
+      return { ...state, feedback: null, selected: null, selectedChoices: [], typed: '', picked: [], hintsShown: 0 };
     case 'FINISH':
       return { ...state, feedback: null, outcome: action.outcome };
     default:
